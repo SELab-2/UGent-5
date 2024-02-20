@@ -37,8 +37,8 @@ jobs:
       - name: Run Frontend linters
         working-directory: frontend
         run: |
-          npm run dev lint
-          npm run dev format:check
+          npm run lint
+          npm run format:check
 
       - name: Run Backend linter
         run: autopep8 -rd --exit-code backend
