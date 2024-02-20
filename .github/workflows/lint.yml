@@ -1,0 +1,45 @@
+name: Lint
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  checks: write
+  contents: write
+
+jobs:
+  lint:
+    name: Run linters
+    runs-on: self-hosted
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+      - name: Install Node (frontend) dependencies
+        working-directory: frontend
+        run: npm ci
+      - name: Install Python linting (backend) dependencies
+        run: pip install autopep8
+
+      - name: Run Frontend linters
+        working-directory: frontend
+        run: |
+          npm run dev lint
+          npm run dev format:check
+
+      - name: Run Backend linter
+        run: autopep8 -rd --exit-code backend
+
