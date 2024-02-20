@@ -1,0 +1,29 @@
+name: Deployment
+
+concurrency:
+  group: production
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deployment:
+    runs-on: self-hosted
+    environment: 
+      name: production
+      url: https://sel2-5.ugent.be
+    steps:
+      - name: Add private key
+        shell: bash
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H localhost > ~/.ssh/known_hosts
+      - name: deploy
+        run: ssh selab2@localhost "./deploy.sh"
+      - name: cleanup
+        run: rm -rf ~/.ssh
+          
+          
+
