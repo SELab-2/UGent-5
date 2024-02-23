@@ -31,10 +31,10 @@ source venv/bin/activate
 #### Run the web server:
 
 ```sh
-python app.py
+./run.sh
 ```
 
-It will start a local development server on port `5000`
+It will start a local development server on port `8000`
 
 #### To format the python code in place to conform to PEP 8 style:
 
