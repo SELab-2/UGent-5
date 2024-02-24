@@ -36,6 +36,25 @@ source venv/bin/activate
 
 It will start a local development server on port `8000`
 
+##### Local HTTPS:
+For local development, an SSL-certificate is needed to interact with the
+CAS-server of UGent. Install [mkcert](https://github.com/FiloSottile/mkcert) and
+run
+
+```sh
+mkdir local-cert
+mkcert -key-file local-cert/localhost-key.pem -cert-file local-cert/localhost.pem localhost
+```
+
+To start the local webserver:
+
+```sh
+./dev.sh
+```
+
+This will start a local development server on port 8080
+
+
 #### To format the python code in place to conform to PEP 8 style:
 
 ```sh
