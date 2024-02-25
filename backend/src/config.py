@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import dataclasses
-import os
 from dataclasses import dataclass
 
 import yaml
@@ -22,8 +21,3 @@ class Config:
 
 
 CONFIG = Config()
-
-if os.environ.get("API_ENV") == "production":
-    CONFIG.read("config.yml")
-else:
-    CONFIG.read("local_config.yml")
