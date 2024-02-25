@@ -37,23 +37,23 @@
 .login-button {
     background-color: var(--secondary-bg-color);
     color: white;
-    border: 2px solid white; /* Add border with blue color */
-    padding: 10px 20px; /* Add padding to the button */
-    font-size: 16px; /* Adjust font size */
-    border-radius: 50px; /* Add border radius for rounded corners */
-    cursor: pointer; /* Change cursor to pointer on hover */
-    transition: background-color 0.3s, color 0.3s; /* Add smooth transition effect */
+    border: 2px solid white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .login-button:hover {
-    background-color: var(--ternairy-bg-color); /* Change background color on hover */
-    color: white; /* Change text color on hover */
+    background-color: var(--ternairy-bg-color);
+    color: white;
 }
 
 .ugent-logo{
     position: absolute;
-    bottom: 10px; /* Adjust the distance from the bottom */
-    left: 10px; /* Adjust the distance from the left */
-    width: 100px; /* Adjust the width of the logo */
+    bottom: 10px;
+    left: 10px;
+    width: 100px;
     height: auto;
 }

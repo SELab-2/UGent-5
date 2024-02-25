@@ -12,7 +12,13 @@
 import '../assets/login.css'
 
 export default {
-name: "LoginView"
+name: "LoginView",
+methods:{
+  redirect_to_CAS(event){
+    event.preventDefault();
+    window.location.href = 'CAS_LOGIN'
+  }
+}
 }
 </script>
 
