@@ -1,16 +1,19 @@
 from typing import Optional
-from fastapi import FastAPI
+
 from cas import CASClient
+from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, RedirectResponse
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.requests import Request
+
+from src import config
 
 app = FastAPI()
 
 cas_client = CASClient(
     version=2,
-    service_url="https://localhost:8080/login?next=%2Fprofile",
-    server_url="https://login.ugent.be",
+    service_url=f"{config.CONFIG.api_url}/login?next=%2Fprofile",
+    server_url=f"{config.CONFIG.cas_server_url}",
 )
 app.add_middleware(SessionMiddleware, secret_key="!secret")
 
