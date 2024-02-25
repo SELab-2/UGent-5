@@ -40,8 +40,6 @@ def login(request: Request, next: Optional[str] = None, ticket: Optional[str] = 
         # Already logged in
         return RedirectResponse(request.url_for("profile"))
 
-    # next = request.args.get('next')
-    # ticket = request.args.get('ticket')
     if not ticket:
         # No ticket, the request come from end user, send to CAS login
         cas_login_url = cas_client.get_login_url()
@@ -83,6 +81,5 @@ def logout(request: Request):
 @app.get("/logout_callback")
 def logout_callback(request: Request):
     # redirect from CAS logout request after CAS logout successfully
-    # response.delete_cookie('username')
     request.session.pop("user", None)
     return HTMLResponse('Logged out from CAS. <a href="/login">Login</a>')
