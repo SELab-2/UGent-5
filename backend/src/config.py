@@ -21,3 +21,4 @@ class Config:
 
 
 CONFIG = Config()
+CONFIG.read("config.yml")

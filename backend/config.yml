@@ -1,2 +1,2 @@
-api_url: https://sel2-5.ugent.be
+api_url: https://localhost:8080
 cas_server_url: https://login.ugent.be
