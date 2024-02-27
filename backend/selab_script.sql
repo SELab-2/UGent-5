@@ -94,6 +94,38 @@ CREATE TABLE Bestand (
 );
 
 
+--checks
+
+ALTER TABLE Project
+ADD CONSTRAINT deadline_check CHECK (deadline >= CURRENT_DATE);
+
+ALTER TABLE Groep ADD CONSTRAINT score_check CHECK (score BETWEEN 0 AND 20);
+
+ALTER TABLE WebsiteUser ALTER COLUMN is_admin SET DEFAULT FALSE;
+
+--zorgt ervoor dat er geen indieningen na deadline kunnen gebeuren
+CREATE OR REPLACE FUNCTION check_indiening_voor_deadline()
+RETURNS TRIGGER AS $$
+DECLARE
+    project_deadline DATE;
+BEGIN
+    SELECT deadline INTO project_deadline
+    FROM Project
+    WHERE id = NEW.project_id;
+
+    IF CURRENT_TIMESTAMP > project_deadline THEN
+        RAISE EXCEPTION 'Indiening is niet meer toegelaten na deadline';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_check_indiening_voor_deadline
+BEFORE INSERT ON Indiening
+FOR EACH ROW
+EXECUTE FUNCTION check_indiening_voor_deadline();
+
 
 
 
