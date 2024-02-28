@@ -1,18 +1,18 @@
-from sqlalchemy import Column, ForeignKey, String, Table, Set
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.database import Base
-from src.subject.router import StudentSubject,TeacherSubject, Subject
+import src.subject.models as subj_models
+from typing import Set
 
 class User(Base):
     __tablename__ = "user"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name = Column(String)
+    name: Mapped[str]
 
     follows_subjects: Mapped[Set["Subject"]] = relationship(
-        secondary=StudentSubject,back_populates="subjects"
+        secondary=subj_models.StudentSubject,back_populates="students"
     )
 
     teaches_subjects: Mapped[Set["Subject"]] = relationship(
-        secondary=TeacherSubject,back_populates="subjects"
+        secondary=subj_models.TeacherSubject,back_populates="teachers"
     )
