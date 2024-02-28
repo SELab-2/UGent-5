@@ -1,22 +1,19 @@
 <template>
   <div class="login">
-    <img alt="white logo" class="logo" src="@/assets/logo_white_ transparant.png"  height="100" />
-    <h3> De officiële indienapplicatie van de Universiteit Gent</h3>
-    <p> Aanmelden</p>
+    <img alt="white logo" class="logo" src="@/assets/logo_white_ transparant.png" height="100" />
+    <h3>De officiële indienapplicatie van de Universiteit Gent</h3>
+    <p>Aanmelden</p>
     <a class="login-button"> Apollo login </a>
   </div>
 </template>
 
-<script>
-
-</script>
+<script setup lang="ts"></script>
 
 <style scoped>
-
-.login{
-  --primary-bg-color: #1A5276;
-  --secondary-bg-color: #797D7F;
-  --tertiary-bg-color: #A6ACAF;
+.login {
+  --primary-bg-color: #1a5276;
+  --secondary-bg-color: #797d7f;
+  --tertiary-bg-color: #a6acaf;
   position: fixed;
   top: 50%;
   left: 0;
@@ -29,7 +26,8 @@
   flex-direction: column;
   text-align: center;
 }
-.logo{
+
+.logo {
   margin-top: 30px;
 }
 
@@ -40,11 +38,12 @@
   margin-bottom: 100px;
 }
 
-.login p{
-  color:white;
+.login p {
+  color: white;
   font-size: 20px;
   margin-bottom: 20px;
 }
+
 .login-button {
   background-color: var(--secondary-bg-color);
   color: white;
@@ -53,12 +52,13 @@
   font-size: 16px;
   border-radius: 50px;
   cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
 .login-button:hover {
   background-color: var(--tertiary-bg-color);
   color: white;
 }
-
 </style>
