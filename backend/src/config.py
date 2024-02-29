@@ -15,7 +15,8 @@ class Config:
         with open(config_file, "r") as file:
             user_config = yaml.safe_load(file)
             for field in dataclasses.fields(Config):
-                user_value = user_config.get(field.name, getattr(self, field.name))
+                user_value = user_config.get(
+                    field.name, getattr(self, field.name))
                 setattr(self, field.name, user_value)
         return self
 

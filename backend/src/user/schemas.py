@@ -1,15 +1,18 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, Field
+
 
 class Userbase(BaseModel):
+    id: str  # ugentID
     uid: str
     given_name: str
-    surname: str
 
-class UserCreate():
+
+class UserCreate(Userbase):
     pass
 
-class User(BaseModel):
-    id: int
+
+class User(Userbase):
+    is_admin: bool = Field(default=False)
 
     class Config:
         from_attributes = True
