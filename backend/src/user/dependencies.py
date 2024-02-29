@@ -8,8 +8,9 @@ from starlette.requests import Request
 import src.user.service as service
 
 
-async def get_authenticated_user(request: Request,
-                                 db: Session = Depends(get_db)) -> User:
+async def get_authenticated_user(
+    request: Request, db: Session = Depends(get_db)
+) -> User:
     """Get current logged in user"""
     user_id = request.session.get("user")
     if not user_id:
