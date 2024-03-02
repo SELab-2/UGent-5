@@ -3,12 +3,21 @@ from typing import Optional
 from cas import CASClient
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.requests import Request
 
 from src import config
 
 app = FastAPI()
+origins = ["https://localhost:5173"]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 cas_client = CASClient(
     version=2,
@@ -28,6 +37,7 @@ async def profile(request: Request):
     print(request.session.get("user"))
     user = request.session.get("user")
     if user:
+        return {"user": user}
         return HTMLResponse(
             'Logged in as %s. <a href="/logout">Logout</a>' % user["user"]
         )
@@ -38,7 +48,8 @@ async def profile(request: Request):
 def login(request: Request, next: Optional[str] = None, ticket: Optional[str] = None):
     if request.session.get("user", None):
         # Already logged in
-        return RedirectResponse(request.url_for("profile"))
+        # TODO: dit is hardcoded, moet nog op een of andere manier aangepast worden
+        return RedirectResponse("https://localhost:5173/home")
 
     if not ticket:
         # No ticket, the request come from end user, send to CAS login
@@ -65,7 +76,9 @@ def login(request: Request, next: Optional[str] = None, ticket: Optional[str] = 
     else:  # Login successfully, redirect according `next` query parameter.
         if not next:
             return
-        response = RedirectResponse(next)
+        # response = RedirectResponse(next)
+        # TODO: dit is hardcoded, moet nog op een of andere manier aangepast worden
+        response = RedirectResponse("https://localhost:5173/home")
         request.session["user"] = dict(user=user)
         return response
 

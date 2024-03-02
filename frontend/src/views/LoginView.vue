@@ -1,14 +1,10 @@
 <template>
     <div class="login">
-        <img
-            alt="white logo"
-            class="logo"
-            src="@/assets/logo_white_ transparant.png"
-            height="100"
-        />
+        <img alt="white logo" class="logo" src="@/assets/logo_white_ transparant.png" height="100" />
         <h3>De officiële indienapplicatie van de Universiteit Gent</h3>
         <p>Aanmelden</p>
-        <a class="login-button"> Apollo login </a>
+        <a class="login-button" href="https://localhost:8080/login" target="_blank"> Apollo login </a>
+        <!-- <RouterLink to="www.google.com">Login</RouterLink> -->
     </div>
 </template>
 
