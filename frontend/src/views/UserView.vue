@@ -8,20 +8,16 @@
 import { ref, onMounted, type Ref } from "vue";
 const user: Ref<string> = ref("");
 onMounted(async () => {
-    user.value = await fetchUser();
+    await fetchUser();
 })
 
 async function fetchUser() {
     try {
-        const response = await fetch("https://localhost:8080/profile", {
+        await fetch("https://localhost:8080/profile", {
             credentials: "include",
-        });
-        const user = await response.json()
-        console.log(user.user.user)
-        return user.user.user
+        }).then(data => { data.json().then(userObj => user.value = userObj.user.user) });
     } catch (error) {
-        console.error(error)
-        return "oei"
+        console.error(error);
     }
 }
 </script>
