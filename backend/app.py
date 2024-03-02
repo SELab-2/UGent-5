@@ -10,7 +10,7 @@ from starlette.requests import Request
 from src import config
 
 app = FastAPI()
-origins = ["https://localhost:5173"]
+origins = [config.CONFIG.frontend_url]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -48,8 +48,7 @@ async def profile(request: Request):
 def login(request: Request, next: Optional[str] = None, ticket: Optional[str] = None):
     if request.session.get("user", None):
         # Already logged in
-        # TODO: dit is hardcoded, moet nog op een of andere manier aangepast worden
-        return RedirectResponse("https://localhost:5173/home")
+        return RedirectResponse(f"{config.CONFIG.frontend_url}/home")
 
     if not ticket:
         # No ticket, the request come from end user, send to CAS login
@@ -77,8 +76,7 @@ def login(request: Request, next: Optional[str] = None, ticket: Optional[str] = 
         if not next:
             return
         # response = RedirectResponse(next)
-        # TODO: dit is hardcoded, moet nog op een of andere manier aangepast worden
-        response = RedirectResponse("https://localhost:5173/home")
+        response = RedirectResponse(f"{config.CONFIG.frontend_url}/home")
         request.session["user"] = dict(user=user)
         return response
 

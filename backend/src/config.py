@@ -9,13 +9,15 @@ import yaml
 @dataclass
 class Config:
     api_url: str = "http://localhost:8000"
-    cas_server_url: str = "http://localhost:8001"
+    frontend_url: str = "http://localhost:8001"
+    cas_server_url: str = "http://localhost:8002"
 
     def read(self, config_file) -> Config:
         with open(config_file, "r") as file:
             user_config = yaml.safe_load(file)
             for field in dataclasses.fields(Config):
-                user_value = user_config.get(field.name, getattr(self, field.name))
+                user_value = user_config.get(
+                    field.name, getattr(self, field.name))
                 setattr(self, field.name, user_value)
         return self
 
