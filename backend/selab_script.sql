@@ -18,7 +18,7 @@ CREATE TABLE website_user (
 );
 
 CREATE TABLE subject (
-    subject_id TEXT PRIMARY KEY,
+    id TEXT PRIMARY KEY,
     name TEXT NOT NULL
 );
 
