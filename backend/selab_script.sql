@@ -73,7 +73,7 @@ INSERT INTO status (status_name) VALUES ('Accepted');
 INSERT INTO status (status_name) VALUES ('Denied');
 
 CREATE TABLE submission (
-    submission_id BIGSERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     team_id BIGINT NOT NULL,
     project_id BIGINT NOT NULL,
