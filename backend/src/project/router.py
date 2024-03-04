@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.user.models import User
 from src.dependencies import get_db
 from src.user.dependencies import get_authenticated_user
-from .schemas import ProjectCreate, ProjectResponse
+from .schemas import ProjectCreate, ProjectResponse, ProjectUpdate
 from .service import create_project, get_project, delete_project, update_project
 from ..subject.service import is_teacher_of_subject
 
@@ -62,6 +62,24 @@ async def delete_project_for_subject(
 
     await delete_project(db, project_id)
     return {"message": "Project deleted successfully"}
+
+
+@router.patch("/{project_id}", response_model=ProjectResponse)
+async def patch_project_for_subject(
+    subject_id: int,
+    project_id: int,
+    project_update: ProjectUpdate,
+    user: User = Depends(get_authenticated_user),
+    db: AsyncSession = Depends(get_db)
+):
+    # Check if the user is authorized to update the project
+    if not await is_teacher_of_subject(db, user.id, subject_id):
+        raise HTTPException(status_code=403, detail="User is not authorized to update projects for this subject")
+
+    updated_project = await update_project(db, project_id, project_update)
+    if not updated_project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    return updated_project
 
 
 
