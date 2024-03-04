@@ -25,7 +25,7 @@ pip install -r requirements.txt
 ```yml
 api_url: https://localhost:8080
 cas_server_url: https://login.ugent.be
-database_uri: "database connection string, see discord..."
+database_uri: "database connection string: postgresql://..., see discord..."
 ```
 
 ### Usage

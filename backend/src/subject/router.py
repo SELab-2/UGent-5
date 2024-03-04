@@ -33,8 +33,8 @@ async def create_subject(subject: SubjectCreate, db: Session = Depends(get_db)):
 
 @router.delete("/{subject_id}",
                dependencies=[Depends(admin_user_validation)], status_code=200)
-async def delete_subject(subject: Subject = Depends(get_subject), db: Session = Depends(get_db)):
-    await service.delete_subject(db, subject)
+async def delete_subject(subject_id: int, db: Session = Depends(get_db)):
+    await service.delete_subject(db, subject_id)
     return "Successfully deleted"
 
 
@@ -59,6 +59,7 @@ async def get_subject_teachers(subject_id: int, db: Session = Depends(get_db)):
              status_code=201)
 async def create_subject_teacher(subject_id: int, user_id: str, db: Session = Depends(get_db)):
     await service.create_subject_teacher(db, subject_id, user_id)
+    return "Successfully added"
 
 
 @router.delete("/{subject_id}/teachers/{user_id}", dependencies=[Depends(user_permission_validation)])

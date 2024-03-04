@@ -11,10 +11,10 @@ async def get_subject(db: Session, subject_id: int) -> models.Subject:
 async def get_subjects(db: Session, user_id: str) -> tuple[Sequence[models.Subject],
                                                            Sequence[models.Subject]]:
     return (db.query(models.Subject).join(models.TeacherSubject).
-            filter(models.TeacherSubject.c.teacher_id == user_id).all(),
+            filter(models.TeacherSubject.c.uid == user_id).all(),
 
             db.query(models.Subject).join(models.StudentSubject).
-            filter(models.StudentSubject.c.student_id == user_id).all()
+            filter(models.StudentSubject.c.uid == user_id).all()
             )
 
 
@@ -34,18 +34,18 @@ async def create_subject(db: Session, subject: schemas.SubjectCreate) -> models.
 
 async def create_subject_teacher(db: Session, subject_id: int, user_id: str):
     insert_stmnt = models.TeacherSubject.insert().values(
-        subject_id=subject_id, teacher_id=user_id)
+        subject_id=subject_id, uid=user_id)
     db.execute(insert_stmnt)
     db.commit()
 
 
 async def delete_subject_teacher(db: Session, subject_id: int, user_id: str):
     db.query(models.TeacherSubject).filter_by(
-        subject_id=subject_id, teacher_id=user_id).delete()
+        subject_id=subject_id, uid=user_id).delete()
     db.commit()
 
 
-async def delete_subject(db: Session, subject: schemas.Subject):
+async def delete_subject(db: Session, subject_id: int):
     """Remove a subject"""
-    db.delete(subject)
+    db.query(models.Subject).filter_by(id=subject_id).delete()
     db.commit()
