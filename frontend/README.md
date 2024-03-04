@@ -4,6 +4,17 @@
 npm install
 ```
 
+## .env.local file
+
+Linux:
+```sh
+cp .env.local.example .env.local
+```
+Windows:
+```sh
+copy .env.local.example .env.local
+```
+
 ### Compile and Hot-Reload for Development
 
 ```sh
