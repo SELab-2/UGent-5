@@ -13,28 +13,28 @@ DROP TABLE IF EXISTS website_user CASCADE;
 DROP TABLE IF EXISTS file CASCADE;
 
 CREATE TABLE website_user (
-    uid INT PRIMARY KEY,
+    uid TEXT PRIMARY KEY,
     is_admin BOOLEAN NOT NULL DEFAULT FALSE,
     given_name TEXT NOT NULL,
     mail TEXT NOT NULL
 );
 
 CREATE TABLE subject (
-    id TEXT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     name TEXT NOT NULL
 );
 
 CREATE TABLE student_subject (
-    uid INT NOT NULL,
-    subject_id TEXT NOT NULL,
+    uid TEXT NOT NULL,
+    subject_id BIGSERIAL NOT NULL,
     PRIMARY KEY (uid, subject_id),
     FOREIGN KEY (uid) REFERENCES website_user(uid) ON DELETE CASCADE,
     FOREIGN KEY (subject_id) REFERENCES subject(id) ON DELETE CASCADE
 );
 
 CREATE TABLE teacher_subject (
-    uid INT NOT NULL,
-    subject_id TEXT NOT NULL,
+    uid TEXT NOT NULL,
+    subject_id BIGSERIAL NOT NULL,
     PRIMARY KEY (uid, subject_id),
     FOREIGN KEY (uid) REFERENCES website_user(uid) ON DELETE CASCADE,
     FOREIGN KEY (subject_id) REFERENCES subject(id) ON DELETE CASCADE
@@ -44,7 +44,7 @@ CREATE TABLE project (
     id BIGSERIAL PRIMARY KEY,
     deadline DATE NOT NULL,
     name TEXT NOT NULL,
-    subject_id TEXT NOT NULL,
+    subject_id BIGSERIAL NOT NULL,
     FOREIGN KEY (subject_id) REFERENCES subject(id) ON DELETE SET NULL
 );
 
@@ -58,7 +58,7 @@ CREATE TABLE team (
 );
 
 CREATE TABLE student_group (
-    uid INT NOT NULL,
+    uid TEXT NOT NULL,
     team_id BIGINT NOT NULL,
     PRIMARY KEY (uid, team_id),
     FOREIGN KEY (uid) REFERENCES website_user(uid) ON DELETE CASCADE,
