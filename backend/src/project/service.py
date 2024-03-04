@@ -19,6 +19,14 @@ async def create_project(db: Session, project_in: ProjectCreate, user_id: str) -
 async def get_project(db: Session, project_id: int) -> Project:
     return db.query(Project).filter(Project.id == project_id).first()
 
+async def get_projects_for_subject(db: Session, subject_id: int) -> list[models.Project]:
+    projects = (
+        db.query(models.Project)
+        .filter(models.Project.subject_id == subject_id)
+        .all()
+    )
+    return projects
+
 async def delete_project(db: Session, project_id: int):
     project = db.query(Project).filter(Project.id == project_id).first()
     if project:
