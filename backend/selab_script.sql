@@ -87,7 +87,7 @@ CREATE TABLE file (
     file_id BIGSERIAL PRIMARY KEY,
     submission_id BIGINT,  -- Optional, can be linked to a submission, project, or standalone
     project_id BIGINT,     -- Optional, same as above
-    FOREIGN KEY (submission_id) REFERENCES submission(submission_id) ON DELETE SET NULL,
+    FOREIGN KEY (submission_id) REFERENCES submission(id) ON DELETE SET NULL,
     FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE SET NULL
 );
 
