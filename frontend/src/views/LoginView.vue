@@ -1,6 +1,11 @@
 <template>
     <div class="login">
-        <img alt="white logo" class="logo" src="@/assets/logo_white_ transparant.png" height="100" />
+        <img
+            alt="white logo"
+            class="logo"
+            src="@/assets/logo_white_ transparant.png"
+            height="100"
+        />
         <h3>De officiële indienapplicatie van de Universiteit Gent</h3>
         <p>Aanmelden</p>
         <a class="login-button" :href="apiUrl + '/login'">Apollo login </a>
@@ -8,14 +13,14 @@
 </template>
 
 <script lang="ts">
-    export default{
-        setup(){
-            const apiUrl = import.meta.env.VITE_API_URL
-            return{
-                apiUrl
-            }
-        }
-    }
+export default {
+    setup() {
+        const apiUrl = import.meta.env.VITE_API_URL;
+        return {
+            apiUrl,
+        };
+    },
+};
 </script>
 
 <style scoped>
