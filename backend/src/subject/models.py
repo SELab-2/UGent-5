@@ -24,11 +24,3 @@ class Subject(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
-
-    students: Mapped[Set["User"]] = relationship(
-        secondary=StudentSubject, back_populates="follows_subjects"
-    )
-
-    teachers: Mapped[Set["User"]] = relationship(
-        secondary=TeacherSubject, back_populates="teaches_subjects"
-    )

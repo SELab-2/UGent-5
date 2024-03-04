@@ -3,7 +3,6 @@ from pydantic import BaseModel, Field
 
 class Userbase(BaseModel):
     id: str  # ugentID
-    uid: str
     given_name: str
 
 
