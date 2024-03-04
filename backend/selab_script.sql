@@ -43,7 +43,7 @@ CREATE TABLE project (
     deadline DATE NOT NULL,
     name TEXT NOT NULL,
     subject_id TEXT NOT NULL,
-    FOREIGN KEY (subject_id) REFERENCES subject(subject_id) ON DELETE SET NULL
+    FOREIGN KEY (subject_id) REFERENCES subject(id) ON DELETE SET NULL
 );
 
 CREATE TABLE team (
