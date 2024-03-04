@@ -1,4 +1,6 @@
 from datetime import date
+from typing import Optional
+
 from pydantic import BaseModel, Field, validator
 
 class ProjectCreate(BaseModel):
@@ -23,4 +25,9 @@ class ProjectResponse(BaseModel):
 
     class Config:
         orm_mode = True
+
+class ProjectUpdate(BaseModel):
+    name: Optional[str] = None
+    deadline: Optional[date] = None
+    description: Optional[str] = None
 
