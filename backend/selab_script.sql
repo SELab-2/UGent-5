@@ -60,7 +60,7 @@ CREATE TABLE student_group (
     team_id BIGINT NOT NULL,
     PRIMARY KEY (uid, team_id),
     FOREIGN KEY (uid) REFERENCES website_user(uid) ON DELETE CASCADE,
-    FOREIGN KEY (team_id) REFERENCES team(team_id) ON DELETE CASCADE
+    FOREIGN KEY (team_id) REFERENCES team(id) ON DELETE CASCADE
 );
 
 CREATE TABLE status (
