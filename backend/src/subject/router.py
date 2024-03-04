@@ -9,7 +9,7 @@ from .dependencies import user_permission_validation, retrieve_subject, retrieve
 from .schemas import Subject, SubjectCreate, SubjectList
 
 router = APIRouter(
-    prefix="/subject",
+    prefix="/api/subject",
     tags=["subject"],
     responses={404: {"description": "Not found"}},
 )
