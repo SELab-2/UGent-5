@@ -13,6 +13,17 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+@router.get("/", response_model=list[ProjectResponse])
+async def list_projects_for_subject(
+    subject_id: int,
+    user: User = Depends(get_authenticated_user),
+    db: AsyncSession = Depends(get_db)
+):
+    # Optional: You may want to check if the user has access to the subject (e.g., is a teacher or a student of the subject)
+    projects = await get_projects_for_subject(db, subject_id)
+    if not projects:
+        raise HTTPException(status_code=404, detail=f"No projects found for subject {subject_id}")
+    return projects
 
 @router.post("/", response_model=ProjectResponse)
 async def create_project_for_subject(
