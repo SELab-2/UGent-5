@@ -14,7 +14,9 @@ DROP TABLE IF EXISTS file CASCADE;
 
 CREATE TABLE website_user (
     uid INT PRIMARY KEY,
-    is_admin BOOLEAN NOT NULL DEFAULT FALSE
+    is_admin BOOLEAN NOT NULL DEFAULT FALSE,
+    given_name TEXT NOT NULL,
+    mail TEXT NOT NULL
 );
 
 CREATE TABLE subject (
