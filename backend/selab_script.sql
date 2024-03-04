@@ -47,7 +47,7 @@ CREATE TABLE project (
 );
 
 CREATE TABLE team (
-    team_id BIGSERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     team_name TEXT NOT NULL,
     score BIGINT NOT NULL,
     project_id BIGINT NOT NULL,
