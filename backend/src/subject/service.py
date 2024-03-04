@@ -31,7 +31,6 @@ async def create_subject(db: Session, subject: schemas.SubjectCreate) -> models.
     db.refresh(db_subject)
     return db_subject
 
-
 async def create_subject_teacher(db: Session, subject_id: int, user_id: str):
     insert_stmnt = models.TeacherSubject.insert().values(
         subject_id=subject_id, uid=user_id)
@@ -49,3 +48,8 @@ async def delete_subject(db: Session, subject_id: int):
     """Remove a subject"""
     db.query(models.Subject).filter_by(id=subject_id).delete()
     db.commit()
+
+async def is_teacher_of_subject(db: Session, user_id: str, subject_id: int) -> bool:
+    """Check if a user is a teacher of the subject."""
+    teachers = await get_subject_teachers(db, subject_id)
+    return any(teacher.uid == user_id for teacher in teachers)
