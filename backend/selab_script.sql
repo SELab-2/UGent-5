@@ -27,7 +27,7 @@ CREATE TABLE student_subject (
     subject_id TEXT NOT NULL,
     PRIMARY KEY (uid, subject_id),
     FOREIGN KEY (uid) REFERENCES website_user(uid) ON DELETE CASCADE,
-    FOREIGN KEY (subject_id) REFERENCES subject(subject_id) ON DELETE CASCADE
+    FOREIGN KEY (subject_id) REFERENCES subject(id) ON DELETE CASCADE
 );
 
 CREATE TABLE teacher_subject (
