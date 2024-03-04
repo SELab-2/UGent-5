@@ -78,7 +78,7 @@ CREATE TABLE submission (
     team_id BIGINT NOT NULL,
     project_id BIGINT NOT NULL,
     status_id BIGINT NOT NULL DEFAULT 1, -- Default to 'InProgress'
-    FOREIGN KEY (team_id) REFERENCES team(team_id) ON DELETE CASCADE,
+    FOREIGN KEY (team_id) REFERENCES team(id) ON DELETE CASCADE,
     FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE,
     FOREIGN KEY (status_id) REFERENCES status(id) ON DELETE RESTRICT
 );
