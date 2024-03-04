@@ -64,7 +64,7 @@ CREATE TABLE student_group (
 );
 
 CREATE TABLE status (
-    status_id BIGSERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     status_name TEXT NOT NULL UNIQUE
 );
 
