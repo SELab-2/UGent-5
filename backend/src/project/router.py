@@ -1,33 +1,59 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-from src.user.schemas import User
-from src.user.dependencies import get_authenticated_user, get_db
+from sqlalchemy.ext.asyncio import AsyncSession
+from src.user.models import User
+from src.dependencies import get_db
+from src.user.dependencies import get_authenticated_user
 from .schemas import ProjectCreate, ProjectResponse
-from .service import create_project
+from .service import create_project, get_project, delete_project, update_project
 from ..subject.service import is_teacher_of_subject
 
 router = APIRouter(
-    prefix="/subject/{subject_id}",
-    tags=["subject_overview"],
+    prefix="/subjects/{subject_id}/projects",
+    tags=["projects"],
     responses={404: {"description": "Not found"}},
 )
 
-@router.post("/subjects/{subject_id}/projects/create")
-async def create_project(
+
+@router.post("/", response_model=ProjectResponse)
+async def create_project_for_subject(
     subject_id: int,
     project_in: ProjectCreate,
     user: User = Depends(get_authenticated_user),
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
-    # Check if the user is a teacher of the subject
-    if not await is_teacher_of_subject(db, user.uid, subject_id):
+    if not await is_teacher_of_subject(db, user.id, subject_id):
         raise HTTPException(status_code=403, detail="User is not authorized to create projects for this subject")
 
-    project = create_project(db=db, project_in=project_in, user_id=user.id)
+    project = await create_project(db=db, project_in=project_in, user_id=user.id)
     return project
 
-@router.get("/projects/{project_id}", response_model=ProjectResponse)
-async def get_project(project_id: int, db: Session = Depends(get_db)):
-    project = db.get(models.Project, project_id)
+
+@router.get("/{project_id}", response_model=ProjectResponse)
+async def get_project_for_subject(
+    project_id: int,
+    db: AsyncSession = Depends(get_db)
+):
+    project = await get_project(db, project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
     return project
+
+
+@router.delete("/{project_id}")
+async def delete_project_for_subject(
+    subject_id: int,
+    project_id: int,
+    user: User = Depends(get_authenticated_user),
+    db: AsyncSession = Depends(get_db)
+):
+    if not await is_teacher_of_subject(db, user.id, subject_id):
+        raise HTTPException(status_code=403, detail="User is not authorized to delete this project")
+
+    await delete_project(db, project_id)
+    return {"message": "Project deleted successfully"}
+
+
+
+
+
 
