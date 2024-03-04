@@ -7,7 +7,6 @@ from src import config
 from src.dependencies import get_db
 from .schemas import User, UserCreate
 from . import service
-from . import exceptions
 from .dependencies import get_authenticated_user
 from sqlalchemy.orm import Session
 
@@ -44,7 +43,8 @@ async def login(request: Request, next: Optional[str] = None,
         if not await service.get_by_id(db, attributes["uid"]):
             await service.create_user(db, UserCreate(
                 given_name=attributes["givenname"],
-                id=attributes["uid"]))
+                uid=attributes["uid"],
+                mail=attributes["mail"]))
 
         if not next:
             return
@@ -55,7 +55,7 @@ async def login(request: Request, next: Optional[str] = None,
 
 
 @router.get("/profile", tags=["auth"], response_model=User)
-async def profile(request: Request, user: User = Depends(get_authenticated_user)):
+async def profile(user: User = Depends(get_authenticated_user)):
     return user
 
 

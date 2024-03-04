@@ -2,8 +2,9 @@ from pydantic import BaseModel, Field
 
 
 class Userbase(BaseModel):
-    id: str  # ugentID
+    uid: str  # ugentID
     given_name: str
+    mail: str
 
 
 class UserCreate(Userbase):

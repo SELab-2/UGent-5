@@ -10,6 +10,7 @@ import yaml
 class Config:
     api_url: str = "http://localhost:8000"
     cas_server_url: str = "http://localhost:8001"
+    database_uri: str = "CONNECTION_STRING"
 
     def read(self, config_file) -> Config:
         with open(config_file, "r") as file:

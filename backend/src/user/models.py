@@ -1,12 +1,11 @@
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 from src.database import Base
-from typing import Set
-from src.subject.models import TeacherSubject
 
 
 class User(Base):
-    __tablename__ = "user"
+    __tablename__ = "website_user"
 
-    id: Mapped[str] = mapped_column(primary_key=True)
+    uid: Mapped[str] = mapped_column(primary_key=True)
     given_name: Mapped[str]
+    mail: Mapped[str]
     is_admin: Mapped[bool] = mapped_column(default=False)
