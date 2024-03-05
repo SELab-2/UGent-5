@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field, validator
 
+
 class ProjectCreate(BaseModel):
     name: str = Field(..., min_length=1)
     deadline: date
@@ -16,6 +17,7 @@ class ProjectCreate(BaseModel):
             raise ValueError('The deadline cannot be in the past')
         return value
 
+
 class ProjectResponse(BaseModel):
     id: int
     name: str
@@ -26,8 +28,8 @@ class ProjectResponse(BaseModel):
     class Config:
         orm_mode = True
 
+
 class ProjectUpdate(BaseModel):
     name: Optional[str] = None
     deadline: Optional[date] = None
     description: Optional[str] = None
-

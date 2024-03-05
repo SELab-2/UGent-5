@@ -9,9 +9,9 @@ class Project(Base):
     id = Column(BigInteger, primary_key=True, autoincrement=True, index=True)
     deadline = Column(Date, nullable=False, check_constraint='deadline >= CURRENT_DATE')
     name = Column(String, nullable=False)
-    subjectId = Column(String, ForeignKey('Subject.subjectId', ondelete="SET NULL"), nullable=True)
+    subjectId = Column(String, ForeignKey(
+        'Subject.subjectId', ondelete="SET NULL"), nullable=True)
     description = Column(String, nullable=True)
 
     # Relationships
     teams = relationship("Team", back_populates="project")
-

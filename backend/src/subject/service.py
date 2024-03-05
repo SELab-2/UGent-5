@@ -49,3 +49,9 @@ async def delete_subject(db: Session, subject_id: int):
     """Remove a subject"""
     db.query(models.Subject).filter_by(id=subject_id).delete()
     db.commit()
+
+
+async def is_teacher_of_subject(db: Session, user_id: str, subject_id: int) -> bool:
+    """Check if a user is a teacher of the subject."""
+    teachers = await get_subject_teachers(db, subject_id)
+    return any(teacher.uid == user_id for teacher in teachers)
