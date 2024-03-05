@@ -4,7 +4,7 @@ from src.database import Base
 
 
 class Project(Base):
-    __tablename__ = 'Project'
+    __tablename__ = 'project'
 
     id = Column(BigInteger, primary_key=True, autoincrement=True, index=True)
     deadline = Column(Date, nullable=False, check_constraint='deadline >= CURRENT_DATE')
