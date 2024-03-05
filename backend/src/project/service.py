@@ -16,8 +16,10 @@ async def create_project(db: Session, project_in: ProjectCreate, user_id: str) -
     db.refresh(new_project)
     return new_project
 
+
 async def get_project(db: Session, project_id: int) -> Project:
     return db.query(Project).filter(Project.id == project_id).first()
+
 
 async def get_projects_for_subject(db: Session, subject_id: int) -> list[models.Project]:
     projects = (
@@ -27,11 +29,13 @@ async def get_projects_for_subject(db: Session, subject_id: int) -> list[models.
     )
     return projects
 
+
 async def delete_project(db: Session, project_id: int):
     project = db.query(Project).filter(Project.id == project_id).first()
     if project:
         db.delete(project)
         db.commit()
+
 
 async def update_project(db: Session, project_id: int, project_update: ProjectCreate) -> Project:
     project = db.query(Project).filter(Project.id == project_id).first()
@@ -42,5 +46,3 @@ async def update_project(db: Session, project_id: int, project_update: ProjectCr
         db.commit()
         db.refresh(project)
     return project
-
-

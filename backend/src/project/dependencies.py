@@ -11,9 +11,6 @@ from src.subject.schemas import SubjectList
 from . import service
 
 
-
-
-
 async def retrieve_subjects(
     user: User = Depends(get_authenticated_user), db: Session = Depends(get_db)
 ) -> SubjectList:

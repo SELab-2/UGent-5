@@ -14,6 +14,7 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+
 @router.get("/", response_model=list[ProjectResponse])
 async def list_projects_for_subject(
     subject_id: int,
@@ -25,6 +26,7 @@ async def list_projects_for_subject(
     if not projects:
         raise NoProjectsFoundException(subject_id)
     return projects
+
 
 @router.post("/", response_model=ProjectResponse)
 async def create_project_for_subject(
@@ -81,9 +83,3 @@ async def patch_project_for_subject(
     if not updated_project:
         raise ProjectNotFoundException()
     return updated_project
-
-
-
-
-
-
