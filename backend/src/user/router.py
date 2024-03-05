@@ -7,7 +7,6 @@ from src import config
 from src.dependencies import get_db
 from .schemas import User, UserCreate
 from . import service
-from . import exceptions
 from .dependencies import get_authenticated_user
 from sqlalchemy.orm import Session
 
@@ -41,21 +40,22 @@ async def login(request: Request, next: Optional[str] = None,
     else:  # Login successfully, redirect according `next` query parameter.
 
         # Check if user exists in database, else create one.
-        if not await service.get_by_id(db, attributes["ugentID"]):
-            await service.create_user(db, UserCreate(uid=attributes["uid"],
-                                                     given_name=attributes["givenname"],
-                                                     id=attributes["ugentID"]))
+        if not await service.get_by_id(db, attributes["uid"]):
+            await service.create_user(db, UserCreate(
+                given_name=attributes["givenname"],
+                uid=attributes["uid"],
+                mail=attributes["mail"]))
 
         if not next:
             return
         response = RedirectResponse(next)
 
-        request.session["user"] = dict(user=attributes["ugentID"])
+        request.session["user"] = dict(user=attributes["uid"])
         return response
 
 
 @router.get("/profile", tags=["auth"], response_model=User)
-async def profile(request: Request, user: User = Depends(get_authenticated_user)):
+async def profile(user: User = Depends(get_authenticated_user)):
     return user
 
 

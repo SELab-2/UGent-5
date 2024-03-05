@@ -26,3 +26,9 @@ async def admin_user_validation(user: User = Depends(get_authenticated_user)):
     """Checks if user is an admin"""
     if not user.is_admin:
         raise NotAuthorized()
+
+
+async def user_id_validation(user_id: str, db: Session = Depends(get_db)):
+    user = await service.get_by_id(db, user_id)
+    if not user:
+        raise UserNotFound()
