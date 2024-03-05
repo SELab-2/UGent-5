@@ -20,7 +20,7 @@ async function fetchUser() {
         }).then(
             (data) => data.json()
         ).then((userObj) => {
-            (user.value = userObj.user.user);
+            (user.value = userObj.given_name);
         });
     } catch (error) {
         console.error(error);

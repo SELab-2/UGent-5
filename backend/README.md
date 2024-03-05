@@ -20,6 +20,14 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+#### Create a config.yml file with following content
+
+```yml
+api_url: https://localhost:8080
+cas_server_url: https://login.ugent.be
+database_uri: "database connection string: postgresql://..., see discord..."
+```
+
 ### Usage
 
 #### Activate the environment:

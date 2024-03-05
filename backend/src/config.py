@@ -11,6 +11,7 @@ class Config:
     api_url: str = "http://localhost:8000"
     frontend_url: str = "http://localhost:8001"
     cas_server_url: str = "http://localhost:8002"
+    database_uri: str = "CONNECTION_STRING"
 
     def read(self, config_file) -> Config:
         with open(config_file, "r") as file:
