@@ -9,8 +9,6 @@ from src.subject.schemas import SubjectList
 
 
 from . import service
-# from .exceptions import SubjectNotFound
-# from .schemas import Subject, SubjectList
 
 
 
