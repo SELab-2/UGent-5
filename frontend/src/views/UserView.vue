@@ -17,8 +17,10 @@ async function fetchUser() {
     try {
         await fetch(`${apiUrl}/profile`, {
             credentials: 'include',
-        }).then((data) => {
-            data.json().then((userObj) => (user.value = userObj.user.user));
+        }).then(
+            (data) => data.json()
+        ).then((userObj) => {
+            (user.value = userObj.user.user);
         });
     } catch (error) {
         console.error(error);
