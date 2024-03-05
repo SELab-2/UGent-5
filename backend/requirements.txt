@@ -6,6 +6,7 @@ cattrs==23.1.2
 certifi==2024.2.2
 charset-normalizer==3.3.2
 click==8.1.7
+docker==7.0.0
 exceptiongroup==1.1.2
 fastapi==0.109.2
 greenlet==3.0.3
