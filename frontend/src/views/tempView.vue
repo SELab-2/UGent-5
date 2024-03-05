@@ -2,10 +2,6 @@
     <RouterLink to="/login" class="button">Login</RouterLink>
 </template>
 
-<script>
-export default {
-    name: 'tempView',
-};
-</script>
+<script setup lang="ts"></script>
 
 <style scoped></style>

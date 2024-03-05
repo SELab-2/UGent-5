@@ -1,31 +1,35 @@
 <template>
-    <div class="login">
-        <img
-            alt="white logo"
-            class="logo"
-            src="@/assets/logo_white_ transparant.png"
-            height="100"
-        />
-        <h3>De officiële indienapplicatie van de Universiteit Gent</h3>
-        <p>Aanmelden</p>
-        <a class="login-button" :href="apiUrl + '/login'">Apollo login </a>
+    <div class="page-container">
+        <div class="login">
+            <img
+                alt="white logo"
+                class="logo"
+                src="@/assets/logo_white_ transparant.png"
+                height="100"
+            />
+            <h3>De officiële indienapplicatie van de Universiteit Gent</h3>
+            <p>Aanmelden</p>
+            <a class="login-button" :href="apiUrl + '/login'">Apollo login </a>
+            <img
+                alt="ugent logo"
+                class="ugent-logo"
+                src="@/assets/universiteit-gent-logo-white.png"
+            />
+        </div>
     </div>
 </template>
 
-<script lang="ts">
-export default {
-    setup() {
-        const apiUrl = import.meta.env.VITE_API_URL;
-        return {
-            apiUrl,
-        };
-    },
-};
+<script setup lang="ts">
+const apiUrl = import.meta.env.VITE_API_URL;
 </script>
 
 <style scoped>
+.page-container {
+    background-color: green;
+}
+
 .login {
-    --primary-bg-color: #1a5276;
+    --primary-bg-color: #1d357e;
     --secondary-bg-color: #797d7f;
     --tertiary-bg-color: #a6acaf;
     position: fixed;
@@ -74,5 +78,13 @@ export default {
 .login-button:hover {
     background-color: var(--tertiary-bg-color);
     color: white;
+}
+
+.ugent-logo {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    height: 150px;
+    width: auto;
 }
 </style>
