@@ -12,6 +12,8 @@ class Config:
     frontend_url: str = "http://localhost:8001"
     cas_server_url: str = "http://localhost:8002"
     database_uri: str = "CONNECTION_STRING"
+    secret_key: str = "test"
+    algorithm: str = "HS256"
 
     def read(self, config_file) -> Config:
         with open(config_file, "r") as file:
