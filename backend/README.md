@@ -1,22 +1,15 @@
-## Run the backend api
+# Backend API
+
+## Running the API
 
 ### Setup
 
-#### In this directy execute the following command to create a python environment:
-
 ```sh
+# Create a python virtual environment
 python -m venv venv
-```
-
-#### Activate the environment:
-
-```sh
+# Activate the environment
 source venv/bin/activate
-```
-
-#### Install the dependencies:
-
-```sh
+# Install dependencies
 pip install -r requirements.txt
 ```
 
@@ -26,6 +19,8 @@ pip install -r requirements.txt
 api_url: https://localhost:8080
 cas_server_url: https://login.ugent.be
 database_uri: "database connection string: postgresql://..., see discord..."
+secret_key: "<secret key to sign JWT tokens>"
+algorithm: "<algorithm used to sign JWT tokens>"
 ```
 
 ### Usage
@@ -52,7 +47,16 @@ source venv/bin/activate
 
 It will start a local development server on port `8080`
 
+## The API
 
+## Login
+
+The `/api/login` endpoint will redirect the user to a CAS login page. After
+authentication, a [JWT](https://jwt.io/) token will be returned to the user.
+This token has to be send in the `Authorization` header of each request to
+access protected endpoints.
+
+## Developing
 
 #### To format the python code in place to conform to PEP 8 style:
 
