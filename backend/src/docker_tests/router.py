@@ -9,9 +9,9 @@ router = APIRouter(
 @router.get("/build")
 async def test():
     await service.build_image()
-    return [{"sucess"}]
+    return [{"success"}]
 
 @router.get("/")
 async def test():
-    success = service.run_docker_tests()
-    return [{"brol": "brol"}]
+    await service.run_docker_tests_detatched()
+    return [{"success"}]
