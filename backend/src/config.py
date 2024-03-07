@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 load_dotenv()
 
+
 @dataclass
 class Config:
     api_url: str
