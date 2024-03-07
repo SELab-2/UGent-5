@@ -46,7 +46,7 @@ jobs:
  
   pytest:
     name: Unit Testing
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python 3.12
