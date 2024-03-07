@@ -58,10 +58,14 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+    - name: Initialize Database
+      working-directory: backend
+      run: |
+        psql -U selab -p 2002 -d selab < selab_script.sql
     - name: Test with pytest
       run: |
         pip install pytest pytest-cov pytest-html pytest-sugar pytest-json-report
-        py.test -v --cov --html=reports/pytest/report.html
+        DATABASE_URI='postgresql://selab@127.0.0.1:2002/selab' py.test -v --cov --html=reports/pytest/report.html
     - name: Archive pytest coverage results
       uses: actions/upload-artifact@v1
       with:
