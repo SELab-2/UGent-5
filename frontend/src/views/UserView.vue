@@ -6,10 +6,10 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '@/stores/auth-store';
-import { ref, onMounted } from 'vue';
+import { useAuthStore } from "@/stores/auth-store";
+import { ref, onMounted } from "vue";
 const apiUrl = import.meta.env.VITE_API_URL;
-const user = ref<string>('');
+const user = ref<string>("");
 const { token, logout: logout_callback } = useAuthStore();
 onMounted(async () => {
     await fetchUser();
@@ -24,13 +24,13 @@ async function fetchUser() {
         return;
     }
     await fetch(`${apiUrl}/api/user/profile`, {
-        headers: { Authorization: `${token?.token_type} ${token?.token}` }
+        headers: { Authorization: `${token?.token_type} ${token?.token}` },
     })
         .then((data) => data.json())
         .then((userObj) => {
             user.value = userObj.given_name;
         })
-        .catch(error => console.log(error));
+        .catch((error) => console.log(error));
 }
 </script>
 

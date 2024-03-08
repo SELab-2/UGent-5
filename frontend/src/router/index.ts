@@ -1,26 +1,26 @@
-import { useAuthStore } from '@/stores/auth-store';
-import { createRouter, createWebHistory } from 'vue-router';
+import { useAuthStore } from "@/stores/auth-store";
+import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
-            path: '/',
-            redirect: { name: 'home' },
+            path: "/",
+            redirect: { name: "home" },
         },
         {
-            path: '/about',
-            name: 'about',
-            component: () => import('../views/AboutView.vue'),
+            path: "/about",
+            name: "about",
+            component: () => import("../views/AboutView.vue"),
         },
         {
-            path: '/login',
-            name: 'login',
-            component: () => import('../views/LoginView.vue'),
+            path: "/login",
+            name: "login",
+            component: () => import("../views/LoginView.vue"),
             beforeEnter: () => {
                 const { isLoggedIn } = useAuthStore();
                 if (isLoggedIn) {
-                    return { name: "home" }
+                    return { name: "home" };
                 }
             },
             meta: {
@@ -29,9 +29,9 @@ const router = createRouter({
             },
         },
         {
-            path: '/home',
-            name: 'home',
-            component: () => import('../views/UserView.vue'),
+            path: "/home",
+            name: "home",
+            component: () => import("../views/UserView.vue"),
         },
         {
             path: "/:pathMatch(.*)",
@@ -39,8 +39,8 @@ const router = createRouter({
             component: () => import("../views/NotFoundView.vue"),
             meta: {
                 requiresAuth: false,
-            }
-        }
+            },
+        },
     ],
 });
 
@@ -54,6 +54,6 @@ router.beforeEach(async (to, _, next) => {
     const ticket = to.query.ticket?.toString();
     await login(to.path, ticket);
     next();
-})
+});
 
 export default router;
