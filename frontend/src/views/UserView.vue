@@ -1,37 +1,41 @@
 <template>
     <div class="logout">
         <h2>Welkom, {{ user }}!</h2>
-        <a class="logout-button" :href="apiUrl + '/logout'"> logout </a>
+        <button class="logout-button" @click="Logout">Logout</button>
     </div>
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/auth-store';
 import { ref, onMounted } from 'vue';
 const apiUrl = import.meta.env.VITE_API_URL;
 const user = ref<string>('');
+const { token, logout: logout_callback } = useAuthStore();
 onMounted(async () => {
     await fetchUser();
 });
 
+async function Logout() {
+    await logout_callback();
+}
+
 async function fetchUser() {
-    try {
-        await fetch(`${apiUrl}/profile`, {
-            credentials: 'include',
-        })
-            .then((data) => data.json())
-            .then((userObj) => {
-                user.value = userObj.given_name;
-            });
-    } catch (error) {
-        console.error(error);
+    if (!token) {
+        return;
     }
+    await fetch(`${apiUrl}/api/user/profile`, {
+        headers: { Authorization: `${token?.token_type} ${token?.token}` }
+    })
+        .then((data) => data.json())
+        .then((userObj) => {
+            user.value = userObj.given_name;
+        })
+        .catch(error => console.log(error));
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .logout {
-    --secondary-bg-color: #797d7f;
-    --tertiary-bg-color: #a6acaf;
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -43,9 +47,9 @@ async function fetchUser() {
 }
 
 .logout-button {
-    background-color: var(--secondary-bg-color);
-    color: white;
-    border: 2px solid white;
+    background-color: var(--color-error);
+    color: var(--color-text-on-error);
+    border: 2px solid var(--white);
     padding: 10px 20px;
     font-size: 16px;
     border-radius: 50px;
@@ -56,7 +60,7 @@ async function fetchUser() {
 }
 
 .logout-button:hover {
-    background-color: var(--tertiary-bg-color);
+    background-color: var(--color-error-secondary);
     color: white;
 }
 </style>

@@ -1,0 +1,119 @@
+/* color palette from <https://github.com/vuejs/theme> */
+// BUG: color-mod does not seem to work, fix this somehow
+:root {
+    --color-primary: #1d357e;
+    --color-primary-light: color-mod(var(--color-primary) tint(15%));
+    --color-primary-dark: color-mod(var(--color-primary) shade(15%));
+    --color-primary-bg: color-mod(var(--color-primary) alpha(30));
+
+    --color-accent: #ffd200;
+    --color-accent-light: color-mod(var(--color-accent) tint(15%));
+    --color-accent-dark: color-mod(var(--color-accent) shade(15%));
+    --color-accent-bg: color-mod(var(--color-accent) alpha(30));
+
+    --black: #181818;
+    --gray-10: #222222;
+    --gray-8: #282828;
+    --gray-6: #444444;
+    --gray-4: #666666;
+    --gray-2: #f2f2f2;
+    --gray-0: #f8f8f8;
+    --white: #ffffff;
+
+    --color-success: #88c459;
+    --color-succes-secondary: color-mod(var(--color-succes) tint(15%));
+    --color-error: #b00020;
+    --color-error-secondary: color-mod(var(--color-warning) tint(15%));
+    --color-warning: #ffd137;
+    --color-warning-secondary: color-mod(var(--color-warning) tint(15%));
+}
+
+/* semantic color variables for this project */
+:root {
+    --color-text: var(--gray-10);
+    --color-text-on-primary: var(--white);
+    --color-text-on-accent: var(--gray-6);
+    --color-text-on-success: var(--white);
+    --color-text-on-error: var(--white);
+    --color-text-on-warning: var(--black);
+    --color-text-heading: var(--black);
+    --color-text-subtle: var(--gray-6);
+    --color-link: var(--color-primary);
+    --color-link-visited: var(--color-primary-dark);
+    --color-mark: var(--color-accent-bg);
+    --color-blockquote-border: var(--gray-2);
+
+    --color-border: var(--gray-2);
+    --color-border-hover: var(--color-primary-light);
+
+    --color-body: var(--white);
+
+    --form-element-border: var(--color-border);
+    --form-element-border-focus: var(--color-border-hover);
+    --form-element-border-error: var(--color-error);
+    --form-element-bg: var(--white);
+    --form-text-placehoder: var(--gray-4);
+
+    --btn-primary-bg: var(--color-primary);
+    --btn-primary-hover: var(--color-primary-light);
+    --btn-primary-active: var(--color-primary-dark);
+    --btn-primary-label: var(--white);
+
+    --color-icon-primary: var(--gray-4);
+    --color-icon-secondary: inherit;
+
+    --color-background: var(--white);
+    --color-background-soft: var(--gray-0);
+    --color-background-mute: var(--gray-2);
+
+    --section-gap: 160px;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-background: var(--gray-10);
+        --color-background-soft: var(--gray-8);
+        --color-background-mute: var(--gray-6);
+
+        --color-border: var(--gray-6);
+        --color-border-hover: var(--gray-4);
+
+        --color-heading: var(--white);
+        --color-text: var(--gray-0);
+    }
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    font-weight: normal;
+}
+
+body {
+    min-height: 100vh;
+    color: var(--color-text);
+    background: var(--color-background);
+    transition:
+        color 0.5s,
+        background-color 0.5s;
+    line-height: 1.6;
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        Roboto,
+        Oxygen,
+        Ubuntu,
+        Cantarell,
+        'Fira Sans',
+        'Droid Sans',
+        'Helvetica Neue',
+        sans-serif;
+    font-size: 15px;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}

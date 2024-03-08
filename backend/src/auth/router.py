@@ -2,14 +2,13 @@ from typing import Optional
 
 import src.user.service as user_service
 from cas import CASClient
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 from src import config
-from src.auth.schemas import Token
+from src.auth.schemas import Token, TokenRequest
 from src.dependencies import get_db
 from src.user.schemas import UserCreate
-from starlette.requests import Request
 
 from .service import create_jwt_token
 
@@ -19,28 +18,35 @@ router = APIRouter(
 
 cas_client = CASClient(
     version=2,
-    service_url=f"{config.CONFIG.api_url}/api/login",
+    # service_url=f"{config.CONFIG.frontend_url}/login",
     server_url=f"{config.CONFIG.cas_server_url}",
 )
 
 
-@router.get("/login", tags=["auth"], response_model=Token)
+@router.get("/authority", tags=["auth"])
+def authority(request: Request):
+    return {"method": "cas", "authority": f"{config.CONFIG.cas_server_url}"}
+
+
+@router.post("/login", tags=["auth"], response_model=Token)
 async def login(
-    # request: Request,
+    request: Request,
+    token_request: TokenRequest,
     # next: Optional[str] = None,
-    ticket: Optional[str] = None,
+    # ticket: Optional[str] = None,
     db: Session = Depends(get_db),
 ):
     # if request.session.get("user", None):
     #     # Already logged in
     #     return RedirectResponse(f"{config.CONFIG.frontend_url}/home")
 
-    if not ticket:
+    if not token_request.ticket:
         # No ticket, the request come from end user, send to CAS login
         cas_login_url = cas_client.get_login_url()
         return RedirectResponse(cas_login_url)
 
-    user, attributes, _ = cas_client.verify_ticket(ticket)
+    cas_client.service_url = f"{request.headers.get('origin')}{token_request.returnUrl}"
+    user, attributes, _ = cas_client.verify_ticket(token_request.ticket)
 
     if not user or not attributes:
         raise HTTPException(

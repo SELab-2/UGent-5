@@ -1,44 +1,29 @@
 <template>
     <div class="page-container">
         <div class="login">
-            <img
-                alt="white logo"
-                class="logo"
-                src="@/assets/logo_white_ transparant.png"
-                height="100"
-            />
+            <img alt="white logo" class="logo" src="@/assets/logo_white_ transparant.png" height="100" />
             <h3>De officiële indienapplicatie van de Universiteit Gent</h3>
             <p>Aanmelden</p>
-            <a class="login-button" :href="apiUrl + '/login'">Apollo login </a>
-            <img
-                alt="ugent logo"
-                class="ugent-logo"
-                src="@/assets/universiteit-gent-logo-white.png"
-            />
+            <a class="login-button" :href="useCASUrl().CASUrl">Apollo login </a>
+            <img alt="ugent logo" class="ugent-logo" src="@/assets/universiteit-gent-logo-white.png" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-const apiUrl = import.meta.env.VITE_API_URL;
+import { useCASUrl } from "@/stores/cas-url";
 </script>
 
 <style scoped>
-.page-container {
-    background-color: green;
-}
-
 .login {
-    --primary-bg-color: #1d357e;
-    --secondary-bg-color: #797d7f;
-    --tertiary-bg-color: #a6acaf;
-    position: fixed;
-    top: 50%;
-    left: 0;
+    /* position: fixed; */
+    /* top: 50%; */
+    /* left: 0; */
     width: 100%;
-    height: 75vh;
-    background-color: var(--primary-bg-color);
-    transform: translateY(-50%);
+    height: 100vh;
+    /* height: 75vh; */
+    background-color: var(--color-primary);
+    /* transform: translateY(-50%); */
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -63,9 +48,10 @@ const apiUrl = import.meta.env.VITE_API_URL;
 }
 
 .login-button {
-    background-color: var(--secondary-bg-color);
-    color: white;
-    border: 2px solid white;
+    background-color: var(--color-accent);
+    color: var(--color-text-on-accent);
+    font-weight: bold;
+    border: 2px solid var(--color-border);
     padding: 10px 20px;
     font-size: 16px;
     border-radius: 50px;
