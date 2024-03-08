@@ -51,10 +51,15 @@ It will start a local development server on port `8080`
 
 ## Login
 
-The `/api/login` endpoint will redirect the user to a CAS login page. After
-authentication, a [JWT](https://jwt.io/) token will be returned to the user.
-This token has to be send in the `Authorization` header of each request to
-access protected endpoints.
+Authentication happens with the use of CAS. The client can ask where it can find
+the CAS server with the `/api/authority` endpoint. A ticket then can be obtained
+via `<authority>?service=<redirect_url>`. The CAS server will redirect to
+`<redirect_url>?ticket=<ticket>` after authentication. Once the client is
+authenticated, further authorization happens with [JWT](https://jwt.io/). To
+obtain this token, a `POST` request has to be made to `/api/token/`, with the
+CAS ticket `<ticket>` and the `<redirect_url>`. The redirect url is needed to
+verify the ticket. If the ticket is valid, a webtoken will be returned. To
+authorize each request, add the token in the `Authorization` header.
 
 ## Developing
 

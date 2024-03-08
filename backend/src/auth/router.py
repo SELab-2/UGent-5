@@ -1,5 +1,3 @@
-from typing import Optional
-
 import src.user.service as user_service
 from cas import CASClient
 from fastapi import APIRouter, Depends, HTTPException, Request, status
@@ -24,26 +22,20 @@ cas_client = CASClient(
 
 
 @router.get("/authority", tags=["auth"])
-def authority(request: Request):
-    return {"method": "cas", "authority": f"{config.CONFIG.cas_server_url}"}
+def authority():
+    return {"method": "cas", "authority": config.CONFIG.cas_server_url}
 
 
-@router.post("/login", tags=["auth"], response_model=Token)
-async def login(
+@router.post("/token", tags=["auth"], response_model=Token)
+async def token(
     request: Request,
     token_request: TokenRequest,
-    # next: Optional[str] = None,
-    # ticket: Optional[str] = None,
     db: Session = Depends(get_db),
 ):
-    # if request.session.get("user", None):
-    #     # Already logged in
-    #     return RedirectResponse(f"{config.CONFIG.frontend_url}/home")
-
     if not token_request.ticket:
-        # No ticket, the request come from end user, send to CAS login
-        cas_login_url = cas_client.get_login_url()
-        return RedirectResponse(cas_login_url)
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="No ticket provided"
+        )
 
     cas_client.service_url = f"{request.headers.get('origin')}{token_request.returnUrl}"
     user, attributes, _ = cas_client.verify_ticket(token_request.ticket)
