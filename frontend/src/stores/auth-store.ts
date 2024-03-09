@@ -22,7 +22,7 @@ export const useAuthStore = defineStore("auth", () => {
             return;
         }
         if (ticket) {
-            const new_token = await fetch(`${apiUrl}/api/login`, {
+            const new_token = await fetch(`${apiUrl}/api/token`, {
                 method: "POST",
                 body: JSON.stringify({
                     returnUrl: returnUrl,
