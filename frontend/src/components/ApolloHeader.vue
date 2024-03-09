@@ -1,10 +1,14 @@
 <template>
     <header>
-        <img alt="Logo" class="logo" src="@/assets/logo_white_ transparant.png" />
+        <RouterLink to="/">
+            <img alt="Logo" class="logo" src="@/assets/logo_white_ transparant.png" />
+        </RouterLink>
     </header>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { RouterLink } from "vue-router";
+</script>
 
 <style scoped>
 .logo {

@@ -17,11 +17,19 @@ const router = createRouter({
             path: "/login",
             name: "login",
             component: () => import("../views/LoginView.vue"),
-            beforeEnter: () => {
-                const { isLoggedIn } = useAuthStore();
+            beforeEnter: async (to, from, next) => {
+                const { isLoggedIn, login, setNext } = useAuthStore();
                 if (isLoggedIn) {
-                    return { name: "home" };
+                    router.replace("/home");
+                    next();
                 }
+                const ticket = to.query.ticket?.toString();
+                setNext(from.path);
+                const redirect = await login(ticket);
+                if (redirect) {
+                    router.replace(redirect);
+                }
+                next();
             },
             meta: {
                 requiresAuth: false,
@@ -46,13 +54,10 @@ const router = createRouter({
 
 router.beforeEach(async (to, _, next) => {
     const requiresAuth = to.meta.requiresAuth !== undefined ? to.meta.requiresAuth : true;
-    const { isLoggedIn, login } = useAuthStore();
-    if (!requiresAuth || isLoggedIn) {
-        next();
-        return;
+    const { isLoggedIn } = useAuthStore();
+    if (requiresAuth && !isLoggedIn) {
+        router.replace({ name: "login" });
     }
-    const ticket = to.query.ticket?.toString();
-    await login(to.path, ticket);
     next();
 });
 

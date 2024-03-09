@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-import router from "@/router/index";
+import { useRouter } from "vue-router";
 import { useCASUrl } from "./cas-url";
 
 interface Token {
@@ -14,40 +14,50 @@ export const useAuthStore = defineStore("auth", () => {
     const storedToken = localStorage.getItem("token");
     const token = ref<Token | null>(storedToken ? JSON.parse(storedToken) : null);
     const isLoggedIn = computed(() => token.value !== null && token.value !== undefined);
-    const { setReturnUrl } = useCASUrl();
+    const { redirectUrl } = useCASUrl();
+    const router = useRouter();
+    // FIXME: after redirect to CAS server, value is reset -> use query parameter instead?
+    const next = ref<string>("/home");
 
-    async function login(returnUrl: string, ticket?: string) {
+    function setNext(url: string) {
+        next.value = url;
+    }
+
+    async function login(ticket?: string): Promise<string | null> {
         if (isLoggedIn.value) {
-            // router.replace({ query: undefined })
-            return;
+            return next.value;
         }
         if (ticket) {
-            const new_token = await fetch(`${apiUrl}/api/token`, {
-                method: "POST",
-                body: JSON.stringify({
-                    returnUrl: returnUrl,
-                    ticket: ticket,
-                }),
-                headers: { "content-type": "application/json" },
-            }).then((data) => data.json());
-            if (!new_token || new_token.token === undefined || new_token.token_type === undefined) {
-                return;
+            try {
+                const response = await fetch(`${apiUrl}/api/token`, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        returnUrl: redirectUrl,
+                        ticket: ticket,
+                    }),
+                    headers: { "content-type": "application/json" },
+                })
+                if (!response.ok) {
+                    throw new Error("Failed to verify ticket");
+                }
+                const new_token = await response.json();
+                token.value = new_token;
+                localStorage.setItem("token", JSON.stringify(token.value));
+                return next.value;
+            } catch (e) {
+                router.replace({ query: { ticket: null } })
+                alert("Failed to login");
+                return null;
             }
-            token.value = new_token;
-            localStorage.setItem("token", JSON.stringify(token.value));
-            // router.replace({ query: undefined })
-            router.push(returnUrl);
-        } else {
-            setReturnUrl(returnUrl);
-            // router.replace({ query: undefined })
-            router.push("/login");
         }
+        return null;
     }
 
     function logout() {
         token.value = null;
         localStorage.removeItem("token");
-        router.push("/login");
+        // FIXME: somehow does not work
+        router.replace("/")
     }
-    return { token, isLoggedIn, login, logout };
+    return { token, isLoggedIn, login, logout, setNext };
 });

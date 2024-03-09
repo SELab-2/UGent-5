@@ -1,7 +1,7 @@
 <template>
-    <div class="logout">
+    <div class="logout" :v-if="user">
         <h2>Welkom, {{ user }}!</h2>
-        <button class="logout-button" @click="Logout">Logout</button>
+        <button class="logout-button" @click="logout">Logout</button>
     </div>
 </template>
 
@@ -10,14 +10,10 @@ import { useAuthStore } from "@/stores/auth-store";
 import { ref, onMounted } from "vue";
 const apiUrl = import.meta.env.VITE_API_URL;
 const user = ref<string>("");
-const { token, logout: logout_callback } = useAuthStore();
+const { token, logout } = useAuthStore();
 onMounted(async () => {
     await fetchUser();
 });
-
-async function Logout() {
-    await logout_callback();
-}
 
 async function fetchUser() {
     if (!token) {
