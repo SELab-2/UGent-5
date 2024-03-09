@@ -36,7 +36,7 @@ export const useAuthStore = defineStore("auth", () => {
                         ticket: ticket,
                     }),
                     headers: { "content-type": "application/json" },
-                })
+                });
                 if (!response.ok) {
                     throw new Error("Failed to verify ticket");
                 }
@@ -45,7 +45,7 @@ export const useAuthStore = defineStore("auth", () => {
                 localStorage.setItem("token", JSON.stringify(token.value));
                 return next.value;
             } catch (e) {
-                router.replace({ query: { ticket: null } })
+                router.replace({ query: { ticket: null } });
                 alert("Failed to login");
                 return null;
             }
@@ -57,7 +57,7 @@ export const useAuthStore = defineStore("auth", () => {
         token.value = null;
         localStorage.removeItem("token");
         // FIXME: somehow does not work
-        router.replace("/")
+        router.replace("/");
     }
     return { token, isLoggedIn, login, logout, setNext };
 });
