@@ -28,7 +28,7 @@ def verify_jwt_token(
         )
         user_id = payload["sub"]
         return user_id
-    except (jwt.ExpiredSignatureError,jwt.MissingRequiredClaimError):
+    except (jwt.ExpiredSignatureError, jwt.MissingRequiredClaimError):
         # Token is expired or no expiration time is set
         raise UnAuthenticated
     except jwt.InvalidTokenError:
