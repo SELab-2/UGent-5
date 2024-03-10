@@ -1,0 +1,11 @@
+@startuml
+Client -> API: GET /api/authority
+API --> Client: {authority: "https://login.ugent.be", method: "cas"}
+Client -> CAS: Redirect: https://login.ugent.be/login?service=https://sel2-5.ugent.be/login
+CAS --> CAS: User authenticates
+CAS -> Client: Redirect: https://sel2-5.ugent.be/login?ticket=ST-123456
+Client -> API: POST /api/token {ticket: "ST-123456", returnUrl: "https://sel2-5.ugent.be/login"}
+API -> CAS: Verify "ST-123456"
+CAS --> API: {user, attributes}
+API --> Client: {token: "eyJ.{sub: user_id, exp: "1 week"}.<sig>", token_type: "Bearer"}
+@endstartuml
