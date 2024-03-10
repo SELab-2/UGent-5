@@ -17,7 +17,7 @@ class Config:
 
 env = {
     "frontend_url": os.getenv("FRONTEND_URL", ""),
-    "cas_server_url": os.getenv("CAS_SERVER", ""),
+    "cas_server_url": os.getenv("CAS_SERVER_URL", ""),
     "database_uri": os.getenv("DATABASE_URI", ""),
     "secret_key": os.getenv("SECRET_KEY", ""),
     "algorithm": os.getenv("ALGORITHM", ""),
