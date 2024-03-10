@@ -1,5 +1,7 @@
 # UGent-5
 
+Informatie over de gebruikte technologieën kan je vinden in de [wiki](https://github.com/SELab-2/UGent-5/wiki/Gebruikte-technologie%C3%ABn).
+
 ## Rolverdeling
 
 | Rol  | Verantwoordelijke |
