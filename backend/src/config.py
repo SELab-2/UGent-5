@@ -1,26 +1,20 @@
 from __future__ import annotations
-
-import dataclasses
+from dotenv import load_dotenv
+import os
 from dataclasses import dataclass
 
-import yaml
+load_dotenv()
 
 
 @dataclass
 class Config:
-    api_url: str = "http://localhost:8000"
-    cas_server_url: str = "http://localhost:8001"
-    database_uri: str = "CONNECTION_STRING"
-
-    def read(self, config_file) -> Config:
-        with open(config_file, "r") as file:
-            user_config = yaml.safe_load(file)
-            for field in dataclasses.fields(Config):
-                user_value = user_config.get(
-                    field.name, getattr(self, field.name))
-                setattr(self, field.name, user_value)
-        return self
+    api_url: str
+    cas_server_url: str
+    database_uri: str
 
 
-CONFIG = Config()
-CONFIG.read("config.yml")
+CONFIG = Config(
+    os.getenv("API_URL", "https://localhost:8000"),
+    os.getenv("CAS_SERVER", "https://login.ugent.be"),
+    os.getenv("DATABASE_URI", "CONNECtOON_STRING")
+)
