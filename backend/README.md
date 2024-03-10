@@ -16,11 +16,11 @@ pip install -r requirements.txt
 #### Create a config.yml file with following content
 
 ```yml
-api_url: https://localhost:8080
+frontend_url: https://localhost:8080
 cas_server_url: https://login.ugent.be
 database_uri: "database connection string: postgresql://..., see discord..."
-secret_key: "<secret key to sign JWT tokens>"
-algorithm: "<algorithm used to sign JWT tokens>"
+secret_key: <secret key to sign JWT tokens> # e.g. generate with `openssl rand -hex 32`
+algorithm: HS256 # algorithm used to sign JWT tokens
 ```
 
 ### Usage
@@ -33,19 +33,11 @@ source venv/bin/activate
 
 #### Run the web server:
 
-> Note: For local development, an SSL-certificate is needed to interact with the
-> CAS-server of UGent. Install [mkcert](https://github.com/FiloSottile/mkcert)
-> and run
-> ```sh
-> mkdir local-cert
-> mkcert -key-file local-cert/localhost-key.pem -cert-file local-cert/localhost.pem localhost
-> ```
-
 ```sh
 ./run.sh
 ```
 
-It will start a local development server on port `8080`
+This will start a local development server on port `5173`
 
 ## The API
 
