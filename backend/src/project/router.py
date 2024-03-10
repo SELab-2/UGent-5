@@ -9,7 +9,7 @@ from ..subject.service import is_teacher_of_subject
 from . import exceptions
 
 router = APIRouter(
-    prefix="/subjects/{subject_id}/projects",
+    prefix="/api/subjects/{subject_id}/projects",
     tags=["projects"],
     responses={404: {"description": "Not found"}},
 )
