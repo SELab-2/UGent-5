@@ -25,12 +25,8 @@ import { useCASUrl } from "@/stores/cas-url";
 
 <style scoped>
 .login {
-    /* position: fixed; */
-    /* top: 50%; */
-    /* left: 0; */
     width: 100%;
     height: 100vh;
-    /* height: 75vh; */
     background-color: var(--color-primary);
     /* transform: translateY(-50%); */
     justify-content: center;
@@ -40,7 +36,7 @@ import { useCASUrl } from "@/stores/cas-url";
 }
 
 .logo {
-    margin-top: 30px;
+    margin-top: 125px;
 }
 
 .login h1,
@@ -57,9 +53,8 @@ import { useCASUrl } from "@/stores/cas-url";
 }
 
 .login-button {
-    background-color: var(--color-accent);
-    color: var(--color-text-on-accent);
-    font-weight: bold;
+    background-color: var(--gray-4);
+    color: var(--white);
     border: 2px solid var(--color-border);
     padding: 10px 20px;
     font-size: 16px;
@@ -71,8 +66,8 @@ import { useCASUrl } from "@/stores/cas-url";
 }
 
 .login-button:hover {
-    background-color: var(--tertiary-bg-color);
-    color: white;
+    background-color: var(--gray-3);
+    color: var(--white);
 }
 
 .ugent-logo {

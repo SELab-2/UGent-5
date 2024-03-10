@@ -39,6 +39,7 @@ async function fetchUser() {
 }
 
 .logout h2 {
+    margin-top: 50px;
     margin-bottom: 30px;
 }
 
@@ -56,7 +57,7 @@ async function fetchUser() {
 }
 
 .logout-button:hover {
-    background-color: var(--color-error-secondary);
+    background-color: indianred;
     color: white;
 }
 </style>
