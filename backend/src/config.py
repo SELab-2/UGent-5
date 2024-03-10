@@ -15,10 +15,22 @@ class Config:
     algorithm: str
 
 
+env = {
+    "frontend_url": os.getenv("FRONTEND_URL", ""),
+    "cas_server_url": os.getenv("CAS_SERVER", ""),
+    "database_uri": os.getenv("DATABASE_URI", ""),
+    "secret_key": os.getenv("SECRET_KEY", ""),
+    "algorithm": os.getenv("ALGORITHM", ""),
+}
+
+for key, value in env.items():
+    if value == "":
+        raise ValueError(f"Environment variable {key} is not set")
+
 CONFIG = Config(
-    frontend_url=os.getenv("FRONTEND_URL", "https://localhost:8000"),
-    cas_server_url=os.getenv("CAS_SERVER", "https://localhost:8001"),
-    database_uri=os.getenv("DATABASE_URI", "CONNECTION_STRING"),
-    secret_key=os.getenv("SECRET_KEY", "test"),
-    algorithm=os.getenv("ALGORITHM", "HS256"),
+    frontend_url=env["frontend_url"],
+    cas_server_url=env["cas_server_url"],
+    database_uri=env["database_uri"],
+    secret_key=env["secret_key"],
+    algorithm=env["algorithm"],
 )
