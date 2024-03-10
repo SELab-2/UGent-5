@@ -1,4 +1,6 @@
 DROP TRIGGER IF EXISTS trg_check_submission_before_deadline ON submission;
+DROP TRIGGER IF EXISTS trg_check_team_size_before_joining ON student_group;
+
 DROP FUNCTION IF EXISTS check_submission_before_deadline();
 DROP FUNCTION IF EXISTS check_team_size_before_joining();
 
