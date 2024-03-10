@@ -1,6 +1,6 @@
 # UGent-5
 
-Informatie over de gebruikte technologieën kan je vinden in de [wiki](https://github.com/SELab-2/UGent-5/wiki/Gebruikte-technologie%C3%ABn).
+Informatie over de gebruikte technologieën, documentatie over de API en meer kan je vinden in de [wiki](https://github.com/SELab-2/UGent-5/wiki).
 
 ## Rolverdeling
 
