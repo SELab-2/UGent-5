@@ -1,7 +1,7 @@
 from typing import Sequence
 from sqlalchemy.orm import Session
-from src.user.models import User
 from . import models, schemas
+from src.user.models import User
 
 
 async def get_subject(db: Session, subject_id: int) -> models.Subject:
@@ -19,8 +19,7 @@ async def get_subjects(db: Session, user_id: str) -> tuple[Sequence[models.Subje
 
 
 async def get_teachers(db: Session, subject_id: int) -> list[User]:
-    return db.query(User).join(models.TeacherSubject).filter(
-        models.TeacherSubject.c.subject_id == subject_id).all()
+    return db.query(User).join(models.TeacherSubject, models.TeacherSubject.c.subject_id==subject_id).all()
 
 
 async def create_subject(db: Session, subject: schemas.SubjectCreate) -> models.Subject:

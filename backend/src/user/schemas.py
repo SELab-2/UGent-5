@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 
 class Userbase(BaseModel):
@@ -12,7 +12,6 @@ class UserCreate(Userbase):
 
 
 class User(Userbase):
-    is_admin: bool = Field(default=False)
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        from_attributes = True
+    is_admin: bool = Field(default=False)
