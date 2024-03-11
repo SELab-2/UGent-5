@@ -2,12 +2,18 @@ from sqlalchemy.orm import Session
 from . import models, schemas
 
 
-async def get_group_by_id(db: Session, group_id: str) -> models.Group:
+async def get_group_by_id(db: Session, group_id: int) -> models.Group:
     return db.get(models.Group, group_id)
 
 
-async def get_groups() -> list[models.Group]:
-    pass
+async def get_groups_by_project(db: Session, project_id: int) -> list[models.Group]:
+    return (db.query(models.Group).join(models.Project).
+                filter(models.Group.project_id == project_id).all())
+
+
+async def get_groups_by_user(db: Session, user_id: int) -> list[models.Group]:
+    return (db.query(models.Group).join(models.StudentGroup).
+                filter(models.StudentGroup.uid == user_id).all())
 
 
 async def create_group(db: Session, group: schemas.GroupCreate) -> models.Group:
@@ -18,9 +24,14 @@ async def create_group(db: Session, group: schemas.GroupCreate) -> models.Group:
     return db_group
 
 
-async def join_group():
-    pass
+async def join_group(db: Session, team_id: int, user_id: str):
+    insert_stmnt = models.StudentGroup.insert().values(
+        team_id=team_id, uid=user_id)
+    db.execute(insert_stmnt)
+    db.commit()
 
 
-async def leave_group():
-    pass
+async def leave_group(db: Session, team_id: int, user_id: str):
+    db.query(models.StudentGroup).filter_by(
+        team_id=team_id, uid=user_id).delete()
+    db.commit()
