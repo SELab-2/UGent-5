@@ -21,7 +21,6 @@ async def list_projects_for_subject(
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_db)
 ):
-    # Optional: You may want to check if the user has access to the subject (e.g., is a teacher or a student of the subject)
     projects = await get_projects_for_subject(db, subject_id)
     if not projects:
         raise NoProjectsFoundException(subject_id)
