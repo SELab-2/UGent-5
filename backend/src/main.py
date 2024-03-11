@@ -26,6 +26,7 @@ app.include_router(auth_router)
 app.include_router(project_router)
 
 
+
 @app.get("/api")
 async def root():
     return {"message": "Hello World"}

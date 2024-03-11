@@ -9,7 +9,8 @@ class Project(Base):
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     deadline = Column(Date, nullable=False)
     name = Column(String, nullable=False)
-    subject_id = Column(BigInteger, ForeignKey('subject.id', ondelete="SET NULL"), nullable=True)  # Adjusted to BigInteger
+    subject_id = Column(BigInteger, ForeignKey(
+        'subject.id', ondelete="SET NULL"), nullable=True)  # Adjusted to BigInteger
     description = Column(String, nullable=True)
     enroll_deadline = Column(Date, nullable=True)
 
