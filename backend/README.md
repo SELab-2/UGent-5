@@ -60,3 +60,13 @@ authorize each request, add the token in the `Authorization` header.
 ```sh
 autopep8 -ri .
 ```
+
+## Testing
+
+You can add tests by creating `test_*` files and `test_*` functions under `tests` directory.
+
+### Run the tests (in the virtual environment):
+
+```sh
+pytest -v
+```
