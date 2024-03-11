@@ -15,13 +15,15 @@ class Project(Base):
     id = Column(Integer, primary_key=True)  # type: Mapped[int]
     deadline = Column(Date, nullable=False)  # type: Mapped[date]
     name = Column(String, nullable=False)  # type: Mapped[str]
-    subject_id = Column(Integer, ForeignKey('subject.id'), nullable=True)  # type: Mapped[int]
+    subject_id = Column(Integer, ForeignKey('subject.id'),
+                        nullable=True)  # type: Mapped[int]
     description = Column(String, nullable=True)  # type: Mapped[str]
     subject = relationship("Subject")  # type: Mapped[Subject]
-    enroll_deadline: Mapped[date] = Column(Date, nullable=True) # type: Mapped[date]
+    enroll_deadline: Mapped[date] = Column(
+        Date, nullable=True)  # type: Mapped[date]
 
     # Relationships
-    subject = relationship("Subject") # type: Mapped[Subject]
+    subject = relationship("Subject")  # type: Mapped[Subject]
 
     __table_args__ = (
         CheckConstraint('deadline >= CURRENT_DATE', name='deadline_check'),
