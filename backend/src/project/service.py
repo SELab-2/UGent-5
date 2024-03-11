@@ -1,45 +1,42 @@
-from sqlalchemy.orm import Session
-from . import models, schemas
+from typing import List
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from . import models
 from .exceptions import ProjectNotFoundException
 from .models import Project
 from .schemas import ProjectCreate, ProjectUpdate
 
-
-def create_project(db: Session, project_in: ProjectCreate, user_id: str) -> Project:
-    # SQLAlchemy does magic that Pyright doesn't understand. Using type: ignore
+async def create_project(db: AsyncSession, project_in: ProjectCreate, user_id: str) -> Project:
     new_project = Project(
-        name=project_in.name,  # type: ignore
-        deadline=project_in.deadline,  # type: ignore
-        subject_id=project_in.subject_id,  # type: ignore
-        description=project_in.description  # type: ignore
+        name=project_in.name,
+        deadline=project_in.deadline,
+        subject_id=project_in.subject_id,
+        description=project_in.description
     )
     db.add(new_project)
-    db.commit()
-    db.refresh(new_project)
+    await db.commit()
+    await db.refresh(new_project)
     return new_project
 
-async def get_project(db: Session, project_id: int) -> models.Project:
-    return db.query(models.Project).filter(models.Project.id == project_id).first()
+async def get_project(db: AsyncSession, project_id: int) -> models.Project:
+    result = await db.execute(select(models.Project).filter(models.Project.id == project_id))
+    return result.scalars().first()
 
+async def get_projects_for_subject(db: AsyncSession, subject_id: int) -> List[models.Project]:
+    result = await db.execute(select(models.Project).filter(models.Project.subject_id == subject_id))
+    projects = result.scalars().all()
+    return list(projects)  # Explicitly convert to list
 
-async def get_projects_for_subject(db: Session, subject_id: int) -> list[models.Project]:
-    projects = (
-        db.query(models.Project)
-        .filter(models.Project.subject_id == subject_id)
-        .all()
-    )
-    return projects
-
-
-async def delete_project(db: Session, project_id: int):
-    project = db.query(models.Project).filter(models.Project.id == project_id).first()
+async def delete_project(db: AsyncSession, project_id: int):
+    result = await db.execute(select(models.Project).filter(models.Project.id == project_id))
+    project = result.scalars().first()
     if project:
-        db.delete(project)
-        db.commit()
+        await db.delete(project)
+        await db.commit()
 
-
-async def update_project(db: Session, project_id: int, project_update: ProjectUpdate) -> Project:
-    project = db.query(Project).filter(Project.id == project_id).first()
+async def update_project(db: AsyncSession, project_id: int, project_update: ProjectUpdate) -> Project:
+    result = await db.execute(select(Project).filter(Project.id == project_id))
+    project = result.scalars().first()
     if not project:
         # Handle the case where the project doesn't exist
         raise ProjectNotFoundException()
@@ -54,6 +51,8 @@ async def update_project(db: Session, project_id: int, project_update: ProjectUp
     if project_update.description is not None:
         project.description = project_update.description
 
-    db.commit()
-    db.refresh(project)
+    await db.commit()
+    await db.refresh(project)
     return project
+
+

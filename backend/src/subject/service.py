@@ -1,4 +1,7 @@
 from typing import Sequence
+
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 from . import models, schemas
 from src.user.models import User
@@ -50,6 +53,8 @@ async def delete_subject(db: Session, subject_id: int):
     db.commit()
 
 
-async def is_teacher_of_subject(db: Session, user_id: str, subject_id: int) -> bool:
+async def is_teacher_of_subject(db: AsyncSession, user_id: str, subject_id: int) -> bool:
     """Check if a user is a teacher of the subject."""
-    return db.query(models.TeacherSubject).filter_by(uid=user_id, subject_id=subject_id).count() > 0
+    query = select(models.TeacherSubject).filter_by(uid=user_id, subject_id=subject_id)
+    result = await db.execute(query)
+    return result.scalars().first() is not None
