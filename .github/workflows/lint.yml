@@ -47,6 +47,12 @@ jobs:
   pytest:
     name: Unit Testing
     runs-on: self-hosted
+    env:
+      DATABASE_URI: "${{ secrets.POSTGRES_CONNECTION }}"
+      FRONTEND_URL: "https://localhost:8080"
+      CAS_SERVER_URL: "https://login.ugent.be"
+      SECRET_KEY: "test" 
+      ALGORITHM: "HS256" 
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python 3.12
@@ -61,11 +67,11 @@ jobs:
     - name: Initialize Database
       working-directory: backend
       run: |
-        psql -U selab -p 2002 -d selab < selab_script.sql
+        psql -U selab -p 2002 -d selabtest < selab_script.sql
     - name: Test with pytest
       run: |
         pip install pytest pytest-cov pytest-html pytest-sugar pytest-json-report
-        DATABASE_URI='postgresql://selab@127.0.0.1:2002/selab' py.test -v --cov --html=reports/pytest/report.html
+        py.test -v --cov --html=reports/pytest/report.html
     - name: Archive pytest coverage results
       uses: actions/upload-artifact@v1
       with:
