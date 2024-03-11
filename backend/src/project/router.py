@@ -3,6 +3,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.user.models import User
 from src.dependencies import get_db
 from src.user.dependencies import get_authenticated_user
+
+from .exceptions import UnauthorizedToCreateProjectException, ProjectNotFoundException, \
+    UnauthorizedToUpdateProjectException, NoProjectsFoundException
 from .schemas import ProjectCreate, ProjectResponse, ProjectUpdate
 from .service import create_project, get_project, delete_project, update_project, get_projects_for_subject
 from ..subject.service import is_teacher_of_subject

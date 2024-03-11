@@ -30,6 +30,13 @@ class ProjectResponse(BaseModel):
 
 
 class ProjectUpdate(BaseModel):
-    name: Optional[str] = None
+    name: Optional[str] = Field(None, min_length=1)
     deadline: Optional[date] = None
+    subject_id: Optional[int] = None
     description: Optional[str] = None
+
+    @validator('deadline', pre=True, always=True)
+    def validate_deadline(cls, value):
+        if value is not None and value < date.today():
+            raise ValueError('The deadline cannot be in the past')
+        return value
