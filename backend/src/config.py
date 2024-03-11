@@ -1,26 +1,36 @@
-from __future__ import annotations
-
-import dataclasses
+import os
 from dataclasses import dataclass
 
-import yaml
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 @dataclass
 class Config:
-    api_url: str = "http://localhost:8000"
-    cas_server_url: str = "http://localhost:8001"
-    database_uri: str = "CONNECTION_STRING"
-
-    def read(self, config_file) -> Config:
-        with open(config_file, "r") as file:
-            user_config = yaml.safe_load(file)
-            for field in dataclasses.fields(Config):
-                user_value = user_config.get(
-                    field.name, getattr(self, field.name))
-                setattr(self, field.name, user_value)
-        return self
+    frontend_url: str
+    cas_server_url: str
+    database_uri: str
+    secret_key: str
+    algorithm: str
 
 
-CONFIG = Config()
-CONFIG.read("config.yml")
+env = {
+    "frontend_url": os.getenv("FRONTEND_URL", ""),
+    "cas_server_url": os.getenv("CAS_SERVER_URL", ""),
+    "database_uri": os.getenv("DATABASE_URI", ""),
+    "secret_key": os.getenv("SECRET_KEY", ""),
+    "algorithm": os.getenv("ALGORITHM", ""),
+}
+
+for key, value in env.items():
+    if value == "":
+        raise ValueError(f"Environment variable {key} is not set")
+
+CONFIG = Config(
+    frontend_url=env["frontend_url"],
+    cas_server_url=env["cas_server_url"],
+    database_uri=env["database_uri"],
+    secret_key=env["secret_key"],
+    algorithm=env["algorithm"],
+)
