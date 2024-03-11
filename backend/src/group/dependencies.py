@@ -2,14 +2,11 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 from src.dependencies import get_db
 from src.user.dependencies import get_authenticated_user
-#from src.user.exceptions import NotAuthorized
 from src.group.schemas import Group, GroupList
 from src.user.schemas import User
 
 from . import service
-from ..subject import service as userService
 from .exceptions import NotAuthorized, NotAuthorizedToLeave, GroupNotFound
-#from .schemas import Subject, SubjectList
 
 async def retrieve_group(group_id: int, db: Session = Depends(get_db)) -> Group: #as teammember and as not teammember
     group = await service.get_group_by_id(db, group_id)

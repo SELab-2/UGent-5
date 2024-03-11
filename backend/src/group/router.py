@@ -6,8 +6,6 @@ from src.group.schemas import GroupList, Group
 from src.subject.dependencies import user_permission_validation
 
 from . import service
-# from .dependencies import user_permission_validation, retrieve_subject, retrieve_subjects
-# from .schemas import Subject, SubjectCreate, SubjectList
 
 router = APIRouter(
     prefix="/api/subjects/{subject_id}/projects/{project_id}/groups",
@@ -33,6 +31,4 @@ async def leave_group(subject_id: int, db: Session = Depends(get_db)):
              dependencies=[Depends(user_permission_validation, is_authorized_user(False))], status_code=201)
 async def join_group(subject_id: int, db: Session = Depends(get_db)):
     await service.join_group(db, subject_id)
-    return "Successfully deleted"
-
-
+    return "Successfully joined"
