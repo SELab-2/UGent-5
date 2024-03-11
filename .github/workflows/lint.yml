@@ -1,4 +1,4 @@
-name: Lint
+name: Code Style
 
 on:
   push:
@@ -72,7 +72,7 @@ jobs:
         name: pytest-coverage-report
         path: reports/pytest/
   pyright:
-    name: Check invalid types
+    name: Pyright
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v3
