@@ -13,6 +13,7 @@ connection = engine.connect()
 trans = connection.begin()
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=connection)
 
+
 def get_db_override():
     db = TestingSessionLocal()
     try:
@@ -20,11 +21,14 @@ def get_db_override():
     finally:
         db.close()
 
+
 app.dependency_overrides[get_db] = get_db_override
+
 
 @pytest.fixture
 def anyio_backend():
     return 'asyncio'
+
 
 @pytest.fixture
 async def db():
@@ -37,14 +41,16 @@ async def db():
         trans.rollback()
         trans = connection.begin()
 
+
 @pytest.fixture
 async def client(db: Session):
     token = create_jwt_token("test")
 
-    await create_user(db,UserCreate(uid="test",given_name="tester", mail="test@test.test"))
+    await create_user(db, UserCreate(uid="test", given_name="tester", mail="test@test.test"))
 
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test", headers = {"Authorization": f"Bearer {token.token}"}) as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test", headers={"Authorization": f"Bearer {token.token}"}) as client:
         yield client
+
 
 def pytest_sessionfinish():
     connection.close()
