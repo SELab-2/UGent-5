@@ -4,10 +4,12 @@ import datetime
 import enum
 from src.database import Base
 
+
 class Status(enum.Enum):
     InProgress = 1,
     Accepted = 2,
     Denied = 3
+
 
 class Submission(Base):
     __tablename__ = "submission"

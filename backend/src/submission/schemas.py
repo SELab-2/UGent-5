@@ -4,9 +4,6 @@ from .models import Status
 
 
 class SubmissionBase(BaseModel):
-    date: datetime
-    status: Status
-    group_id: int
     project_id: int
 
 
@@ -16,6 +13,9 @@ class SubmissionCreate(SubmissionBase):
 
 class Submission(SubmissionBase):
     id: int
+    date: datetime
+    group_id: int
+    status: Status
 
     class Config:
         from_attributes = True
