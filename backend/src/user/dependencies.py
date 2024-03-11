@@ -7,7 +7,7 @@ from src.auth.exceptions import NotAuthorized, UnAuthenticated
 from src.dependencies import get_db
 
 from .exceptions import UserNotFound
-from .schemas import SubjectList, User
+from .schemas import User, UserGroupList, UserProjectList, UserSubjectList
 
 
 async def get_authenticated_user(
@@ -37,8 +37,22 @@ async def user_id_validation(user_id: str, db: Session = Depends(get_db)):
 
 async def retrieve_subjects(
     user: User = Depends(get_authenticated_user), db: Session = Depends(get_db)
-) -> SubjectList:
+) -> UserSubjectList:
     teacher_subjects, student_subjects = await subject_service.get_subjects_by_user(
         db, user.uid
     )
-    return SubjectList(as_student=student_subjects, as_teacher=teacher_subjects)
+    return UserSubjectList(as_student=student_subjects, as_teacher=teacher_subjects)
+
+
+async def retrieve_groups(
+    user: User = Depends(get_authenticated_user), db: Session = Depends(get_db)
+) -> UserGroupList:
+    # TODO: Implement this
+    return UserGroupList(groups=[])
+
+
+async def retrieve_projects(
+    user: User = Depends(get_authenticated_user), db: Session = Depends(get_db)
+) -> UserProjectList:
+    # TODO: Implement this
+    return UserProjectList(projects=[])

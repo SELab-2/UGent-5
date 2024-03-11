@@ -1,5 +1,3 @@
-from typing import Sequence
-
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from src.auth.exceptions import NotAuthorized
@@ -9,7 +7,7 @@ from src.user.schemas import User
 
 from . import service
 from .exceptions import SubjectNotFound
-from .schemas import Subject
+from .schemas import Subject, SubjectList
 
 
 async def retrieve_subject(subject_id: int, db: Session = Depends(get_db)) -> Subject:
@@ -22,9 +20,9 @@ async def retrieve_subject(subject_id: int, db: Session = Depends(get_db)) -> Su
 
 async def retrieve_subjects(
     _: User = Depends(get_authenticated_user), db: Session = Depends(get_db)
-) -> Sequence[Subject]:
+) -> SubjectList:
     subjects = await service.get_subjects(db)
-    return subjects
+    return SubjectList(subjects=subjects)
 
 
 async def user_permission_validation(

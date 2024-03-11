@@ -1,3 +1,5 @@
+from typing import Sequence
+
 from pydantic import BaseModel, Field
 
 
@@ -14,3 +16,7 @@ class Subject(SubjectBase):
 
     class Config:
         from_attributes = True
+
+
+class SubjectList(BaseModel):
+    subjects: Sequence[Subject]

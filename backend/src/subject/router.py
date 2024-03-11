@@ -10,7 +10,7 @@ from .dependencies import (
     retrieve_subjects,
     user_permission_validation,
 )
-from .schemas import Subject, SubjectCreate
+from .schemas import Subject, SubjectCreate, SubjectList
 
 router = APIRouter(
     prefix="/api/subject",
@@ -19,8 +19,8 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=list[Subject])
-async def get_subjects(subjects: list[Subject] = Depends(retrieve_subjects)):
+@router.get("/", response_model=SubjectList)
+async def get_subjects(subjects: SubjectList = Depends(retrieve_subjects)):
     return subjects
 
 
