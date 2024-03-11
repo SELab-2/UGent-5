@@ -2,7 +2,7 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 from src.dependencies import get_db
 from src.user.dependencies import get_authenticated_user
-from src.user.exceptions import NotAuthorized
+from src.auth.exceptions import NotAuthorized
 from src.user.schemas import User
 
 from . import service
