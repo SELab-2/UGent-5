@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Sequence
 
+
 class Groupbase(BaseModel):
     project_id: int
     score: int
@@ -15,11 +16,11 @@ class Group(Groupbase):
     team_name: str = Field(min_length=1)
 
 
-class GroupJoin(Groupbase): #TODO needed?
+class GroupJoin(Groupbase):  # TODO needed?
     pass
 
 
-class GroupLeave(Groupbase): #TODO needed?
+class GroupLeave(Groupbase):  # TODO needed?
     pass
 
 

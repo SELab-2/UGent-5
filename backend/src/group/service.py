@@ -8,12 +8,12 @@ async def get_group_by_id(db: Session, group_id: int) -> models.Group:
 
 async def get_groups_by_project(db: Session, project_id: int) -> list[models.Group]:
     return (db.query(models.Group).join(models.Project).
-                filter(models.Group.project_id == project_id).all())
+            filter(models.Group.project_id == project_id).all())
 
 
 async def get_groups_by_user(db: Session, user_id: int) -> list[models.Group]:
     return (db.query(models.Group).join(models.StudentGroup).
-                filter(models.StudentGroup.uid == user_id).all())
+            filter(models.StudentGroup.uid == user_id).all())
 
 
 async def create_group(db: Session, group: schemas.GroupCreate) -> models.Group:

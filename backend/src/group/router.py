@@ -13,19 +13,23 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+
 @router.get("/")
-async def get_groups(groups : GroupList = Depends(retrieve_groups_by_project)):
+async def get_groups(groups: GroupList = Depends(retrieve_groups_by_project)):
     return groups
+
 
 @router.get("/{group_id}")
 async def get_group(group: Group = Depends(retrieve_group)):
     return group
+
 
 @router.delete("/{group_id}",
                dependencies=[Depends(user_permission_validation, is_authorized_user(True))], status_code=200)
 async def leave_group(subject_id: int, db: Session = Depends(get_db)):
     await service.leave_group(db, subject_id)
     return "Successfully deleted"
+
 
 @router.post("/{group_id}",
              dependencies=[Depends(user_permission_validation, is_authorized_user(False))], status_code=201)

@@ -9,6 +9,7 @@ StudentGroup = Table(
     Column("team_id", ForeignKey("team.id")),
 )
 
+
 class Group(Base):
     __tablename__ = "team"
 
@@ -16,4 +17,4 @@ class Group(Base):
     team_name: Mapped[str]
     score: Mapped[int]
     project_id: Mapped[int]
-    deadline: Mapped[Date] # TODO: should be added to project
+    deadline: Mapped[Date]  # TODO: should be added to project
