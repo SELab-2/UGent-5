@@ -6,7 +6,8 @@ from src.group.schemas import Group, GroupList
 from src.user.schemas import User
 
 from . import service
-from .exceptions import NotAuthorized, NotAuthorizedToLeave, GroupNotFound
+from .exceptions import GroupNotFound
+from ..auth.exceptions import NotAuthorized
 
 
 # as teammember and as not teammember
