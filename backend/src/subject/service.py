@@ -31,7 +31,6 @@ async def create_subject(db: Session, subject: schemas.SubjectCreate) -> models.
     db.refresh(db_subject)
     return db_subject
 
-
 async def create_subject_teacher(db: Session, subject_id: int, user_id: str):
     insert_stmnt = models.TeacherSubject.insert().values(
         subject_id=subject_id, uid=user_id)
