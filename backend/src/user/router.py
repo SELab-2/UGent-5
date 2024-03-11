@@ -1,12 +1,24 @@
 from fastapi import APIRouter, Depends
-from .schemas import User
-from .dependencies import get_authenticated_user
+
+from .dependencies import get_authenticated_user, retrieve_subjects
+from .schemas import SubjectList, User
 
 router = APIRouter(
-    prefix="/api/user", tags=["user"], responses={404: {"description": "Not Found"}}
+    prefix="/api/users", tags=["user"], responses={404: {"description": "Not Found"}}
 )
 
 
-@router.get("/profile", response_model=User)
-async def profile(user=Depends(get_authenticated_user)):
+@router.get("/me")
+async def profile(user=Depends(get_authenticated_user)) -> User:
+    """
+    Get information about the current user
+    """
     return user
+
+
+@router.get("/me/subjects")
+async def subjects(subjects: SubjectList = Depends(retrieve_subjects)) -> SubjectList:
+    """
+    Get the subjects of the current user
+    """
+    return subjects
