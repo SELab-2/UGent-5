@@ -48,7 +48,8 @@ async def client(db: Session):
 
     await create_user(db, UserCreate(uid="test", given_name="tester", mail="test@test.test"))
 
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test", headers={"Authorization": f"Bearer {token.token}"}) as client:
+    transport = ASGITransport(app=app)  # type: ignore
+    async with AsyncClient(transport=transport, base_url="http://test", headers={"Authorization": f"Bearer {token.token}"}) as client:
         yield client
 
 
