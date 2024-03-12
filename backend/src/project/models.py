@@ -6,8 +6,6 @@ from sqlalchemy import Column, BigInteger, String, Date, ForeignKey, CheckConstr
 from sqlalchemy.orm import relationship, Mapped
 from src.database import Base
 
-f
-
 
 class Project(Base):
     __tablename__ = 'project'
