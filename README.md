@@ -14,3 +14,7 @@ Informatie over de gebruikte technologieën, documentatie over de API en meer ka
 | Backendbeheerder                                   | Dries Huybens     |
 | Documentatiebeheerder                              | Pieter Janin      |
 | Testbeheerder                                      | Michaël Boelaert  |
+
+## Setup ontwikkelomgeving
+
+De instructies voor het opzetten van de ontwikkelomgeving van de frontend kan je [hier](https://github.com/SELab-2/UGent-5/tree/main/frontend) vinden. 
