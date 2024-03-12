@@ -58,7 +58,7 @@ CREATE TABLE team (
     CONSTRAINT score_check CHECK (score BETWEEN 0 AND 20)
 );
 
-CREATE TABLE student_group (
+CREATE TABLE student_team (
     uid TEXT NOT NULL,
     team_id BIGINT NOT NULL,
     PRIMARY KEY (uid, team_id),
