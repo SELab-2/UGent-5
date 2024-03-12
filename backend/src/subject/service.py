@@ -1,7 +1,5 @@
 from typing import Sequence
 
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 from src.user.models import User
 
@@ -9,9 +7,8 @@ from .models import StudentSubject, Subject, TeacherSubject
 from .schemas import SubjectCreate
 
 
-async def get_subject(db: AsyncSession, subject_id: int) -> Subject:
-    result = await db.execute(select(Subject).filter(Subject.id == subject_id))
-    return result.scalars().first()
+async def get_subject(db: Session, subject_id: int) -> Subject:
+    return db.query(Subject).filter_by(id=subject_id).first()
 
 
 async def get_subjects(db: Session) -> list[Subject]:
