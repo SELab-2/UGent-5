@@ -5,14 +5,14 @@ from src.database import Base
 StudentSubject = Table(
     "student_subject",
     Base.metadata,
-    Column("uid", ForeignKey("user.uid")),
+    Column("uid", ForeignKey("website_user.uid")),
     Column("subject_id", ForeignKey("subject.id")),
 )
 
 TeacherSubject = Table(
     "teacher_subject",
     Base.metadata,
-    Column("uid", ForeignKey("user.uid")),
+    Column("uid", ForeignKey("website_user.uid")),
     Column("subject_id", ForeignKey("subject.id")),
 )
 
