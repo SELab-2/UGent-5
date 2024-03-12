@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from . import models
@@ -7,11 +7,11 @@ from .models import Project
 from .schemas import ProjectCreate, ProjectUpdate
 
 
-async def create_project(db: AsyncSession, project_in: ProjectCreate, user_id: str) -> Project:
+async def create_project(db: AsyncSession, project_in: ProjectCreate, subject_id: int) -> Project:
     new_project = Project(
         name=project_in.name,
         deadline=project_in.deadline,
-        subject_id=project_in.subject_id,
+        subject_id=subject_id,
         description=project_in.description
     )
     db.add(new_project)
@@ -25,10 +25,10 @@ async def get_project(db: AsyncSession, project_id: int) -> models.Project:
     return result.scalars().first()
 
 
-async def get_projects_for_subject(db: AsyncSession, subject_id: int) -> List[models.Project]:
-    result = await db.execute(select(models.Project).filter(models.Project.subject_id == subject_id))
+async def get_projects_for_subject(db: AsyncSession, subject_id: int) -> Sequence[models.Project]:
+    result = await db.execute(select(models.Project).filter_by(subject_id=subject_id))
     projects = result.scalars().all()
-    return list(projects)  # Explicitly convert to list
+    return projects
 
 
 async def delete_project(db: AsyncSession, project_id: int):
@@ -43,16 +43,12 @@ async def update_project(db: AsyncSession, project_id: int, project_update: Proj
     result = await db.execute(select(Project).filter(Project.id == project_id))
     project = result.scalars().first()
     if not project:
-        # Handle the case where the project doesn't exist
         raise ProjectNotFoundException()
 
-    # Update fields only if they're provided in the update payload
     if project_update.name is not None:
         project.name = project_update.name
     if project_update.deadline is not None:
         project.deadline = project_update.deadline
-    if project_update.subject_id is not None:
-        project.subject_id = project_update.subject_id
     if project_update.description is not None:
         project.description = project_update.description
 

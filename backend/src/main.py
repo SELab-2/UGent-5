@@ -25,7 +25,6 @@ app.include_router(subject_router)
 app.include_router(user_router)
 app.include_router(project_router)
 app.include_router(auth_router)
-app.include_router(project_router)
 
 
 @app.get("/api")

@@ -3,19 +3,9 @@ from sqlalchemy.orm import Session
 from src.dependencies import get_db
 from src.user.dependencies import get_authenticated_user
 from src.user.schemas import User
-from src.subject.schemas import Subject
-from src.subject.schemas import SubjectList
-
 
 from ..auth.exceptions import NotAuthorized
-from ..subject.service import get_subjects, get_teachers
-
-
-async def retrieve_subjects(
-    user: User = Depends(get_authenticated_user), db: Session = Depends(get_db)
-) -> SubjectList:
-    teacher_subjects, student_subjects = await get_subjects(db, user.uid)
-    return SubjectList(as_teacher=teacher_subjects, as_student=student_subjects)
+from ..subject.service import get_teachers
 
 
 async def user_permission_validation(

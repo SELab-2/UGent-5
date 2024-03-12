@@ -51,11 +51,3 @@ async def delete_subject(db: Session, subject_id: int):
     """Remove a subject"""
     db.query(models.Subject).filter_by(id=subject_id).delete()
     db.commit()
-
-
-async def is_teacher_of_subject(db: AsyncSession, user_id: str, subject_id: int) -> bool:
-    """Check if a user is a teacher of the subject."""
-    query = select(models.TeacherSubject).filter_by(
-        uid=user_id, subject_id=subject_id)
-    result = await db.execute(query)
-    return result.scalars().first() is not None
