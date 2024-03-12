@@ -49,7 +49,7 @@ CREATE TABLE project (
     FOREIGN KEY (subject_id) REFERENCES subject(id) ON DELETE SET NULL
 );
 
-CREATE TABLE team (
+CREATE TABLE group (
     id BIGSERIAL PRIMARY KEY,
     team_name TEXT NOT NULL,
     score BIGINT NOT NULL,
@@ -58,12 +58,12 @@ CREATE TABLE team (
     CONSTRAINT score_check CHECK (score BETWEEN 0 AND 20)
 );
 
-CREATE TABLE student_team (
+CREATE TABLE student_group (
     uid TEXT NOT NULL,
     team_id BIGINT NOT NULL,
     PRIMARY KEY (uid, team_id),
     FOREIGN KEY (uid) REFERENCES website_user(uid) ON DELETE CASCADE,
-    FOREIGN KEY (team_id) REFERENCES team(id) ON DELETE CASCADE
+    FOREIGN KEY (group_id) REFERENCES group(id) ON DELETE CASCADE
 );
 
 CREATE TABLE status (
@@ -78,10 +78,10 @@ INSERT INTO status (status_name) VALUES ('Denied');
 CREATE TABLE submission (
     id BIGSERIAL PRIMARY KEY,
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    team_id BIGINT NOT NULL,
+    group_id BIGINT NOT NULL,
     project_id BIGINT NOT NULL,
     status_id BIGINT NOT NULL DEFAULT 1, -- Default to 'InProgress'
-    FOREIGN KEY (team_id) REFERENCES team(id) ON DELETE CASCADE,
+    FOREIGN KEY (group_id) REFERENCES group(id) ON DELETE CASCADE,
     FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE,
     FOREIGN KEY (status_id) REFERENCES status(id) ON DELETE RESTRICT
 );
