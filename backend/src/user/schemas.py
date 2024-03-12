@@ -1,6 +1,7 @@
 from typing import Sequence
 
 from pydantic import BaseModel, ConfigDict, Field
+from src.project.schemas import ProjectResponse
 from src.subject.schemas import Subject
 
 
@@ -27,7 +28,7 @@ class UserSubjectList(BaseModel):
 
 class UserProjectList(BaseModel):
     model_config = ConfigDict(from_attributes=True)
-    projects: Sequence  # TODO: Add project schema
+    projects: Sequence[ProjectResponse]
 
 
 class UserGroupList(BaseModel):

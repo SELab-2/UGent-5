@@ -1,7 +1,8 @@
 from fastapi import Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 from src.auth.exceptions import NotAuthorized
-from src.dependencies import get_db
+from src.dependencies import get_async_db, get_db
 from src.user.dependencies import get_authenticated_user
 from src.user.schemas import User
 
@@ -10,7 +11,9 @@ from .exceptions import SubjectNotFound
 from .schemas import Subject, SubjectList
 
 
-async def retrieve_subject(subject_id: int, db: Session = Depends(get_db)) -> Subject:
+async def retrieve_subject(
+    subject_id: int, db: AsyncSession = Depends(get_async_db)
+) -> Subject:
     subject = await service.get_subject(db, subject_id)
     if not subject:
         raise SubjectNotFound()
