@@ -32,5 +32,5 @@ async def user_permission_validation(
 ):
     if not user.is_admin:
         teachers = await service.get_teachers(db, subject_id)
-        if not list(filter(lambda teacher: teacher.id == user.uid, teachers)):
+        if not list(filter(lambda teacher: teacher.uid == user.uid, teachers)):
             raise NotAuthorized()

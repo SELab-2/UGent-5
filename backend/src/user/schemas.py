@@ -1,6 +1,6 @@
 from typing import Sequence
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from src.subject.schemas import Subject
 
 
@@ -15,6 +15,7 @@ class UserCreate(Userbase):
 
 
 class User(Userbase):
+    model_config = ConfigDict(from_attributes=True)
     is_admin: bool = Field(default=False)
 
     class Config:

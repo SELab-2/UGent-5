@@ -23,8 +23,7 @@ def verify_jwt_token(
             credentials.credentials,
             CONFIG.secret_key,
             algorithms=[CONFIG.algorithm],
-            verify_signature=True,
-            options={"require": ["exp", "sub"]},
+            options={"require": ["exp", "sub"], "verify_signature": True},
         )
         user_id = payload["sub"]
         return user_id
