@@ -18,27 +18,18 @@ class User(Userbase):
     model_config = ConfigDict(from_attributes=True)
     is_admin: bool = Field(default=False)
 
-    class Config:
-        from_attributes = True
-
 
 class UserSubjectList(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     as_teacher: Sequence[Subject]
     as_student: Sequence[Subject]
 
-    class Config:
-        from_attributes = True
-
 
 class UserProjectList(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     projects: Sequence  # TODO: Add project schema
-
-    class Config:
-        from_attributes = True
 
 
 class UserGroupList(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     groups: Sequence  # TODO: Add group schema
-
-    class Config:
-        from_attributes = True
