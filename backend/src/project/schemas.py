@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime, date
 from typing import Optional
 
 from pydantic import BaseModel, Field, validator
@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field, validator
 
 class ProjectCreate(BaseModel):
     name: str = Field(..., min_length=1)
-    deadline: date
+    deadline: datetime
     subject_id: int
     description: str
 
@@ -21,7 +21,7 @@ class ProjectCreate(BaseModel):
 class ProjectResponse(BaseModel):
     id: int
     name: str
-    deadline: date
+    deadline: datetime
     subject_id: int
     description: str
 
@@ -31,12 +31,12 @@ class ProjectResponse(BaseModel):
 
 class ProjectUpdate(BaseModel):
     name: Optional[str] = Field(None, min_length=1)
-    deadline: Optional[date] = None
+    deadline: Optional[datetime] = None
     subject_id: Optional[int] = None
     description: Optional[str] = None
 
     @validator('deadline', pre=True, always=True)
     def validate_deadline(cls, value):
-        if value is not None and value < date.today():
+        if value is not None and value < datetime.now():
             raise ValueError('The deadline cannot be in the past')
         return value

@@ -1,25 +1,20 @@
-from datetime import date
-from typing import Optional
-
-from pydantic import BaseModel
-from sqlalchemy import Column, BigInteger, String, Date, ForeignKey, CheckConstraint, Integer
-from sqlalchemy.orm import relationship, Mapped
+from datetime import datetime
+from sqlalchemy import BigInteger, DateTime, ForeignKey, CheckConstraint
+from sqlalchemy.orm import Mapped, mapped_column
 from src.database import Base
 
 
 class Project(Base):
     __tablename__ = 'project'
 
-    id = Column(BigInteger, primary_key=True)
-    deadline = Column(Date, nullable=False)
-    name = Column(String, nullable=False)
-    subject_id = Column(BigInteger, ForeignKey('subject.id'), nullable=True)
-    description = Column(String, nullable=True)
-    subject = relationship("Subject")
-    enroll_deadline: Mapped[date] = Column(Date, nullable=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    deadline: Mapped[datetime] = mapped_column(nullable=False)
+    name: Mapped[str] = mapped_column(nullable=False)
+    subject_id: Mapped[int] = mapped_column(ForeignKey(
+        'subject.id', ondelete="CASCADE"), nullable=True)
+    description: Mapped[str] = mapped_column(nullable=True)
 
-    # Relationships
-    subject = relationship("Subject")
+    enroll_deadline: Mapped[datetime] = mapped_column(nullable=True)
 
     __table_args__ = (
         CheckConstraint('deadline >= CURRENT_DATE', name='deadline_check'),
