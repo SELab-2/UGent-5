@@ -1,7 +1,5 @@
 # UGent-5
 
-Informatie over de gebruikte technologieën, de gebruikershandleiding en meer kan je vinden in de [wiki](https://github.com/SELab-2/UGent-5/wiki).
-
 ## Rolverdeling
 
 | Rol  | Verantwoordelijke |
@@ -14,6 +12,10 @@ Informatie over de gebruikte technologieën, de gebruikershandleiding en meer ka
 | Backendbeheerder                                   | Dries Huybens     |
 | Documentatiebeheerder                              | Pieter Janin      |
 | Testbeheerder                                      | Michaël Boelaert  |
+
+## Wiki
+
+Informatie over de gebruikte technologieën, de gebruikershandleiding en meer kan je vinden in de [wiki](https://github.com/SELab-2/UGent-5/wiki).
 
 ## Setup ontwikkelomgeving
 
