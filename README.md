@@ -1,6 +1,6 @@
 # UGent-5
 
-Informatie over de gebruikte technologieën, documentatie over de API en meer kan je vinden in de [wiki](https://github.com/SELab-2/UGent-5/wiki).
+Informatie over de gebruikte technologieën, de gebruikershandleiding en meer kan je vinden in de [wiki](https://github.com/SELab-2/UGent-5/wiki).
 
 ## Rolverdeling
 
@@ -18,3 +18,7 @@ Informatie over de gebruikte technologieën, documentatie over de API en meer ka
 ## Setup ontwikkelomgeving
 
 De instructies voor het opzetten van de ontwikkelomgeving van de frontend kan je [hier](https://github.com/SELab-2/UGent-5/tree/main/frontend) vinden. 
+
+## API
+
+Geautomatiseerde clients kunnen interageren met de webapplicatie via de [API](https://sel2-5.ugent.be/docs).
