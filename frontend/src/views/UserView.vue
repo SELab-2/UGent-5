@@ -19,7 +19,7 @@ async function fetchUser() {
     if (!token) {
         return;
     }
-    await fetch(`${apiUrl}/api/user/profile`, {
+    await fetch(`${apiUrl}/api/users/me`, {
         headers: { Authorization: `${token?.token_type} ${token?.token}` },
     })
         .then((data) => data.json())
