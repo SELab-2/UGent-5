@@ -17,7 +17,7 @@ Informatie over de gebruikte technologieën, de gebruikershandleiding en meer ka
 
 ## Setup ontwikkelomgeving
 
-De instructies voor het opzetten van de ontwikkelomgeving van de frontend kan je [hier](https://github.com/SELab-2/UGent-5/tree/main/frontend) vinden. De instructies voor de backend staan [hier](https://github.com/SELab-2/UGent-5/tree/main/backend).
+De instructies voor het opzetten van de ontwikkelomgeving van de frontend kan je [hier](frontend/README.md) vinden. De instructies voor de backend staan [hier](backend/REAMDE.md).
 
 ## API
 
