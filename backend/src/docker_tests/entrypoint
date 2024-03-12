@@ -1,0 +1,5 @@
+#!/bin/sh
+cp -r /submission/ /home/runner/
+chown -R runner:runner /home/runner/submission/
+chmod a+wx /artifacts/
+su runner -c '/home/runner/run'
