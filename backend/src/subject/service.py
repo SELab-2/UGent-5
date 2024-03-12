@@ -33,8 +33,7 @@ async def get_subjects_by_user(
 async def get_teachers(db: Session, subject_id: int) -> list[User]:
     return (
         db.query(User)
-        .join(TeacherSubject)
-        .filter(TeacherSubject.c.subject_id == subject_id)
+        .join(TeacherSubject, TeacherSubject.c.subject_id == subject_id)
         .all()
     )
 
