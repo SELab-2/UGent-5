@@ -1,64 +1,63 @@
 from typing import Sequence
 
-from sqlalchemy.orm import Session
+from sqlalchemy import delete, select
+from sqlalchemy.ext.asyncio import AsyncSession
 from src.user.models import User
 
 from .models import StudentSubject, Subject, TeacherSubject
 from .schemas import SubjectCreate
 
 
-async def get_subject(db: Session, subject_id: int) -> Subject:
-    return db.query(Subject).filter_by(id=subject_id).first()
+async def get_subjects(db: AsyncSession) -> Sequence[Subject]:
+    subjects = await db.execute(select(Subject))
+    return subjects.scalars().all()
 
 
-async def get_subjects(db: Session) -> list[Subject]:
-    return db.query(Subject).all()
+async def get_subject(db: AsyncSession, subject_id: int) -> Subject:
+    result = await db.execute(select(Subject).filter_by(id=subject_id))
+    return result.scalars().first()
 
 
 async def get_subjects_by_user(
-    db: Session, user_id: str
+    db: AsyncSession, user_id: str
 ) -> tuple[Sequence[Subject], Sequence[Subject]]:
-    return (
-        db.query(Subject)
-        .join(TeacherSubject)
-        .filter(TeacherSubject.c.uid == user_id)
-        .all(),
-        db.query(Subject)
-        .join(StudentSubject)
-        .filter(StudentSubject.c.uid == user_id)
-        .all(),
+    teachers_subjects = await db.execute(
+        select(Subject).join(TeacherSubject).filter(TeacherSubject.c.uid == user_id)
     )
-
-
-async def get_teachers(db: Session, subject_id: int) -> list[User]:
-    return (
-        db.query(User)
-        .join(TeacherSubject, TeacherSubject.c.subject_id == subject_id)
-        .all()
+    students_subjects = await db.execute(
+        select(Subject).join(StudentSubject).filter(StudentSubject.c.uid == user_id)
     )
+    return teachers_subjects.scalars().all(), students_subjects.scalars().all()
 
 
-async def create_subject(db: Session, subject: SubjectCreate) -> Subject:
-    """Create and return a new subject"""
+async def get_teachers(db: AsyncSession, subject_id: int) -> Sequence[User]:
+    result = await db.execute(
+        select(User).join(TeacherSubject, TeacherSubject.c.subject_id == subject_id)
+    )
+    return result.scalars().all()
+
+
+async def create_subject(db: AsyncSession, subject: SubjectCreate) -> Subject:
     db_subject = Subject(name=subject.name)
     db.add(db_subject)
-    db.commit()
-    db.refresh(db_subject)
+    await db.commit()
+    await db.refresh(db_subject)
     return db_subject
 
 
-async def create_subject_teacher(db: Session, subject_id: int, user_id: str):
+async def create_subject_teacher(db: AsyncSession, subject_id: int, user_id: str):
     insert_stmnt = TeacherSubject.insert().values(subject_id=subject_id, uid=user_id)
-    db.execute(insert_stmnt)
-    db.commit()
+    await db.execute(insert_stmnt)
+    await db.commit()
 
 
-async def delete_subject_teacher(db: Session, subject_id: int, user_id: str):
-    db.query(TeacherSubject).filter_by(subject_id=subject_id, uid=user_id).delete()
-    db.commit()
+async def delete_subject_teacher(db: AsyncSession, subject_id: int, user_id: str):
+    await db.execute(
+        delete(TeacherSubject).filter_by(subject_id=subject_id, uid=user_id)
+    )
+    await db.commit()
 
 
-async def delete_subject(db: Session, subject_id: int):
-    """Remove a subject"""
-    db.query(Subject).filter_by(id=subject_id).delete()
-    db.commit()
+async def delete_subject(db: AsyncSession, subject_id: int):
+    await db.execute(delete(Subject).filter_by(id=subject_id))
+    await db.commit()

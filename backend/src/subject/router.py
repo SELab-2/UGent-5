@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
-from src.dependencies import get_db
+from sqlalchemy.ext.asyncio import AsyncSession
+from src.dependencies import get_async_db
 from src.user.dependencies import admin_user_validation, user_id_validation
 from src.user.schemas import User
 
@@ -35,14 +35,16 @@ async def get_subject(subject: Subject = Depends(retrieve_subject)):
     dependencies=[Depends(admin_user_validation)],
     status_code=201,
 )
-async def create_subject(subject: SubjectCreate, db: Session = Depends(get_db)):
+async def create_subject(
+    subject: SubjectCreate, db: AsyncSession = Depends(get_async_db)
+):
     return await service.create_subject(db, subject)
 
 
 @router.delete(
     "/{subject_id}", dependencies=[Depends(admin_user_validation)], status_code=200
 )
-async def delete_subject(subject_id: int, db: Session = Depends(get_db)):
+async def delete_subject(subject_id: int, db: AsyncSession = Depends(get_async_db)):
     await service.delete_subject(db, subject_id)
     return "Successfully deleted"
 
@@ -64,7 +66,9 @@ async def update_subject(
 
 
 @router.get("/{subject_id}/teachers", response_model=list[User])
-async def get_subject_teachers(subject_id: int, db: Session = Depends(get_db)):
+async def get_subject_teachers(
+    subject_id: int, db: AsyncSession = Depends(get_async_db)
+):
     return await service.get_teachers(db, subject_id)
 
 
@@ -74,7 +78,7 @@ async def get_subject_teachers(subject_id: int, db: Session = Depends(get_db)):
     status_code=201,
 )
 async def create_subject_teacher(
-    subject_id: int, user_id: str, db: Session = Depends(get_db)
+    subject_id: int, user_id: str, db: AsyncSession = Depends(get_async_db)
 ):
     await service.create_subject_teacher(db, subject_id, user_id)
     return "Successfully added"
@@ -85,6 +89,6 @@ async def create_subject_teacher(
     dependencies=[Depends(user_permission_validation)],
 )
 async def delete_subject_teacher(
-    subject_id: int, user_id: str, db: Session = Depends(get_db)
+    subject_id: int, user_id: str, db: AsyncSession = Depends(get_async_db)
 ):
     await service.delete_subject_teacher(db, subject_id, user_id)
