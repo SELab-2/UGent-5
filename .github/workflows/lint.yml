@@ -67,11 +67,12 @@ jobs:
     - name: Initialize Database
       working-directory: backend
       run: |
-        psql -U selab -p 2002 -d selabtest < selab_script.sql
+        alembic upgrade head
     - name: Test with pytest
       run: |
         pip install pytest pytest-cov pytest-html pytest-sugar pytest-json-report
         py.test -v --cov --html=reports/pytest/report.html
+        alembic downgrade base
     - name: Archive pytest coverage results
       uses: actions/upload-artifact@v1
       with:

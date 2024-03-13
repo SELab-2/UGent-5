@@ -12,6 +12,8 @@ from sqlalchemy import MetaData
 
 from alembic import context
 from src.database import Base
+from src import config as c
+
 
 # Calculate the path based on the location of the env.py file
 d = os.path.dirname
@@ -28,6 +30,8 @@ config = context.config
 # This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
+
+config.set_main_option('sqlalchemy.url', c.CONFIG.database_uri)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
