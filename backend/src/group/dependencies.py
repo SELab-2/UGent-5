@@ -2,8 +2,9 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 from src.dependencies import get_db
 from src.user.dependencies import get_authenticated_user
-from src.group.schemas import Group, GroupList
+from src.group.schemas import Group
 from src.user.schemas import User
+from src.project.models import Project
 
 from . import service
 from .exceptions import GroupNotFound
@@ -18,21 +19,27 @@ async def retrieve_group(group_id: int, db: Session = Depends(get_db)) -> Group:
     return Group.model_validate(group)
 
 
-async def retrieve_groups_by_user(user: User, db: Session = Depends(get_db)) -> GroupList:
+async def retrieve_groups_by_user(user: User, db: Session = Depends(get_db)) -> list[Group]:
     grouplist = await service.get_groups_by_user(db, user.uid)
-    return GroupList.model_validate(grouplist)
+    return grouplist
 
 
-async def retrieve_groups_by_project(project: User, db: Session = Depends(get_db)) -> GroupList: #TODO: FIX USER TO PROJECT
-    grouplist = await service.get_groups_by_project(db, project.uid)
-    return GroupList.model_validate(grouplist)
+async def retrieve_groups_by_project(project_id: int, db: Session = Depends(get_db)) -> list[Group]:
+    grouplist = await service.get_groups_by_project(db, project_id)
+    return grouplist
 
 
-async def is_authorized_user(member: bool, group_id: int, user: User = Depends(get_authenticated_user), db: Session = Depends(get_db)):
+async def is_authorized_to_leave(group_id: int, user: User = Depends(get_authenticated_user), db: Session = Depends(get_db)):
     groups = await service.get_groups_by_user(db, user.uid)
-    if member:
+    teachers = await service.get_teachers_by_group(db, user.uid, group_id)
+    if not any(user.uid == teacher.uid for teacher in teachers):
         if not any(group.id == group_id for group in groups):
             raise NotAuthorized()
-    if not member:
-        if not any(group.id == group_id for group in groups):
+
+
+async def is_authorized_to_join(group_id: int, user: User = Depends(get_authenticated_user), db: Session = Depends(get_db)):
+    groups = await service.get_groups_by_user(db, user.uid)
+    teachers = await service.get_teachers_by_group(db, user.uid, group_id)
+    if not any(user.uid == teacher.uid for teacher in teachers):
+        if any(group.id == group_id for group in groups):
             raise NotAuthorized()

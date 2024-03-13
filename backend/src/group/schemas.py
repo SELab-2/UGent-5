@@ -14,15 +14,3 @@ class GroupCreate(Groupbase):
 class Group(Groupbase):
     id: int
     team_name: str = Field(min_length=1)
-
-
-class GroupJoin(Groupbase):  # TODO needed?
-    pass
-
-
-class GroupLeave(Groupbase):  # TODO needed?
-    pass
-
-
-class GroupList(BaseModel):
-    pass
