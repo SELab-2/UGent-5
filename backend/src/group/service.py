@@ -20,7 +20,8 @@ async def get_groups_by_user(db: Session, user_id: int) -> list[models.Group]:
 
 
 async def get_teachers_by_group(db: Session, group_id: int) -> list[userModels.User]:
-    return (db.query(models.Group).join(projectModels.Project).join(subjectModels.Subject)
+    return (db.query(userModels.User).join(subjectModels.TeacherSubject).join(subjectModels.Subject)
+            .join(projectModels.Project).join(models.Group)
             .filter(models.Group.id == group_id and models.Group.project_id == projectModels.Project.id
                     and projectModels.Project.subject_id == subjectModels.Subject.id).all()
             )
