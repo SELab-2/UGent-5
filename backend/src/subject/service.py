@@ -26,6 +26,7 @@ async def get_subjects_by_user(
     )
     students_subjects = await db.execute(
         select(Subject).join(StudentSubject).filter(StudentSubject.c.uid == user_id)
+
     )
     return teachers_subjects.scalars().all(), students_subjects.scalars().all()
 
@@ -53,11 +54,13 @@ async def create_subject_teacher(db: AsyncSession, subject_id: int, user_id: str
 
 async def delete_subject_teacher(db: AsyncSession, subject_id: int, user_id: str):
     await db.execute(
-        delete(TeacherSubject).filter_by(subject_id=subject_id, uid=user_id)
+        delete(TeacherSubject)
+        .where(TeacherSubject.c.subject_id == subject_id)
+        .where(TeacherSubject.c.uid == user_id)
     )
     await db.commit()
 
 
 async def delete_subject(db: AsyncSession, subject_id: int):
-    await db.execute(delete(Subject).filter_by(id=subject_id))
+    await db.execute(delete(Subject).where(Subject.id == subject_id))
     await db.commit()

@@ -9,7 +9,7 @@
 import { useAuthStore } from "@/stores/auth-store";
 import { ref, onMounted } from "vue";
 const apiUrl = import.meta.env.VITE_API_URL;
-const user = ref<string>("");
+const user = ref<string | null>(null);
 const { token, logout } = useAuthStore();
 onMounted(async () => {
     await fetchUser();
