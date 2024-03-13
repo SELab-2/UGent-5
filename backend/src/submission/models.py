@@ -1,6 +1,6 @@
 from sqlalchemy import BigInteger, DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
-import datetime
+from datetime import datetime, timezone
 import enum
 from src.database import Base
 
@@ -15,16 +15,16 @@ class Submission(Base):
     __tablename__ = "submission"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    date: Mapped[DateTime] = mapped_column(default=datetime.datetime.now(datetime.UTC),
+    date: Mapped[datetime] = mapped_column(default=datetime.now(timezone.utc),
                                            nullable=False)
     status: Mapped[Status] = mapped_column(default=Status.InProgress, nullable=False)
 
-    group_id: Mapped[BigInteger] = mapped_column(
+    group_id: Mapped[int] = mapped_column(
         ForeignKey("group.id", ondelete="CASCADE"),
         nullable=False
     )
 
-    project_id: Mapped[BigInteger] = mapped_column(
+    project_id: Mapped[int] = mapped_column(
         ForeignKey("project.id", ondelete="CASCADE"),
         nullable=False
     )

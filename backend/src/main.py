@@ -8,6 +8,7 @@ from src.group.router import router as group_router
 from src.project.router import router as project_router
 from src.subject.router import router as subject_router
 from src.user.router import router as user_router
+from src.submission.router import router as submission_router
 
 app = FastAPI()
 
@@ -21,7 +22,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 @app.get("/api")
 async def root():
@@ -40,3 +40,4 @@ app.include_router(user_router)
 app.include_router(subject_router)
 app.include_router(project_router)
 app.include_router(group_router)
+app.include_router(submission_router)

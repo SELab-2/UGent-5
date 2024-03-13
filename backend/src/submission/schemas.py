@@ -1,5 +1,5 @@
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from .models import Status
 
 
@@ -12,10 +12,9 @@ class SubmissionCreate(SubmissionBase):
 
 
 class Submission(SubmissionBase):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     date: datetime
     group_id: int
     status: Status
-
-    class Config:
-        from_attributes = True
