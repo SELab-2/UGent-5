@@ -75,3 +75,14 @@ async def test_delete_subject(client: AsyncClient, db: AsyncSession, subject_id:
 
     response4 = await client.get(f"/api/subjects/{subject_id}")
     assert response4.status_code == 404  # Not Found
+
+
+@pytest.mark.asyncio
+async def test_patch_subject(client: AsyncClient, db: AsyncSession, subject_id: int):
+    await set_admin(db, "test", False)
+    response = await client.patch(f"/api/subjects/{subject_id}", json={"name": "new name"})
+    assert response.status_code == 403
+    await set_admin(db, "test", True)
+    response = await client.patch(f"/api/subjects/{subject_id}", json={"name": "new name"})
+    assert response.status_code == 200
+    assert response.json()["name"] == "new name"
