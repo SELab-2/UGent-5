@@ -1,6 +1,8 @@
-from pydantic import BaseModel, Field
-from ..user.schemas import User
 from typing import List
+
+from pydantic import BaseModel, Field
+
+from src.user.schemas import User
 
 
 class Groupbase(BaseModel):

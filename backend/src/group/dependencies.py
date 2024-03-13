@@ -1,4 +1,5 @@
 from typing import Sequence
+
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.dependencies import get_async_db
@@ -11,7 +12,9 @@ from . import service
 from .exceptions import AlreadyInGroup, GroupNotFound
 
 
-async def retrieve_group(group_id: int, db: AsyncSession = Depends(get_async_db)) -> Group:
+async def retrieve_group(
+    group_id: int, db: AsyncSession = Depends(get_async_db)
+) -> Group:
     group = await service.get_group_by_id(db, group_id)
     if not group:
         raise GroupNotFound()

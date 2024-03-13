@@ -1,13 +1,14 @@
 from typing import Sequence
+
 from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
-
-from ..project import models as projectModels
-from ..subject import models as subjectModels
+from sqlalchemy.future import select
 from src.user.models import User
+
+from src.project import models as projectModels
+from src.subject import models as subjectModels
 from . import schemas
 from .models import Group, StudentGroup
-from sqlalchemy.future import select
 
 
 async def get_group_by_id(db: AsyncSession, group_id: int) -> Group | None:
@@ -15,15 +16,39 @@ async def get_group_by_id(db: AsyncSession, group_id: int) -> Group | None:
 
 
 async def get_groups_by_project(db: AsyncSession, project_id: int) -> Sequence[Group]:
-    return (await db.execute(select(Group).filter_by(project_id=project_id))).scalars().all()
+    return (
+        (await db.execute(select(Group).filter_by(project_id=project_id)))
+        .scalars()
+        .all()
+    )
 
 
 async def get_groups_by_user(db: AsyncSession, user_id: str) -> Sequence[Group]:
-    return (await db.execute(select(Group).join(StudentGroup, StudentGroup.c.uid == user_id))).scalars().all()
+    return (
+        (
+            await db.execute(
+                select(Group).join(StudentGroup, StudentGroup.c.uid == user_id)
+            )
+        )
+        .scalars()
+        .all()
+    )
 
 
 async def get_teachers_by_group(db: AsyncSession, group_id: int) -> Sequence[User]:
-    return (await db.execute(select(User).join(subjectModels.TeacherSubject).join(subjectModels.Subject).join(projectModels.Project).join(Group, Group.id == group_id))).scalars().all()
+    return (
+        (
+            await db.execute(
+                select(User)
+                .join(subjectModels.TeacherSubject)
+                .join(subjectModels.Subject)
+                .join(projectModels.Project)
+                .join(Group, Group.id == group_id)
+            )
+        )
+        .scalars()
+        .all()
+    )
 
 
 async def create_group(db: AsyncSession, group: schemas.GroupCreate) -> Group:
