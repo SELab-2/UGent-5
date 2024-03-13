@@ -1,29 +1,24 @@
 from typing import Sequence
 
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import Session
 from . import models, schemas
 from src.user.models import User
 
-
 async def get_subject(db: AsyncSession, subject_id: int) -> models.Subject:
-    async with db.begin():
-        result = await db.execute(select(models.Subject).filter_by(id=subject_id))
-        return result.scalars().first()
+    result = await db.execute(select(models.Subject).filter_by(id=subject_id))
+    return result.scalars().first()
 
 
 async def get_subjects(db: AsyncSession, user_id: str) -> tuple[Sequence[models.Subject], Sequence[models.Subject]]:
-    async with db.begin():
-        teachers_subjects = await db.execute(select(models.Subject).join(models.TeacherSubject).filter(models.TeacherSubject.c.uid == user_id))
-        students_subjects = await db.execute(select(models.Subject).join(models.StudentSubject).filter(models.StudentSubject.c.uid == user_id))
-        return teachers_subjects.scalars().all(), students_subjects.scalars().all()
+    teachers_subjects = await db.execute(select(models.Subject).join(models.TeacherSubject).filter(models.TeacherSubject.c.uid == user_id))
+    students_subjects = await db.execute(select(models.Subject).join(models.StudentSubject).filter(models.StudentSubject.c.uid == user_id))
+    return teachers_subjects.scalars().all(), students_subjects.scalars().all()
 
 
-async def get_teachers(db: AsyncSession, subject_id: int) -> list[User]:
-    async with db.begin():
-        result = await db.execute(select(User).join(models.TeacherSubject, models.TeacherSubject.c.subject_id == subject_id))
-        return result.scalars().all()
+async def get_teachers(db: AsyncSession, subject_id: int) -> Sequence[User]:
+    result = await db.execute(select(User).join(models.TeacherSubject, models.TeacherSubject.c.subject_id == subject_id))
+    return result.scalars().all()
 
 
 async def create_subject(db: AsyncSession, subject: schemas.SubjectCreate) -> models.Subject:
