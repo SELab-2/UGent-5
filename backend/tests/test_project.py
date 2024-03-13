@@ -18,7 +18,6 @@ project = {
     "enroll_deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ")
 }
 
-
 @pytest_asyncio.fixture
 async def subject_id(client: AsyncClient, db: AsyncSession) -> int:
     """Create new subject"""
