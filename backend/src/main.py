@@ -6,7 +6,6 @@ from src.project.router import router as project_router
 from src.auth.router import router as auth_router
 from fastapi.middleware.cors import CORSMiddleware
 from src import config
-from src.project.router import router as project_router
 
 app = FastAPI()
 
@@ -29,4 +28,10 @@ app.include_router(auth_router)
 
 @app.get("/api")
 async def root():
-    return {"message": "Hello World"}
+    return {
+        "docs": "/api/docs",
+        "profile": f"{user_router.prefix}/me",
+        "subjects": subject_router.prefix,
+        "projects": project_router.prefix,
+        # TODO: groups moet hier nog inkomen
+    }
