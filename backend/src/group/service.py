@@ -13,7 +13,8 @@ async def get_group_by_id(db: Session, project_id, group_id: int) -> Group:
             .filter(Group.id == group_id).first())
 
 
-async def get_groups_by_project(db: Session, project_id: int) -> list[Group]:#, list[userModels.User]]:
+# , list[userModels.User]]:
+async def get_groups_by_project(db: Session, project_id: int) -> list[Group]:
     groups = (
         db.query(Group)
         .filter(Group.project_id == project_id)
@@ -27,8 +28,8 @@ async def get_groups_by_project(db: Session, project_id: int) -> list[Group]:#, 
     #         Group.project_id == project_id
     #     )
     #     .all()
-    #)
-    return groups#, group_members
+    # )
+    return groups  # , group_members
 
 
 async def get_groups_by_user(db: Session, user_id: str) -> list[Group]:
