@@ -8,7 +8,7 @@ from src.subject.dependencies import user_permission_validation
 from . import service
 
 router = APIRouter(
-    prefix="/api/subjects/{subject_id}/projects/{project_id}/groups",
+    prefix="/api/projects/{project_id}/groups",
     tags=["groups"],
     responses={404: {"description": "Not found"}},
 )
@@ -25,14 +25,14 @@ async def get_group(group: Group = Depends(retrieve_group)):
 
 
 @router.delete("/{group_id}",
-               dependencies=[Depends(user_permission_validation, is_authorized_user(True))], status_code=200)
-async def leave_group(subject_id: int, db: Session = Depends(get_db)):
-    await service.leave_group(db, subject_id)
+               dependencies=[Depends(user_permission_validation, is_authorized_user(member = True))], status_code=200)
+async def leave_group(group_id: int, user_id: str, db: Session = Depends(get_db)):
+    await service.leave_group(db, group_id, user_id)
     return "Successfully deleted"
 
 
 @router.post("/{group_id}",
-             dependencies=[Depends(user_permission_validation, is_authorized_user(False))], status_code=201)
-async def join_group(subject_id: int, db: Session = Depends(get_db)):
-    await service.join_group(db, subject_id)
+             dependencies=[Depends(user_permission_validation, is_authorized_user(member = False))], status_code=201)
+async def join_group(group_id: int, user_id: str, db: Session = Depends(get_db)):
+    await service.join_group(db, group_id, user_id)
     return "Successfully joined"

@@ -23,13 +23,16 @@ async def retrieve_groups_by_user(user: User, db: Session = Depends(get_db)) -> 
     return GroupList.model_validate(grouplist)
 
 
-async def retrieve_groups_by_project(project: Project, db: Session = Depends(get_db)) -> GroupList:
-    grouplist = await service.get_groups_by_project(db, project.id)
+async def retrieve_groups_by_project(project: User, db: Session = Depends(get_db)) -> GroupList: #TODO: FIX USER TO PROJECT
+    grouplist = await service.get_groups_by_project(db, project.uid)
     return GroupList.model_validate(grouplist)
 
 
 async def is_authorized_user(member: bool, group_id: int, user: User = Depends(get_authenticated_user), db: Session = Depends(get_db)):
     groups = await service.get_groups_by_user(db, user.uid)
     if member:
+        if not any(group.id == group_id for group in groups):
+            raise NotAuthorized()
+    if not member:
         if not any(group.id == group_id for group in groups):
             raise NotAuthorized()

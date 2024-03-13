@@ -17,4 +17,3 @@ class Group(Base):
     team_name: Mapped[str]
     score: Mapped[int]
     project_id: Mapped[int]
-    deadline: Mapped[Date]  # TODO: should be added to project
