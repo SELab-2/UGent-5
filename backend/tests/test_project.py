@@ -14,7 +14,8 @@ project = {
     "name": "test project",
     "subject_id": 0,  # temp needs to be filled in by actual subject id
     "deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
-    "description": "test"
+    "description": "test",
+    "enroll_deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ")
 }
 
 
