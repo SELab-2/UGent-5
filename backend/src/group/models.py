@@ -14,6 +14,6 @@ class Group(Base):
     __tablename__ = "team"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    team_name: Mapped[str]
-    score: Mapped[int]
-    project_id: Mapped[int]
+    team_name: Mapped[str] = mapped_column(nullable=False)
+    score: Mapped[int] = mapped_column(nullable=False)
+    project_id: Mapped[int] = mapped_column(nullable=False)

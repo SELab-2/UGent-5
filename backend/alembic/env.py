@@ -1,6 +1,7 @@
 from src.user.models import Base as UserBase
 from src.subject.models import Base as SubjectBase
 from src.project.models import Base as ProjectBase
+from src.group.models import Base as GroupBase
 import os
 import sys
 from logging.config import fileConfig
@@ -33,7 +34,7 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 combined_metadata = MetaData()
-for base in [ProjectBase, SubjectBase, UserBase]:
+for base in [ProjectBase, SubjectBase, UserBase, GroupBase]:
     for table in base.metadata.tables.values():
         combined_metadata._add_table(table.name, table.schema, table)
 
