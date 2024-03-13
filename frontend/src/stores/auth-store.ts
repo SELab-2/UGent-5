@@ -53,11 +53,10 @@ export const useAuthStore = defineStore("auth", () => {
         return null;
     }
 
-    function logout() {
+    async function logout() {
         token.value = null;
         localStorage.removeItem("token");
-        // FIXME: somehow does not work
-        router.replace("/");
+        await router.replace({ name: "login" });
     }
     return { token, isLoggedIn, login, logout, setNext };
 });
