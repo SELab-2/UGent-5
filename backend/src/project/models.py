@@ -13,9 +13,7 @@ class Project(Base):
     subject_id: Mapped[int] = mapped_column(ForeignKey(
         'subject.id', ondelete="CASCADE"), nullable=True)
     description: Mapped[str] = mapped_column(nullable=True)
-
-    enroll_deadline: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), nullable=True)
+    enroll_deadline: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
 
     __table_args__ = (
         CheckConstraint('deadline >= CURRENT_DATE', name='deadline_check'),
