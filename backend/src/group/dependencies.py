@@ -45,6 +45,7 @@ async def is_authorized_to_leave(
             raise NotAuthorized()
 
 
+# TODO: take enroll_date into consideration
 async def is_authorized_to_join(
     group_id: int,
     user: User = Depends(get_authenticated_user),
