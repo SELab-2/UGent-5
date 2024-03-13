@@ -3,10 +3,9 @@ import src.user.service as user_service
 from cas import CASClient
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import RedirectResponse
-from sqlalchemy.orm import Session
 from src import config
 from src.auth.schemas import Authority, Token, TokenRequest
-from src.dependencies import get_db, get_async_db
+from src.dependencies import get_async_db
 from src.user.schemas import UserCreate
 
 from .exceptions import UnAuthenticated
