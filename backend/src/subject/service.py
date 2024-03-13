@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from . import models, schemas
 from src.user.models import User
 
+
 async def get_subject(db: AsyncSession, subject_id: int) -> models.Subject:
     result = await db.execute(select(models.Subject).filter_by(id=subject_id))
     return result.scalars().first()
