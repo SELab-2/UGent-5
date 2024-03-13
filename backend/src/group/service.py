@@ -1,71 +1,45 @@
-from sqlalchemy.orm import Session
+from typing import Sequence
+from sqlalchemy import delete
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..project import models as projectModels
 from ..subject import models as subjectModels
-from ..user import models as userModels
+from src.user.models import User
 from . import schemas
 from .models import Group, StudentGroup
+from sqlalchemy.future import select
 
 
-async def get_group_by_id(db: Session, project_id, group_id: int) -> Group:
-    return (db.query(Group)
-            .filter(Group.project_id == project_id)
-            .filter(Group.id == group_id).first())
+async def get_group_by_id(db: AsyncSession, group_id: int) -> Group | None:
+    return (await db.execute(select(Group).filter_by(id=group_id))).scalar_one_or_none()
 
 
-# , list[userModels.User]]:
-async def get_groups_by_project(db: Session, project_id: int) -> list[Group]:
-    groups = (
-        db.query(Group)
-        .filter(Group.project_id == project_id)
-        .all()
-    )
-    # group_members = (
-    #     db.query(userModels.User)
-    #     .join(StudentGroup, userModels.User.uid == StudentGroup.columns.uid)
-    #     .join(Group, StudentGroup.columns.team_id == Group.id)
-    #     .filter(
-    #         Group.project_id == project_id
-    #     )
-    #     .all()
-    # )
-    return groups  # , group_members
+async def get_groups_by_project(db: AsyncSession, project_id: int) -> Sequence[Group]:
+    return (await db.execute(select(Group).filter_by(project_id=project_id))).scalars().all()
 
 
-async def get_groups_by_user(db: Session, user_id: str) -> list[Group]:
-    return (
-        db.query(Group).join(StudentGroup).filter(StudentGroup.c.uid == user_id).all()
-    )
+async def get_groups_by_user(db: AsyncSession, user_id: str) -> Sequence[Group]:
+    return (await db.execute(select(Group).join(StudentGroup, StudentGroup.c.uid == user_id))).scalars().all()
 
 
-async def get_teachers_by_group(db: Session, group_id: int) -> list[userModels.User]:
-    return (
-        db.query(userModels.User)
-        .join(subjectModels.TeacherSubject)
-        .join(subjectModels.Subject)
-        .join(projectModels.Project)
-        .join(Group)
-        .filter(Group.id == group_id)
-        .filter(Group.project_id == projectModels.Project.id)
-        .filter(projectModels.Project.subject_id == subjectModels.Subject.id)
-        .all()
-    )
+async def get_teachers_by_group(db: AsyncSession, group_id: int) -> Sequence[User]:
+    return (await db.execute(select(User).join(subjectModels.TeacherSubject).join(subjectModels.Subject).join(projectModels.Project).join(Group, Group.id == group_id))).scalars().all()
 
 
-async def create_group(db: Session, group: schemas.GroupCreate) -> Group:
+async def create_group(db: AsyncSession, group: schemas.GroupCreate) -> Group:
     db_group = Group(**group.model_dump())
     db.add(db_group)
-    db.commit()
-    db.refresh(db_group)
+    await db.commit()
+    await db.refresh(db_group)
     return db_group
 
 
-async def join_group(db: Session, team_id: int, user_id: str):
+async def join_group(db: AsyncSession, team_id: int, user_id: str):
     insert_stmnt = StudentGroup.insert().values(team_id=team_id, uid=user_id)
-    db.execute(insert_stmnt)
-    db.commit()
+    await db.execute(insert_stmnt)
+    await db.commit()
 
 
-async def leave_group(db: Session, team_id: int, user_id: str):
-    db.query(StudentGroup).filter_by(team_id=team_id, uid=user_id).delete()
-    db.commit()
+async def leave_group(db: AsyncSession, team_id: int, user_id: str):
+    await db.execute(delete(StudentGroup).filter_by(team_id=team_id, uid=user_id))
+    await db.commit()
