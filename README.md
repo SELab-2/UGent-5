@@ -23,4 +23,4 @@ De instructies voor het opzetten van de ontwikkelomgeving van de frontend kan je
 
 ## API
 
-Geautomatiseerde clients kunnen interageren met de webapplicatie via de [API](https://sel2-5.ugent.be/docs).
+Geautomatiseerde clients kunnen interageren met de webapplicatie via de [API](https://sel2-5.ugent.be/api/docs).
