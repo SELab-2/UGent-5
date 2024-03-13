@@ -5,7 +5,7 @@ from src.database import Base
 StudentGroup = Table(
     "student_group",
     Base.metadata,
-    Column("uid", ForeignKey("user.uid")),
+    Column("uid", ForeignKey("website_user.uid")),
     Column("team_id", ForeignKey("team.id")),
 )
 

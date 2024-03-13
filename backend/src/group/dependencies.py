@@ -10,26 +10,25 @@ from . import service
 from .exceptions import GroupNotFound
 
 
-# as teammember and as not teammember
-async def retrieve_group(group_id: int, db: Session = Depends(get_db)) -> Group:
-    group = await service.get_group_by_id(db, group_id)
+async def retrieve_group(project_id: int, group_id: int, db: Session = Depends(get_db)) -> Group:
+    group = await service.get_group_by_id(db, project_id, group_id)
     if not group:
         raise GroupNotFound()
-    return Group.model_validate(group)
+    return Group(**group.__dict__)
 
 
 async def retrieve_groups_by_user(
     user: User, db: Session = Depends(get_db)
 ) -> list[Group]:
     grouplist = await service.get_groups_by_user(db, user.uid)
-    return [Group.model_validate(group) for group in grouplist]
+    return [Group(**group.__dict__) for group in grouplist]
 
 
 async def retrieve_groups_by_project(
     project_id: int, db: Session = Depends(get_db)
 ) -> list[Group]:
     grouplist = await service.get_groups_by_project(db, project_id)
-    return [Group.model_validate(group) for group in grouplist]
+    return [Group(**group.__dict__) for group in grouplist]
 
 
 async def is_authorized_to_leave(

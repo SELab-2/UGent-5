@@ -7,17 +7,28 @@ from . import schemas
 from .models import Group, StudentGroup
 
 
-async def get_group_by_id(db: Session, group_id: int) -> Group:
-    return db.get(Group, group_id)
+async def get_group_by_id(db: Session, project_id, group_id: int) -> Group:
+    return (db.query(Group)
+            .filter(Group.project_id == project_id)
+            .filter(Group.id == group_id).first())
 
 
-async def get_groups_by_project(db: Session, project_id: int) -> list[Group]:
-    return (
+async def get_groups_by_project(db: Session, project_id: int) -> list[Group]:#, list[userModels.User]]:
+    groups = (
         db.query(Group)
-        .join(projectModels.Project)
         .filter(Group.project_id == project_id)
         .all()
     )
+    # group_members = (
+    #     db.query(userModels.User)
+    #     .join(StudentGroup, userModels.User.uid == StudentGroup.columns.uid)
+    #     .join(Group, StudentGroup.columns.team_id == Group.id)
+    #     .filter(
+    #         Group.project_id == project_id
+    #     )
+    #     .all()
+    #)
+    return groups#, group_members
 
 
 async def get_groups_by_user(db: Session, user_id: str) -> list[Group]:
