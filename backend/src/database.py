@@ -10,7 +10,7 @@ engine = create_engine(SQLALCHEMY_DATABASE_URL)
 async_engine = create_async_engine(
     SQLALCHEMY_DATABASE_URL[: len("postgresql")]
     + "+asyncpg"
-    + SQLALCHEMY_DATABASE_URL[len("postgresql") :]
+    + SQLALCHEMY_DATABASE_URL[len("postgresql"):]
 )
 
 AsyncSessionLocal = async_sessionmaker(async_engine, autoflush=False)
