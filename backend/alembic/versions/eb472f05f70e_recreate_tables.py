@@ -38,7 +38,7 @@ def upgrade() -> None:
                     sa.Column('deadline', sa.Date(), nullable=False,
                               check_constraint='deadline >= CURRENT_DATE'),
                     sa.Column('name', sa.String(), nullable=False),
-                    sa.Column('subjectId', sa.String(), nullable=True),
+                    sa.Column('subjectId', sa.BigInteger(), nullable=True),
                     sa.Column('description', sa.String(), nullable=True),
                     sa.ForeignKeyConstraint(
                         ['subjectId'], ['subject.id'], ondelete='SET NULL'),
