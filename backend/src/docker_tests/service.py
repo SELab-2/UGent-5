@@ -3,7 +3,8 @@ import docker
 async def build_image():
     client = docker.from_env()
 
-    client.images.build(path="/Users/pieterjanin/docker_example_bash/", tag="docker_example", rm=True)
+    client.images.build(path="/Users/pieterjanin/UGent-5/backend/src/docker_tests/docker_base", tag="docker_base", rm=True)
+    client.images.build(path="/Users/pieterjanin/UGent-5/backend/src/docker_tests/docker_example", tag="docker_example", rm=True)
     client.images.prune()
 
 
