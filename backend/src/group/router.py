@@ -7,7 +7,7 @@ from src.group.dependencies import (
     retrieve_group,
     retrieve_groups_by_project,
 )
-from src.group.schemas import Group
+from src.group.schemas import Group, GroupCreate
 
 from . import service
 
@@ -21,6 +21,11 @@ router = APIRouter(
 @router.get("/")
 async def get_groups(groups: list[Group] = Depends(retrieve_groups_by_project)):
     return groups
+
+
+@router.post("/", status_code=201) #CHECK IF AUTHORIZED
+async def create_group(group: GroupCreate, db: AsyncSession = Depends(get_async_db)):
+    return await service.create_group(db, group)
 
 
 @router.get("/{group_id}")
