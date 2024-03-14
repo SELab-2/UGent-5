@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends
+from src.group.schemas import GroupList
 
 from .dependencies import (
     get_authenticated_user,
@@ -7,7 +8,6 @@ from .dependencies import (
     retrieve_subjects,
 )
 from .schemas import User, UserProjectList, UserSubjectList
-from src.group.schemas import GroupList
 
 router = APIRouter(
     prefix="/api/users", tags=["user"], responses={404: {"description": "Not Found"}}
@@ -32,14 +32,6 @@ async def subjects(
     return subjects
 
 
-@router.get("/me/groups")
-async def groups(groups: GroupList = Depends(retrieve_groups)) -> GroupList:
-    """
-    Get the groups of the current user
-    """
-    return groups
-
-
 @router.get("/me/projects")
 async def projects(
     projects: UserProjectList = Depends(retrieve_projects),
@@ -48,3 +40,11 @@ async def projects(
     Get the projects of the current user
     """
     return projects
+
+
+@router.get("/me/groups")
+async def groups(groups: GroupList = Depends(retrieve_groups)) -> GroupList:
+    """
+    Get the groups of the current user
+    """
+    return groups
