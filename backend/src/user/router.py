@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends
+from src.auth.dependencies import authentication_validation
 from src.group.schemas import GroupList
 
 from .dependencies import (
@@ -11,28 +12,31 @@ from .dependencies import (
 from .schemas import User, UserProjectList, UserSimple, UserSubjectList
 
 router = APIRouter(
-    prefix="/api/users", tags=["user"], responses={404: {"description": "Not Found"}}
+    prefix="/api/users",
+    tags=["user"],
+    responses={404: {"description": "Not Found"}},
+    dependencies=[Depends(authentication_validation)],
 )
 
 
+@router.get("/{user_id}")
+async def user_info(user: UserSimple = Depends(retrieve_user)) -> UserSimple:
+    """
+    Get information about a user
+    """
+    return user
+
+
 @router.get("/me")
-async def me(user: User = Depends(get_authenticated_user)) -> User:
+async def profile(user: User = Depends(get_authenticated_user)) -> User:
     """
     Get information about the current user
     """
     return user
 
 
-@router.get("/{user_id}", dependencies=[Depends(get_authenticated_user)])
-async def user(user: UserSimple = Depends(retrieve_user)) -> UserSimple:
-    """
-    Get information about the user with the given user_id
-    """
-    return user
-
-
 @router.get("/me/subjects")
-async def subjects(
+async def list_subjects(
     subjects: UserSubjectList = Depends(retrieve_subjects),
 ) -> UserSubjectList:
     """
@@ -42,7 +46,7 @@ async def subjects(
 
 
 @router.get("/me/projects")
-async def projects(
+async def list_projects(
     projects: UserProjectList = Depends(retrieve_projects),
 ) -> UserProjectList:
     """
@@ -52,7 +56,7 @@ async def projects(
 
 
 @router.get("/me/groups")
-async def groups(groups: GroupList = Depends(retrieve_groups)) -> GroupList:
+async def list_groups(groups: GroupList = Depends(retrieve_groups)) -> GroupList:
     """
     Get the groups of the current user
     """

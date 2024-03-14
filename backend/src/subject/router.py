@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.auth.dependencies import authentication_validation
 from src.dependencies import get_async_db
 from src.user.dependencies import admin_user_validation, user_id_validation
 from src.user.schemas import User
@@ -16,6 +17,7 @@ router = APIRouter(
     prefix="/api/subjects",
     tags=["subjects"],
     responses={404: {"description": "Not found"}},
+    dependencies=[Depends(authentication_validation)],
 )
 
 

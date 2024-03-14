@@ -1,12 +1,15 @@
 import jwt
 from fastapi import Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from sqlalchemy.ext.asyncio import AsyncSession
 from src.config import CONFIG
+from src.dependencies import get_async_db
+import src.user.service as user_service
 
 from .exceptions import UnAuthenticated
 
 
-def verify_jwt_token(
+def jwt_token_validation(
     credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
 ) -> str:
     """
@@ -29,7 +32,18 @@ def verify_jwt_token(
         return user_id
     except (jwt.ExpiredSignatureError, jwt.MissingRequiredClaimError):
         # Token is expired or no expiration time is set
-        raise UnAuthenticated
+        raise UnAuthenticated()
     except jwt.InvalidTokenError:
         # Token is invalid
-        raise UnAuthenticated
+        raise UnAuthenticated()
+
+
+async def authentication_validation(
+    user_id: str = Depends(jwt_token_validation), db: AsyncSession = Depends(get_async_db)
+):
+    """
+    Verify if the user is authenticated
+    """
+    user = await user_service.get_by_id(db, user_id)
+    if not user:
+        raise UnAuthenticated()

@@ -4,7 +4,7 @@ import src.subject.service as subject_service
 import src.user.service as user_service
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.auth.dependencies import verify_jwt_token
+from src.auth.dependencies import jwt_token_validation
 from src.auth.exceptions import NotAuthorized, UnAuthenticated
 from src.dependencies import get_async_db
 from src.group.schemas import GroupList
@@ -14,7 +14,8 @@ from .schemas import User, UserProjectList, UserSimple, UserSubjectList
 
 
 async def get_authenticated_user(
-    user_id: str = Depends(verify_jwt_token), db: AsyncSession = Depends(get_async_db)
+    user_id: str = Depends(jwt_token_validation),
+    db: AsyncSession = Depends(get_async_db),
 ) -> User:
     """Get current logged in user"""
     if not user_id:
