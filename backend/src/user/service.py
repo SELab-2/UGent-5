@@ -1,14 +1,15 @@
-from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
-from . import models, schemas
+
+from .models import User
+from .schemas import UserCreate
 
 
-async def get_by_id(db: AsyncSession, user_id: str) -> models.User:
-    return await db.get(models.User, user_id)
+async def get_by_id(db: AsyncSession, user_id: str) -> User:
+    return await db.get(User, user_id)
 
 
-async def create_user(db: AsyncSession, user: schemas.UserCreate) -> models.User:
-    db_user = models.User(**user.model_dump())
+async def create_user(db: AsyncSession, user: UserCreate) -> User:
+    db_user = User(**user.model_dump())
     db.add(db_user)
     await db.commit()
     await db.refresh(db_user)

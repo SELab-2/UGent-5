@@ -24,8 +24,8 @@ async def retrieve_subjects(
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db),
 ) -> SubjectList:
-    teacher_subjects, student_subjects = await service.get_subjects(db, user.uid)
-    return SubjectList(as_teacher=teacher_subjects, as_student=student_subjects)
+    subjects = await service.get_subjects(db)
+    return SubjectList(subjects=subjects)
 
 
 async def user_permission_validation(

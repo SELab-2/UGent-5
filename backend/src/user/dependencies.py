@@ -1,11 +1,14 @@
+import src.project.service as project_service
+import src.subject.service as subject_service
+import src.user.service as user_service
+from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.dependencies import verify_jwt_token
+from src.auth.exceptions import NotAuthorized, UnAuthenticated
 from src.dependencies import get_async_db
-from fastapi import Depends
-from .schemas import User
+
 from .exceptions import UserNotFound
-from src.auth.exceptions import UnAuthenticated, NotAuthorized
-import src.user.service as user_service
+from .schemas import User, UserGroupList, UserProjectList, UserSubjectList
 
 
 async def get_authenticated_user(
@@ -31,3 +34,29 @@ async def user_id_validation(user_id: str, db: AsyncSession = Depends(get_async_
     user = await user_service.get_by_id(db, user_id)
     if not user:
         raise UserNotFound()
+
+
+async def retrieve_subjects(
+    user: User = Depends(get_authenticated_user),
+    db: AsyncSession = Depends(get_async_db),
+) -> UserSubjectList:
+    teacher_subjects, student_subjects = await subject_service.get_subjects_by_user(
+        db, user.uid
+    )
+    return UserSubjectList(as_student=student_subjects, as_teacher=teacher_subjects)
+
+
+async def retrieve_groups(
+    user: User = Depends(get_authenticated_user),
+    db: AsyncSession = Depends(get_async_db),
+) -> UserGroupList:
+    # TODO: Implement this
+    return UserGroupList(groups=[])
+
+
+async def retrieve_projects(
+    user: User = Depends(get_authenticated_user),
+    db: AsyncSession = Depends(get_async_db),
+) -> UserProjectList:
+    projects = await project_service.get_projects_by_user(db, user.uid)
+    return UserProjectList(projects=projects)

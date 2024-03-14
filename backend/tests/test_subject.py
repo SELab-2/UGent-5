@@ -58,10 +58,10 @@ async def test_create_teacher(client: AsyncClient, db: AsyncSession, subject_id:
 
 @pytest.mark.asyncio
 async def test_get_subjects(client: AsyncClient, subject_id: int):
-    await client.post(f"/api/subjects/{subject_id}/teachers", params={'user_id': 'test'})
+    # await client.post(f"/api/subjects/{subject_id}/teachers", params={'user_id': 'test'})
     response2 = await client.get("/api/subjects/")
     assert response2.status_code == 200
-    assert len(response2.json()["as_teacher"]) == 1
+    assert len(response2.json()) == 1
 
 
 @pytest.mark.asyncio

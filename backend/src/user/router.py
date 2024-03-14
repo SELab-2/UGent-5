@@ -1,12 +1,49 @@
 from fastapi import APIRouter, Depends
-from .schemas import User
-from .dependencies import get_authenticated_user
+
+from .dependencies import (
+    get_authenticated_user,
+    retrieve_groups,
+    retrieve_projects,
+    retrieve_subjects,
+)
+from .schemas import User, UserGroupList, UserProjectList, UserSubjectList
 
 router = APIRouter(
-    prefix="/api/user", tags=["user"], responses={404: {"description": "Not Found"}}
+    prefix="/api/users", tags=["user"], responses={404: {"description": "Not Found"}}
 )
 
 
-@router.get("/profile", response_model=User)
-async def profile(user=Depends(get_authenticated_user)):
+@router.get("/me")
+async def profile(user: User = Depends(get_authenticated_user)) -> User:
+    """
+    Get information about the current user
+    """
     return user
+
+
+@router.get("/me/subjects")
+async def subjects(
+    subjects: UserSubjectList = Depends(retrieve_subjects),
+) -> UserSubjectList:
+    """
+    Get the subjects of the current user
+    """
+    return subjects
+
+
+@router.get("/me/groups")
+async def groups(groups: UserGroupList = Depends(retrieve_groups)) -> UserGroupList:
+    """
+    Get the groups of the current user
+    """
+    return groups
+
+
+@router.get("/me/projects")
+async def projects(
+    projects: UserProjectList = Depends(retrieve_projects),
+) -> UserProjectList:
+    """
+    Get the projects of the current user
+    """
+    return projects

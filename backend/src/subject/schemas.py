@@ -1,6 +1,6 @@
-from enum import Enum
 from typing import Sequence
-from pydantic import BaseModel, Field, ConfigDict
+
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class SubjectBase(BaseModel):
@@ -18,7 +18,5 @@ class Subject(SubjectBase):
 
 
 class SubjectList(BaseModel):
+    subjects: Sequence[Subject]
     model_config = ConfigDict(from_attributes=True)
-
-    as_teacher: Sequence[Subject]
-    as_student: Sequence[Subject]
