@@ -27,6 +27,7 @@ app.add_middleware(
 async def root():
     return {
         "docs": "/api/docs",
+        "authentication": auth_router.prefix,
         "profile": f"{user_router.prefix}/me",
         "subjects": subject_router.prefix,
         "projects": project_router.prefix,

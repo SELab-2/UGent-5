@@ -39,7 +39,8 @@ def jwt_token_validation(
 
 
 async def authentication_validation(
-    user_id: str = Depends(jwt_token_validation), db: AsyncSession = Depends(get_async_db)
+    user_id: str = Depends(jwt_token_validation),
+    db: AsyncSession = Depends(get_async_db),
 ):
     """
     Verify if the user is authenticated

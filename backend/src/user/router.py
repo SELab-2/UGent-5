@@ -20,18 +20,18 @@ router = APIRouter(
 )
 
 
-@router.get("/{user_id}")
-async def user_info(user: UserSimple = Depends(retrieve_user)) -> UserSimple:
-    """
-    Get information about a user
-    """
-    return user
-
-
 @router.get("/me")
 async def profile(user: User = Depends(get_authenticated_user)) -> User:
     """
     Get information about the current user
+    """
+    return user
+
+
+@router.get("/{user_id}")
+async def user_info(user: UserSimple = Depends(retrieve_user)) -> UserSimple:
+    """
+    Get information about a user
     """
     return user
 
