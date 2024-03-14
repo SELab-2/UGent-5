@@ -44,6 +44,7 @@ async def get_project(project_id: int, db: AsyncSession = Depends(get_async_db))
     return project
 
 
+# TODO: dependency klotp niet
 @router.delete("/{project_id}", dependencies=[Depends(user_permission_validation)])
 async def delete_project_for_subject(
     project_id: int, db: AsyncSession = Depends(get_async_db)

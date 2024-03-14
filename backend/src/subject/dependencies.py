@@ -8,6 +8,7 @@ from src.user.schemas import User
 from . import service
 from .exceptions import SubjectNotFound
 from .schemas import Subject, SubjectList
+from src.project.schemas import ProjectCreate
 
 
 async def retrieve_subject(
@@ -29,11 +30,11 @@ async def retrieve_subjects(
 
 
 async def user_permission_validation(
-    subject_id: int,
+    project_in: ProjectCreate,
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     if not user.is_admin:
-        teachers = await service.get_teachers(db, subject_id)
+        teachers = await service.get_teachers(db, project_in.subject_id)
         if not list(filter(lambda teacher: teacher.uid == user.uid, teachers)):
             raise NotAuthorized()
