@@ -1,18 +1,22 @@
+import src.group.service as group_service
 import src.project.service as project_service
 import src.subject.service as subject_service
 import src.user.service as user_service
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.auth.dependencies import verify_jwt_token
+from src.auth.dependencies import jwt_token_validation
 from src.auth.exceptions import NotAuthorized, UnAuthenticated
 from src.dependencies import get_async_db
+from src.group.schemas import GroupList
+from src.project.schemas import ProjectList
 
 from .exceptions import UserNotFound
-from .schemas import User, UserGroupList, UserProjectList, UserSubjectList
+from .schemas import User, UserSimple, UserSubjectList
 
 
 async def get_authenticated_user(
-    user_id: str = Depends(verify_jwt_token), db: AsyncSession = Depends(get_async_db)
+    user_id: str = Depends(jwt_token_validation),
+    db: AsyncSession = Depends(get_async_db),
 ) -> User:
     """Get current logged in user"""
     if not user_id:
@@ -36,6 +40,15 @@ async def user_id_validation(user_id: str, db: AsyncSession = Depends(get_async_
         raise UserNotFound()
 
 
+async def retrieve_user(
+    user_id: str, db: AsyncSession = Depends(get_async_db)
+) -> UserSimple:
+    user = await user_service.get_by_id(db, user_id)
+    if not user:
+        raise UserNotFound()
+    return user
+
+
 async def retrieve_subjects(
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db),
@@ -49,14 +62,14 @@ async def retrieve_subjects(
 async def retrieve_groups(
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db),
-) -> UserGroupList:
-    # TODO: Implement this
-    return UserGroupList(groups=[])
+) -> GroupList:
+    groups = await group_service.get_groups_by_user(db, user.uid)
+    return GroupList(groups=groups)
 
 
 async def retrieve_projects(
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db),
-) -> UserProjectList:
+) -> ProjectList:
     projects = await project_service.get_projects_by_user(db, user.uid)
-    return UserProjectList(projects=projects)
+    return ProjectList(projects=projects)

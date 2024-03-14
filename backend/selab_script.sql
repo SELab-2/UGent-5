@@ -6,10 +6,9 @@ DROP FUNCTION IF EXISTS check_team_size_before_joining();
 
 DROP TABLE IF EXISTS submission CASCADE;
 DROP TABLE IF EXISTS status CASCADE;
-DROP TABLE IF EXISTS file CASCADE;
-DROP TABLE IF EXISTS student_group CASCADE;
-DROP TABLE IF EXISTS team CASCADE;
 DROP TABLE IF EXISTS project CASCADE;
+DROP TABLE IF EXISTS student_team CASCADE;
+DROP TABLE IF EXISTS file CASCADE;
 DROP TABLE IF EXISTS teacher_subject CASCADE;
 DROP TABLE IF EXISTS student_subject CASCADE;
 DROP TABLE IF EXISTS subject CASCADE;
@@ -49,6 +48,8 @@ CREATE TABLE project (
     name TEXT NOT NULL,
     subject_id BIGSERIAL NOT NULL,
     description TEXT,
+    enroll_deadline DATE,
+    FOREIGN KEY (subject_id) REFERENCES subject(id) ON DELETE SET NULL,
     max_team_size INT NOT NULL DEFAULT 4, -- Added column for maximum team size
     FOREIGN KEY (subject_id) REFERENCES subject(id) ON DELETE SET NULL,
     CONSTRAINT deadline_check CHECK (deadline >= CURRENT_DATE)
@@ -63,7 +64,7 @@ CREATE TABLE group (
     CONSTRAINT score_check CHECK (score BETWEEN 0 AND 20)
 );
 
-CREATE TABLE student_group (
+CREATE TABLE student_team (
     uid TEXT NOT NULL,
     team_id BIGINT NOT NULL,
     PRIMARY KEY (uid, team_id),

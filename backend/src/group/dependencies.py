@@ -3,7 +3,7 @@ from typing import Sequence
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.dependencies import get_async_db
-from src.group.schemas import Group
+from src.group.schemas import Group, GroupList
 from src.user.dependencies import get_authenticated_user
 from src.user.schemas import User
 
@@ -29,8 +29,9 @@ async def retrieve_groups_by_user(
 
 async def retrieve_groups_by_project(
     project_id: int, db: AsyncSession = Depends(get_async_db)
-) -> Sequence[Group]:
-    return await service.get_groups_by_project(db, project_id)
+) -> GroupList:
+    groups = await service.get_groups_by_project(db, project_id)
+    return GroupList(groups=groups)
 
 
 async def is_authorized_to_leave(

@@ -1,19 +1,29 @@
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.dependencies import get_async_db
+from src.subject.dependencies import user_permission_validation
 from src.user.dependencies import get_authenticated_user
 from src.user.schemas import User
 
-from ..auth.exceptions import NotAuthorized
-from ..subject.service import get_teachers
+from .schemas import ProjectCreate
+from .service import get_project
 
 
-async def user_permission_validation(
-    subject_id: int,
+async def create_permission_validation(
+    project_in: ProjectCreate,
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db),
 ):
-    if not user.is_admin:
-        teachers = await get_teachers(db, subject_id)
-        if not list(filter(lambda teacher: teacher.id == user.uid, teachers)):
-            raise NotAuthorized()
+    await user_permission_validation(project_in.subject_id, user, db)
+
+
+async def patch_permission_validation(
+    project_id: int,
+    user: User = Depends(get_authenticated_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    project = await get_project(db, project_id)
+    await user_permission_validation(project.subject_id, user, db)
+
+
+delete_permission_validation = patch_permission_validation

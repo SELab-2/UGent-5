@@ -1,57 +1,54 @@
+import src.project.service as project_service
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.auth.dependencies import authentication_validation
 from src.dependencies import get_async_db
-from src.subject.dependencies import user_permission_validation
+from src.group.dependencies import retrieve_groups_by_project
+from src.group.schemas import GroupList
 
+from . import service
+from .dependencies import (
+    create_permission_validation,
+    delete_permission_validation,
+    patch_permission_validation,
+)
 from .exceptions import ProjectNotFoundException
-from .schemas import ProjectCreate, ProjectResponse, ProjectUpdate
+from .schemas import Project, ProjectCreate, ProjectUpdate
 from .service import (
-    create_project,
     delete_project,
-    get_project,
-    get_projects_for_subject,
     update_project,
 )
 
 router = APIRouter(
-    prefix="/api/subjects/{subject_id}/projects",
+    prefix="/api/projects",
     tags=["projects"],
     responses={404: {"description": "Not found"}},
+    dependencies=[Depends(authentication_validation)],
 )
-
-
-@router.get("/", response_model=list[ProjectResponse])
-async def list_projects_for_subject(
-    subject_id: int, db: AsyncSession = Depends(get_async_db)
-):
-    projects = await get_projects_for_subject(db, subject_id)
-    return projects
 
 
 @router.post(
     "/",
-    response_model=ProjectResponse,
-    dependencies=[Depends(user_permission_validation)],
+    response_model=Project,
+    dependencies=[Depends(create_permission_validation)],
     status_code=201,
 )
-async def create_project_for_subject(
-    subject_id: int, project_in: ProjectCreate, db: AsyncSession = Depends(get_async_db)
+async def create_project(
+    project_in: ProjectCreate, db: AsyncSession = Depends(get_async_db)
 ):
-    project = await create_project(db, project_in, subject_id)
+    project = await service.create_project(db, project_in)
     return project
 
 
-@router.get("/{project_id}", response_model=ProjectResponse)
-async def get_project_for_subject(
-    project_id: int, db: AsyncSession = Depends(get_async_db)
-):
-    project = await get_project(db, project_id)
+@router.get("/{project_id}", response_model=Project)
+async def get_project(project_id: int, db: AsyncSession = Depends(get_async_db)):
+    project = await project_service.get_project(db, project_id)
     if not project:
         raise ProjectNotFoundException()
     return project
 
 
-@router.delete("/{project_id}", dependencies=[Depends(user_permission_validation)])
+@router.delete("/{project_id}", dependencies=[Depends(delete_permission_validation)])
 async def delete_project_for_subject(
     project_id: int, db: AsyncSession = Depends(get_async_db)
 ):
@@ -61,8 +58,8 @@ async def delete_project_for_subject(
 
 @router.patch(
     "/{project_id}",
-    response_model=ProjectResponse,
-    dependencies=[Depends(user_permission_validation)],
+    response_model=Project,
+    dependencies=[Depends(patch_permission_validation)],
 )
 async def patch_project_for_subject(
     project_id: int,
@@ -70,3 +67,8 @@ async def patch_project_for_subject(
     db: AsyncSession = Depends(get_async_db),
 ):
     return await update_project(db, project_id, project_update)
+
+
+@router.get("/{project_id}/groups")
+async def get_groups(groups: GroupList = Depends(retrieve_groups_by_project)):
+    return groups

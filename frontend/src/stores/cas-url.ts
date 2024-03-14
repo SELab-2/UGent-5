@@ -12,7 +12,7 @@ export const useCASUrl = defineStore("cas_url", () => {
 
     async function fetchAuthority(): Promise<Authority | null> {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/authority`);
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/authority`);
             if (!response.ok) {
                 throw new Error("Failed to fetch authority");
             }

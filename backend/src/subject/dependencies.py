@@ -17,7 +17,7 @@ async def retrieve_subject(
     if not subject:
         raise SubjectNotFound()
 
-    return subject
+    return Subject.model_validate(subject)
 
 
 async def retrieve_subjects(
