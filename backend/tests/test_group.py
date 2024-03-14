@@ -53,15 +53,11 @@ async def test_create_group(client: AsyncClient, db: AsyncSession, project_id: i
         'project_id': project_id
     }
     await set_admin(db, "test", True)
-    response = await client.post(f"/api/groups/", json=group_data)
+    response = await client.post("/api/groups/", json=group_data)
     print(response.json())
     assert response.status_code == 201  # Created
     assert response.json()["team_name"] == group_data["team_name"]
 
-# group_data = {
-#          'team_name': 'test group',
-#          'project_id': project_id
-#      }
 
 @pytest.mark.asyncio
 async def test_get_group(client: AsyncClient, group_id: int):
@@ -87,4 +83,4 @@ async def test_join_user(client: AsyncClient, db: AsyncSession, group_id: int):
     assert response.status_code == 403  # Forbidden
     await set_admin(db, "test", True)
     response = await client.post(f"/api/groups/{group_id}")
-    assert response.status_code == 200
+    assert response.status_code == 201
