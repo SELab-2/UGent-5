@@ -1,4 +1,4 @@
-name: Lint
+name: Code Style
 
 on:
   push:
@@ -43,4 +43,62 @@ jobs:
 
       - name: Run Backend linter
         run: autopep8 -rd --exit-code backend
+ 
+  pytest:
+    name: Unit Testing
+    runs-on: self-hosted
+    env:
+      DATABASE_URI: "${{ secrets.POSTGRES_CONNECTION }}"
+      FRONTEND_URL: "https://localhost:8080"
+      CAS_SERVER_URL: "https://login.ugent.be"
+      SECRET_KEY: "test" 
+      ALGORITHM: "HS256" 
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.12
+    - name: Install dependencies
+      working-directory: backend
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Initialize Database
+      working-directory: backend
+      run: |
+        alembic upgrade head
+    - name: Test with pytest
+      working-directory: backend
+      run: |
+        pip install pytest pytest-cov pytest-html pytest-sugar pytest-json-report
+        py.test -v --cov --html=../reports/pytest/report.html
+    - name: Archive pytest coverage results
+      uses: actions/upload-artifact@v1
+      with:
+        name: pytest-coverage-report
+        path: reports/pytest/
+    - name: clean up alembic
+      working-directory: backend
+      if: always()
+      run: alembic downgrade base
+  pyright:
+    name: Pyright
+    runs-on: self-hosted
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.12
+    - name: Install dependencies
+      working-directory: backend
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyright
 
+    - name: run pyright
+      working-directory: backend
+      run: |
+        pyright
