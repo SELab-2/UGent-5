@@ -2,11 +2,14 @@ from typing import Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
+from src.group.service import get_group_by_id
+
 from . import models, schemas
 
 
 async def get_submissions(db: AsyncSession) -> Sequence[models.Submission]:
     return (await db.execute(select(models.Submission))).scalars().all()
+
 
 async def get_submissions_by_project(db: AsyncSession,
                                      project_id: int) -> Sequence[models.Submission]:
@@ -14,10 +17,12 @@ async def get_submissions_by_project(db: AsyncSession,
     return (await db.execute(select(models.Submission).
                              filter_by(project_id=project_id))).scalars().all()
 
+
 async def get_submissions_by_group(db: AsyncSession,
                                    group_id: int) -> Sequence[models.Submission]:
     return (await db.execute(select(models.Submission).
                              filter_by(group_id=group_id))).scalars().all()
+
 
 async def get_submission(db: AsyncSession, submission_id: int) -> models.Submission:
     return (await db.execute(select(models.Submission)
@@ -30,10 +35,10 @@ async def get_group(db: AsyncSession, submission_id: int):
 
 async def create_submission(db: AsyncSession,
                             submission: schemas.SubmissionCreate,
-                            group_id: int
+                            group_id: int,
+                            subject_id: int
                             ) -> models.Submission:
-    db_submission = models.Submission(
-        project_id=submission.project_id, group_id=group_id)
+    db_submission = models.Submission(group_id=group_id, project_id=subject_id)
     db.add(db_submission)
     await db.commit()
     await db.refresh(db_submission)

@@ -15,6 +15,7 @@ connection = None
 trans = None
 TestingSessionLocal = None
 
+
 async def get_session() -> AsyncSession:
     global TestingSessionLocal, connection, trans
     if TestingSessionLocal is None:
@@ -58,6 +59,7 @@ async def db():
             await db.close()
             await trans.rollback()
             trans = await connection.begin()
+
 
 @pytest_asyncio.fixture
 async def client(db: AsyncSession):

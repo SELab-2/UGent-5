@@ -4,7 +4,7 @@ from .models import Status
 
 
 class SubmissionBase(BaseModel):
-    project_id: int
+    group_id: int
 
 
 class SubmissionCreate(SubmissionBase):
@@ -16,5 +16,5 @@ class Submission(SubmissionBase):
 
     id: int
     date: datetime
-    group_id: int
+    project_id: int
     status: Status

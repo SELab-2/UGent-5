@@ -1,3 +1,4 @@
+from typing import Sequence
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.dependencies import authentication_validation
@@ -9,6 +10,9 @@ from src.group.dependencies import (
     retrieve_groups_by_project,
 )
 from src.group.schemas import Group, GroupCreate
+from src.submission.dependencies import group_id_validation
+from src.submission.schemas import Submission
+from src.submission.service import get_submissions_by_group
 from src.user.dependencies import get_authenticated_user
 from src.user.schemas import User
 
@@ -61,3 +65,10 @@ async def join_group(
 ):
     await service.join_group(db, group_id, user.uid)
     return "Successfully joined"
+
+
+@router.get("/{group_id}/submissions", dependencies=[Depends(group_id_validation)])
+async def list_submissions(group_id: int,
+                           db: AsyncSession = Depends(get_async_db)
+                           ) -> Sequence[Submission]:
+    return await get_submissions_by_group(db, group_id)

@@ -5,8 +5,16 @@ from src.subject.dependencies import user_permission_validation
 from src.user.dependencies import get_authenticated_user
 from src.user.schemas import User
 
-from .schemas import ProjectCreate
+from .schemas import Project, ProjectCreate
 from .service import get_project
+from .exceptions import ProjectNotFoundException
+
+
+async def retrieve_project(project_id: int, db: AsyncSession = Depends(get_async_db)):
+    project = await get_project(db, project_id)
+    if not project:
+        raise ProjectNotFoundException()
+    return project
 
 
 async def create_permission_validation(
@@ -18,11 +26,10 @@ async def create_permission_validation(
 
 
 async def patch_permission_validation(
-    project_id: int,
+    project: Project = Depends(retrieve_project),
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db),
 ):
-    project = await get_project(db, project_id)
     await user_permission_validation(project.subject_id, user, db)
 
 
