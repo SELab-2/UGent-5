@@ -35,7 +35,6 @@ async def get_db_override():
     finally:
         await db.close()
 
-
 app.dependency_overrides[get_async_db] = get_db_override
 
 

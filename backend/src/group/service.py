@@ -21,12 +21,27 @@ async def get_groups_by_project(db: AsyncSession, project_id: int) -> Sequence[G
 
 
 async def get_groups_by_user(db: AsyncSession, user_id: str) -> Sequence[Group]:
-    result = await db.execute(
-        select(Group)
-        .join(StudentGroup, StudentGroup.c.team_id == Group.id)
-        .where(StudentGroup.c.uid == user_id)
+    return (
+        (
+            await db.execute(
+                select(Group).join(StudentGroup).filter_by(uid=user_id)
+            )
+        )
+        .scalars()
+        .all()
     )
-    return result.scalars().all()
+
+
+async def get_users_by_group(db: AsyncSession, group_id: int) -> Sequence[User]:
+    return (
+        (
+            await db.execute(
+                select(User).join(StudentGroup).filter_by(team_id=group_id)
+            )
+        )
+        .scalars()
+        .all()
+    )
 
 
 async def get_teachers_by_group(db: AsyncSession, group_id: int) -> Sequence[User]:
@@ -37,7 +52,8 @@ async def get_teachers_by_group(db: AsyncSession, group_id: int) -> Sequence[Use
                 .join(subjectModels.TeacherSubject)
                 .join(subjectModels.Subject)
                 .join(projectModels.Project)
-                .join(Group, Group.id == group_id)
+                .join(Group)
+                .filter(Group.id == group_id)
             )
         )
         .scalars()

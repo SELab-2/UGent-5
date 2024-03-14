@@ -2,6 +2,7 @@ from src.user.models import Base as UserBase
 from src.subject.models import Base as SubjectBase
 from src.project.models import Base as ProjectBase
 from src.group.models import Base as GroupBase
+from src.submission.models import Base as SubmissionBase
 import os
 import sys
 from logging.config import fileConfig
@@ -11,7 +12,6 @@ from sqlalchemy import pool
 from sqlalchemy import MetaData
 
 from alembic import context
-from src.database import Base
 from src import config as c
 
 
@@ -38,7 +38,7 @@ config.set_main_option('sqlalchemy.url', c.CONFIG.database_uri)
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 combined_metadata = MetaData()
-for base in [ProjectBase, SubjectBase, UserBase, GroupBase]:
+for base in [ProjectBase, SubjectBase, UserBase, GroupBase, SubmissionBase]:
     for table in base.metadata.tables.values():
         combined_metadata._add_table(table.name, table.schema, table)
 
