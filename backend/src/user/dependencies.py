@@ -7,10 +7,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.dependencies import verify_jwt_token
 from src.auth.exceptions import NotAuthorized, UnAuthenticated
 from src.dependencies import get_async_db
+from src.group.schemas import GroupList
 
 from .exceptions import UserNotFound
-from .schemas import User, UserProjectList, UserSubjectList
-from src.group.schemas import GroupList
+from .schemas import User, UserProjectList, UserSimple, UserSubjectList
 
 
 async def get_authenticated_user(
@@ -36,6 +36,15 @@ async def user_id_validation(user_id: str, db: AsyncSession = Depends(get_async_
     user = await user_service.get_by_id(db, user_id)
     if not user:
         raise UserNotFound()
+
+
+async def retrieve_user(
+    user_id: str, db: AsyncSession = Depends(get_async_db)
+) -> UserSimple:
+    user = await user_service.get_by_id(db, user_id)
+    if not user:
+        raise UserNotFound()
+    return user
 
 
 async def retrieve_subjects(

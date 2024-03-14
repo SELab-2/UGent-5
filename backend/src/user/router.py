@@ -6,8 +6,9 @@ from .dependencies import (
     retrieve_groups,
     retrieve_projects,
     retrieve_subjects,
+    retrieve_user,
 )
-from .schemas import User, UserProjectList, UserSubjectList
+from .schemas import User, UserProjectList, UserSimple, UserSubjectList
 
 router = APIRouter(
     prefix="/api/users", tags=["user"], responses={404: {"description": "Not Found"}}
@@ -15,9 +16,17 @@ router = APIRouter(
 
 
 @router.get("/me")
-async def profile(user: User = Depends(get_authenticated_user)) -> User:
+async def me(user: User = Depends(get_authenticated_user)) -> User:
     """
     Get information about the current user
+    """
+    return user
+
+
+@router.get("/{user_id}", dependencies=[Depends(get_authenticated_user)])
+async def user(user: UserSimple = Depends(retrieve_user)) -> UserSimple:
+    """
+    Get information about the user with the given user_id
     """
     return user
 

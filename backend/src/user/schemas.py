@@ -15,6 +15,10 @@ class UserCreate(Userbase):
     pass
 
 
+class UserSimple(Userbase):
+    pass
+
+
 class User(Userbase):
     model_config = ConfigDict(from_attributes=True)
     is_admin: bool = Field(default=False)
