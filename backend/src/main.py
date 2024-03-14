@@ -36,5 +36,5 @@ async def root():
         "profile": f"{user_router.prefix}/me",
         "subjects": subject_router.prefix,
         "projects": project_router.prefix,
-        # TODO: groups moet hier nog inkomen
+        "groups": group_router.prefix,
     }
