@@ -35,13 +35,14 @@ async def project_id(client: AsyncClient, db: AsyncSession, subject_id: int):
 
 
 @pytest_asyncio.fixture
-async def group_id(client: AsyncClient, db: AsyncSession, subject_id: int):
+async def group_id(client: AsyncClient, db: AsyncSession, project_id: int):
     group_data = {
         'team_name': 'test group',
         'project_id': project_id
     }
     await set_admin(db, "test", True) 
     response = await client.post("/api/groups/", json=group_data)
+    print(response.json())
     return response.json()["id"]
 
 
@@ -53,6 +54,7 @@ async def test_create_group(client: AsyncClient, db: AsyncSession, project_id: i
     }
     await set_admin(db, "test", True)
     response = await client.post(f"/api/groups/", json=group_data)
+    print(response.json())
     assert response.status_code == 201  # Created
     assert response.json()["team_name"] == group_data["team_name"]
 
