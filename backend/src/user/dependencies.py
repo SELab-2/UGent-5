@@ -1,3 +1,4 @@
+import src.group.service as group_service
 import src.project.service as project_service
 import src.subject.service as subject_service
 import src.user.service as user_service
@@ -8,7 +9,8 @@ from src.auth.exceptions import NotAuthorized, UnAuthenticated
 from src.dependencies import get_async_db
 
 from .exceptions import UserNotFound
-from .schemas import User, UserGroupList, UserProjectList, UserSubjectList
+from .schemas import User, UserProjectList, UserSubjectList
+from src.group.schemas import GroupList
 
 
 async def get_authenticated_user(
@@ -49,9 +51,9 @@ async def retrieve_subjects(
 async def retrieve_groups(
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db),
-) -> UserGroupList:
-    # TODO: Implement this
-    return UserGroupList(groups=[])
+) -> GroupList:
+    groups = await group_service.get_groups_by_user(db, user.uid)
+    return GroupList(groups=groups)
 
 
 async def retrieve_projects(

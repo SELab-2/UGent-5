@@ -6,7 +6,8 @@ from .dependencies import (
     retrieve_projects,
     retrieve_subjects,
 )
-from .schemas import User, UserGroupList, UserProjectList, UserSubjectList
+from .schemas import User, UserProjectList, UserSubjectList
+from src.group.schemas import GroupList
 
 router = APIRouter(
     prefix="/api/users", tags=["user"], responses={404: {"description": "Not Found"}}
@@ -32,7 +33,7 @@ async def subjects(
 
 
 @router.get("/me/groups")
-async def groups(groups: UserGroupList = Depends(retrieve_groups)) -> UserGroupList:
+async def groups(groups: GroupList = Depends(retrieve_groups)) -> GroupList:
     """
     Get the groups of the current user
     """

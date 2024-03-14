@@ -29,8 +29,3 @@ class UserSubjectList(BaseModel):
 class UserProjectList(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     projects: Sequence[ProjectResponse]
-
-
-class UserGroupList(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-    groups: Sequence  # TODO: Add group schema
