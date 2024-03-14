@@ -55,7 +55,7 @@ async def delete_subject(subject_id: int, db: AsyncSession = Depends(get_async_d
     dependencies=[Depends(user_permission_validation)],
 )
 async def update_subject(
-    subject_update: SubjectCreate, subject_original: Subject = Depends(get_subject)
+    subject_update: SubjectCreate, subject_original: Subject = Depends(retrieve_subject)
 ) -> Subject:
     update_data = subject_update.model_dump(exclude_unset=True)
     subject_updated = subject_original.model_copy(update=update_data)
