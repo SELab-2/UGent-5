@@ -34,7 +34,8 @@ def upgrade() -> None:
                     )
     op.create_table('project',
                     sa.Column('id', sa.Integer(), nullable=False),
-                    sa.Column('deadline', sa.DateTime(timezone=True), nullable=False),
+                    sa.Column('deadline', sa.DateTime(
+                        timezone=True), nullable=False),
                     sa.Column('name', sa.String(), nullable=False),
                     sa.Column('subject_id', sa.Integer(), nullable=True),
                     sa.Column('description', sa.String(), nullable=True),
