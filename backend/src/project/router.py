@@ -3,14 +3,18 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.dependencies import authentication_validation
 from src.dependencies import get_async_db
-from src.subject.dependencies import user_permission_validation
-from src.group.schemas import GroupList
 from src.group.dependencies import retrieve_groups_by_project
+from src.group.schemas import GroupList
 
+from . import service
+from .dependencies import (
+    create_permission_validation,
+    delete_permission_validation,
+    patch_permission_validation,
+)
 from .exceptions import ProjectNotFoundException
 from .schemas import Project, ProjectCreate, ProjectUpdate
 from .service import (
-    create_project,
     delete_project,
     update_project,
 )
@@ -26,13 +30,13 @@ router = APIRouter(
 @router.post(
     "/",
     response_model=Project,
-    dependencies=[Depends(user_permission_validation)],
+    dependencies=[Depends(create_permission_validation)],
     status_code=201,
 )
-async def create_project_for_subject(
+async def create_project(
     project_in: ProjectCreate, db: AsyncSession = Depends(get_async_db)
 ):
-    project = await create_project(db, project_in)
+    project = await service.create_project(db, project_in)
     return project
 
 
@@ -44,8 +48,7 @@ async def get_project(project_id: int, db: AsyncSession = Depends(get_async_db))
     return project
 
 
-# TODO: dependency klotp niet
-@router.delete("/{project_id}", dependencies=[Depends(user_permission_validation)])
+@router.delete("/{project_id}", dependencies=[Depends(delete_permission_validation)])
 async def delete_project_for_subject(
     project_id: int, db: AsyncSession = Depends(get_async_db)
 ):
@@ -56,7 +59,7 @@ async def delete_project_for_subject(
 @router.patch(
     "/{project_id}",
     response_model=Project,
-    dependencies=[Depends(user_permission_validation)],
+    dependencies=[Depends(patch_permission_validation)],
 )
 async def patch_project_for_subject(
     project_id: int,

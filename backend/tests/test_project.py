@@ -83,9 +83,7 @@ async def test_delete_project(client: AsyncClient, db: AsyncSession, project_id:
 
 
 @pytest.mark.asyncio
-async def test_patch_project(
-    client: AsyncClient, db: AsyncSession, project_id: int, subject_id
-):
+async def test_patch_project(client: AsyncClient, db: AsyncSession, project_id: int):
     await set_admin(db, "test", False)
     response = await client.patch(
         f"/api/projects/{project_id}", json={"name": "new name"}
@@ -96,7 +94,7 @@ async def test_patch_project(
         f"/api/projects/{project_id}", json={"name": "new name"}
     )
     assert response.status_code == 200
-    response = await client.get(f"/api/subjects/{subject_id}/projects/{project_id}")
+    response = await client.get(f"/api/projects/{project_id}")
     assert response.json()["name"] == "new name"
     response = await client.patch(
         f"/api/projects/{project_id}",
