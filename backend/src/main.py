@@ -22,19 +22,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(subject_router)
-app.include_router(user_router)
-app.include_router(project_router)
-app.include_router(auth_router)
-app.include_router(group_router)
-
 
 @app.get("/api")
 async def root():
     return {
         "docs": "/api/docs",
+        "authentication": auth_router.prefix,
         "profile": f"{user_router.prefix}/me",
         "subjects": subject_router.prefix,
         "projects": project_router.prefix,
-        # TODO: groups moet hier nog inkomen
+        "groups": group_router.prefix,
     }
+
+
+app.include_router(auth_router)
+app.include_router(user_router)
+app.include_router(subject_router)
+app.include_router(project_router)
+app.include_router(group_router)

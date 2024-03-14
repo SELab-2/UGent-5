@@ -29,7 +29,7 @@ export const useAuthStore = defineStore("auth", () => {
         }
         if (ticket) {
             try {
-                const response = await fetch(`${apiUrl}/api/token`, {
+                const response = await fetch(`${apiUrl}/api/auth/token`, {
                     method: "POST",
                     body: JSON.stringify({
                         returnUrl: redirectUrl,

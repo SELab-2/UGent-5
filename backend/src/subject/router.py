@@ -1,6 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.auth.dependencies import authentication_validation
 from src.dependencies import get_async_db
+from src.project.schemas import Project, ProjectList
+from src.project.service import get_projects_for_subject
 from src.user.dependencies import admin_user_validation, user_id_validation
 from src.user.schemas import User
 
@@ -16,6 +19,7 @@ router = APIRouter(
     prefix="/api/subjects",
     tags=["subjects"],
     responses={404: {"description": "Not found"}},
+    dependencies=[Depends(authentication_validation)],
 )
 
 
@@ -92,3 +96,14 @@ async def delete_subject_teacher(
     subject_id: int, user_id: str, db: AsyncSession = Depends(get_async_db)
 ):
     await service.delete_subject_teacher(db, subject_id, user_id)
+
+
+# ---------------Projects------------
+
+
+@router.get("/{subject_id}/projects")
+async def list_projects(
+    subject_id: int, db: AsyncSession = Depends(get_async_db)
+) -> ProjectList:
+    projects = await get_projects_for_subject(db, subject_id)
+    return projects

@@ -12,7 +12,7 @@ from .exceptions import UnAuthenticated
 from .utils import create_jwt_token
 
 router = APIRouter(
-    prefix="/api", tags=["auth"], responses={404: {"description": "Not Found"}}
+    prefix="/api/auth", tags=["auth"], responses={404: {"description": "Not Found"}}
 )
 
 cas_client = CASClient(

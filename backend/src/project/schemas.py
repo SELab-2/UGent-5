@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Sequence
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -8,6 +8,7 @@ class ProjectCreate(BaseModel):
     name: str = Field(..., min_length=1)
     deadline: datetime
     description: str
+    subject_id: int
 
     # Check if deadline is not in the past
     @field_validator("deadline")
@@ -17,7 +18,7 @@ class ProjectCreate(BaseModel):
         return value
 
 
-class ProjectResponse(BaseModel):
+class Project(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
@@ -25,6 +26,10 @@ class ProjectResponse(BaseModel):
     deadline: datetime
     description: str
     subject_id: int
+
+
+class ProjectList(BaseModel):
+    projects: Sequence[Project]
 
 
 class ProjectUpdate(BaseModel):

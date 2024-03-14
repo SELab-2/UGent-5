@@ -1,11 +1,11 @@
-from typing import List
+from typing import Sequence
 
-from pydantic import BaseModel, Field
-
+from pydantic import BaseModel, ConfigDict, Field
 from src.user.schemas import User
 
 
 class Groupbase(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     project_id: int
     score: int
 
@@ -20,7 +20,11 @@ class Group(Groupbase):
 
 
 class GroupPreview(Group):
-    memberlist: List[User]
+    memberlist: Sequence[User]
 
     class Config:
         from_attributes = True
+
+
+class GroupList(BaseModel):
+    groups: Sequence[Group]
