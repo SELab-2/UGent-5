@@ -102,7 +102,7 @@ async def delete_subject_teacher(
 # ---------------Students------------
 
 @router.get("/{subject_id}/students", response_model=list[User])
-async def get_subject_teachers(
+async def get_subject_students(
     subject_id: int, db: AsyncSession = Depends(get_async_db)
 ):
     return await service.get_students(db, subject_id)
