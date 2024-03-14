@@ -8,9 +8,10 @@ from src.auth.dependencies import jwt_token_validation
 from src.auth.exceptions import NotAuthorized, UnAuthenticated
 from src.dependencies import get_async_db
 from src.group.schemas import GroupList
+from src.project.schemas import ProjectList
 
 from .exceptions import UserNotFound
-from .schemas import User, UserProjectList, UserSimple, UserSubjectList
+from .schemas import User, UserSimple, UserSubjectList
 
 
 async def get_authenticated_user(
@@ -69,6 +70,6 @@ async def retrieve_groups(
 async def retrieve_projects(
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db),
-) -> UserProjectList:
+) -> ProjectList:
     projects = await project_service.get_projects_by_user(db, user.uid)
-    return UserProjectList(projects=projects)
+    return ProjectList(projects=projects)

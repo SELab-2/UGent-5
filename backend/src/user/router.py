@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from src.auth.dependencies import authentication_validation
 from src.group.schemas import GroupList
+from src.project.schemas import ProjectList
 
 from .dependencies import (
     get_authenticated_user,
@@ -9,7 +10,7 @@ from .dependencies import (
     retrieve_subjects,
     retrieve_user,
 )
-from .schemas import User, UserProjectList, UserSimple, UserSubjectList
+from .schemas import User, UserSimple, UserSubjectList
 
 router = APIRouter(
     prefix="/api/users",
@@ -47,8 +48,8 @@ async def list_subjects(
 
 @router.get("/me/projects")
 async def list_projects(
-    projects: UserProjectList = Depends(retrieve_projects),
-) -> UserProjectList:
+    projects: ProjectList = Depends(retrieve_projects),
+) -> ProjectList:
     """
     Get the projects of the current user
     """

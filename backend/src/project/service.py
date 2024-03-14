@@ -6,7 +6,7 @@ from src.subject.models import StudentSubject, Subject
 
 from .exceptions import ProjectNotFoundException
 from .models import Project
-from .schemas import ProjectCreate, ProjectUpdate
+from .schemas import ProjectCreate, ProjectList, ProjectUpdate
 
 
 async def create_project(
@@ -39,12 +39,10 @@ async def get_projects_by_user(db: AsyncSession, user_id: str) -> Sequence[Proje
     return result.scalars().all()
 
 
-async def get_projects_for_subject(
-    db: AsyncSession, subject_id: int
-) -> Sequence[Project]:
+async def get_projects_for_subject(db: AsyncSession, subject_id: int) -> ProjectList:
     result = await db.execute(select(Project).filter_by(subject_id=subject_id))
     projects = result.scalars().all()
-    return projects
+    return ProjectList(projects=projects)
 
 
 async def delete_project(db: AsyncSession, project_id: int):
