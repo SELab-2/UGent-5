@@ -8,7 +8,7 @@ from src.user.service import set_admin
 
 # skeletons for basic json objects
 subject = {"name": "test subject"}
-future_date = datetime.utcnow() + timedelta(weeks=1)
+future_date = datetime.now(timezone.utc) + timedelta(weeks=1)
 project = {
     "name": "test project",
     "subject_id": 0,  # temp needs to be filled in by actual subject id

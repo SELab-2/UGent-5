@@ -6,7 +6,7 @@ from src.group.dependencies import (
     is_authorized_to_join,
     is_authorized_to_leave,
     retrieve_group,
-    retrieve_groups_by_project
+    retrieve_groups_by_project,
 )
 from src.group.schemas import Group, GroupCreate
 from src.user.dependencies import get_authenticated_user
@@ -27,9 +27,9 @@ async def get_groups(groups: list[Group] = Depends(retrieve_groups_by_project)):
     return groups
 
 
-@router.post("/", status_code=201) #CHECK IF AUTHORIZED
+@router.post("/", status_code=201)  # CHECK IF AUTHORIZED
 async def create_group(group: GroupCreate, db: AsyncSession = Depends(get_async_db)):
-    return await service.create_group(db,group)
+    return await service.create_group(db, group)
 
 
 @router.get("/{group_id}")
@@ -41,9 +41,11 @@ async def get_group(group: Group = Depends(retrieve_group)):
     "/{group_id}", dependencies=[Depends(is_authorized_to_leave)], status_code=200
 )
 async def leave_group(
-    group_id: int, user_id: str, db: AsyncSession = Depends(get_async_db)
+    group_id: int,
+    user: User = Depends(get_authenticated_user),
+    db: AsyncSession = Depends(get_async_db),
 ):
-    await service.leave_group(db, group_id, user_id)
+    await service.leave_group(db, group_id, user.uid)
     return "Successfully deleted"
 
 
