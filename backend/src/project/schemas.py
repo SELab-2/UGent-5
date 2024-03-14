@@ -8,6 +8,7 @@ class ProjectCreate(BaseModel):
     name: str = Field(..., min_length=1)
     deadline: datetime
     description: str
+    subject_id: int
 
     # Check if deadline is not in the past
     @field_validator("deadline")

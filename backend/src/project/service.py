@@ -9,13 +9,11 @@ from .models import Project
 from .schemas import ProjectCreate, ProjectList, ProjectUpdate
 
 
-async def create_project(
-    db: AsyncSession, project_in: ProjectCreate, subject_id: int
-) -> Project:
+async def create_project(db: AsyncSession, project_in: ProjectCreate) -> Project:
     new_project = Project(
         name=project_in.name,
         deadline=project_in.deadline,
-        subject_id=subject_id,
+        subject_id=project_in.subject_id,
         description=project_in.description,
     )
     db.add(new_project)

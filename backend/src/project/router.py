@@ -1,21 +1,23 @@
+import src.project.service as project_service
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.auth.dependencies import authentication_validation
 from src.dependencies import get_async_db
 from src.subject.dependencies import user_permission_validation
 
 from .exceptions import ProjectNotFoundException
-from .schemas import ProjectCreate, Project, ProjectUpdate
+from .schemas import Project, ProjectCreate, ProjectUpdate
 from .service import (
     create_project,
     delete_project,
-    get_project,
     update_project,
 )
 
 router = APIRouter(
-    prefix="/api/subjects/{subject_id}/projects",
+    prefix="/api/projects",
     tags=["projects"],
     responses={404: {"description": "Not found"}},
+    dependencies=[Depends(authentication_validation)],
 )
 
 
@@ -26,17 +28,15 @@ router = APIRouter(
     status_code=201,
 )
 async def create_project_for_subject(
-    subject_id: int, project_in: ProjectCreate, db: AsyncSession = Depends(get_async_db)
+    project_in: ProjectCreate, db: AsyncSession = Depends(get_async_db)
 ):
-    project = await create_project(db, project_in, subject_id)
+    project = await create_project(db, project_in)
     return project
 
 
 @router.get("/{project_id}", response_model=Project)
-async def get_project_for_subject(
-    project_id: int, db: AsyncSession = Depends(get_async_db)
-):
-    project = await get_project(db, project_id)
+async def get_project(project_id: int, db: AsyncSession = Depends(get_async_db)):
+    project = await project_service.get_project(db, project_id)
     if not project:
         raise ProjectNotFoundException()
     return project
