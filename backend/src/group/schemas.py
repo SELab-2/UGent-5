@@ -5,6 +5,7 @@ from src.user.schemas import User
 
 
 class Groupbase(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     project_id: int
     score: int
 
@@ -26,5 +27,4 @@ class GroupPreview(Group):
 
 
 class GroupList(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
     groups: Sequence[Group]

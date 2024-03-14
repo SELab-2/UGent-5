@@ -1,26 +1,24 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.auth.dependencies import authentication_validation
 from src.dependencies import get_async_db
 from src.group.dependencies import (
     is_authorized_to_join,
     is_authorized_to_leave,
     retrieve_group,
-    retrieve_groups_by_project,
 )
 from src.group.schemas import Group
+from src.user.dependencies import get_authenticated_user
+from src.user.schemas import User
 
 from . import service
 
 router = APIRouter(
-    prefix="/api/projects/{project_id}/groups",
+    prefix="/api/groups",
     tags=["groups"],
     responses={404: {"description": "Not found"}},
+    dependencies=[Depends(authentication_validation)],
 )
-
-
-@router.get("/")
-async def get_groups(groups: list[Group] = Depends(retrieve_groups_by_project)):
-    return groups
 
 
 @router.get("/{group_id}")
@@ -44,7 +42,9 @@ async def leave_group(
     status_code=201,
 )
 async def join_group(
-    group_id: int, user_id: str, db: AsyncSession = Depends(get_async_db)
+    group_id: int,
+    user: User = Depends(get_authenticated_user),
+    db: AsyncSession = Depends(get_async_db),
 ):
-    await service.join_group(db, group_id, user_id)
+    await service.join_group(db, group_id, user.uid)
     return "Successfully joined"

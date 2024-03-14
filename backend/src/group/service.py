@@ -16,11 +16,8 @@ async def get_group_by_id(db: AsyncSession, group_id: int) -> Group | None:
 
 
 async def get_groups_by_project(db: AsyncSession, project_id: int) -> Sequence[Group]:
-    return (
-        (await db.execute(select(Group).filter_by(project_id=project_id)))
-        .scalars()
-        .all()
-    )
+    result = await db.execute(select(Group).where(Group.project_id == project_id))
+    return result.scalars().all()
 
 
 async def get_groups_by_user(db: AsyncSession, user_id: str) -> Sequence[Group]:

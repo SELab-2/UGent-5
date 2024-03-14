@@ -4,6 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.dependencies import authentication_validation
 from src.dependencies import get_async_db
 from src.subject.dependencies import user_permission_validation
+from src.group.schemas import GroupList
+from src.group.dependencies import retrieve_groups_by_project
 
 from .exceptions import ProjectNotFoundException
 from .schemas import Project, ProjectCreate, ProjectUpdate
@@ -61,3 +63,8 @@ async def patch_project_for_subject(
     db: AsyncSession = Depends(get_async_db),
 ):
     return await update_project(db, project_id, project_update)
+
+
+@router.get("/{project_id}/groups")
+async def get_groups(groups: GroupList = Depends(retrieve_groups_by_project)):
+    return groups
