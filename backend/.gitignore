@@ -1,2 +1,7 @@
 __pycache__
 *venv*
+
+*.db
+config.yml
+.env
+.coverage

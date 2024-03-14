@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-uvicorn app:app --reload
+uvicorn src.main:app --reload --port 5173
