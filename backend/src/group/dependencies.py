@@ -7,7 +7,6 @@ from src.group.schemas import Group, GroupList
 from src.user.dependencies import get_authenticated_user
 from src.user.schemas import User
 
-from ..auth.exceptions import NotAuthorized
 from . import service
 from .exceptions import AlreadyInGroup, GroupNotFound
 
@@ -40,10 +39,8 @@ async def is_authorized_to_leave(
     db: AsyncSession = Depends(get_async_db),
 ):
     groups = await service.get_groups_by_user(db, user.uid)
-    teachers = await service.get_teachers_by_group(db, group_id)
-    if not any(user.uid == teacher.uid for teacher in teachers):
-        if not any(group.id == group_id for group in groups):
-            raise NotAuthorized()
+    if not any(group.id == group_id for group in groups):
+        raise GroupNotFound()
 
 
 # TODO: take enroll_date into consideration

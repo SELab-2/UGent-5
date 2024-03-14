@@ -21,15 +21,12 @@ async def get_groups_by_project(db: AsyncSession, project_id: int) -> Sequence[G
 
 
 async def get_groups_by_user(db: AsyncSession, user_id: str) -> Sequence[Group]:
-    return (
-        (
-            await db.execute(
-                select(Group).join(StudentGroup, StudentGroup.c.uid == user_id)
-            )
-        )
-        .scalars()
-        .all()
+    result = await db.execute(
+        select(Group)
+        .join(StudentGroup, StudentGroup.c.team_id == Group.id)
+        .where(StudentGroup.c.uid == user_id)
     )
+    return result.scalars().all()
 
 
 async def get_teachers_by_group(db: AsyncSession, group_id: int) -> Sequence[User]:
