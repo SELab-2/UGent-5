@@ -9,7 +9,8 @@ class Project(Base):
     __tablename__ = "project"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    deadline: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    deadline: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False)
     name: Mapped[str] = mapped_column(nullable=False)
     subject_id: Mapped[int] = mapped_column(
         ForeignKey("subject.id", ondelete="CASCADE"), nullable=True

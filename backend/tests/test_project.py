@@ -102,7 +102,8 @@ async def test_patch_project(client: AsyncClient, db: AsyncSession, project_id: 
     )
     assert response.status_code == 200
     response = await client.get(f"/api/projects/{project_id}")
-    assert response.json()["deadline"] == future_date.strftime("%Y-%m-%dT%H:%M:%SZ")
+    assert response.json()["deadline"] == future_date.strftime(
+        "%Y-%m-%dT%H:%M:%SZ")
     response = await client.patch(
         f"/api/projects/{project_id}",
         json={"description": "new description"},
