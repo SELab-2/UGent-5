@@ -1,28 +1,64 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '@/views/HomeView.vue';
+import { useAuthStore } from "@/stores/auth-store";
+import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
-            path: '/',
-            name: 'home',
-            component: HomeView,
+            path: "/",
+            redirect: { name: "home" },
         },
         {
-            path: '/about',
-            name: 'about',
-            // route level code-splitting
-            // this generates a separate chunk (About.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
-            component: () => import('../views/AboutView.vue'),
+            path: "/about",
+            name: "about",
+            component: () => import("../views/AboutView.vue"),
         },
         {
-            path: '/login',
-            name: 'Login',
-            component: () => import('../views/LoginView.vue'),
+            path: "/login",
+            name: "login",
+            component: () => import("../views/LoginView.vue"),
+            beforeEnter: async (to, from, next) => {
+                const { isLoggedIn, login, setNext } = useAuthStore();
+                if (isLoggedIn) {
+                    router.replace("/home");
+                    next();
+                }
+                const ticket = to.query.ticket?.toString();
+                setNext(from.path);
+                const redirect = await login(ticket);
+                if (redirect) {
+                    router.replace(redirect);
+                }
+                next();
+            },
+            meta: {
+                requiresAuth: false,
+                hideHeader: true,
+            },
+        },
+        {
+            path: "/home",
+            name: "home",
+            component: () => import("../views/UserView.vue"),
+        },
+        {
+            path: "/:pathMatch(.*)",
+            name: "default",
+            component: () => import("../views/NotFoundView.vue"),
+            meta: {
+                requiresAuth: false,
+            },
         },
     ],
+});
+
+router.beforeEach(async (to, _, next) => {
+    const requiresAuth = to.meta.requiresAuth !== undefined ? to.meta.requiresAuth : true;
+    const { isLoggedIn } = useAuthStore();
+    if (requiresAuth && !isLoggedIn) {
+        router.replace({ name: "login" });
+    }
+    next();
 });
 
 export default router;

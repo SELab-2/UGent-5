@@ -1,31 +1,34 @@
 <template>
-    <div class="login">
-        <img
-            alt="white logo"
-            class="logo"
-            src="@/assets/logo_white_ transparant.png"
-            height="100"
-        />
-        <h3>De officiële indienapplicatie van de Universiteit Gent</h3>
-        <p>Aanmelden</p>
-        <a class="login-button"> Apollo login </a>
+    <div class="page-container">
+        <div class="login">
+            <img
+                alt="white logo"
+                class="logo"
+                src="@/assets/logo_white_ transparant.png"
+                height="100"
+            />
+            <h3>De officiële indienapplicatie van de Universiteit Gent</h3>
+            <p>Aanmelden</p>
+            <a class="login-button" :href="useCASUrl().CASUrl">Apollo login </a>
+            <img
+                alt="ugent logo"
+                class="ugent-logo"
+                src="@/assets/universiteit-gent-logo-white.png"
+            />
+        </div>
     </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useCASUrl } from "@/stores/cas-url";
+</script>
 
 <style scoped>
 .login {
-    --primary-bg-color: #1a5276;
-    --secondary-bg-color: #797d7f;
-    --tertiary-bg-color: #a6acaf;
-    position: fixed;
-    top: 50%;
-    left: 0;
     width: 100%;
-    height: 75vh;
-    background-color: var(--primary-bg-color);
-    transform: translateY(-50%);
+    height: 100vh;
+    background-color: var(--color-primary);
+    /* transform: translateY(-50%); */
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -33,7 +36,7 @@
 }
 
 .logo {
-    margin-top: 30px;
+    margin-top: 125px;
 }
 
 .login h1,
@@ -50,9 +53,9 @@
 }
 
 .login-button {
-    background-color: var(--secondary-bg-color);
-    color: white;
-    border: 2px solid white;
+    background-color: var(--gray-4);
+    color: var(--white);
+    border: 2px solid var(--color-border);
     padding: 10px 20px;
     font-size: 16px;
     border-radius: 50px;
@@ -63,7 +66,15 @@
 }
 
 .login-button:hover {
-    background-color: var(--tertiary-bg-color);
-    color: white;
+    background-color: var(--gray-3);
+    color: var(--white);
+}
+
+.ugent-logo {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    height: 150px;
+    width: auto;
 }
 </style>
