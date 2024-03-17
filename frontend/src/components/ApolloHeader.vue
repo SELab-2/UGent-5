@@ -3,11 +3,13 @@
         <RouterLink to="/">
             <img alt="Logo" class="logo" src="@/assets/logo_white_ transparant.png" />
         </RouterLink>
+        <LocaleSwitcher />
     </div>
 </template>
 
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
+import LocaleSwitcher from "./LocaleSwitcher.vue";
 </script>
 
 <style scoped>

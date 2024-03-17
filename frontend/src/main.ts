@@ -11,6 +11,9 @@ import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 
+import i18n from "./i18n";
+
+
 const app = createApp(App);
 
 const pinia = createPinia();
@@ -39,5 +42,6 @@ const vuetify = createVuetify({
 app.use(router);
 app.use(pinia);
 app.use(vuetify);
+app.use(i18n);
 
 app.mount("#app");

@@ -1,6 +1,6 @@
 <template>
     <div class="logout" :v-if="user">
-        <h2>Welkom, {{ user }}!</h2>
+        <h2>{{ $t("home.welcome", { name: user }) }}!</h2>
         <button class="logout-button" @click="logout">Logout</button>
     </div>
 </template>
