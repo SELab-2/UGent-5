@@ -134,9 +134,12 @@ async def test_get_students(client: AsyncClient, db: AsyncSession, subject_id: i
         db, UserCreate(uid="get_test", given_name="tester",
                        mail="blabla@gmail.com")
     )
-    await client.post(
-        f"/api/subjects/{subject_id}/students", params={"user_id": "get_test"}
+    await set_admin(db, "test", True)
+    response = await client.post(
+        f"/api/subjects/{subject_id}/students", json=({"uid": "get_test"})
     )
+    assert response.status_code == 201
+    await set_admin(db, "test", False)
     response = await client.get(f"/api/subjects/{subject_id}/students")
     assert response.status_code == 200
     print(response.json())

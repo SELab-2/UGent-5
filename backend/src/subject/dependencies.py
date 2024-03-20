@@ -45,7 +45,7 @@ async def add_student_permission_validation(
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db),
 ):
-    if not user.is_admin or user.uid != student_in.uid:
+    if not user.is_admin and user.uid != student_in.uid:
         students = await service.get_students(db, subject_id)
         instructors = await service.get_teachers(db, subject_id)
         if not list(filter(lambda teacher: teacher.uid == user.uid, instructors)):
