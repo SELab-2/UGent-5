@@ -4,7 +4,7 @@ from src.auth.dependencies import authentication_validation
 from src.dependencies import get_async_db
 from src.project.schemas import Project, ProjectList
 from src.project.service import get_projects_for_subject
-from src.user.dependencies import admin_user_validation, user_id_validation
+from src.user.dependencies import admin_user_validation, user_id_validation, teacher_or_admin_user_validation
 from src.user.schemas import User
 
 from . import service
@@ -37,7 +37,7 @@ async def get_subject(subject: Subject = Depends(retrieve_subject)):
 @router.post(
     "/",
     response_model=Subject,
-    dependencies=[Depends(admin_user_validation)],
+    dependencies=[Depends(teacher_or_admin_user_validation)],
     status_code=201,
 )
 async def create_subject(
