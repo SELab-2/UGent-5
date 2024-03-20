@@ -80,7 +80,6 @@ async def test_get_teachers(client: AsyncClient, subject_id: int, db: AsyncSessi
 
 @pytest.mark.asyncio
 async def test_get_subjects(client: AsyncClient, subject_id: int):
-    # await client.post(f"/api/subjects/{subject_id}/teachers", params={'user_id': 'test'})
     response2 = await client.get("/api/subjects/")
     assert response2.status_code == 200
     assert len(response2.json()) == 1

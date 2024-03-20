@@ -10,7 +10,9 @@ class SubjectBase(BaseModel):
 class SubjectCreate(SubjectBase):
     pass
 
-#can be used to add a teacher or student to a subject
+# can be used to add a teacher or student to a subject
+
+
 class AddUserToSubject(BaseModel):
     uid: str
 

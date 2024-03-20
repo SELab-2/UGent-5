@@ -19,7 +19,8 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade():
-    op.add_column('website_user', sa.Column('is_teacher', sa.Boolean(), nullable=False, server_default='f'))
+    op.add_column('website_user', sa.Column(
+        'is_teacher', sa.Boolean(), nullable=False, server_default='f'))
 
     # ### end Alembic commands ###
 
