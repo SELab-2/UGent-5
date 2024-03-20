@@ -1,7 +1,7 @@
 <template>
     <div class="logout" :v-if="user">
         <h2>{{ $t("home.welcome", { name: user }) }}!</h2>
-        <button class="logout-button" @click="logout">Logout</button>
+        <button class="logout-button" @click="logout">{{ $t("home.logout") }}</button>
     </div>
 </template>
 

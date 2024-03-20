@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>404 PAGE NOT FOUND</h1>
+        <h1>404 {{ $t("default.error.not-found") }}</h1>
     </div>
 </template>
 
