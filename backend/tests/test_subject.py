@@ -3,7 +3,7 @@ import pytest_asyncio
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.user.schemas import UserCreate
-from src.user.service import create_user, set_admin
+from src.user.service import create_user, set_admin, set_teacher
 
 subject = {"name": "test_subject"}
 
@@ -38,25 +38,27 @@ async def test_get_subject(client: AsyncClient, subject_id: int):
 @pytest.mark.asyncio
 async def test_create_teacher(client: AsyncClient, db: AsyncSession, subject_id: int):
     await set_admin(db, "test", False)
-    response2 = await client.post(
-        f"/api/subjects/{subject_id}/teachers", params={"user_id": "test"}
+    response = await client.post(
+        f"/api/subjects/{subject_id}/teachers", json={"uid": "test"}
     )
-    assert response2.status_code == 403  # Forbidden
+    assert response.status_code == 403  # Forbidden
 
     await set_admin(db, "test", True)
-    response2 = await client.post(
-        f"/api/subjects/{subject_id}/teachers", params={"user_id": "test"}
+    response = await client.post(
+        f"/api/subjects/{subject_id}/teachers", json={"uid": "test"}
     )
-    assert response2.status_code == 201
+    print(response.json())
+    assert response.status_code == 201
 
-    await set_admin(db, "test", False)
     await create_user(
         db, UserCreate(uid="test2", given_name="tester", mail="test@test.test")
     )
-    response2 = await client.post(
-        f"/api/subjects/{subject_id}/teachers", params={"user_id": "test2"}
+    await set_admin(db, "test", False)
+    await set_teacher(db, "test", True)
+    response = await client.post(
+        f"/api/subjects/{subject_id}/teachers", json={"uid": "test"}
     )
-    assert response2.status_code == 201  # Success because we are teacher now
+    assert response.status_code == 201
 
 
 @pytest.mark.asyncio
@@ -68,7 +70,7 @@ async def test_get_teachers(client: AsyncClient, subject_id: int, db: AsyncSessi
                        mail="blabla@gmail.com")
     )
     await client.post(
-        f"/api/subjects/{subject_id}/teachers", params={"user_id": "get_test"}
+        f"/api/subjects/{subject_id}/teachers", json={"uid": "test"}
     )
     response = await client.get(f"/api/subjects/{subject_id}/teachers")
     assert response.status_code == 200
