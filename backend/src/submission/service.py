@@ -50,3 +50,12 @@ async def delete_submission(db: AsyncSession, submission_id: int):
                                    filter_by(id=submission_id))).scalar()
     await db.delete(submission)
     await db.commit()
+
+async def upload_files(db: AsyncSession, files: list[schemas.File]):
+    files = [models.File(**file.model_dump()) for file in files]
+    db.add_all(files)
+    await db.commit()
+
+async def get_files(db:AsyncSession, submission_id: int) -> Sequence[models.File]:
+    return (await db.execute(select(models.File).
+                             filter_by(submission_id=submission_id))).scalars().all()

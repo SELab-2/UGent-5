@@ -42,6 +42,7 @@ pytest==8.1.1
 pytest-asyncio==0.23.5.post1
 python-cas==1.6.0
 python-dotenv==1.0.1
+python-multipart==0.0.9
 PyYAML==6.0.1
 requests==2.31.0
 six==1.16.0

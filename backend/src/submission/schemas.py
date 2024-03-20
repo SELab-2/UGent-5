@@ -1,5 +1,5 @@
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from .models import Status
 
 
@@ -18,3 +18,11 @@ class Submission(SubmissionBase):
     date: datetime
     project_id: int
     status: Status
+
+class File(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    uid: str
+    filename: str = Field(min_length=1)
+    content_type: str = Field(min_length=1)
+    submission_id: int

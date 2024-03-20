@@ -13,6 +13,7 @@ class Config:
     database_uri: str
     secret_key: str
     algorithm: str
+    file_path: str
 
 
 env = {
@@ -21,6 +22,7 @@ env = {
     "database_uri": os.getenv("DATABASE_URI", ""),
     "secret_key": os.getenv("SECRET_KEY", ""),
     "algorithm": os.getenv("ALGORITHM", ""),
+    "file_path": os.getenv("FILE_PATH","")
 }
 
 for key, value in env.items():
@@ -33,4 +35,5 @@ CONFIG = Config(
     database_uri=env["database_uri"],
     secret_key=env["secret_key"],
     algorithm=env["algorithm"],
+    file_path=env["file_path"],
 )

@@ -21,6 +21,7 @@ CAS_SERVER_URL="https://login.ugent.be"
 DATABASE_URI="database connection string: postgresql://..., see discord..."
 SECRET_KEY="<secret key to sign JWT tokens>" # e.g. generate with `openssl rand -hex 32`
 ALGORITHM="HS256" # algorithm used to sign JWT tokens
+FILE_PATH="files" # Location where uploaded files are stored
 ```
 
 ### Usage

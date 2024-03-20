@@ -28,3 +28,15 @@ class Submission(Base):
         ForeignKey("project.id", ondelete="CASCADE"),
         nullable=False
     )
+
+class File(Base):
+    __tablename__ = "file"
+
+    uid: Mapped[str] = mapped_column(primary_key=True)
+    filename: Mapped[str] = mapped_column(nullable=False)
+    content_type: Mapped[str] = mapped_column(nullable=False)
+
+    submission_id: Mapped[int] = mapped_column(
+        ForeignKey("submission.id", ondelete="CASCADE"),
+        nullable=False
+    )
