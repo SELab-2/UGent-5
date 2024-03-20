@@ -10,6 +10,9 @@ class SubjectBase(BaseModel):
 class SubjectCreate(SubjectBase):
     pass
 
+class AddStudent(BaseModel):
+    uid: str
+
 
 class Subject(SubjectBase):
     model_config = ConfigDict(from_attributes=True)

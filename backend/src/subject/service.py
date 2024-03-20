@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.user.models import User
 
 from .models import StudentSubject, Subject, TeacherSubject
-from .schemas import SubjectCreate
+from .schemas import SubjectCreate, AddStudent
 
 
 async def get_subjects(db: AsyncSession) -> Sequence[Subject]:
@@ -70,9 +70,9 @@ async def delete_subject(db: AsyncSession, subject_id: int):
     await db.commit()
 
 
-async def create_subject_student(db: AsyncSession, subject_id: int, user_id: str):
+async def create_subject_student(db: AsyncSession, subject_id: int, student_in: AddStudent):
     insert_stmnt = StudentSubject.insert().values(
-        subject_id=subject_id, uid=user_id)
+        subject_id=subject_id, uid=student_in.uid)
     await db.execute(insert_stmnt)
     await db.commit()
 

@@ -7,7 +7,7 @@ from src.user.schemas import User
 
 from . import service
 from .exceptions import SubjectNotFound
-from .schemas import Subject, SubjectList
+from .schemas import Subject, SubjectList, AddStudent
 
 
 async def retrieve_subject(
@@ -31,9 +31,22 @@ async def retrieve_subjects(
 async def user_permission_validation(
     subject_id: int,
     user: User = Depends(get_authenticated_user),
-    db: AsyncSession = Depends(get_async_db),assistents_allowed: bool = False
+    db: AsyncSession = Depends(get_async_db),
 ):
-    if not user.is_admin or not user.is_teacher and assistents_allowed:
+    if not user.is_admin:
+        teachers = await service.get_teachers(db, subject_id)
+        if not list(filter(lambda teacher: teacher.uid == user.uid, teachers)):
+            raise NotAuthorized()
+
+
+async def add_student_permission_validation(
+    student_in: AddStudent,
+    subject_id: int,
+    user: User = Depends(get_authenticated_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    if not user.is_admin or user.uid != student_in.uid:
+        students = await service.get_students(db, subject_id)
         instructors = await service.get_teachers(db, subject_id)
         if not list(filter(lambda teacher: teacher.uid == user.uid, instructors)):
             raise NotAuthorized()
