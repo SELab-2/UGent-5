@@ -47,7 +47,7 @@ async def create_subject(
 
 
 @router.delete(
-    "/{subject_id}", dependencies=[Depends(admin_user_validation)], status_code=200
+    "/{subject_id}", dependencies=[Depends(teacher_or_admin_user_validation)], status_code=200
 )
 async def delete_subject(subject_id: int, db: AsyncSession = Depends(get_async_db)):
     await service.delete_subject(db, subject_id)
@@ -57,7 +57,7 @@ async def delete_subject(subject_id: int, db: AsyncSession = Depends(get_async_d
 @router.patch(
     "/{subject_id}",
     response_model=Subject,
-    dependencies=[Depends(user_permission_validation)],
+    dependencies=[Depends(teacher_or_admin_user_validation)],
 )
 async def update_subject(
     subject_update: SubjectCreate, subject_original: Subject = Depends(retrieve_subject)
@@ -91,7 +91,7 @@ async def create_subject_teacher(
 
 @router.delete(
     "/{subject_id}/teachers/{user_id}",
-    dependencies=[Depends(user_permission_validation)],
+    dependencies=[Depends(teacher_or_admin_user_validation)],
 )
 async def delete_subject_teacher(
     subject_id: int, user_id: str, db: AsyncSession = Depends(get_async_db)
@@ -122,7 +122,7 @@ async def add_student_to_subject(
 
 @router.delete(
     "/{subject_id}/students/{user_id}",
-    dependencies=[Depends(user_permission_validation)],
+    dependencies=[Depends(teacher_or_admin_user_validation)],
 )
 async def delete_subject_student(
     subject_id: int, user_id: str, db: AsyncSession = Depends(get_async_db)

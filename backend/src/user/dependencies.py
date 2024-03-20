@@ -33,6 +33,7 @@ async def admin_user_validation(user: User = Depends(get_authenticated_user)):
     if not user.is_admin:
         raise NotAuthorized()
 
+
 async def teacher_or_admin_user_validation(
     user: User = Depends(get_authenticated_user),
 ):
