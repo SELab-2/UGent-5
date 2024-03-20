@@ -10,9 +10,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { useRouter } from "vue-router";
+import { RouterView, useRouter } from "vue-router";
 import ApolloHeader from "@/components/ApolloHeader.vue";
+import { computed, onBeforeMount } from "vue";
+import { useI18n } from "vue-i18n";
+import { useLocale } from "@/stores/locale-store";
+
 const { currentRoute } = useRouter();
 const hideHeader = computed(() => currentRoute.value.meta.hideHeader === true);
+onBeforeMount(() => {
+    const { locale } = useI18n();
+    const { selectedLocale } = useLocale();
+    locale.value = selectedLocale;
+});
 </script>

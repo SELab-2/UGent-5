@@ -1,10 +1,19 @@
 <template>
     <div class="page-container">
         <div class="login">
-            <img alt="white logo" class="logo" src="@/assets/logo_white_ transparant.png" height="100" />
+            <img
+                alt="white logo"
+                class="logo"
+                src="@/assets/logo_white_ transparant.png"
+                height="100"
+            />
             <h3>{{ $t("login.about") }}</h3>
             <a class="login-button" :href="useCASUrl().CASUrl">{{ $t("login.login") }}</a>
-            <img alt="ugent logo" class="ugent-logo" src="@/assets/universiteit-gent-logo-white.png" />
+            <img
+                alt="ugent logo"
+                class="ugent-logo"
+                src="@/assets/universiteit-gent-logo-white.png"
+            />
         </div>
     </div>
 </template>

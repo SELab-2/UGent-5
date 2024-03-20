@@ -1,7 +1,11 @@
 <template>
     <div>
         <select v-model="locale" @change="onLocaleChange">
-            <option v-for="availableLocale in availableLocales" :key="availableLocale" :value="availableLocale">
+            <option
+                v-for="availableLocale in availableLocales"
+                :key="availableLocale"
+                :value="availableLocale"
+            >
                 {{ availableLocale }}
             </option>
         </select>
@@ -18,7 +22,6 @@ const { setLocale } = useLocale();
 function onLocaleChange(event: Event) {
     setLocale((event.target as HTMLSelectElement).value);
 }
-
 </script>
 
 <style lang="scss" scoped></style>
