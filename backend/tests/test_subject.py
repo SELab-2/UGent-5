@@ -70,7 +70,7 @@ async def test_get_teachers(client: AsyncClient, subject_id: int, db: AsyncSessi
                        mail="blabla@gmail.com")
     )
     await client.post(
-        f"/api/subjects/{subject_id}/teachers", json={"uid": "test"}
+        f"/api/subjects/{subject_id}/teachers", json={"uid": "get_test"}
     )
     response = await client.get(f"/api/subjects/{subject_id}/teachers")
     assert response.status_code == 200
