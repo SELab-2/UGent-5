@@ -31,9 +31,9 @@ async def retrieve_subjects(
 async def user_permission_validation(
     subject_id: int,
     user: User = Depends(get_authenticated_user),
-    db: AsyncSession = Depends(get_async_db),
+    db: AsyncSession = Depends(get_async_db),assistents_allowed: bool = False
 ):
-    if not user.is_admin:
-        teachers = await service.get_teachers(db, subject_id)
-        if not list(filter(lambda teacher: teacher.uid == user.uid, teachers)):
+    if not user.is_admin or not user.is_teacher and assistents_allowed:
+        instructors = await service.get_teachers(db, subject_id)
+        if not list(filter(lambda teacher: teacher.uid == user.uid, instructors)):
             raise NotAuthorized()

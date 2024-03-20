@@ -114,17 +114,23 @@ async def test_patch_subject(client: AsyncClient, db: AsyncSession, subject_id: 
 
 @pytest.mark.asyncio
 async def test_enroll_student_into_course(client: AsyncClient, db: AsyncSession, subject_id: int):
-    await set_admin(db, "test", False)
+    # Assuming 'set_admin' sets the 'test' user as an admin
+    await set_admin(db, "test", True)
+
     response = await client.post(
-        f"/api/subjects/{subject_id}/students", params={"user_id": "test"}
+        f"/api/subjects/{subject_id}/students",
+        params={"user_id": "test"}
     )
-    assert response.status_code == 201
+    print(response.json())
+    assert response.status_code == 201, "Failed to enroll student"
 
     # check if actually enrolled now:
     response = await client.get(f"/api/subjects/{subject_id}/students")
-    assert response.status_code == 200
-    assert len(response.json()) == 1
-    assert response.json()[0]["uid"] == "test"
+    print(response.json())
+    assert response.status_code == 200, "Failed to get students"
+    students = response.json()
+    assert len(students) == 1, f"Expected 1 student, found {len(students)}"
+    assert students[0]["uid"] == "test", "The enrolled student UID does not match"
 
 
 @pytest.mark.asyncio
@@ -137,7 +143,10 @@ async def test_get_students(client: AsyncClient, db: AsyncSession, subject_id: i
     await client.post(
         f"/api/subjects/{subject_id}/students", params={"user_id": "get_test"}
     )
-    response = await client.get(f"/api/subjects/{subject_id}/students")
+    response = await client.get(
+        f"/api/subjects/{subject_id}/students",
+        params={"user_id": "test"}
+    )
     assert response.status_code == 200
     print(response.json())
     assert len(response.json()) == 1

@@ -21,6 +21,7 @@ class UserSimple(Userbase):
 class User(Userbase):
     model_config = ConfigDict(from_attributes=True)
     is_admin: bool = Field(default=False)
+    is_teacher: bool = Field(default=False)
 
 
 class UserSubjectList(BaseModel):
