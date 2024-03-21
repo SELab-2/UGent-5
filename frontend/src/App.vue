@@ -1,16 +1,18 @@
 <template>
     <v-app>
-        <v-main>
+        <v-app-bar>
             <ApolloHeader v-if="!hideHeader" />
-            <router-view />
+        </v-app-bar>
+        <v-main>
+            <RouterView />
         </v-main>
     </v-app>
 </template>
 
 <script setup lang="ts">
-import { defineComponent, computed } from "vue";
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 import ApolloHeader from "@/components/ApolloHeader.vue";
-const router = useRouter();
-const hideHeader = computed(() => router.currentRoute.value.meta.hideHeader === true);
+const { currentRoute } = useRouter();
+const hideHeader = computed(() => currentRoute.value.meta.hideHeader === true);
 </script>
