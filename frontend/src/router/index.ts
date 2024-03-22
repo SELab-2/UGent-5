@@ -1,5 +1,5 @@
-import { useAuthStore } from "@/stores/auth-store";
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '@/views/HomeView.vue';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,6 +42,14 @@ const router = createRouter({
             component: () => import("../views/UserView.vue"),
         },
         {
+            path: "/:pathMatch(.*)",
+            name: "default",
+            component: () => import("../views/NotFoundView.vue"),
+            meta: {
+                requiresAuth: false,
+            }
+        },
+        {
             path: "/subjects",
             name: "subjects",
             component: () => import("../views/SubjectsView.vue"),
@@ -62,15 +70,6 @@ const router = createRouter({
             },
         },
     ],
-});
-
-router.beforeEach(async (to, _, next) => {
-    const requiresAuth = to.meta.requiresAuth !== undefined ? to.meta.requiresAuth : true;
-    const { isLoggedIn } = useAuthStore();
-    if (requiresAuth && !isLoggedIn) {
-        router.replace({ name: "login" });
-    }
-    next();
 });
 
 export default router;

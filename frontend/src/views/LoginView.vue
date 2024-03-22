@@ -7,9 +7,8 @@
                 src="@/assets/logo_white_ transparant.png"
                 height="100"
             />
-            <h3>De officiële indienapplicatie van de Universiteit Gent</h3>
-            <p>Aanmelden</p>
-            <a class="login-button" :href="useCASUrl().CASUrl">Apollo login </a>
+            <h3>{{ $t("login.about") }}</h3>
+            <a class="login-button" :href="useCASUrl().CASUrl">{{ $t("login.login") }}</a>
             <img
                 alt="ugent logo"
                 class="ugent-logo"
