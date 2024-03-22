@@ -1,4 +1,5 @@
 from fastapi import Depends
+from sqlalchemy import Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.exceptions import NotAuthorized
 from src.dependencies import get_async_db
@@ -16,7 +17,8 @@ async def group_id_validation(group_id: int,
                               db: AsyncSession = Depends(get_async_db)):
     if not user.is_admin:
         # check if is instructor
-        instructors: list[User] = (await get_teachers_by_group(db, group_id))
+        # should be sequence
+        instructors: Sequence[User] = await get_teachers_by_group(db, group_id)
         for i in instructors:
             if i.uid == user.uid:
                 return
