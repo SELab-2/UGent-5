@@ -11,7 +11,7 @@ from . import service
 from .dependencies import (
     retrieve_subject,
     retrieve_subjects,
-    user_permission_validation, add_student_permission_validation, add_instructor_permission_validation,
+    user_permission_validation, add_student_permission_validation, instructor_permission_validation,
 )
 from .schemas import Subject, SubjectCreate, SubjectList, AddUserToSubject
 from .schemas import Subject, SubjectCreate, SubjectList, SubjectStudentCreate
@@ -79,7 +79,7 @@ async def get_subject_teachers(
 
 @router.post(
     "/{subject_id}/teachers",
-    dependencies=[Depends(add_instructor_permission_validation)],
+    dependencies=[Depends(instructor_permission_validation)],
     status_code=201,
 )
 async def create_subject_teacher(

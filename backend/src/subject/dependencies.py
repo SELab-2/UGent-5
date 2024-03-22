@@ -52,7 +52,7 @@ async def add_student_permission_validation(
             raise NotAuthorized()
 
 
-async def add_instructor_permission_validation(
+async def instructor_permission_validation(
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db),
 ):

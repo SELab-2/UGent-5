@@ -15,11 +15,14 @@ async def group_id_validation(group_id: int,
                               user: User = Depends(get_authenticated_user),
                               db: AsyncSession = Depends(get_async_db)):
     if not user.is_admin:
+        #check if is instructor
+        instructors: list[User] = await get_teachers_by_group(db, group_id)
+        for i in instructors:
+            if i.uid == user.uid:
+                return
         users = await get_users_by_group(db, group_id)
-        for u in users:
-            print(u.uid)
         if not any(user.uid == u.uid for u in users):
-            raise NotAuthorized("Not in group")
+            raise NotAuthorized("Not in group nor instructor or admin")
 
 
 async def create_permission_validation(
@@ -39,10 +42,10 @@ async def retrieve_submission(
     if not submission:
         raise SubmissionNotFound()
 
-    teachers = list(await get_teachers_by_group(db, submission.group_id))
+    instructors = list(await get_teachers_by_group(db, submission.group_id))
     group_users = list(await get_users_by_group(db, submission.group_id))
 
-    if not any(user.uid == u.uid for u in teachers + group_users):
+    if not any(user.uid == u.uid for u in instructors + group_users) and not user.is_admin:
         raise NotAuthorized()
 
     return submission
