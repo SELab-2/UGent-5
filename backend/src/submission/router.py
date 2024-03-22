@@ -20,7 +20,6 @@ async def get_submissions(db: AsyncSession = Depends(get_async_db)) -> Sequence[
     return await service.get_submissions(db)
 
 
-
 @router.get("/{submission_id}")
 async def get_submission(submission: Submission = Depends(retrieve_submission)) -> Submission:
     return submission
