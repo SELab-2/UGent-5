@@ -1,5 +1,6 @@
+from typing import Sequence
+
 from fastapi import Depends
-from sqlalchemy import Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.exceptions import NotAuthorized
 from src.dependencies import get_async_db
