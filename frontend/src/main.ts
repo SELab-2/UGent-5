@@ -21,6 +21,19 @@ const vuetify = createVuetify({
     icons: {
         defaultSet: "mdi",
     },
+    theme: {
+        defaultTheme: "myTheme",
+        themes: {
+            myTheme: {
+                dark: true,
+                colors: {
+                    background: "#222222",
+                    surface: "#1d357e",
+                    // TODO: Add rest of colors
+                },
+            },
+        },
+    },
 });
 
 app.use(router);
