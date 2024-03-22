@@ -42,6 +42,18 @@ const router = createRouter({
             component: () => import("../views/UserView.vue"),
         },
         {
+            path: "/subjects",
+            name: "subjects",
+            component: () => import("../views/SubjectsView.vue"),
+            children: []
+        },
+        {
+            path: "/subjects/:subjectId",
+            name: "subject",
+            component: () => import("../views/SubjectView.vue"),
+            props: true
+        },
+        {
             path: "/:pathMatch(.*)",
             name: "default",
             component: () => import("../views/NotFoundView.vue"),
