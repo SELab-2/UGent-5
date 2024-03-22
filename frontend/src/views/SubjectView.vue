@@ -1,7 +1,6 @@
 <template>
     <h1>Subject</h1>
     <h2>{{ subjectId }}</h2>
-
 </template>
 
 <script setup lang="ts">
@@ -21,9 +20,9 @@ interface Teacher {
 
 
 const subject = reactive({
-    id: -1 as Number,
-    name: "" as String,
-    teachers: [] as Teacher[]
+    id: Number,
+    name: String,
+    teachers: []
 })
 const apiUrl = import.meta.env.VITE_API_URL;
 const {token, logout} = useAuthStore();
@@ -37,7 +36,6 @@ async function fetchSubject() {
         return;
     }
     try {
-        console.log("kak")
         const [name, teachers] = await Promise.all([
             fetchSubjectName(),
             fetchSubjectTeachers()
