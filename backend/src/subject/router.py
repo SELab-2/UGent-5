@@ -70,15 +70,15 @@ async def update_subject(
 # ---------------Teachers------------
 
 
-@router.get("/{subject_id}/teachers", response_model=list[User])
+@router.get("/{subject_id}/instructors", response_model=list[User])
 async def get_subject_teachers(
     subject_id: int, db: AsyncSession = Depends(get_async_db)
 ):
-    return await service.get_teachers(db, subject_id)
+    return await service.get_instructors(db, subject_id)
 
 
 @router.post(
-    "/{subject_id}/teachers",
+    "/{subject_id}/instructors",
     dependencies=[Depends(instructor_permission_validation)],
     status_code=201,
 )
@@ -90,13 +90,13 @@ async def create_subject_teacher(
 
 
 @router.delete(
-    "/{subject_id}/teachers/{user_id}",
+    "/{subject_id}/instructors/{user_id}",
     dependencies=[Depends(teacher_or_admin_user_validation)],
 )
 async def delete_subject_teacher(
     subject_id: int, user_id: str, db: AsyncSession = Depends(get_async_db)
 ):
-    await service.delete_subject_teacher(db, subject_id, user_id)
+    await service.delete_subject_instructor(db, subject_id, user_id)
 
 
 # ---------------Students------------

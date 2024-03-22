@@ -26,5 +26,5 @@ class User(Userbase):
 
 class UserSubjectList(BaseModel):
     model_config = ConfigDict(from_attributes=True)
-    as_teacher: Sequence[Subject]
+    as_instructor: Sequence[Subject]
     as_student: Sequence[Subject]

@@ -36,16 +36,16 @@ async def test_get_subject(client: AsyncClient, subject_id: int):
 
 
 @pytest.mark.asyncio
-async def test_create_teacher(client: AsyncClient, db: AsyncSession, subject_id: int):
+async def test_create_instructor(client: AsyncClient, db: AsyncSession, subject_id: int):
     await set_admin(db, "test", False)
     response = await client.post(
-        f"/api/subjects/{subject_id}/teachers", json={"uid": "test"}
+        f"/api/subjects/{subject_id}/instructors", json={"uid": "test"}
     )
     assert response.status_code == 403  # Forbidden
 
     await set_admin(db, "test", True)
     response = await client.post(
-        f"/api/subjects/{subject_id}/teachers", json={"uid": "test"}
+        f"/api/subjects/{subject_id}/instructors", json={"uid": "test"}
     )
     print(response.json())
     assert response.status_code == 201
@@ -56,13 +56,13 @@ async def test_create_teacher(client: AsyncClient, db: AsyncSession, subject_id:
     await set_admin(db, "test", False)
     await set_teacher(db, "test", True)
     response = await client.post(
-        f"/api/subjects/{subject_id}/teachers", json={"uid": "test"}
+        f"/api/subjects/{subject_id}/instructors", json={"uid": "test"}
     )
     assert response.status_code == 201
 
 
 @pytest.mark.asyncio
-async def test_get_teachers(client: AsyncClient, subject_id: int, db: AsyncSession):
+async def test_get_instructors(client: AsyncClient, subject_id: int, db: AsyncSession):
     await set_admin(db, "test", True)
     # create teacher
     await create_user(
@@ -70,9 +70,9 @@ async def test_get_teachers(client: AsyncClient, subject_id: int, db: AsyncSessi
                        mail="blabla@gmail.com")
     )
     await client.post(
-        f"/api/subjects/{subject_id}/teachers", json={"uid": "get_test"}
+        f"/api/subjects/{subject_id}/instructors", json={"uid": "get_test"}
     )
-    response = await client.get(f"/api/subjects/{subject_id}/teachers")
+    response = await client.get(f"/api/subjects/{subject_id}/instructors")
     assert response.status_code == 200
     assert len(response.json()) == 1
     assert response.json()[0]["uid"] == "get_test"

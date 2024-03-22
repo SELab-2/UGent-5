@@ -60,10 +60,10 @@ async def retrieve_subjects(
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db),
 ) -> UserSubjectList:
-    teacher_subjects, student_subjects = await subject_service.get_subjects_by_user(
+    instructor_subjects, student_subjects = await subject_service.get_subjects_by_user(
         db, user.uid
     )
-    return UserSubjectList(as_student=student_subjects, as_teacher=teacher_subjects)
+    return UserSubjectList(as_student=student_subjects, as_instructor=instructor_subjects)
 
 
 async def retrieve_groups(

@@ -34,8 +34,8 @@ async def user_permission_validation(
     db: AsyncSession = Depends(get_async_db),
 ):
     if not user.is_admin:
-        teachers = await service.get_teachers(db, subject_id)
-        if not list(filter(lambda teacher: teacher.uid == user.uid, teachers)):
+        instructors = await service.get_instructors(db, subject_id)
+        if not list(filter(lambda instructor: instructor.uid == user.uid, instructors)):
             raise NotAuthorized()
 
 
@@ -47,8 +47,8 @@ async def add_student_permission_validation(
 ):
     if not user.is_admin and user.uid != student_in.uid:
         students = await service.get_students(db, subject_id)
-        instructors = await service.get_teachers(db, subject_id)
-        if not list(filter(lambda teacher: teacher.uid == user.uid, instructors)):
+        instructors = await service.get_instructors(db, subject_id)
+        if not list(filter(lambda instructor: instructor.uid == user.uid, instructors)):
             raise NotAuthorized()
 
 

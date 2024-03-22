@@ -4,8 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from src.subject.models import StudentSubject, Subject
 
-from src.subject.service import get_teachers
-
+from src.subject.service import get_instructors
 from .exceptions import ProjectNotFoundException
 from .models import Project
 from .schemas import ProjectCreate, ProjectList, ProjectUpdate
@@ -30,9 +29,9 @@ async def get_project(db: AsyncSession, project_id: int) -> Project:
     return result.scalars().first()
 
 
-async def get_teachers_by_project(db: AsyncSession, project_id: int) -> Sequence[User]:
+async def get_instructors_by_project(db: AsyncSession, project_id: int) -> Sequence[User]:
     project = await get_project(db, project_id)
-    return await get_teachers(db, project.subject_id)
+    return await get_instructors(db, project.subject_id)
 
 
 async def get_projects_by_user(db: AsyncSession, user_id: str) -> Sequence[Project]:
