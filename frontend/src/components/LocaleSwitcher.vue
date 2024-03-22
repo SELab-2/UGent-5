@@ -1,14 +1,7 @@
 <template>
     <div>
-        <select v-model="locale" @change="onLocaleChange">
-            <option
-                v-for="availableLocale in availableLocales"
-                :key="availableLocale"
-                :value="availableLocale"
-            >
-                {{ availableLocale }}
-            </option>
-        </select>
+        <v-btn @click="onLocaleChange(availableLocales[0])"> {{ availableLocales[0] }} </v-btn>
+        | <v-btn @click="onLocaleChange(availableLocales[1])"> {{ availableLocales[1] }}</v-btn>
     </div>
 </template>
 
@@ -19,8 +12,8 @@ import { useI18n } from "vue-i18n";
 const { locale, availableLocales } = useI18n();
 const { setLocale } = useLocale();
 
-function onLocaleChange(event: Event) {
-    setLocale((event.target as HTMLSelectElement).value);
+function onLocaleChange(newLocale: string) {
+    setLocale(newLocale);
 }
 </script>
 
