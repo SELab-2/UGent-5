@@ -19,7 +19,8 @@ router = APIRouter(
 async def get_submissions(db: AsyncSession = Depends(get_async_db)) -> Sequence[Submission]:
     return await service.get_submissions(db)
 
-#TODO: Add permission validation (instructor, teacher, admin, student within the group)
+
+
 @router.get("/{submission_id}")
 async def get_submission(submission: Submission = Depends(retrieve_submission)) -> Submission:
     return submission

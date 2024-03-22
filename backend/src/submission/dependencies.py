@@ -15,7 +15,7 @@ async def group_id_validation(group_id: int,
                               user: User = Depends(get_authenticated_user),
                               db: AsyncSession = Depends(get_async_db)):
     if not user.is_admin:
-        #check if is instructor
+        # check if is instructor
         instructors: list[User] = await get_teachers_by_group(db, group_id)
         for i in instructors:
             if i.uid == user.uid:
