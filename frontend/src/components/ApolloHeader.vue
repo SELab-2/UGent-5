@@ -3,7 +3,7 @@
         <RouterLink to="/">
             <img alt="Logo" class="logo" src="@/assets/logo_white_ transparant.png" />
         </RouterLink>
-        <LocaleSwitcher />
+        <LocaleSwitcher style="margin-left: auto" />
     </div>
 </template>
 
@@ -21,6 +21,7 @@ import LocaleSwitcher from "./LocaleSwitcher.vue";
 
 .header {
     padding: 5px 0px;
+    width: 100%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
