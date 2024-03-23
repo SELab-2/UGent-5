@@ -12,4 +12,8 @@ export default {
         welcome: "Welcome {name}",
         logout: "Logout",
     },
+    submit: {
+        submit_title: "Submit solution",
+        submit_button: "Submit",
+    }
 };

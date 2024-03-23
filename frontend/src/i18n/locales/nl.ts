@@ -12,4 +12,8 @@ export default {
         welcome: "Welkom {name}",
         logout: "Uitloggen",
     },
+    submit: {
+        submit_title: "Oplossing indienen",
+        submit_button: "indienen",
+    }
 };

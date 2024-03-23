@@ -42,6 +42,11 @@ const router = createRouter({
             component: () => import("../views/UserView.vue"),
         },
         {
+            path: "/subject/project/submit",
+            name: "submit",
+            component: () => import("../views/SubmitView.vue"),
+        },
+        {
             path: "/:pathMatch(.*)",
             name: "default",
             component: () => import("../views/NotFoundView.vue"),
