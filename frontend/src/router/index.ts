@@ -42,7 +42,7 @@ const router = createRouter({
             component: () => import("../views/UserView.vue"),
         },
         {
-            path: "/subject/project/submit",
+            path: "/project/:projectId(\\d+)/submit",
             name: "submit",
             component: () => import("../views/SubmitView.vue"),
         },
