@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 
 from src import config
@@ -35,8 +34,6 @@ async def root():
         "projects": project_router.prefix,
         "groups": group_router.prefix,
     }
-
-app.mount('/files', StaticFiles(directory=config.CONFIG.file_path),'files')
 
 app.include_router(auth_router)
 app.include_router(user_router)

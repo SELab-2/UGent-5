@@ -22,7 +22,7 @@ env = {
     "database_uri": os.getenv("DATABASE_URI", ""),
     "secret_key": os.getenv("SECRET_KEY", ""),
     "algorithm": os.getenv("ALGORITHM", ""),
-    "file_path": os.getenv("FILE_PATH","")
+    "file_path": os.getenv("FILE_PATH", "")
 }
 
 for key, value in env.items():

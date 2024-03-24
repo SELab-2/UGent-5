@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.exceptions import NotAuthorized
 from src.dependencies import get_async_db
 from src.group.service import get_teachers_by_group, get_users_by_group
-from src.submission.exceptions import SubmissionNotFound
+from src.submission.exceptions import SubmissionNotFound, FileNotFound
 from src.submission.schemas import SubmissionCreate
 from src.user.dependencies import get_authenticated_user
 from src.user.schemas import User
@@ -28,6 +28,17 @@ async def create_permission_validation(
         db: AsyncSession = Depends(get_async_db)
 ):
     await group_id_validation(submission.group_id, user, db)
+
+
+async def retrieve_file(uuid: str,
+                        user: User = Depends(get_authenticated_user),
+                        db: AsyncSession = Depends(get_async_db)):
+    file = await service.get_file_by_id(db, uuid)
+    if not file:
+        raise FileNotFound
+
+    await retrieve_submission(file.submission_id, user, db)  # Validate permission
+    return file
 
 
 async def retrieve_submission(

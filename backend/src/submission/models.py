@@ -29,6 +29,7 @@ class Submission(Base):
         nullable=False
     )
 
+
 class File(Base):
     __tablename__ = "file"
 

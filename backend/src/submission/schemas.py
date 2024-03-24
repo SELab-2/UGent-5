@@ -19,6 +19,7 @@ class Submission(SubmissionBase):
     project_id: int
     status: Status
 
+
 class File(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
