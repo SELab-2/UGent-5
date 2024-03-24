@@ -1,4 +1,4 @@
-import { myFetch } from "@/helpers/datafetchers";
+import { authorized_fetch } from "@/helpers/datafetchers";
 
 export interface User {
     uid: string;
@@ -8,5 +8,5 @@ export interface User {
 }
 
 export async function getUser(): Promise<User> {
-    return await myFetch("/api/users/me", { method: "GET" });
+    return await authorized_fetch("/api/users/me", { method: "GET" });
 }
