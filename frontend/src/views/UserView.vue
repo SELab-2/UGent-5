@@ -5,9 +5,7 @@
                 <UserInfo />
                 <button class="logout-button" @click="logout">{{ $t("home.logout") }}</button>
             </div>
-            <template #fallback>
-                Loading...
-            </template>
+            <template #fallback> Loading... </template>
         </Suspense>
     </div>
 </template>
