@@ -22,7 +22,7 @@ const BASE_URL = import.meta.env.VITE_API_URL;
  * @param requestOptions: Custom request options
  * @returns Response from the API
  */
-export async function myFetch<T>(endpoint: string, requestOptions: RequestOptions): Promise<T> {
+export async function authorized_fetch<T>(endpoint: string, requestOptions: RequestOptions): Promise<T> {
     return await fetch(`${BASE_URL}${endpoint}`, {
         ...requestOptions,
         headers: { Authorization: `${token?.token_type} ${token?.token}` },
