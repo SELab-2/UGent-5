@@ -1,12 +1,11 @@
 <template>
     <div class="switcher">
-        <v-btn variant="plain" @click="handleLocaleChange(availableLocales[0])">
-            {{ availableLocales[0] }}
-        </v-btn>
-        |
-        <v-btn variant="plain" @click="handleLocaleChange(availableLocales[1])">
-            {{ availableLocales[1] }}</v-btn
-        >
+        <template v-for="(availableLocale, index) in availableLocales" :key="availableLocale">
+            <v-btn variant="plain" @click="handleLocaleChange(availableLocale)">
+                {{ availableLocale }}
+            </v-btn>
+            <span v-if="index !== availableLocales.length - 1">|</span>
+        </template>
     </div>
 </template>
 
@@ -17,7 +16,7 @@ import { useI18n } from "vue-i18n";
 const { setLocale } = useLocale();
 const { locale, availableLocales } = useI18n();
 
-function handleLocaleChange(selectedLocale) {
+function handleLocaleChange(selectedLocale: string) {
     locale.value = selectedLocale;
     setLocale(selectedLocale);
 }
@@ -25,6 +24,6 @@ function handleLocaleChange(selectedLocale) {
 
 <style lang="scss" scoped>
 .switcher {
-    color: #ffffff;
+    color: var(--white);
 }
 </style>
