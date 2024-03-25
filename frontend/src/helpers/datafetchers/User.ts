@@ -8,5 +8,5 @@ export interface User {
 }
 
 export async function getUser(): Promise<User> {
-    return await authorized_fetch("/api/users/me", { method: "GET" });
+    return authorized_fetch("/api/users/me", { method: "GET" });
 }
