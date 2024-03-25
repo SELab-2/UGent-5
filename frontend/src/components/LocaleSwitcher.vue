@@ -1,7 +1,12 @@
 <template>
     <div class="switcher">
+        <v-icon icon="mdi-earth" />
         <template v-for="(availableLocale, index) in availableLocales" :key="availableLocale">
-            <v-btn variant="plain" @click="handleLocaleChange(availableLocale)">
+            <v-btn
+                variant="text"
+                :class="availableLocale === locale ? 'selected-option' : 'locale-option'"
+                @click="handleLocaleChange(availableLocale)"
+            >
                 {{ availableLocale }}
             </v-btn>
             <span v-if="index !== availableLocales.length - 1">|</span>
@@ -24,6 +29,15 @@ function handleLocaleChange(selectedLocale: string) {
 
 <style lang="scss" scoped>
 .switcher {
-    color: var(--white);
+    color: var(--color-text-on-primary);
+}
+
+.locale-option {
+    color: var(--color-text-subtle);
+}
+
+.selected-option {
+    color: var(--color-text-on-primary);
+    font-style: bold;
 }
 </style>
