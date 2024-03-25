@@ -7,6 +7,6 @@ export interface User {
     is_admin: boolean;
 }
 
-export async function getUser(): Promise<User> {
-    return authorized_fetch("/api/users/me", { method: "GET" });
+export async function getUser(uid?: string): Promise<User> {
+    return authorized_fetch(`/api/users/${uid || "me"}`, { method: "GET" });
 }

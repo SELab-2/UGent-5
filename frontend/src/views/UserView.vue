@@ -1,12 +1,12 @@
 <template>
     <div class="userInfo">
-        <Suspense>
-            <div>
-                <UserInfo />
-                <button class="logout-button" @click="logout">{{ $t("home.logout") }}</button>
-            </div>
-            <template #fallback> Loading... </template>
-        </Suspense>
+        <!-- <Suspense> -->
+        <!-- <div> -->
+        <UserInfo />
+        <button class="logout-button" @click="logout">{{ $t("home.logout") }}</button>
+        <!-- </div> -->
+        <!-- <template #fallback> Loading... </template> -->
+        <!-- </Suspense> -->
     </div>
 </template>
 

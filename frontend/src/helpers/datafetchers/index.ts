@@ -26,11 +26,15 @@ export async function authorized_fetch<T>(
     endpoint: string,
     requestOptions: RequestOptions
 ): Promise<T> {
-    return await fetch(`${BASE_URL}${endpoint}`, {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
         ...requestOptions,
         headers: {
             Authorization: `${token?.token_type} ${token?.token}`,
             "Content-Type": "application/json",
         },
-    }).then((response) => response.json());
+    });
+    if (!response.ok) {
+        throw new Error(response.statusText);
+    }
+    return response.json();
 }
