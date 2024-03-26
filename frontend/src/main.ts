@@ -26,16 +26,24 @@ const vuetify = createVuetify({
         defaultSet: "mdi",
     },
     theme: {
-        defaultTheme: "myTheme",
+        defaultTheme: "lightTheme",
         themes: {
-            myTheme: {
+            lightTheme: {
+                dark: false,
+                colors: {
+                    background: "#ffffff",
+                    surface: "#1d357e",
+                    // TODO: Add rest of colors
+                },
+            },
+            darkTheme:{
                 dark: true,
                 colors: {
                     background: "#222222",
                     surface: "#1d357e",
                     // TODO: Add rest of colors
                 },
-            },
+            }
         },
     },
 });
