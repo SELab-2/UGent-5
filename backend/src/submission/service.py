@@ -2,9 +2,7 @@ from typing import Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from src.group.service import get_group_by_id
-
-from . import models, schemas
+from . import models
 
 
 async def get_submissions(db: AsyncSession) -> Sequence[models.Submission]:
@@ -28,17 +26,12 @@ async def get_submission(db: AsyncSession, submission_id: int) -> models.Submiss
     return (await db.execute(select(models.Submission)
                              .filter_by(id=submission_id))).scalar_one_or_none()
 
-
-async def get_group(db: AsyncSession, submission_id: int):
-    pass
-
-
 async def create_submission(db: AsyncSession,
-                            submission: schemas.SubmissionCreate,
+                            uuid: str,
                             group_id: int,
                             subject_id: int
                             ) -> models.Submission:
-    db_submission = models.Submission(group_id=group_id, project_id=subject_id)
+    db_submission = models.Submission(group_id=group_id, project_id=subject_id, files_uuid=uuid)
     db.add(db_submission)
     await db.commit()
     await db.refresh(db_submission)
@@ -50,18 +43,3 @@ async def delete_submission(db: AsyncSession, submission_id: int):
                                    filter_by(id=submission_id))).scalar()
     await db.delete(submission)
     await db.commit()
-
-
-async def upload_files(db: AsyncSession, files: list[schemas.File]):
-    files = [models.File(**file.model_dump()) for file in files]
-    db.add_all(files)
-    await db.commit()
-
-
-async def get_files(db: AsyncSession, submission_id: int) -> Sequence[models.File]:
-    return (await db.execute(select(models.File).
-                             filter_by(submission_id=submission_id))).scalars().all()
-
-
-async def get_file_by_id(db: AsyncSession, uuid: str) -> models.File | None:
-    return (await db.execute(select(models.File).where(models.File.uid == uuid))).scalar_one_or_none()

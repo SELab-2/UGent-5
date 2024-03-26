@@ -18,6 +18,7 @@ class Submission(Base):
     date: Mapped[datetime] = mapped_column(default=datetime.now(),
                                            nullable=False)
     status: Mapped[Status] = mapped_column(default=Status.InProgress, nullable=False)
+    files_uuid: Mapped[str] = mapped_column(nullable=False)
 
     group_id: Mapped[int] = mapped_column(
         ForeignKey("team.id", ondelete="CASCADE"),
@@ -26,18 +27,5 @@ class Submission(Base):
 
     project_id: Mapped[int] = mapped_column(
         ForeignKey("project.id", ondelete="CASCADE"),
-        nullable=False
-    )
-
-
-class File(Base):
-    __tablename__ = "file"
-
-    uid: Mapped[str] = mapped_column(primary_key=True)
-    filename: Mapped[str] = mapped_column(nullable=False)
-    content_type: Mapped[str] = mapped_column(nullable=False)
-
-    submission_id: Mapped[int] = mapped_column(
-        ForeignKey("submission.id", ondelete="CASCADE"),
         nullable=False
     )

@@ -1,4 +1,5 @@
 from datetime import datetime
+from fastapi import UploadFile
 from pydantic import BaseModel, ConfigDict, Field
 from .models import Status
 
@@ -7,13 +8,10 @@ class SubmissionBase(BaseModel):
     group_id: int
 
 
-class SubmissionCreate(SubmissionBase):
-    pass
-
-
 class Submission(SubmissionBase):
     model_config = ConfigDict(from_attributes=True)
 
+    files_uuid: str
     id: int
     date: datetime
     project_id: int
@@ -21,9 +19,5 @@ class Submission(SubmissionBase):
 
 
 class File(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    uid: str
     filename: str = Field(min_length=1)
-    content_type: str = Field(min_length=1)
-    submission_id: int
+    media_type: str = Field(min_length=1)
