@@ -1,21 +1,24 @@
 <template>
-    <h2 v-if="isLoading" class="welcome">Loading...</h2>
-    <h2 v-else-if="isError" class="welcome">Error...</h2>
-    <div v-else>
-        <h2 class="welcome">{{ $t("home.welcome", { name: user.given_name }) }}!</h2>
-        <v-switch
-            :model-value="user.is_admin"
-            label="is_admin"
-            @update:modelValue="mutateAsync"
-        ></v-switch>
-    </div>
+    <h2 class="welcome">{{ $t("home.welcome", { name: user.given_name }) }}!</h2>
+    <v-switch
+        :model-value="user.is_admin"
+        label="is_admin"
+        @update:modelValue="(value) => emit('toggleAdmin', value!)"
+    ></v-switch>
 </template>
 
 <script setup lang="ts">
-import { useUserQuery, useUserMutation } from "@/queries/User";
+import { type User } from "@/helpers/datafetchers/User";
+import { toRefs } from "vue";
 
-const { data: user, isLoading, isError } = useUserQuery();
-const { mutateAsync } = useUserMutation();
+const props = defineProps<{
+    user: User;
+}>();
+const emit = defineEmits<{
+    (e: "toggleAdmin", value: boolean): void;
+}>();
+
+const { user } = toRefs(props);
 </script>
 
 <style scoped lang="scss">

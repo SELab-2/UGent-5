@@ -1,20 +1,24 @@
 <template>
-    <div class="userInfo">
-        <!-- <Suspense> -->
-        <!-- <div> -->
-        <UserInfo />
+    <h2 v-if="isLoading" class="welcome">Loading...</h2>
+    <h2 v-else-if="isError" class="welcome">Error!!!</h2>
+    <div v-else class="userInfo">
+        <UserInfo :user="user!" @toggle-admin="onToggleAdmin" />
         <button class="logout-button" @click="logout">{{ $t("home.logout") }}</button>
-        <!-- </div> -->
-        <!-- <template #fallback> Loading... </template> -->
-        <!-- </Suspense> -->
     </div>
 </template>
 
 <script setup lang="ts">
 import UserInfo from "@/components/user/UserInfo.vue";
 import { useAuthStore } from "@/stores/auth-store";
+import { useUserQuery, useToggleAdminMutation } from "@/queries/User";
 
+const { data: user, isLoading, isError } = useUserQuery();
+const { mutate } = useToggleAdminMutation();
 const { logout } = useAuthStore();
+
+function onToggleAdmin() {
+    mutate(user.value!);
+}
 </script>
 
 <style scoped lang="scss">
