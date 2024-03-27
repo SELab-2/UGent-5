@@ -1,6 +1,6 @@
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
-from datetime import datetime, timezone
+from datetime import datetime
 import enum
 from src.database import Base
 

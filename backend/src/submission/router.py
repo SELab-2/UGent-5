@@ -52,7 +52,6 @@ async def create_submission(group_id: int,
             with open(os.path.join(dir_path,upload_file.filename), 'w+b') as f:
                 shutil.copyfileobj(upload_file.file, f)
 
-
     return await service.create_submission(db, uuid, group_id, group.project_id)
 
 

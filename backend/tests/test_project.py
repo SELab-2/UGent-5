@@ -15,6 +15,7 @@ project = {
     "deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
     "description": "test",
     "enroll_deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
+    "requirements": []
 }
 
 
@@ -43,6 +44,7 @@ async def test_create_project(client: AsyncClient, db: AsyncSession, subject_id:
         "subject_id": subject_id,
         "deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "description": "test",
+        "requirements": [],
     }
     await set_admin(db, "test", False)
     response = await client.post("/api/projects/", json=project)
