@@ -3,11 +3,13 @@ from typing import Optional, Sequence, List
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
+
 class Requirement(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    mandatory: bool # True for mandatory False for prohibited
+    mandatory: bool  # True for mandatory False for prohibited
     value: str = Field(min_length=1)
+
 
 class ProjectCreate(BaseModel):
     name: str = Field(..., min_length=1)
@@ -51,4 +53,3 @@ class ProjectUpdate(BaseModel):
         if value is not None and value < datetime.now(value.tzinfo):
             raise ValueError("The deadline cannot be in the past")
         return value
-

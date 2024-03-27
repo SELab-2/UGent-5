@@ -13,7 +13,6 @@ from src.user.models import User
 
 
 async def create_project(db: AsyncSession, project_in: ProjectCreate) -> Project:
-    print(project_in)
     new_project = Project(
         name=project_in.name,
         deadline=project_in.deadline,
@@ -48,7 +47,7 @@ async def get_projects_by_user(db: AsyncSession, user_id: str) -> Sequence[Proje
 
 
 async def get_projects_for_subject(db: AsyncSession, subject_id: int) -> ProjectList:
-    result = await db.execute(select(Project).where(Project.subject_id==subject_id))
+    result = await db.execute(select(Project).where(Project.subject_id == subject_id))
     projects = result.scalars().unique().all()
     return ProjectList(projects=projects)
 
@@ -76,7 +75,8 @@ async def update_project(
     if project_update.description is not None:
         project.description = project_update.description
     if project_update.requirements is not None:
-        project.requirements = [Requirement(**r.model_dump()) for r in project_update.requirements]
+        project.requirements = [Requirement(**r.model_dump())
+                                for r in project_update.requirements]
 
     await db.commit()
     await db.refresh(project)

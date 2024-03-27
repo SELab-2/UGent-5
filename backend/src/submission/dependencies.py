@@ -15,10 +15,9 @@ async def group_id_validation(group_id: int,
                               db: AsyncSession = Depends(get_async_db)):
     if not user.is_admin:
         users = await get_users_by_group(db, group_id)
-        for u in users:
-            print(u.uid)
         if not any(user.uid == u.uid for u in users):
             raise NotAuthorized("Not in group")
+
 
 async def retrieve_submission(
         submission_id: int,

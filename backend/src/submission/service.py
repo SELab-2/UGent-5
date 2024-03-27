@@ -26,12 +26,14 @@ async def get_submission(db: AsyncSession, submission_id: int) -> models.Submiss
     return (await db.execute(select(models.Submission)
                              .filter_by(id=submission_id))).scalar_one_or_none()
 
+
 async def create_submission(db: AsyncSession,
                             uuid: str,
                             group_id: int,
                             subject_id: int
                             ) -> models.Submission:
-    db_submission = models.Submission(group_id=group_id, project_id=subject_id, files_uuid=uuid)
+    db_submission = models.Submission(
+        group_id=group_id, project_id=subject_id, files_uuid=uuid)
     db.add(db_submission)
     await db.commit()
     await db.refresh(db_submission)

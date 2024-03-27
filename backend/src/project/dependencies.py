@@ -23,7 +23,7 @@ async def create_permission_validation(
     db: AsyncSession = Depends(get_async_db),
 ):
     await user_permission_validation(project_in.subject_id, user, db)
-    await retrieve_subject(project_in.subject_id,db)
+    await retrieve_subject(project_in.subject_id, db)
 
 
 async def patch_permission_validation(

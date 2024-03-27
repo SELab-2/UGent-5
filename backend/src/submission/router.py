@@ -1,3 +1,5 @@
+import os
+import glob
 import shutil
 from typing import Sequence
 from uuid import uuid4
@@ -8,16 +10,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src import config
 from src.dependencies import get_async_db
 from src.group.dependencies import retrieve_group
+from src.project.dependencies import retrieve_project
 from src.submission.dependencies import (
     group_id_validation,
     retrieve_submission,
 )
-from src.submission.exceptions import FileNotFound
+from src.submission.exceptions import FileNotFound, UnMetRequirement
 from src.user.dependencies import admin_user_validation
 
 from . import service
-from .schemas import Submission, File
-import os
+from .schemas import File, Submission
 
 router = APIRouter(
     prefix="/api/submissions",
@@ -42,15 +44,26 @@ async def create_submission(group_id: int,
                             files: list[UploadFile],
                             db: AsyncSession = Depends(get_async_db)):
     group = await retrieve_group(group_id, db)
+    project = await retrieve_project(group.project_id, db)
 
     uuid = str(uuid4())
-    dir_path = os.path.join(config.CONFIG.file_path,uuid)
+    dir_path = os.path.join(config.CONFIG.file_path, uuid)
     os.makedirs(dir_path)
 
     for upload_file in files:
         if upload_file.filename and upload_file.content_type:
-            with open(os.path.join(dir_path,upload_file.filename), 'w+b') as f:
+            path = os.path.join(dir_path, upload_file.filename)
+            with open(path, 'w+b') as f:
                 shutil.copyfileobj(upload_file.file, f)
+
+            if upload_file.content_type == "application/zip":
+                shutil.unpack_archive(path, dir_path)
+                os.remove(path)
+
+    for r in project.requirements:
+        matches = glob.glob(os.path.join(dir_path, r.value))
+        if (not r.mandatory and len(matches)) or (r.mandatory and not len(matches)):
+            raise UnMetRequirement()
 
     return await service.create_submission(db, uuid, group_id, group.project_id)
 
@@ -61,21 +74,23 @@ async def create_submission(group_id: int,
 async def delete_submision(submission_id: int, db: AsyncSession = Depends(get_async_db)):
     await service.delete_submission(db, submission_id)
 
+
 @router.get("/{submission_id}/files", response_model=list[File])
 async def get_files(submission: Submission = Depends(retrieve_submission)):
-    submission_dir = os.path.join(config.CONFIG.file_path,submission.files_uuid)
+    submission_dir = os.path.join(config.CONFIG.file_path, submission.files_uuid)
     output_files = []
 
-    for root,_,files in os.walk(submission_dir):
+    for root, _, files in os.walk(submission_dir):
         for file in files:
-            path = os.path.join(root,file)
-            output_files.append(FileResponse(filename=path.replace(f"{submission_dir}/",""),path=path))
+            path = os.path.join(root, file)
+            output_files.append(FileResponse(
+                filename=path.replace(f"{submission_dir}/", ""), path=path))
     return output_files
 
 
-@router.get("/{submission_id}/files/{path:path}",response_class=FileResponse)
-async def get_file(path: str,submission: Submission = Depends(get_submission)):
-    path = os.path.join(config.CONFIG.file_path,submission.files_uuid,path)
+@router.get("/{submission_id}/files/{path:path}", response_class=FileResponse)
+async def get_file(path: str, submission: Submission = Depends(get_submission)):
+    path = os.path.join(config.CONFIG.file_path, submission.files_uuid, path)
 
     if not os.path.isfile(path):
         raise FileNotFound
