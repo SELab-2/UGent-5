@@ -36,14 +36,14 @@ const vuetify = createVuetify({
                     // TODO: Add rest of colors
                 },
             },
-            darkTheme:{
+            darkTheme: {
                 dark: true,
                 colors: {
                     background: "#222222",
                     surface: "#1d357e",
                     // TODO: Add rest of colors
                 },
-            }
+            },
         },
     },
 });

@@ -21,6 +21,6 @@ export default {
     homescreen: {
         deadlines: "Mijn deadlines",
         courses: "Mijn vakken",
-        announcements: "Meldingen"
-    }
+        announcements: "Meldingen",
+    },
 };
