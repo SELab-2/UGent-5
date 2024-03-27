@@ -72,9 +72,8 @@ async def list_groups(groups: GroupList = Depends(retrieve_groups)) -> GroupList
 async def toggle_admin(
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db),
-) -> User:
+):
     """
     Toggle the admin status of the current user
     """
-    new_user = await set_admin(db, user.uid, not user.is_admin)
-    return new_user
+    await set_admin(db, user.uid, not user.is_admin)
