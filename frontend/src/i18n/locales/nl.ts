@@ -15,6 +15,7 @@ export default {
     submit: {
         submit_title: "Oplossing indienen",
         submit_button: "indienen",
+        remarks: "Opmerkingen",
     },
     project: {
         deadline: "deadline",
