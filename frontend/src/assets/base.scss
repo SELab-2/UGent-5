@@ -5,6 +5,8 @@
     --color-primary-dark: color-mod(var(--color-primary) shade(15%));
     --color-primary-bg: color-mod(var(--color-primary) alpha(30));
 
+    --color-secondary: #dfe5f7;
+
     --color-accent: #ffd200;
     --color-accent-light: color-mod(var(--color-accent) tint(15%));
     --color-accent-dark: color-mod(var(--color-accent) shade(15%));
