@@ -1,11 +1,16 @@
 import { useQuery, useMutation, useQueryClient } from "vue-query";
-import { getUser, type User } from "@/helpers/datafetchers/User";
 import { authorized_fetch } from "@/helpers/datafetchers";
+import type UserDTO from "@/module/user/UserModel";
+import { useGetUserUseCase } from "@/module/user/UserUseCase";
+import { FetchUserRepository } from "@/module/user/UserRepository";
 
 const USER_QUERY_KEY = (uid?: string) => (uid ? ["user", uid] : ["user"]);
 
 export function useUserQuery(uid?: string) {
-    return useQuery<User, Error>(USER_QUERY_KEY(uid), () => getUser(uid));
+    return useQuery<UserDTO, Error>(USER_QUERY_KEY(uid), () => {
+        const getUser = useGetUserUseCase(new FetchUserRepository(authorized_fetch));
+        return getUser(uid);
+    });
 }
 
 export function useUserMutation() {
@@ -17,9 +22,9 @@ export function useUserMutation() {
         {
             onMutate: async () => {
                 await queryClient.cancelQueries(USER_QUERY_KEY());
-                const previousUser = queryClient.getQueryData<User>(USER_QUERY_KEY());
-                queryClient.setQueryData<User>(USER_QUERY_KEY(), (old) => {
-                    if (!old) return {} as User;
+                const previousUser = queryClient.getQueryData<UserDTO>(USER_QUERY_KEY());
+                queryClient.setQueryData<UserDTO>(USER_QUERY_KEY(), (old) => {
+                    if (!old) return {} as UserDTO;
                     return { ...old, is_admin: !old.is_admin };
                 });
                 return previousUser;

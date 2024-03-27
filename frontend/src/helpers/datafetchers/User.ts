@@ -1,12 +1,6 @@
 import { authorized_fetch } from "@/helpers/datafetchers";
+import type UserDTO from "@/module/user/UserModel";
 
-export interface User {
-    uid: string;
-    given_name: string;
-    mail: string;
-    is_admin: boolean;
-}
-
-export async function getUser(uid?: string): Promise<User> {
+export async function getUser(uid?: string): Promise<UserDTO> {
     return authorized_fetch(`/api/users/${uid || "me"}`, { method: "GET" });
 }
