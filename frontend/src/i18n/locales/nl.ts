@@ -12,4 +12,15 @@ export default {
         welcome: "Welkom {name}",
         logout: "Uitloggen",
     },
+    navigation: {
+        courses: "Vakken",
+        projects: "Projecten",
+        settings: "Instellingen",
+        help: "Help",
+    },
+    homescreen: {
+        deadlines: "Mijn deadlines",
+        courses: "Mijn vakken",
+        announcements: "Meldingen"
+    }
 };

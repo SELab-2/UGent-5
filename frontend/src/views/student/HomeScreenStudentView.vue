@@ -6,28 +6,28 @@
         <v-list-item>
             <v-btn variant="text" class="btn-wrapper">
                 <v-icon icon="mdi-school-outline" />
-                <span>Courses</span>
+                <span>{{ $t("navigation.courses") }}</span>
                 <v-icon class="chevron" icon="mdi-chevron-right" />
             </v-btn>
         </v-list-item>
         <v-list-item>
             <v-btn variant="text" class="btn-wrapper">
                 <v-icon icon="mdi-book-check-outline" />
-                <span>Projects</span>
+                <span>{{ $t("navigation.projects") }}</span>
                 <v-icon class="chevron" icon="mdi-chevron-right" />
             </v-btn>
         </v-list-item>
         <v-list-item>
             <v-btn variant="text" class="btn-wrapper">
                 <v-icon icon="mdi-cog-outline" />
-                <span>Settings</span>
+                <span>{{ $t("navigation.settings") }}</span>
                 <v-icon class="chevron" icon="mdi-chevron-right" />
             </v-btn>
         </v-list-item>
         <v-list-item>
             <v-btn variant="text" class="btn-wrapper">
                 <v-icon icon="mdi-help-circle-outline" />
-                <span>Help</span>
+                <span>{{ $t("navigation.help") }}</span>
                 <v-icon class="chevron" icon="mdi-chevron-right" />
             </v-btn>
         </v-list-item>
@@ -35,11 +35,33 @@
             <img alt="Logo" class="logo" src="@/assets/universiteit-gent-logo-white.png" height="150"/>
         </div>
     </v-navigation-drawer>
+    <div class="content">
+        <h1> {{ $t("home.welcome", { name: user }) }}</h1>
+        <v-container>
+            <v-row>
+                <v-col>
+                    <v-card variant="text" :title='$t("homescreen.deadlines")'>
+
+                    </v-card>
+                </v-col>
+                <v-col>
+                    <v-card variant="text" :title='$t("homescreen.courses")'>
+                    </v-card>
+                </v-col>
+                <v-col>
+                    <v-card variant="text" :title='$t("homescreen.announcements")'>
+                    </v-card>
+                </v-col>
+            </v-row>
+        </v-container>
+    </div>
 </template>
 
 <script setup lang="ts">
 import { useAuthStore } from "@/stores/auth-store";
 import { ref, onMounted } from "vue";
+import LocaleSwitcher from "@/components/LocaleSwitcher.vue";
+
 const apiUrl = import.meta.env.VITE_API_URL;
 const user = ref<string | null>(null);
 const { token, logout } = useAuthStore();
@@ -79,9 +101,6 @@ async function fetchUser() {
     bottom: 0;
     margin-bottom: 20px;
 }
-
-
-
 .btn-wrapper {
     display: flex;
     justify-content: space-between;
@@ -97,4 +116,27 @@ async function fetchUser() {
     position:absolute;
     right: 0
 }
+
+.content{
+    padding: 20px;
+    height: 100vh;
+    border: 25px solid white;
+    border-radius: 50px;
+    background-color: var(--color-secondary)
+}
+
+.content h1 {
+    margin-bottom: 30px;
+}
+
+.v-card{
+    background-color: white;
+    color:black;
+    border-radius: 20px;
+}
+
+.v-card h1{
+    margin: 15px;
+}
+
 </style>
