@@ -1,7 +1,7 @@
 <template>
     <div class="header">
         <RouterLink to="/">
-            <img alt="Logo" class="logo" src="@/assets/logo_white_ transparant.png" />
+            <img alt="Logo" class="logo" src="@/assets/logo_white_transparant.png" />
         </RouterLink>
         <LocaleSwitcher style="margin-left: auto" />
     </div>

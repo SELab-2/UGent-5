@@ -4,7 +4,7 @@
             <img
                 alt="white logo"
                 class="logo"
-                src="@/assets/logo_white_ transparant.png"
+                src="@/assets/logo_white_transparant.png"
                 height="100"
             />
             <h3>{{ $t("login.about") }}</h3>

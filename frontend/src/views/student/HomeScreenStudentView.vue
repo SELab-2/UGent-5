@@ -1,11 +1,39 @@
 <template>
     <v-navigation-drawer>
         <div class="logo">
-            <img alt="Logo" class="logo" src="@/assets/logo_white_ transparant.png" height="60"/>
+            <img alt="Logo" class="logo" src="@/assets/logo_white_transparant.png" height="60"/>
         </div>
-        <v-list-item link title="List Item 1"></v-list-item>
-        <v-list-item link title="List Item 2"></v-list-item>
-        <v-list-item link title="List Item 3"></v-list-item>
+        <v-list-item>
+            <v-btn variant="text" class="btn-wrapper">
+                <v-icon icon="mdi-school-outline" />
+                <span>Courses</span>
+                <v-icon class="chevron" icon="mdi-chevron-right" />
+            </v-btn>
+        </v-list-item>
+        <v-list-item>
+            <v-btn variant="text" class="btn-wrapper">
+                <v-icon icon="mdi-book-check-outline" />
+                <span>Projects</span>
+                <v-icon class="chevron" icon="mdi-chevron-right" />
+            </v-btn>
+        </v-list-item>
+        <v-list-item>
+            <v-btn variant="text" class="btn-wrapper">
+                <v-icon icon="mdi-cog-outline" />
+                <span>Settings</span>
+                <v-icon class="chevron" icon="mdi-chevron-right" />
+            </v-btn>
+        </v-list-item>
+        <v-list-item>
+            <v-btn variant="text" class="btn-wrapper">
+                <v-icon icon="mdi-help-circle-outline" />
+                <span>Help</span>
+                <v-icon class="chevron" icon="mdi-chevron-right" />
+            </v-btn>
+        </v-list-item>
+        <div class="ugent-logo">
+            <img alt="Logo" class="logo" src="@/assets/universiteit-gent-logo-white.png" height="150"/>
+        </div>
     </v-navigation-drawer>
 </template>
 
@@ -37,13 +65,36 @@ async function fetchUser() {
 <style scoped lang="scss">
 .v-navigation-drawer {
     background: linear-gradient(#0e2057, #1e46bd);
-    align-content: center;
 }
 .logo {
-    margin: 10px;
+    margin: 15px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.ugent-logo{
+    position:absolute;
+    bottom: 0;
+    margin-bottom: 20px;
+}
+
+
+
+.btn-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.v-icon{
+    margin-right: 10px;
+}
+
+.chevron {
+    position:absolute;
+    right: 0
 }
 </style>
