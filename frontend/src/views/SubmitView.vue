@@ -11,15 +11,15 @@
                             <v-card>
                                 <v-card-item>
                                     <v-card-title>
-                                        {{ projectName }}
+                                        {{ project?.name }}
                                     </v-card-title>
                                     <v-card-subtitle>
                                         {{ subjectName }}
                                     </v-card-subtitle>
                                 </v-card-item>
-                                <v-card-text v-if="projectDeadline != null">
+                                <v-card-text v-if="!isLoading">
                                     <b>{{ $t("project.deadline") }}:</b>
-                                    <p>{{ $d(projectDeadline, 'long') }}</p>
+                                    <p>{{ $d(project.deadline, 'long') }}</p>
                                 </v-card-text>
                                 <v-card-actions>
                                     <v-btn>Project details</v-btn>
@@ -67,16 +67,23 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from "@/stores/auth-store";
 import { ref, onMounted } from "vue";
 import { useRoute } from 'vue-router'
 import { VForm } from 'vuetify/components';
+import { useProjectQuery } from "@/queries/Project";
+import { useAuthStore } from "@/stores/auth-store";
+
+
+const route = useRoute()
+
+const props = defineProps({
+    'projectId': Number
+})
+
+const { data: project, isLoading, isError } = useProjectQuery(props.projectId!);
 
 const apiUrl = import.meta.env.VITE_API_URL;
 const { token } = useAuthStore();
-
-const projectName = ref<string | null>(null);
-const projectDeadline = ref<Date | null>(null);
 
 const subjectId = ref<number | null>(null);
 const subjectName = ref<string | null>(null);
@@ -85,28 +92,8 @@ const fileInputs = ref<File[] | null>(null);
 const remarksInput = ref<string | null>(null);
 
 onMounted(async () => {
-    await fetchProject();
     await fetchSubject();
 });
-
-const route = useRoute()
-
-async function fetchProject() {
-    if (!token) {
-        return;
-    }
-    await fetch(`${apiUrl}/api/projects/${route.params.projectId}`, {
-        headers: { Authorization: `${token?.token_type} ${token?.token}` },
-    })
-        .then((data) => data.json())
-        .then((projectObj) => {
-            projectName.value = projectObj.name;
-            subjectId.value = projectObj.subject_id;
-            projectDeadline.value = new Date(projectObj.deadline);
-
-        })
-        .catch((error) => console.log(error));
-}
 
 async function fetchSubject() {
     if (!token) {
