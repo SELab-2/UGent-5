@@ -1,7 +1,7 @@
 <template>
     <v-app>
-        <v-app-bar>
-            <ApolloHeader v-if="!hideHeader" />
+        <v-app-bar v-if="!hideHeader">
+            <ApolloHeader />
         </v-app-bar>
         <v-main>
             <RouterView />
