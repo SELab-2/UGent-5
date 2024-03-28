@@ -1,6 +1,6 @@
 <template>
-    <h1>Subject</h1>
-    <h2>{{ subjectId }}</h2>
+    <h1>{{ subject.name}}</h1>
+    <h2>{{ subject.id }}</h2>
 </template>
 
 <script setup lang="ts">
@@ -11,7 +11,7 @@ import {onMounted, reactive} from "vue";
 
 const props = defineProps(['subjectId'])
 
-interface Teacher {
+interface User {
     "uid": "string",
     "given_name": "string",
     "mail": "string",
@@ -20,9 +20,10 @@ interface Teacher {
 
 
 const subject = reactive({
-    id: Number,
+    id: props.subjectId as Number,
     name: String,
-    teachers: []
+    teachers: [],
+    students: []
 })
 const apiUrl = import.meta.env.VITE_API_URL;
 const {token, logout} = useAuthStore();
@@ -36,14 +37,15 @@ async function fetchSubject() {
         return;
     }
     try {
-        const [name, teachers] = await Promise.all([
+        const [name, students] = await Promise.all([
             fetchSubjectName(),
-            fetchSubjectTeachers()
+            //fetchSubjectTeachers(),
+            fetchSubjectStudents()
         ]);
 
-        subject.id = props.subjectId;
         subject.name = name;
-        subject.teachers = teachers;
+        //subject.teachers = teachers;
+        subject.students = students;
 
     } catch (error) {
         console.error('Error fetching subjects:', error);
@@ -61,6 +63,14 @@ async function fetchSubjectName() {
 
 async function fetchSubjectTeachers() {
     const response = await fetch(`${apiUrl}/api/subjects/${props.subjectId}/teachers`, {
+        headers: {Authorization: `${token?.token_type} ${token?.token}`},
+    });
+
+    return await response.json()
+}
+
+async function fetchSubjectStudents() {
+    const response = await fetch(`${apiUrl}/api/subjects/${props.subjectId}/students`, {
         headers: {Authorization: `${token?.token_type} ${token?.token}`},
     });
 
