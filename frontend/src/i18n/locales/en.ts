@@ -16,8 +16,10 @@ export default {
         submit_title: "Submit solution",
         submit_button: "Submit",
         remarks: "Remarks",
+        add_files: "Add files",
     },
     project: {
         deadline: "deadline",
+        details_button: "Project details",
     }
 };

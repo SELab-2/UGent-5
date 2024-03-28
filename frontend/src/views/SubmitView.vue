@@ -8,23 +8,7 @@
                 <v-container class="card-container">
                     <v-row>
                         <v-col>
-                            <v-card>
-                                <v-card-item>
-                                    <v-card-title>
-                                        {{ project?.name }}
-                                    </v-card-title>
-                                    <v-card-subtitle>
-                                        {{ subject?.name }}
-                                    </v-card-subtitle>
-                                </v-card-item>
-                                <v-card-text v-if="!isLoading">
-                                    <b>{{ $t("project.deadline") }}:</b>
-                                    <p>{{ $d(project.deadline, 'long') }}</p>
-                                </v-card-text>
-                                <v-card-actions>
-                                    <v-btn>Project details</v-btn>
-                                </v-card-actions>
-                            </v-card>
+                            <ProjectMiniCard :projectId="projectId"/>
                         </v-col>
                         <v-spacer/>
                         <v-spacer/>
@@ -32,7 +16,7 @@
                     <v-row>
                         <v-col>
                             <h1>
-                                Voeg bestanden toe
+                                {{ $t("submit.add_files") }}
                             </h1>
                         </v-col>
                     </v-row>
@@ -53,10 +37,7 @@
                                     name="remarks"
                                     v-model="remarksInput"
                                 ></v-textarea>
-                                <label>
-                                    test
-                                    <v-btn type="submit">{{ $t("submit.submit_button") }}</v-btn>
-                                </label>
+                                <v-btn type="submit">{{ $t("submit.submit_button") }}</v-btn>
                             </v-form>
                         </v-col>
                     </v-row>
@@ -66,49 +47,28 @@
     </div>
 </template>
 
+
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
-import { useRoute } from 'vue-router'
+import { ref } from "vue";
 import { VForm } from 'vuetify/components';
-import { useProjectQuery, useProjectSubjectQuery } from "@/queries/Project";
 import { useAuthStore } from "@/stores/auth-store";
-
-
-const route = useRoute()
+import ProjectMiniCard from "@/components/project/ProjectMiniCard.vue";
 
 const props = defineProps({
     'projectId': Number
 })
 
-const { data: project, isLoading, isError } = useProjectQuery(props.projectId!);
-const { data: subject } = useProjectSubjectQuery(computed(() => props.projectId!));
-
 const apiUrl = import.meta.env.VITE_API_URL;
 const { token } = useAuthStore();
 
-// const subjectId = ref<number | null>(null);
-// const subjectName = ref<string | null>(null);
-
-const fileInputs = ref<File[] | null>(null);
+const fileInputs = ref<File[]>([]);
 const remarksInput = ref<string | null>(null);
-
-onMounted(async () => {
-    //await fetchSubject();
-});
 
 
 const formOnSubmit = (event: SubmitEvent) => {
     const formData = new FormData(event.target as HTMLFormElement);
-    //const formData = new FormData();
-    formData.append('remarks', remarksInput.value.toString());
-    //
-    // for (let file of fileInputs.value) {
-    //     formData.append("files", file, file.name);
-    // }
-    console.log(fileInputs.value)
-    console.log(Object.fromEntries(formData))
 
-    fetch(`${apiUrl}/api/projects/${route.params.projectId}`, {
+    fetch(`${apiUrl}/api/projects/${props.projectId}`, {
         method: 'post',
         headers: {
             Authorization: `${token?.token_type} ${token?.token}`,
@@ -125,7 +85,6 @@ const formOnSubmit = (event: SubmitEvent) => {
 }
 
 </script>
-
 
 
 <style scoped>

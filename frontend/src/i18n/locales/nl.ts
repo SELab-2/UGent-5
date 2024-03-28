@@ -16,8 +16,10 @@ export default {
         submit_title: "Oplossing indienen",
         submit_button: "indienen",
         remarks: "Opmerkingen",
+        add_files: "Voeg bestanden toe",
     },
     project: {
         deadline: "deadline",
+        details_button: "Naar project",
     }
 };
