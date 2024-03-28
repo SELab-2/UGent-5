@@ -14,7 +14,7 @@
                                         {{ project?.name }}
                                     </v-card-title>
                                     <v-card-subtitle>
-                                        {{ subjectName }}
+                                        {{ subject?.name }}
                                     </v-card-subtitle>
                                 </v-card-item>
                                 <v-card-text v-if="!isLoading">
@@ -67,10 +67,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRoute } from 'vue-router'
 import { VForm } from 'vuetify/components';
-import { useProjectQuery } from "@/queries/Project";
+import { useProjectQuery, useProjectSubjectQuery } from "@/queries/Project";
 import { useAuthStore } from "@/stores/auth-store";
 
 
@@ -81,33 +81,21 @@ const props = defineProps({
 })
 
 const { data: project, isLoading, isError } = useProjectQuery(props.projectId!);
+const { data: subject } = useProjectSubjectQuery(computed(() => props.projectId!));
 
 const apiUrl = import.meta.env.VITE_API_URL;
 const { token } = useAuthStore();
 
-const subjectId = ref<number | null>(null);
-const subjectName = ref<string | null>(null);
+// const subjectId = ref<number | null>(null);
+// const subjectName = ref<string | null>(null);
 
 const fileInputs = ref<File[] | null>(null);
 const remarksInput = ref<string | null>(null);
 
 onMounted(async () => {
-    await fetchSubject();
+    //await fetchSubject();
 });
 
-async function fetchSubject() {
-    if (!token) {
-        return;
-    }
-    await fetch(`${apiUrl}/api/subjects/${subjectId.value}`, {
-        headers: { Authorization: `${token?.token_type} ${token?.token}` },
-    })
-        .then((data) => data.json())
-        .then((subjectObj) => {
-            subjectName.value = subjectObj.name;
-        })
-        .catch((error) => console.log(error));
-}
 
 const formOnSubmit = (event: SubmitEvent) => {
     const formData = new FormData(event.target as HTMLFormElement);
