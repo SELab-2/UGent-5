@@ -6,6 +6,7 @@
         <HomeScreenNavButton v-for="nav in navigations"
             :iconname="nav.icon"
             :title="nav.title"
+            :goTo="nav.goTo"
         />
         <div class="ugent-logo">
             <img

@@ -1,6 +1,6 @@
 <template>
     <v-list-item>
-        <v-btn variant="text" class="btn-wrapper">
+        <v-btn variant="text" class="btn-wrapper" :to="{ name: goTo }">
             <v-icon :icon="iconname" />
             <span>{{ $t(title) }}</span>
             <v-icon class="chevron" icon="mdi-chevron-right" />
@@ -12,7 +12,8 @@
 
 const props = defineProps({
     iconname: String,
-    title: String
+    title: String,
+    goTo: {type: String, default: "about" }
 })
 
 </script>
