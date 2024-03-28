@@ -22,23 +22,7 @@
                     </v-row>
                     <v-row>
                         <v-col>
-                            <v-form validate-on="submit lazy" @submit.prevent="formOnSubmit">
-                                <v-file-input
-                                    counter
-                                    multiple
-                                    show-size
-                                    chips
-                                    dense
-                                    name="files"
-                                    v-model="fileInputs">
-                                </v-file-input>
-                                <v-textarea
-                                    :label="$t('submit.remarks')"
-                                    name="remarks"
-                                    v-model="remarksInput"
-                                ></v-textarea>
-                                <v-btn type="submit">{{ $t("submit.submit_button") }}</v-btn>
-                            </v-form>
+                            <SubmitForm :projectId="projectId"/>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -49,41 +33,12 @@
 
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { VForm } from 'vuetify/components';
-import { useAuthStore } from "@/stores/auth-store";
 import ProjectMiniCard from "@/components/project/ProjectMiniCard.vue";
+import SubmitForm from "@/components/project/SubmitForm.vue";
 
-const props = defineProps({
+defineProps({
     'projectId': Number
 })
-
-const apiUrl = import.meta.env.VITE_API_URL;
-const { token } = useAuthStore();
-
-const fileInputs = ref<File[]>([]);
-const remarksInput = ref<string | null>(null);
-
-
-const formOnSubmit = (event: SubmitEvent) => {
-    const formData = new FormData(event.target as HTMLFormElement);
-
-    fetch(`${apiUrl}/api/projects/${props.projectId}`, {
-        method: 'post',
-        headers: {
-            Authorization: `${token?.token_type} ${token?.token}`,
-        },
-        body: formData
-    })
-        .then(data => data.json())
-        .then(json => {
-            console.log('Request succeeded with JSON response', json);
-        })
-        .catch(error => {
-            console.log('Request failed', error);
-        });
-}
-
 </script>
 
 
