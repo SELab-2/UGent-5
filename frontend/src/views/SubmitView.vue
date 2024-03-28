@@ -44,10 +44,13 @@
                                     multiple
                                     show-size
                                     chips
+                                    dense
+                                    name="files"
                                     v-model="fileInputs">
                                 </v-file-input>
                                 <v-textarea
                                     :label="$t('submit.remarks')"
+                                    name="remarks"
                                     v-model="remarksInput"
                                 ></v-textarea>
                                 <label>
@@ -119,24 +122,21 @@ async function fetchSubject() {
         .catch((error) => console.log(error));
 }
 
-// async function onSubmit() {
-//     console.log(fileInputs.value)
-//     const params = new FormData();
-//     params.append('remarks', remarksInput.value);
-//     params.append('score', fileInputs.value);
-//     console.log(params.values()[0])
-// }
-
 const formOnSubmit = (event: SubmitEvent) => {
-    const formData = new FormData();
-    formData.append('remarks', remarksInput);
-    formData.append('files', fileInputs);
+    const formData = new FormData(event.target as HTMLFormElement);
+    //const formData = new FormData();
+    formData.append('remarks', remarksInput.value.toString());
+    //
+    // for (let file of fileInputs.value) {
+    //     formData.append("files", file, file.name);
+    // }
+    console.log(fileInputs.value)
+    console.log(Object.fromEntries(formData))
 
     fetch(`${apiUrl}/api/projects/${route.params.projectId}`, {
         method: 'post',
         headers: {
             Authorization: `${token?.token_type} ${token?.token}`,
-            "Content-type": "multipart/form-data",
         },
         body: formData
     })
