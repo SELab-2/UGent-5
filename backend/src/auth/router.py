@@ -2,7 +2,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 import src.user.service as user_service
 from cas import CASClient
 from fastapi import APIRouter, Depends, Request
-from fastapi.responses import RedirectResponse
 from src import config
 from src.auth.schemas import Authority, Token, TokenRequest
 from src.dependencies import get_async_db
@@ -62,12 +61,3 @@ async def token(
     # Create JWT token
     jwt_token = create_jwt_token(attributes["uid"])
     return jwt_token
-
-
-@router.get("/logout")
-async def logout() -> RedirectResponse:
-    """
-    Logout from CAS
-    """
-    cas_logout_url = cas_client.get_logout_url()
-    return RedirectResponse(cas_logout_url)
