@@ -1,4 +1,3 @@
-/* color palette from <https://github.com/vuejs/theme> */
 // BUG: color-mod does not seem to work, fix this somehow
 :root {
     --color-primary: #1d357e;
@@ -20,13 +19,13 @@
     --gray-4: #666666;
     --gray-3: #b0b0b0;
     --gray-2: #f2f2f2;
-    --gray-0: #f8f8f8;
+    --gray-1: #f8f8f8;
     --white: #ffffff;
 
     --color-success: #88c459;
     --color-succes-secondary: color-mod(var(--color-succes) tint(15%));
     --color-error: #b00020;
-    --color-error-secondary: color-mod(var(--color-warning) tint(15%));
+    --color-error-secondary: color-mod(var(--color-error) tint(15%));
     --color-warning: #ffd137;
     --color-warning-secondary: color-mod(var(--color-warning) tint(15%));
 }
@@ -40,7 +39,7 @@
     --color-text-on-error: var(--white);
     --color-text-on-warning: var(--black);
     --color-text-heading: var(--black);
-    --color-text-subtle: var(--gray-6);
+    --color-text-subtle: var(--gray-4);
     --color-link: var(--color-primary);
     --color-link-visited: var(--color-primary-dark);
     --color-mark: var(--color-accent-bg);

@@ -13,7 +13,6 @@ export const useLocale = defineStore("locale", () => {
         if (!newLocale) {
             return;
         }
-        console.log("Setting locale to", newLocale);
         selectedLocale.value = newLocale;
         localStorage.setItem("locale", newLocale);
     }

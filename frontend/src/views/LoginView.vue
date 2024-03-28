@@ -14,24 +14,32 @@
                 class="ugent-logo"
                 src="@/assets/universiteit-gent-logo-white.png"
             />
+            <LocaleSwitcher class="login-switcher" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { useCASUrl } from "@/stores/cas-url";
+import LocaleSwitcher from "@/components/LocaleSwitcher.vue";
 </script>
 
 <style scoped>
-.login {
-    width: 100%;
-    height: 100vh;
-    background-color: var(--color-primary);
-    /* transform: translateY(-50%); */
+.page-container {
+    display: flex;
     justify-content: center;
     align-items: center;
+    height: 100vh;
+}
+
+.login {
+    width: 100%;
+    display: flex;
     flex-direction: column;
-    text-align: center;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-primary);
+    height: 100%;
 }
 
 .logo {
@@ -75,5 +83,13 @@ import { useCASUrl } from "@/stores/cas-url";
     left: 5px;
     height: 150px;
     width: auto;
+}
+
+.login-switcher {
+    margin-top: auto;
+}
+
+.login-switcher {
+    margin-bottom: 20px;
 }
 </style>

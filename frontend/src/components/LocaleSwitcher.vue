@@ -1,14 +1,16 @@
 <template>
-    <div>
-        <select v-model="locale" @change="onLocaleChange">
-            <option
-                v-for="availableLocale in availableLocales"
-                :key="availableLocale"
-                :value="availableLocale"
+    <div class="switcher">
+        <v-icon icon="mdi-earth" />
+        <template v-for="(availableLocale, index) in availableLocales" :key="availableLocale">
+            <v-btn
+                variant="text"
+                :class="availableLocale === locale ? 'selected-option' : 'locale-option'"
+                @click="handleLocaleChange(availableLocale)"
             >
                 {{ availableLocale }}
-            </option>
-        </select>
+            </v-btn>
+            <span v-if="index !== availableLocales.length - 1">|</span>
+        </template>
     </div>
 </template>
 
@@ -16,12 +18,26 @@
 import { useLocale } from "@/stores/locale-store";
 import { useI18n } from "vue-i18n";
 
-const { locale, availableLocales } = useI18n();
 const { setLocale } = useLocale();
+const { locale, availableLocales } = useI18n();
 
-function onLocaleChange(event: Event) {
-    setLocale((event.target as HTMLSelectElement).value);
+function handleLocaleChange(selectedLocale: string) {
+    locale.value = selectedLocale;
+    setLocale(selectedLocale);
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.switcher {
+    color: var(--color-text-on-primary);
+}
+
+.locale-option {
+    color: var(--color-text-subtle);
+}
+
+.selected-option {
+    color: var(--color-text-on-primary);
+    font-style: bold;
+}
+</style>

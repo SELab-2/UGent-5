@@ -16,7 +16,8 @@ async def create_user(db: AsyncSession, user: UserCreate) -> User:
     return db_user
 
 
-async def set_admin(db: AsyncSession, user_id: str, value: bool):
+async def set_admin(db: AsyncSession, user_id: str, value: bool) -> User:
     user = await get_by_id(db, user_id)
     user.is_admin = value
     await db.commit()
+    return await get_by_id(db, user_id)

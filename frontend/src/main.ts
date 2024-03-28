@@ -3,6 +3,8 @@ import "@mdi/font/css/materialdesignicons.css";
 
 import { createApp } from "vue";
 import { createPinia } from "pinia";
+import { VueQueryPlugin } from "@tanstack/vue-query";
+
 import App from "./App.vue";
 import router from "./router";
 
@@ -50,5 +52,6 @@ app.use(router);
 app.use(pinia);
 app.use(vuetify);
 app.use(i18n);
+app.use(VueQueryPlugin);
 
 app.mount("#app");
