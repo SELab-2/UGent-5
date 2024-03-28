@@ -22,14 +22,12 @@
 import { useAuthStore } from "@/stores/auth-store";
 import { ref, onMounted } from "vue";
 import HomeScreenNav from "@/components/navigation/HomeScreenNav.vue"
-import {useI18n} from "vue-i18n";
-const i18n = useI18n();
 
 const navigations = ref([
-    { icon: 'mdi-school-outline', title: i18n.t("navigation.courses")},
-    { icon: 'mdi-book-check-outline', title: i18n.t("navigation.projects") },
-    { icon: 'mdi-cog-outline', title: i18n.t("navigation.settings") },
-    { icon: 'mdi-help-circle-outline', title: i18n.t("navigation.help")}
+    { icon: 'mdi-school-outline', title: "navigation.courses"},
+    { icon: 'mdi-book-check-outline', title: "navigation.projects" },
+    { icon: 'mdi-cog-outline', title: "navigation.settings" },
+    { icon: 'mdi-help-circle-outline', title: "navigation.help" }
 ]);
 
 const apiUrl = import.meta.env.VITE_API_URL;

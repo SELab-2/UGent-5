@@ -1,5 +1,5 @@
 <template>
-    <v-navigation-drawer app>
+    <v-navigation-drawer>
         <div class="logo">
             <img alt="Logo" class="logo" src="@/assets/logo_white_transparant.png" height="60" />
         </div>
@@ -15,12 +15,13 @@
                 height="150"
             />
         </div>
+        <LocaleSwitcher class="navSwitcher"/>
     </v-navigation-drawer>
 </template>
 
 <script setup lang="ts">
 import HomeScreenNavButton from "./HomeScreenNavButton.vue"
-
+import LocaleSwitcher from "../LocaleSwitcher.vue"
 const props = defineProps({
     navigations: {}
 })
@@ -45,7 +46,13 @@ const props = defineProps({
 .ugent-logo {
     position: absolute;
     bottom: 0;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
+.navSwitcher {
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    margin: 10px;
+}
 </style>

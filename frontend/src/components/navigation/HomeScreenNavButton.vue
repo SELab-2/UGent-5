@@ -2,7 +2,7 @@
     <v-list-item>
         <v-btn variant="text" class="btn-wrapper">
             <v-icon :icon="iconname" />
-            <span>{{ title }}</span>
+            <span>{{ $t(title) }}</span>
             <v-icon class="chevron" icon="mdi-chevron-right" />
         </v-btn>
     </v-list-item>
