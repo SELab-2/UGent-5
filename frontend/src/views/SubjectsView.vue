@@ -1,24 +1,37 @@
 <template>
-    <div class="">
+    <div class="v-container">
         <h1>My Courses</h1>
-        <ul>
-            <li
-                v-for="subject in subjects"
-                :key="subject.id"
-            >
-                <router-link :to="{ name: 'subject', params: { subjectId: subject.id }, meta: { subjectData: subject}}">
-                    {{ subject.name }}
-                </router-link>
-            </li>
 
-        </ul>
+        <div
+            class="v-container"
+            v-if="!loading"
+        >
+            <ul class="pa-5">
+                <li
+                    v-for="subject in subjects"
+                    :key="subject.id"
+                >
+                    <router-link :to="{ name: 'subject', params: { subjectId: subject.id }}">
+                        {{ subject.name }}
+                    </router-link>
+                </li>
+
+            </ul>
+        </div>
+
+        <div v-else-if="error" class="v-container">
+            <p>Error: {{ error }}</p>
+        </div>
+        <div v-else class="v-container">
+            <p>Loading...</p>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
 
 import {useAuthStore} from "@/stores/auth-store";
-import {onMounted, reactive} from "vue";
+import {onMounted, reactive, ref} from "vue";
 
 interface Subject {
     id: number;
@@ -30,6 +43,9 @@ const apiUrl = import.meta.env.VITE_API_URL;
 const subjects: Subject[] = reactive([]);
 const {token, logout} = useAuthStore();
 
+const loading = ref(true);
+const error = ref("");
+
 onMounted(async () => {
     await fetchSubjects();
 });
@@ -39,6 +55,7 @@ async function fetchSubjects() {
         return;
     }
     try {
+        loading.value = true;
         const response = await fetch(`${apiUrl}/api/subjects`, {
             headers: {Authorization: `${token?.token_type} ${token?.token}`},
         });
@@ -48,9 +65,10 @@ async function fetchSubjects() {
         data.subjects.forEach(subject => {
             subjects.push(subject)
         })
-
-    } catch (error) {
-        console.error('Error fetching subjects:', error);
+        loading.value = false;
+    } catch (err) {
+        error.value = err.message
+        console.error('Error fetching subjects:', err);
     }
 }
 
