@@ -10,12 +10,6 @@ class SubjectBase(BaseModel):
 class SubjectCreate(SubjectBase):
     pass
 
-# can be used to add a teacher or student to a subject
-
-
-class AddUserToSubject(BaseModel):
-    uid: str
-
 
 class Subject(SubjectBase):
     model_config = ConfigDict(from_attributes=True)
@@ -28,5 +22,5 @@ class SubjectList(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-class SubjectStudentCreate(BaseModel):
-    user_id: str
+class SubjectStudentSchema(BaseModel):
+    uid: str

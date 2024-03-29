@@ -11,10 +11,9 @@ from . import service
 from .dependencies import (
     retrieve_subject,
     retrieve_subjects,
-    user_permission_validation, add_student_permission_validation, instructor_permission_validation,
+    add_student_permission_validation, instructor_permission_validation,
 )
-from .schemas import Subject, SubjectCreate, SubjectList, AddUserToSubject
-from .schemas import Subject, SubjectCreate, SubjectList, SubjectStudentCreate
+from .schemas import Subject, SubjectCreate, SubjectList, SubjectStudentSchema
 
 router = APIRouter(
     prefix="/api/subjects",
@@ -83,7 +82,7 @@ async def get_subject_teachers(
     status_code=201,
 )
 async def create_subject_teacher(
-    subject_id: int, instructor_in: AddUserToSubject, db: AsyncSession = Depends(get_async_db)
+    subject_id: int, instructor_in: SubjectStudentSchema, db: AsyncSession = Depends(get_async_db)
 ):
     await service.add_instructor_to_subject(db, subject_id, instructor_in)
     return "Successfully added"
@@ -114,7 +113,7 @@ async def get_subject_students(
     status_code=201,
 )
 async def add_student_to_subject(
-    student_in: AddUserToSubject, subject_id: int, db: AsyncSession = Depends(get_async_db)
+    student_in: SubjectStudentSchema, subject_id: int, db: AsyncSession = Depends(get_async_db)
 ):
     await service.create_subject_student(db, subject_id, student_in)
     return "Successfully added"
