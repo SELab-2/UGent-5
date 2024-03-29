@@ -10,7 +10,9 @@ from src.subject.router import router as subject_router
 from src.user.router import router as user_router
 from src.submission.router import router as submission_router
 
-app = FastAPI()
+app = FastAPI(
+    title="Apollo API",
+)
 
 app.add_middleware(SessionMiddleware, secret_key="!secret")
 

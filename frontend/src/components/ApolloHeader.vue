@@ -1,13 +1,15 @@
 <template>
-    <header>
+    <div class="header">
         <RouterLink to="/">
             <img alt="Logo" class="logo" src="@/assets/logo_white_ transparant.png" />
         </RouterLink>
-    </header>
+        <LocaleSwitcher style="margin-left: auto" />
+    </div>
 </template>
 
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
+import LocaleSwitcher from "./LocaleSwitcher.vue";
 </script>
 
 <style scoped>
@@ -17,9 +19,9 @@ import { RouterLink } from "vue-router";
     margin-right: auto;
 }
 
-header {
-    background-color: var(--color-primary);
+.header {
     padding: 5px 0px;
+    width: 100%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
