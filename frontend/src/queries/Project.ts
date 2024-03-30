@@ -20,10 +20,3 @@ export function useProjectQuery(
         enabled: computed(() => !!projectId.value),
     });
 }
-
-export function useProjectSubjectQuery(
-    projectId: ComputedRef<number | undefined>
-): UseQueryReturnType<Subject, Error> {
-    const { data: project } = useProjectQuery(projectId);
-    return useSubjectQuery(computed(() => project.value?.subject_id));
-}
