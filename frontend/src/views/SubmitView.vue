@@ -8,10 +8,10 @@
                 <v-container class="card-container">
                     <v-row>
                         <v-col>
-                            <ProjectMiniCard :projectId="projectId"/>
+                            <ProjectMiniCard :projectId="projectId" />
                         </v-col>
-                        <v-spacer/>
-                        <v-spacer/>
+                        <v-spacer />
+                        <v-spacer />
                     </v-row>
                     <v-row>
                         <v-col>
@@ -22,7 +22,7 @@
                     </v-row>
                     <v-row>
                         <v-col>
-                            <SubmitForm :projectId="projectId"/>
+                            <SubmitForm :projectId="projectId" />
                         </v-col>
                     </v-row>
                 </v-container>
@@ -31,19 +31,16 @@
     </div>
 </template>
 
-
 <script setup lang="ts">
 import ProjectMiniCard from "@/components/project/ProjectMiniCard.vue";
 import SubmitForm from "@/components/project/SubmitForm.vue";
 
 defineProps({
-    'projectId': Number
-})
+    projectId: Number,
+});
 </script>
 
-
 <style scoped>
-
 .submit {
     justify-content: center;
     align-items: center;
@@ -54,4 +51,3 @@ defineProps({
     background-color: var(--gray-8);
 }
 </style>
-

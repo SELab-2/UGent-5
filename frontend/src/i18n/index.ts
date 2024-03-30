@@ -18,31 +18,31 @@ export default createI18n<[MessageSchema], supportedLocales>({
     datetimeFormats: {
         en: {
             short: {
-                year: 'numeric',
-                month: 'numeric',
-                day: 'numeric'
+                year: "numeric",
+                month: "numeric",
+                day: "numeric",
             },
             long: {
-                year: 'numeric',
-                month: 'long',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit'
-            }
+                year: "numeric",
+                month: "long",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+            },
         },
         nl: {
             short: {
-                day: 'numeric',
-                month: 'numeric',
-                year: 'numeric'
+                day: "numeric",
+                month: "numeric",
+                year: "numeric",
             },
             long: {
-                year: 'numeric',
-                month: 'long',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit'
-            }
-        }
-    }
+                year: "numeric",
+                month: "long",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+            },
+        },
+    },
 });

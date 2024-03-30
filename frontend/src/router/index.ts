@@ -45,7 +45,7 @@ const router = createRouter({
             path: "/project/:projectId(\\d+)/submit",
             name: "onSubmit",
             component: () => import("../views/SubmitView.vue"),
-            props: route => ({ projectId: Number(route.params.projectId) })
+            props: (route) => ({ projectId: Number(route.params.projectId) }),
         },
         {
             path: "/:pathMatch(.*)",

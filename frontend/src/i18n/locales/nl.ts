@@ -21,5 +21,5 @@ export default {
     project: {
         deadline: "deadline",
         details_button: "Naar project",
-    }
+    },
 };
