@@ -17,6 +17,8 @@ export default {
         submit_button: "indienen",
         remarks: "Opmerkingen",
         add_files: "Voeg bestanden toe",
+        add_files_button: "Bestanden toevoegen...",
+        no_files_added: "Je hebt nog geen bestanden toegevoegd.",
     },
     project: {
         deadline: "deadline",
