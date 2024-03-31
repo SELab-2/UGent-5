@@ -1,4 +1,5 @@
 from fastapi import HTTPException
+from fastapi.exceptions import RequestValidationError
 
 
 class SubmissionNotFound(HTTPException):
@@ -13,7 +14,7 @@ class FileNotFound(HTTPException):
         super().__init__(status_code=404, detail="File not found")
 
 
-class UnMetRequirement(HTTPException):
-    def __init__(self):
+class UnMetRequirements(RequestValidationError):
+    def __init__(self, detail):
         """Raised when a project requirement is not met for a submission"""
-        super().__init__(status_code=403, detail="File requirements not met")
+        super().__init__(errors=detail)
