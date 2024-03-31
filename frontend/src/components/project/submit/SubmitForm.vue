@@ -1,34 +1,47 @@
 <template>
     <v-form validate-on="submit lazy" @submit.prevent="formOnSubmit">
-        <v-row v-if="inputFiles.length === 0">
-            <v-col>
-                <p> {{ $t("submit.no_files_added") }} </p>
-            </v-col>
-        </v-row>
-        <v-row v-else v-for="(item, index) in inputFiles" :key="item.name">
-            <v-col>
-                <p> {{ item.name }} </p>
-            </v-col>
-            <v-col>
-                <v-btn @click="() => onDeleteClick(index)">x</v-btn>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col>
-                <input @change="updateFiles" ref="fileInput" type="file" multiple hidden>
-                <v-btn @click="onAddFilesClick">{{ $t("submit.add_files_button") }}</v-btn>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col>
-                <v-textarea
-                    :label="$t('submit.remarks')"
-                    name="remarks"
-                    v-model="remarksInput"
-                ></v-textarea>
-            </v-col>
-        </v-row>
-        <v-btn type="submit">{{ $t("submit.submit_button") }}</v-btn>
+        <v-container>
+            <v-row v-if="inputFiles.length === 0">
+                <v-col>
+                    <p>{{ $t("submit.no_files_added") }}</p>
+                </v-col>
+            </v-row>
+            <v-row v-else>
+                <v-col>
+                    <v-chip
+                        v-for="(item, index) in inputFiles"
+                        :key="item.name"
+                        class="ma-2"
+                        closable
+                        label
+                        @click:close="() => onDeleteClick(index)"
+                    >
+                        <v-icon icon="mdi-file" start></v-icon>
+                        {{ item.name }} ({{ formatBytes(item.size) }})
+                    </v-chip>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col>
+                    <input @change="updateFiles" ref="fileInput" type="file" multiple hidden />
+                    <v-btn @click="onAddFilesClick">{{ $t("submit.add_files_button") }}</v-btn>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col>
+                    <v-textarea
+                        :label="$t('submit.remarks')"
+                        name="remarks"
+                        v-model="remarksInput"
+                    ></v-textarea>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col>
+                    <v-btn type="submit">{{ $t("submit.submit_button") }}</v-btn>
+                </v-col>
+            </v-row>
+        </v-container>
     </v-form>
 </template>
 
@@ -44,7 +57,6 @@ const inputFiles = ref<File[]>([]);
 const remarksInput = ref<string | null>(null);
 
 const fileInput = ref<HTMLFormElement | null>(null);
-
 
 const formOnSubmit = (event: SubmitEvent) => {
     const formData = new FormData(event.target as HTMLFormElement);
@@ -73,6 +85,19 @@ const formOnSubmit = (event: SubmitEvent) => {
         });
 };
 
+// https://stackoverflow.com/a/18650828
+function formatBytes(bytes: number, decimals = 2) {
+    if (!+bytes) return "0 Bytes";
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ["Bytes", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+}
+
 function onAddFilesClick() {
     fileInput.value?.click();
 }
@@ -85,7 +110,6 @@ function updateFiles(event: Event) {
 function onDeleteClick(index: number) {
     inputFiles.value.splice(index, 1);
 }
-
 </script>
 
 <style scoped></style>
