@@ -1,8 +1,11 @@
 <template>
     <v-app>
-        <v-app-bar v-if="!hideHeader">
-            <ApolloHeader />
-        </v-app-bar>
+        <div v-if="!hideHeader">
+            <v-app-bar >
+                <ApolloHeader />
+            </v-app-bar>
+            <HomeScreenNav :navigations="navigations"/>
+        </div>
         <v-main>
             <RouterView />
         </v-main>
@@ -10,17 +13,34 @@
 </template>
 
 <script setup lang="ts">
-import { RouterView, useRouter } from "vue-router";
+import {onBeforeRouteUpdate, RouterView, useRouter} from "vue-router";
 import ApolloHeader from "@/components/ApolloHeader.vue";
-import { computed, onBeforeMount } from "vue";
+import HomeScreenNav from "@/components/navigation/HomeScreenNav.vue"
+import {computed, onBeforeMount, ref, provide} from "vue";
 import { useI18n } from "vue-i18n";
 import { useLocale } from "@/stores/locale-store";
 
 const { currentRoute } = useRouter();
 const hideHeader = computed(() => currentRoute.value.meta.hideHeader === true);
+
 onBeforeMount(() => {
     const { locale } = useI18n();
     const { selectedLocale } = useLocale();
     locale.value = selectedLocale;
 });
+
+const navigations = ref([
+    { icon: 'mdi-school-outline', title: "navigation.courses"},
+    { icon: 'mdi-book-check-outline', title: "navigation.projects" },
+    { icon: 'mdi-cog-outline', title: "navigation.settings" },
+]);
+
+const navOpen = ref(true);
+
+const toggleNav = () => {
+    navOpen.value = !navOpen.value;
+};
+
+provide('toggleNav', toggleNav);
+provide('navOpen', navOpen);
 </script>

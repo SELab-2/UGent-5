@@ -1,5 +1,4 @@
 <template>
-    <homeScreenNav :navigations="navigations"/>
     <BackgroundContainer>
         <h1>{{ $t("home.welcome", { name: user }) }}</h1>
         <v-container>
@@ -25,19 +24,11 @@ import HomeScreenNav from "@/components/navigation/HomeScreenNav.vue"
 import HomeScreenCard from "@/components/cards/HomeScreenCard.vue"
 import BackgroundContainer from "@/components/BackgroundContainer.vue"
 
-const navigations = ref([
-    { icon: 'mdi-school-outline', title: "navigation.courses"},
-    { icon: 'mdi-book-check-outline', title: "navigation.projects" },
-    { icon: 'mdi-cog-outline', title: "navigation.settings" },
-]);
-
 const apiUrl = import.meta.env.VITE_API_URL;
 const user = ref<string | null>(null);
 const { token } = useAuthStore();
 onMounted(async () => {
     await fetchUser();
-    console.log(navigations)
-    console.log("test")
 });
 
 async function fetchUser() {
