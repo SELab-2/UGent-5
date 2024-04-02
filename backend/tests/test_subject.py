@@ -139,7 +139,6 @@ async def test_get_students(client: AsyncClient, db: AsyncSession, subject_id: i
     )
     response = await client.get(f"/api/subjects/{subject_id}/students")
     assert response.status_code == 200
-    print(response.json())
     assert len(response.json()) == 1
     assert response.json()[0]["uid"] == "get_test"
 

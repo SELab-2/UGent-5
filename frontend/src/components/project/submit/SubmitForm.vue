@@ -26,42 +26,33 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { useAuthStore } from "@/stores/auth-store";
 import FilesInput from "@/components/form_elements/FilesInput.vue";
+import { useRouter } from "vue-router";
+import { useMakeSubmissionMutation } from "@/queries/Project";
 
-const props = defineProps({
-    projectId: Number,
-});
+const props = defineProps<{
+    projectId: number,
+}>();
 
 const inputFiles = ref<File[]>([]);
 const remarksInput = ref<string | null>(null);
+const { mutate } = useMakeSubmissionMutation(472); //todo
 
-const formOnSubmit = (event: SubmitEvent) => {
-    const formData = new FormData(event.target as HTMLFormElement);
+function formOnSubmit(event: SubmitEvent) {
+    // const formData = new FormData(event.target as HTMLFormElement);
+    const formData = new FormData();
 
     for (const inputFile of inputFiles.value) {
         formData.append("files", inputFile);
     }
-    formData.append("group_id", "472"); //TODO
+    mutate(formData);
 
-    const apiUrl = import.meta.env.VITE_API_URL;
-    const { token } = useAuthStore();
+    // const router = useRouter();
+    // const submission_id = data.id;
+    // router.replace(`/submission/${submission_id}`)
 
-    fetch(`${apiUrl}/api/projects/${props.projectId}`, {
-        method: "post",
-        headers: {
-            Authorization: `${token?.token_type} ${token?.token}`,
-        },
-        body: formData,
-    })
-        .then((data) => data.json())
-        .then((json) => {
-            console.log("Request succeeded with JSON response", json);
-        })
-        .catch((error) => {
-            console.log("Request failed", error);
-        });
-};
+
+}
 </script>
 
 <style scoped></style>

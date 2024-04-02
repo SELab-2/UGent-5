@@ -9,7 +9,7 @@ import { useAuthStore } from "@/stores/auth-store";
 export interface RequestOptions {
     method: "GET" | "POST" | "PATCH" | "DELETE";
     headers?: Object;
-    body?: string;
+    body?: BodyInit;
 }
 
 const { token } = useAuthStore();
@@ -18,8 +18,8 @@ const BASE_URL = import.meta.env.VITE_API_URL;
 
 /**
  * Fetch data from the API
- * @param endpoint: API endpoint
- * @param requestOptions: Custom request options
+ * @param endpoint API endpoint
+ * @param requestOptions Custom request options
  * @returns Response from the API
  */
 export async function authorized_fetch<T>(

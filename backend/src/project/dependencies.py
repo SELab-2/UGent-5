@@ -1,7 +1,7 @@
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.dependencies import get_async_db
-from src.subject.dependencies import user_permission_validation
+from src.subject.dependencies import retrieve_subject, user_permission_validation
 from src.user.dependencies import get_authenticated_user
 from src.user.schemas import User
 
@@ -23,6 +23,7 @@ async def create_permission_validation(
     db: AsyncSession = Depends(get_async_db),
 ):
     await user_permission_validation(project_in.subject_id, user, db)
+    await retrieve_subject(project_in.subject_id, db)
 
 
 async def patch_permission_validation(

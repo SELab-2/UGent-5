@@ -1,6 +1,11 @@
-import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
+import {
+    useMutation,
+    type UseMutationReturnType,
+    useQuery,
+    type UseQueryReturnType,
+} from "@tanstack/vue-query";
 import type Project from "@/models/Project";
-import { getProject } from "@/services/project";
+import { getProject, makeSubmission } from "@/services/project";
 import { type Ref, computed } from "vue";
 
 function PROJECT_QUERY_KEY(projectId: number): (string | number)[] {
@@ -16,3 +21,10 @@ export function useProjectQuery(
         enabled: () => projectId.value !== undefined,
     });
 }
+
+export function useMakeSubmissionMutation(groupId: number): UseMutationReturnType<void, Error, FormData, void> {
+    return useMutation({
+        mutationFn: (formData) => makeSubmission(groupId, formData)
+    });
+}
+
