@@ -17,11 +17,11 @@ export default {
         submit_button: "Submit",
         remarks: "Remarks",
         add_files: "Add files",
-        add_files_button: "Add files...",
+        add_files_button: "Add files",
         no_files_added: "No files have been added yet.",
     },
     project: {
-        deadline: "deadline",
+        deadline: "Deadline",
         details_button: "Project details",
     },
 };

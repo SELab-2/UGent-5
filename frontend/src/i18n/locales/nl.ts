@@ -14,14 +14,14 @@ export default {
     },
     submit: {
         submit_title: "Oplossing indienen",
-        submit_button: "indienen",
+        submit_button: "Indienen",
         remarks: "Opmerkingen",
         add_files: "Voeg bestanden toe",
-        add_files_button: "Bestanden toevoegen...",
+        add_files_button: "Bestanden toevoegen",
         no_files_added: "Je hebt nog geen bestanden toegevoegd.",
     },
     project: {
-        deadline: "deadline",
+        deadline: "Deadline",
         details_button: "Naar project",
     },
 };

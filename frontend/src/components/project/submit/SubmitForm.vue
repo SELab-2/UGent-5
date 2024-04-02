@@ -103,6 +103,7 @@ function onAddFilesClick() {
 }
 
 function updateFiles(event: Event) {
+    // todo: check of meerdere identieke filenames aanwezig zijn
     const files = (event.target as HTMLInputElement).files!;
     inputFiles.value.push(...files);
 }

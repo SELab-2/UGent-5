@@ -10,7 +10,7 @@
         </v-card-item>
         <v-card-text v-if="!isLoading">
             <b>{{ $t("project.deadline") }}:</b>
-            <p>{{ $d(project.deadline, "long") }}</p>
+            <p>{{ $d(project!.deadline, "long") }}</p>
         </v-card-text>
         <v-card-actions>
             <v-btn>{{ $t("project.details_button") }}</v-btn>
