@@ -3,7 +3,7 @@ import type { Ref } from "vue";
 import type { UseQueryReturnType } from "@tanstack/vue-query";
 import { useQuery } from "@tanstack/vue-query";
 import { computed } from "vue";
-import { getGroupId, getUserGroups } from "@/services/group";
+import { getGroupWithProjectId, getUserGroups } from "@/services/group";
 
 function GROUP_QUERY_KEY(): string[] {
     return ["groups", "me"];
@@ -31,11 +31,11 @@ export function useUserGroupsQuery(): UseQueryReturnType<Group[], Error> {
  */
 export function useUserGroupQuery(
     projectId: Ref<number | undefined>
-): UseQueryReturnType<number | null, Error> {
+): UseQueryReturnType<Group | null, Error> {
     const { data: groups } = useUserGroupsQuery();
-    return useQuery<number | null, Error>({
+    return useQuery<Group | null, Error>({
         queryKey: computed(() => USER_GROUP_QUERY_KEY(projectId.value!)),
-        queryFn: () => getGroupId(groups.value!, projectId.value!),
+        queryFn: () => getGroupWithProjectId(groups.value!, projectId.value!),
         enabled: () => groups.value !== undefined,
     });
 }

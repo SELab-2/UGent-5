@@ -5,7 +5,7 @@ import {
     type UseQueryReturnType,
 } from "@tanstack/vue-query";
 import type Project from "@/models/Project";
-import { getProject, makeSubmission } from "@/services/project";
+import { getProject, createSubmission } from "@/services/project";
 import { type Ref, computed } from "vue";
 import type Submission from "@/models/Submission";
 
@@ -23,11 +23,11 @@ export function useProjectQuery(
     });
 }
 
-export function useMakeSubmissionMutation(
+export function useCreateSubmissionMutation(
     groupId: Ref<number | undefined>
 ): UseMutationReturnType<Submission, Error, FormData, void> {
     return useMutation({
-        mutationFn: (formData) => makeSubmission(groupId.value!, formData),
+        mutationFn: (formData) => createSubmission(groupId.value!, formData),
         onError: (e) => {
             // todo
             alert(e.message);

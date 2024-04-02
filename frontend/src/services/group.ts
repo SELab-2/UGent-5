@@ -7,10 +7,10 @@ export async function getUserGroups(): Promise<Group[]> {
     );
 }
 
-export function getGroupId(groups: Group[], projectId: number): number | null {
+export function getGroupWithProjectId(groups: Group[], projectId: number): Group | null {
     for (const group of groups) {
         if (group.project_id === projectId) {
-            return group.id;
+            return group;
         }
     }
     return null;

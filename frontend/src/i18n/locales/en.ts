@@ -19,6 +19,7 @@ export default {
         add_files: "Add files",
         add_files_button: "Add files",
         no_files_added: "No files have been added yet.",
+        no_files_warning: "Please add at least one file to submit a solution.",
     },
     project: {
         deadline: "Deadline",

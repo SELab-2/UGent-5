@@ -28,8 +28,9 @@
 import { computed, ref, toRefs } from "vue";
 import FilesInput from "@/components/form_elements/FilesInput.vue";
 import { useRouter } from "vue-router";
-import { useMakeSubmissionMutation } from "@/queries/Project";
+import { useCreateSubmissionMutation } from "@/queries/Project";
 import { useUserGroupQuery } from "@/queries/Group";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps<{
     projectId: number;
@@ -37,13 +38,18 @@ const props = defineProps<{
 
 const { projectId } = toRefs(props);
 const router = useRouter();
+const { t } = useI18n();
 
 const inputFiles = ref<File[]>([]);
 const remarksInput = ref<string | null>(null);
-const { data: groupId } = useUserGroupQuery(projectId);
-const { mutateAsync } = useMakeSubmissionMutation(computed(() => groupId.value!));
+const { data: group } = useUserGroupQuery(projectId);
+const { mutateAsync } = useCreateSubmissionMutation(computed(() => group.value?.id));
 
 async function formOnSubmit(event: SubmitEvent) {
+    if (inputFiles.value.length === 0) {
+        alert(t("submit.no_files_warning"));
+        return;
+    }
     const formData = new FormData(event.target as HTMLFormElement);
 
     for (const inputFile of inputFiles.value) {
