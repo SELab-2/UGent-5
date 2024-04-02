@@ -26,28 +26,33 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { useAuthStore } from "@/stores/auth-store";
 import FilesInput from "@/components/form_elements/FilesInput.vue";
-import { authorized_fetch } from "@/services";
+import { useRouter } from "vue-router";
+import { useMakeSubmissionMutation } from "@/queries/Project";
 
-const props = defineProps({
-    projectId: Number,
-});
+const props = defineProps<{
+    projectId: number,
+}>();
 
 const inputFiles = ref<File[]>([]);
 const remarksInput = ref<string | null>(null);
+const { mutate } = useMakeSubmissionMutation(472); //todo
 
-const formOnSubmit = (event: SubmitEvent) => {
-    const formData = new FormData(event.target as HTMLFormElement);
+function formOnSubmit(event: SubmitEvent) {
+    // const formData = new FormData(event.target as HTMLFormElement);
+    const formData = new FormData();
 
     for (const inputFile of inputFiles.value) {
         formData.append("files", inputFile);
     }
-    formData.append("group_id", "472"); //TODO
+    mutate(formData);
+
+    // const router = useRouter();
+    // const submission_id = data.id;
+    // router.replace(`/submission/${submission_id}`)
 
 
-
-};
+}
 </script>
 
 <style scoped></style>
