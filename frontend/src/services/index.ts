@@ -30,6 +30,7 @@ export async function authorized_fetch<T>(
         ...requestOptions,
         headers: {
             Authorization: `${token?.token_type} ${token?.token}`,
+            "Content-Type": "application/json",
         },
     });
     if (!response.ok) {
