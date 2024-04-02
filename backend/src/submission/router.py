@@ -1,9 +1,5 @@
 import os
-import shutil
 from typing import Sequence
-import zipfile
-import fnmatch
-from uuid import uuid4
 
 from fastapi import APIRouter, Depends, UploadFile
 from fastapi.responses import FileResponse
@@ -11,12 +7,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src import config
 from src.dependencies import get_async_db
 from src.group.dependencies import retrieve_group
+from src.group.schemas import Group
 from src.project.dependencies import retrieve_project
 from src.submission.dependencies import (
     group_id_validation,
     retrieve_submission,
 )
-from src.submission.exceptions import FileNotFound, UnMetRequirements
+from src.submission.exceptions import FileNotFound
+from src.submission.utils import upload_files
 from src.user.dependencies import admin_user_validation
 
 from . import service
@@ -41,43 +39,12 @@ async def get_submission(submission: Submission = Depends(retrieve_submission)) 
 
 @router.post("/", response_model=Submission, status_code=201,
              dependencies=[Depends(group_id_validation)])
-async def create_submission(group_id: int,
-                            files: list[UploadFile],
+async def create_submission(files: list[UploadFile],
+                            group: Group = Depends(retrieve_group),
                             db: AsyncSession = Depends(get_async_db)):
-    group = await retrieve_group(group_id, db)
     project = await retrieve_project(group.project_id, db)
-
-    uuid = str(uuid4())
-    dir_path = os.path.join(config.CONFIG.file_path, uuid)
-    os.makedirs(dir_path)
-
-    filelist = []
-    for upload_file in files:
-        if upload_file.filename and upload_file.content_type:
-            path = os.path.join(dir_path, upload_file.filename)
-            filelist.append(upload_file.filename)
-            with open(path, 'w+b') as f:
-                shutil.copyfileobj(upload_file.file, f)
-
-            if upload_file.content_type == "application/zip":
-                filelist.extend(zipfile.ZipFile(path, 'r').namelist())
-
-    errors = []
-    for r in project.requirements:
-        matches = [file for file in filelist if fnmatch.fnmatch(file, r.value)]
-
-        if not r.mandatory and len(matches):
-            errors.append({"type": "forbidden", "requirement": r.value,
-                          "msg": f"Forbidden file(s) found: {r.value}", "files": matches})
-        elif r.mandatory and not len(matches):
-            errors.append({"type": "mandatory", "requirement": r.value,
-                          "msg": f"Required file not found: {r.value}"})
-
-    if len(errors):
-        shutil.rmtree(dir_path)
-        raise UnMetRequirements(errors)
-
-    return await service.create_submission(db, uuid, group_id, group.project_id)
+    uuid = upload_files(files, project)
+    return await service.create_submission(db, uuid, group.id, group.project_id)
 
 
 @router.delete("/{submission_id}",

@@ -1,5 +1,4 @@
 from datetime import datetime
-from fastapi import UploadFile
 from pydantic import BaseModel, ConfigDict, Field
 from .models import Status
 

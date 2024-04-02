@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.exceptions import NotAuthorized
 from src.dependencies import get_async_db
 from src.group.service import get_teachers_by_group, get_users_by_group
-from src.submission.exceptions import SubmissionNotFound, FileNotFound
+from src.submission.exceptions import SubmissionNotFound
 from src.user.dependencies import get_authenticated_user
 from src.user.schemas import User
 
