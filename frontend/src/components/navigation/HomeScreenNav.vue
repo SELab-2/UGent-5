@@ -1,7 +1,8 @@
 <template>
-    <v-navigation-drawer
-    v-model="navOpen" app>
-        <HomeScreenNavButton v-for="nav in navigations"
+    <div>
+        <HomeScreenNavButton
+            v-for="nav in navigations"
+            :key="nav.title"
             :iconname="nav.icon"
             :title="nav.title"
             :goTo="nav.goTo"
@@ -14,26 +15,27 @@
                 height="150"
             />
         </div>
-    </v-navigation-drawer>
+    </div>
 </template>
 
 <script setup lang="ts">
-import HomeScreenNavButton from "./HomeScreenNavButton.vue"
-import { ref, inject } from 'vue';
+import HomeScreenNavButton from "./HomeScreenNavButton.vue";
 
-const props = defineProps({
-    navigations: {}
-})
+interface Navigation {
+    title: string;
+    icon: string;
+    goTo?: string;
+}
 
-const navOpen = inject('navOpen');
-
+defineProps<{
+    navigations: Navigation[];
+}>();
 </script>
 
 <style scoped>
-
 .v-navigation-drawer {
     background: linear-gradient(var(--color-primary), #0e2057);
-    padding: 10px
+    padding: 10px;
 }
 
 .ugent-logo {
@@ -41,5 +43,4 @@ const navOpen = inject('navOpen');
     bottom: 0;
     margin-bottom: 30px;
 }
-
 </style>
