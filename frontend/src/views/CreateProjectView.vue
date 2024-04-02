@@ -5,16 +5,13 @@
             <div class="form-section">
                 <input type="text" placeholder="Project Title" v-model="projectTitle" required>
             </div>
-            <!-- Radio Button List for Group Project Options -->
             <div class="form-section">
                 <RadioButtonList
                     :title="groupProjectTitle"
                     :options="groupProjectOptions"
                     v-model="selectedGroupProject"
-                />
+                    @update:deadline="handleDeadlineUpdate" />
             </div>
-
-            <!-- Check Box for Teacher Selection -->
             <div class="form-section">
                 <span v-if="isLoading">Loading teachers...</span>
                 <span v-else-if="isError">Error loading teachers: {{ error.message }}</span>
@@ -26,7 +23,6 @@
                     v-model="selectedTeachers"
                 />
             </div>
-
             <div class="form-section">
                 <button type="submit">Create Project</button>
             </div>
@@ -36,28 +32,30 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import DatePicker from '@/components/DatePicker.vue';
 import RadioButtonList from '@/components/RadiobuttonList.vue';
 import CheckBox from '@/components/CheckboxList.vue';
-import { useSubjectQuery } from '@/queries/Subject';
+import { useCreateProjectMutation } from '@/queries/Project';
+import type Project from "@/models/Project";
+import {useSubjectQuery} from "@/queries/Subject";
 
 const projectTitle = ref('');
-const projectDate = ref(new Date());
-const selectedGroupProject = ref('course'); // Default selection or could be reactive based on a prop
+const deadline = ref(new Date());
+const selectedGroupProject = ref('course');
+const selectedTeachers = ref([]);
 
-// Teachers loading logic
 const { data: teachersData, error, isLoading, isError } = useSubjectQuery('1631');
 
 const teachers = computed(() => {
     return teachersData.value?.map(teacher => ({
         id: teacher.uid,
         label: teacher.given_name,
-        checked: false, // Initial unchecked state
+        checked: false,
     })) || [];
 });
 
-// Selected teachers - an array to store the IDs of selected teachers
-const selectedTeachers = ref([]);
+function handleDeadlineUpdate(newDeadlineIsoString) {
+    deadline.value = new Date(newDeadlineIsoString);
+}
 
 const groupProjectTitle = 'Group Project';
 const groupProjectOptions = [
@@ -66,9 +64,29 @@ const groupProjectOptions = [
     { label: 'Student Picked Groups', value: 'student' },
 ];
 
-function submitForm() {
-    // Implement project creation logic here
-    console.log('Creating project:', projectTitle.value, 'with date:', projectDate.value, 'group project option:', selectedGroupProject.value, 'selected teachers:', selectedTeachers.value);
+const createProjectMutation = useCreateProjectMutation();
+
+async function submitForm() {
+    const projectData: Project = {
+        name: projectTitle.value,
+        deadline: deadline.value.toISOString(),
+        description: 'A default project description',
+        subject_id: '1631',
+        requirements: [],
+        // Add other necessary fields from your form
+    };
+    console.log('Submitting project with deadline:', deadline.value.toISOString());
+
+    createProjectMutation.mutate(projectData, {
+        onSuccess: () => {
+            console.log('Project created successfully');
+            // Handle success, e.g., redirect or clear form
+        },
+        onError: (error) => {
+            console.error('Error creating project', error);
+            // Handle error, e.g., show notification
+        },
+    });
 }
 </script>
 

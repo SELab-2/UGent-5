@@ -67,8 +67,10 @@ export default defineComponent({
             emit('update:modelValue', newValue);
         });
 
-        watch(deadline, (newValue) => {
-            emit('update:deadline', newValue);
+        watch(deadline, (newDate) => {
+            // If you need the date in a specific format e.g., ISO string:
+            const formattedDate = newDate.toISOString();
+            emit('update:deadline', formattedDate);
         });
 
         return {
