@@ -51,9 +51,8 @@ async def add_student_permission_validation(
             raise NotAuthorized()
 
 
-async def instructor_permission_validation(
-    user: User = Depends(get_authenticated_user),
-    db: AsyncSession = Depends(get_async_db),
+async def teacher_permission_validation(
+    user: User = Depends(get_authenticated_user)
 ):
     if not (user.is_admin or user.is_teacher):
         raise NotAuthorized()

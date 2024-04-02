@@ -2,18 +2,18 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.dependencies import authentication_validation
 from src.dependencies import get_async_db
-from src.project.schemas import Project, ProjectList
+from src.project.schemas import ProjectList
 from src.project.service import get_projects_for_subject
-from src.user.dependencies import admin_user_validation, user_id_validation, teacher_or_admin_user_validation
+from src.user.dependencies import teacher_or_admin_user_validation
 from src.user.schemas import User
 
 from . import service
 from .dependencies import (
     retrieve_subject,
     retrieve_subjects,
-    add_student_permission_validation, instructor_permission_validation,
+    add_student_permission_validation, teacher_permission_validation,
 )
-from .schemas import Subject, SubjectCreate, SubjectList, SubjectStudentSchema
+from .schemas import Subject, SubjectCreate, SubjectList
 
 router = APIRouter(
     prefix="/api/subjects",
@@ -78,13 +78,13 @@ async def get_subject_teachers(
 
 @router.post(
     "/{subject_id}/instructors",
-    dependencies=[Depends(instructor_permission_validation)],
+    dependencies=[Depends(teacher_permission_validation)],
     status_code=201,
 )
-async def create_subject_teacher(
-    subject_id: int, instructor_in: SubjectStudentSchema, db: AsyncSession = Depends(get_async_db)
+async def create_subject_instructor(
+    subject_id: int, instructor_uid: str, db: AsyncSession = Depends(get_async_db)
 ):
-    await service.add_instructor_to_subject(db, subject_id, instructor_in)
+    await service.add_instructor_to_subject(db, subject_id, instructor_uid)
     return "Successfully added"
 
 
@@ -92,7 +92,7 @@ async def create_subject_teacher(
     "/{subject_id}/instructors/{user_id}",
     dependencies=[Depends(teacher_or_admin_user_validation)],
 )
-async def delete_subject_teacher(
+async def delete_subject_instructor(
     subject_id: int, user_id: str, db: AsyncSession = Depends(get_async_db)
 ):
     await service.delete_subject_instructor(db, subject_id, user_id)
@@ -113,9 +113,9 @@ async def get_subject_students(
     status_code=201,
 )
 async def add_student_to_subject(
-    student_in: SubjectStudentSchema, subject_id: int, db: AsyncSession = Depends(get_async_db)
+    student_uid: str, subject_id: int, db: AsyncSession = Depends(get_async_db)
 ):
-    await service.create_subject_student(db, subject_id, student_in)
+    await service.create_subject_student(db, subject_id, student_uid)
     return "Successfully added"
 
 

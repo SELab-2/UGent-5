@@ -49,9 +49,9 @@ async def create_subject(db: AsyncSession, subject: SubjectCreate) -> Subject:
     return db_subject
 
 
-async def add_instructor_to_subject(db: AsyncSession, subject_id: int, instructor_in: SubjectStudentSchema):
+async def add_instructor_to_subject(db: AsyncSession, subject_id: int, instructor_in: str):
     insert_stmnt = InstructorSubject.insert().values(
-        subject_id=subject_id, uid=instructor_in.uid)
+        subject_id=subject_id, uid=instructor_in)
     await db.execute(insert_stmnt)
     await db.commit()
 
@@ -70,9 +70,9 @@ async def delete_subject(db: AsyncSession, subject_id: int):
     await db.commit()
 
 
-async def create_subject_student(db: AsyncSession, subject_id: int, student_in: SubjectStudentSchema):
+async def create_subject_student(db: AsyncSession, subject_id: int, student_in: str):
     insert_stmnt = StudentSubject.insert().values(
-        subject_id=subject_id, uid=student_in.uid)
+        subject_id=subject_id, uid=student_in)
     await db.execute(insert_stmnt)
     await db.commit()
 
