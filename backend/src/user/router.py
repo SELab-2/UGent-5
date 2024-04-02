@@ -78,6 +78,7 @@ async def toggle_admin(
     """
     await set_admin(db, user.uid, not user.is_admin)
 
+
 @router.post("/{user_id}/teacher")
 async def set_teacher(
     user: UserSimple = Depends(retrieve_user),
