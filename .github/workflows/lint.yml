@@ -53,6 +53,7 @@ jobs:
       CAS_SERVER_URL: "https://login.ugent.be"
       SECRET_KEY: "test" 
       ALGORITHM: "HS256" 
+      FILE_PATH: "files"
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python 3.12

@@ -2,9 +2,7 @@ from typing import Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from src.group.service import get_group_by_id
-
-from . import models, schemas
+from . import models
 
 
 async def get_submissions(db: AsyncSession) -> Sequence[models.Submission]:
@@ -29,16 +27,13 @@ async def get_submission(db: AsyncSession, submission_id: int) -> models.Submiss
                              .filter_by(id=submission_id))).scalar_one_or_none()
 
 
-async def get_group(db: AsyncSession, submission_id: int):
-    pass
-
-
 async def create_submission(db: AsyncSession,
-                            submission: schemas.SubmissionCreate,
+                            uuid: str,
                             group_id: int,
                             subject_id: int
                             ) -> models.Submission:
-    db_submission = models.Submission(group_id=group_id, project_id=subject_id)
+    db_submission = models.Submission(
+        group_id=group_id, project_id=subject_id, files_uuid=uuid)
     db.add(db_submission)
     await db.commit()
     await db.refresh(db_submission)
