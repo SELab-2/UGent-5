@@ -1,23 +1,23 @@
 <template>
-    <div class="header">
-        <v-app-bar-nav-icon variant="text" @click="toggleNav"></v-app-bar-nav-icon>
-        <RouterLink to="/" >
-            <img alt="Logo" class="logo" src="@/assets/logo_white_transparant.png" />
-        </RouterLink>
-        <v-btn variant="text" class="logout" @click="logout"> logout  </v-btn>
-        <LocaleSwitcher style="margin-left: auto" />
-    </div>
+    <v-app-bar>
+            <v-app-bar-nav-icon variant="text" @click="emit('toggleNav')"></v-app-bar-nav-icon>
+            <RouterLink to="/">
+                <img alt="Logo" class="logo" src="@/assets/logo_white_transparant.png" />
+            </RouterLink>
+            <v-btn variant="text" class="logout" @click="logout"> logout </v-btn>
+            <LocaleSwitcher style="margin-left: auto" />
+    </v-app-bar>
 </template>
-
 
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
-import HomeScreenNav from "./navigation/HomeScreenNav.vue"
 import LocaleSwitcher from "./LocaleSwitcher.vue";
-import { useAuthStore } from "@/stores/auth-store.ts"
-import { inject } from 'vue';
+import { useAuthStore } from "@/stores/auth-store";
 
-const toggleNav = inject('toggleNav');
+const emit = defineEmits<{
+    (e: "toggleNav"): void;
+}>();
+
 const { logout } = useAuthStore();
 </script>
 
@@ -28,7 +28,7 @@ const { logout } = useAuthStore();
     margin-right: auto;
 }
 
-.header {
+.v-app-bar {
     padding: 5px 0px;
     width: 100%;
     display: flex;
@@ -37,6 +37,6 @@ const { logout } = useAuthStore();
 }
 
 .logout {
-    margin-left: 60%
+    margin-left: 60%;
 }
 </style>

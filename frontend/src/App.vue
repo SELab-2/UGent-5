@@ -1,12 +1,8 @@
 <template>
     <v-app>
         <div v-if="!hideHeader">
-            <v-app-bar>
-                <ApolloHeader />
-            </v-app-bar>
-            <v-navigation-drawer v-model="navOpen" app>
-                <HomeScreenNav :navigations="navigations" />
-            </v-navigation-drawer>
+            <ApolloHeader @toggleNav="navBar?.toggleNav" />
+            <NavBar ref="navBar" :navigations="navigations" />
         </div>
         <v-main>
             <RouterView />
@@ -17,10 +13,12 @@
 <script setup lang="ts">
 import { RouterView, useRouter } from "vue-router";
 import ApolloHeader from "@/components/ApolloHeader.vue";
-import HomeScreenNav from "@/components/navigation/HomeScreenNav.vue";
-import { computed, onBeforeMount, ref, provide } from "vue";
+import NavBar from "@/components/navigation/NavBar.vue";
+import { computed, onBeforeMount, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useLocale } from "@/stores/locale-store";
+
+const navBar = ref<InstanceType<typeof NavBar> | null>(null);
 
 const { currentRoute } = useRouter();
 const hideHeader = computed(() => currentRoute.value.meta.hideHeader);
@@ -32,17 +30,8 @@ onBeforeMount(() => {
 });
 
 const navigations = ref([
-    { icon: "mdi-school-outline", title: "navigation.courses" },
-    { icon: "mdi-book-check-outline", title: "navigation.projects" },
-    { icon: "mdi-cog-outline", title: "navigation.settings" },
+    { icon: "mdi-school-outline", title: "navigation.courses", goto: "about" },
+    { icon: "mdi-book-check-outline", title: "navigation.projects", goto: "about" },
+    { icon: "mdi-cog-outline", title: "navigation.settings", goto: "about" },
 ]);
-
-const navOpen = ref(true);
-
-function toggleNav() {
-    navOpen.value = !navOpen.value;
-};
-
-provide("toggleNav", toggleNav);
-provide("navOpen", navOpen);
 </script>
