@@ -28,6 +28,7 @@
 import { ref } from "vue";
 import { useAuthStore } from "@/stores/auth-store";
 import FilesInput from "@/components/form_elements/FilesInput.vue";
+import { authorized_fetch } from "@/services";
 
 const props = defineProps({
     projectId: Number,
@@ -44,23 +45,8 @@ const formOnSubmit = (event: SubmitEvent) => {
     }
     formData.append("group_id", "472"); //TODO
 
-    const apiUrl = import.meta.env.VITE_API_URL;
-    const { token } = useAuthStore();
 
-    fetch(`${apiUrl}/api/projects/${props.projectId}`, {
-        method: "post",
-        headers: {
-            Authorization: `${token?.token_type} ${token?.token}`,
-        },
-        body: formData,
-    })
-        .then((data) => data.json())
-        .then((json) => {
-            console.log("Request succeeded with JSON response", json);
-        })
-        .catch((error) => {
-            console.log("Request failed", error);
-        });
+
 };
 </script>
 
