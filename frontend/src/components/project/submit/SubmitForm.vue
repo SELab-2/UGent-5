@@ -25,33 +25,34 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref, toRefs } from "vue";
 import FilesInput from "@/components/form_elements/FilesInput.vue";
 import { useRouter } from "vue-router";
 import { useMakeSubmissionMutation } from "@/queries/Project";
+import { useUserGroupQuery } from "@/queries/Group";
 
 const props = defineProps<{
-    projectId: number,
+    projectId: number;
 }>();
+
+const { projectId } = toRefs(props);
+const router = useRouter();
 
 const inputFiles = ref<File[]>([]);
 const remarksInput = ref<string | null>(null);
-const { mutate } = useMakeSubmissionMutation(472); //todo
+const { data: groupId } = useUserGroupQuery(projectId);
+const { mutateAsync } = useMakeSubmissionMutation(computed(() => groupId.value!));
 
-function formOnSubmit(event: SubmitEvent) {
-    // const formData = new FormData(event.target as HTMLFormElement);
-    const formData = new FormData();
+async function formOnSubmit(event: SubmitEvent) {
+    const formData = new FormData(event.target as HTMLFormElement);
 
     for (const inputFile of inputFiles.value) {
         formData.append("files", inputFile);
     }
-    mutate(formData);
+    const data = await mutateAsync(formData);
 
-    // const router = useRouter();
-    // const submission_id = data.id;
-    // router.replace(`/submission/${submission_id}`)
-
-
+    const submission_id = data.id;
+    await router.push(`/submission/${submission_id}`);
 }
 </script>
 

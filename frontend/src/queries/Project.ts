@@ -7,6 +7,7 @@ import {
 import type Project from "@/models/Project";
 import { getProject, makeSubmission } from "@/services/project";
 import { type Ref, computed } from "vue";
+import type Submission from "@/models/Submission";
 
 function PROJECT_QUERY_KEY(projectId: number): (string | number)[] {
     return ["project", projectId];
@@ -22,9 +23,14 @@ export function useProjectQuery(
     });
 }
 
-export function useMakeSubmissionMutation(groupId: number): UseMutationReturnType<void, Error, FormData, void> {
+export function useMakeSubmissionMutation(
+    groupId: Ref<number | undefined>
+): UseMutationReturnType<Submission, Error, FormData, void> {
     return useMutation({
-        mutationFn: (formData) => makeSubmission(groupId, formData)
+        mutationFn: (formData) => makeSubmission(groupId.value!, formData),
+        onError: (e) => {
+            // todo
+            alert(e.message);
+        },
     });
 }
-
