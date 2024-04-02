@@ -7,9 +7,9 @@
 <script setup lang="ts">
 import SubmitCard from "@/components/project/submit/SubmitCard.vue";
 
-defineProps({
-    projectId: Number,
-});
+defineProps<{
+    projectId: number;
+}>();
 </script>
 
 <style scoped></style>

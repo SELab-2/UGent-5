@@ -31,9 +31,9 @@
 import ProjectMiniCard from "@/components/project/ProjectMiniCard.vue";
 import SubmitForm from "@/components/project/submit/SubmitForm.vue";
 
-defineProps({
-    projectId: Number,
-});
+defineProps<{
+    projectId: number;
+}>();
 </script>
 
 <style scoped>
