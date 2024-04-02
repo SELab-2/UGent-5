@@ -1,9 +1,7 @@
 import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
 import type Project from "@/models/Project";
 import { getProject } from "@/services/project";
-import type Subject from "@/models/Subject";
 import { computed, type ComputedRef } from "vue";
-import { useSubjectQuery } from "@/queries/Subject";
 
 function PROJECT_QUERY_KEY(
     projectId: ComputedRef<number | undefined>
