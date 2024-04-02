@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import NavButton from "./NavButton.vue";
-import {ref} from "vue";
+import { ref } from "vue";
 
 interface NavigationData {
     icon: string;

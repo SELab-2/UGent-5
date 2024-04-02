@@ -1,11 +1,11 @@
 <template>
     <v-app-bar>
-            <v-app-bar-nav-icon variant="text" @click="emit('toggleNav')"></v-app-bar-nav-icon>
-            <RouterLink to="/">
-                <img alt="Logo" class="logo" src="@/assets/logo_white_transparant.png" />
-            </RouterLink>
-            <v-btn variant="text" class="logout" @click="logout"> logout </v-btn>
-            <LocaleSwitcher style="margin-left: auto" />
+        <v-app-bar-nav-icon variant="text" @click="emit('toggleNav')"></v-app-bar-nav-icon>
+        <RouterLink to="/">
+            <img alt="Logo" class="logo" src="@/assets/logo_white_transparant.png" />
+        </RouterLink>
+        <v-btn variant="text" class="logout" @click="logout"> logout </v-btn>
+        <LocaleSwitcher style="margin-left: auto" />
     </v-app-bar>
 </template>
 

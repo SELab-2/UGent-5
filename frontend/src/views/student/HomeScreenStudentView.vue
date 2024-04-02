@@ -20,9 +20,8 @@
 <script setup lang="ts">
 import { useAuthStore } from "@/stores/auth-store";
 import { ref, onMounted } from "vue";
-import HomeScreenNav from "@/components/navigation/HomeScreenNav.vue"
-import HomeScreenCard from "@/components/cards/HomeScreenCard.vue"
-import BackgroundContainer from "@/components/BackgroundContainer.vue"
+import HomeScreenCard from "@/components/cards/HomeScreenCard.vue";
+import BackgroundContainer from "@/components/BackgroundContainer.vue";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 const user = ref<string | null>(null);
@@ -47,11 +46,7 @@ async function fetchUser() {
 </script>
 
 <style scoped lang="scss">
-
-
 .h1 {
     margin-bottom: 30px;
 }
-
-
 </style>
