@@ -71,13 +71,18 @@ Een query aanmaken is heel simpel. Elke query heeft een key nodig, en een functi
 die de data ophaalt. Voor het voorbeeld met de gebruiker ziet dit er zo uit:
 
 ```ts
-function useUserQuery(uid: string): UseQueryReturnType<User, Error> {
-    return useQuery<User, Error>({ queryKey: USER_QUERY_KEY(uid), queryFn: () => getUser(uid) });
+function useUserQuery(uid: Ref<string>): UseQueryReturnType<User, Error> {
+    return useQuery<User, Error>({
+        queryKey: USER_QUERY_KEY(uid.value),
+        queryFn: () => getUser(uid.value)
+    });
 }
 ```
 
 Bemerk dat deze query zelf nog in een hook zit. Zo kan eenzelfde query makkelijk
-door verschillende componenten gebruikt worden.
+door verschillende componenten gebruikt worden. Let er ook op dat de `uid`
+parameter is voor verscheidene redenen een `Ref` is. (Zie later [dependent
+queryies](#dependent-queries))
 
 ### Keys
 
@@ -113,11 +118,19 @@ gebruikt zou er als volgt uit kunnen zien:
 </template>
 <script setup lang="ts">
 import { useUserQuery } from "@/src/queries/user";
-const { data, error, isLoading, isError } = useUserQuery("user_id")
+import { toRefs } from "vue";
+const props = defineProps<{
+    userId: string;
+}>();
+const { userId } = toRefs(props);
+const { data, error, isLoading, isError } = useUserQuery(userId)
 </script>
 ```
 
 ## Mutations
+
+> WARNING: De documentatie van mutations is nog niet aangepast om met Refs
+> overweg te kunnen.
 
 Om data in de backend te kunnen updaten worden mutations gebruikt. De werking
 hiervan is vrij analoog aan die van queries. Er is een service nodig die een
@@ -246,4 +259,56 @@ mutation in een component blijft identiek als zonder optimistic updates.
 
 ### Dependent Queries
 
-[WIP]
+Soms kan het gebeuren dat de input voor een query afhangt van de output van een
+andere. Hiermee omgaan is een van de redenen dat refs gebruikt worden als input
+voor een query.
+
+Neem bijvoobeeld een component die data van een vak weergeeft:
+
+```html
+<template>
+    <h1 v-if="project">{{ project.name }}</h1>
+    <h2 v-if="subject">{{ subject.name }}</h2>
+</template>
+
+<script setup lang="ts">
+const props = defineProps<{
+    projectId: string;
+}>();
+const { projectId } = toRefs(props);
+const { data: project } = useProjectQuery(projectId);
+const { data: subject } = useSubjectQuery(/* Get subjectId somehow */);
+</script>
+```
+
+De query voor project is een gewone query. Echter, het opvragen van het
+subjectId is geen gemakkelijke opgave. Zolang de project query niet klaar is is
+de waarde van project undefined. Het argument van `useSubjectQuery` zal dus niet
+zomaar `Ref<number>` kunnen zijn. We zullen de signatuur van deze functie dus
+veranderen naar `useSubjectQuery(subjectId: Ref<number | undefined)`. We krijgen
+dan:
+
+```ts
+const { data: subject } = useSubjectQuery(computed(() => project.value?.subject_id));
+```
+
+De implementatie van `useSubjectQuery` ziet er dan zo uit:
+
+```ts
+function useSubjectQuery(subjectId: Ref<number | undefined>): UseQueryReturnType<Subject, Error> {
+    return useQuery<Subject, Error>({
+        queryKey: computed(() => USER_QUERY_KEY(uid.value)),
+        queryFn: () => getUser(uid.value),
+        enabled: () => subjectId.value !== undefind,
+    });
+}
+```
+
+Door `enabled` te laten afhangen van het gedefinieerd zijn van de waarde van
+`subjectId`, zal de query niet uitgevoerd worden zolang er geen waarde voor is.
+Doordat de query key een computed ref is, zal deze veranderen eenmaal het
+project opgehaald is en `subject_id` ingevuld is. Eenmaal deze key veranderd,
+wordt achter de schermen een nieuwe query aangemaakt, die dit keer wel enabled
+is, en dus gewoon zal uivoeren. Om problemen voor later te vermijden worden alle
+queries best aangemaakt op deze manier. Zo kan een query heel snel en makkelijk
+ook een afhankelijke query worden.
