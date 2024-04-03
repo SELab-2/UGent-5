@@ -7,7 +7,7 @@ from src.user.schemas import User
 
 from . import service
 from .exceptions import SubjectNotFound
-from .schemas import Subject, SubjectList, SubjectStudentSchema
+from .schemas import Subject, SubjectList
 
 
 async def retrieve_subject(
