@@ -4,13 +4,13 @@
         <v-container>
             <v-row>
                 <v-col>
-                    <HomeScreenCard title="homescreen.deadlines" />
+                    <HomeScreenCard title="" />
                 </v-col>
                 <v-col>
-                    <HomeScreenCard title="homescreen.courses" />
+                    <HomeScreenCard title="" />
                 </v-col>
                 <v-col>
-                    <HomeScreenCard title="homescreen.announcements" />
+                    <HomeScreenCard title="" />
                 </v-col>
             </v-row>
         </v-container>
@@ -18,8 +18,6 @@
 </template>
 
 <script setup lang="ts">
-import BackgroundContainer from "@/components/BackgroundContainer.vue"
-import HomeScreenCard from "@/components/cards/HomeScreenCard.vue"
 </script>
 
 <style scoped>
