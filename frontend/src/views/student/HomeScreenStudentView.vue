@@ -23,7 +23,7 @@ import HomeScreenCard from "@/components/cards/HomeScreenCard.vue";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import { useUserQuery } from "@/queries/User";
 
-const { data: user, isLoading } = useUserQuery();
+const { data: user, isLoading } = useUserQuery(null);
 </script>
 
 <style scoped lang="scss">
