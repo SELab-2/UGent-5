@@ -12,4 +12,17 @@ export default {
         welcome: "Welcome {name}",
         logout: "Logout",
     },
+    navigation: {
+        home: "Home",
+        courses: "Courses",
+        projects: "Projects",
+        settings: "Settings",
+        help: "Help",
+        admin: "Admin panel",
+    },
+    homescreen: {
+        deadlines: "My deadlines",
+        courses: "My courses",
+        announcements: "Announcements",
+    },
 };

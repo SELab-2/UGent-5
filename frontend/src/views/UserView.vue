@@ -12,12 +12,12 @@ import UserInfo from "@/components/user/UserInfo.vue";
 import { useAuthStore } from "@/stores/auth-store";
 import { useUserQuery, useToggleAdminMutation } from "@/queries/User";
 
-const { data: user, isLoading, isError } = useUserQuery();
-const { mutate } = useToggleAdminMutation();
+const { data: user, isLoading, isError } = useUserQuery(null);
+const { mutateAsync } = useToggleAdminMutation();
 const { logout } = useAuthStore();
 
 function onToggleAdmin() {
-    mutate(user.value!);
+    mutateAsync(user.value!);
 }
 </script>
 
