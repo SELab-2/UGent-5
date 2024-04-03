@@ -2,7 +2,7 @@
     <v-app>
         <div v-if="!hideHeader">
             <ApolloHeader @toggleNav="navBar?.toggleNav" />
-            <NavBar ref="navBar" :navigations="navigations" />
+            <NavBar ref="navBar" />
         </div>
         <v-main>
             <RouterView />
@@ -28,10 +28,4 @@ onBeforeMount(() => {
     const { selectedLocale } = useLocale();
     locale.value = selectedLocale;
 });
-
-const navigations = ref([
-    { icon: "mdi-school-outline", title: "navigation.courses", goto: "about" },
-    { icon: "mdi-book-check-outline", title: "navigation.projects", goto: "about" },
-    { icon: "mdi-cog-outline", title: "navigation.settings", goto: "about" },
-]);
 </script>

@@ -13,10 +13,12 @@ export default {
         logout: "Uitloggen",
     },
     navigation: {
+        home: "Hoofdscherm",
         courses: "Vakken",
         projects: "Projecten",
         settings: "Instellingen",
         help: "Help",
+        admin: "Beheerderspaneel",
     },
     homescreen: {
         deadlines: "Mijn deadlines",

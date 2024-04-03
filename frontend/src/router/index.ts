@@ -22,6 +22,7 @@ const router = createRouter({
                 if (isLoggedIn) {
                     router.replace("/home");
                     next();
+                    return;
                 }
                 const ticket = to.query.ticket?.toString();
                 setNext(from.path);

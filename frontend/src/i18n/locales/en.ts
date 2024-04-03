@@ -13,10 +13,12 @@ export default {
         logout: "Logout",
     },
     navigation: {
+        home: "Home",
         courses: "Courses",
         projects: "Projects",
         settings: "Settings",
         help: "Help",
+        admin: "Admin panel",
     },
     homescreen: {
         deadlines: "My deadlines",

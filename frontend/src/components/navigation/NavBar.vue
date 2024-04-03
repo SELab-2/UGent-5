@@ -21,20 +21,13 @@
 </template>
 
 <script setup lang="ts">
-import NavButton from "./NavButton.vue";
+import NavButton from "@/components/navigation/NavButton.vue";
 import { ref } from "vue";
+import useNavigations from "@/composables/useNavigations";
 
-interface NavigationData {
-    icon: string;
-    title: string;
-    goto: string;
-}
+const { navigations } = useNavigations();
 
 const isOpen = ref(true);
-
-defineProps<{
-    navigations: NavigationData[];
-}>();
 
 function toggleNav() {
     isOpen.value = !isOpen.value;
@@ -45,7 +38,7 @@ defineExpose({
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .v-navigation-drawer {
     background: linear-gradient(var(--color-primary), #0e2057);
     padding: 10px;
