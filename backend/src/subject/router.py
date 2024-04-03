@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Body
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.dependencies import authentication_validation
 from src.dependencies import get_async_db
@@ -82,7 +82,8 @@ async def get_subject_instructors(
     status_code=201,
 )
 async def create_subject_instructor(
-    subject_id: int, instructor_uid: str, db: AsyncSession = Depends(get_async_db)
+    subject_id: int, instructor_uid: str = Body(..., embed=True),
+    db: AsyncSession = Depends(get_async_db)
 ):
     await service.add_instructor_to_subject(db, subject_id, instructor_uid)
     return "Successfully added"
@@ -113,7 +114,9 @@ async def get_subject_students(
     status_code=201,
 )
 async def add_student_to_subject(
-    student_uid: str, subject_id: int, db: AsyncSession = Depends(get_async_db)
+    subject_id: int,
+    student_uid: str = Body(..., embed=True),
+    db: AsyncSession = Depends(get_async_db)
 ):
     await service.create_subject_student(db, subject_id, student_uid)
     return "Successfully added"

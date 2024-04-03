@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import Depends, Body
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.exceptions import NotAuthorized
 from src.dependencies import get_async_db
@@ -40,8 +40,8 @@ async def user_permission_validation(
 
 
 async def add_student_permission_validation(
-    student_uid: str,
     subject_id: int,
+    student_uid: str = Body(..., embed=True),
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db),
 ):

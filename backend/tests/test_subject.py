@@ -39,15 +39,14 @@ async def test_get_subject(client: AsyncClient, subject_id: int):
 async def test_create_instructor(client: AsyncClient, db: AsyncSession, subject_id: int):
     await set_admin(db, "test", False)
     response = await client.post(
-        f"/api/subjects/{subject_id}/instructors", json={"uid": "test"}
+        f"/api/subjects/{subject_id}/instructors", json={"instructor_uid": "test"}
     )
     assert response.status_code == 403  # Forbidden
 
     await set_admin(db, "test", True)
     response = await client.post(
-        f"/api/subjects/{subject_id}/instructors", json={"uid": "test"}
+        f"/api/subjects/{subject_id}/instructors", json={"instructor_uid": "test"}
     )
-    print(response.json())
     assert response.status_code == 201
 
     await create_user(
@@ -56,7 +55,7 @@ async def test_create_instructor(client: AsyncClient, db: AsyncSession, subject_
     await set_admin(db, "test", False)
     await set_teacher(db, "test", True)
     response = await client.post(
-        f"/api/subjects/{subject_id}/instructors", json={"uid": "test"}
+        f"/api/subjects/{subject_id}/instructors", json={"instructor_uid": "test"}
     )
     assert response.status_code == 201
 
@@ -70,7 +69,7 @@ async def test_get_instructors(client: AsyncClient, subject_id: int, db: AsyncSe
                        mail="blabla@gmail.com")
     )
     await client.post(
-        f"/api/subjects/{subject_id}/instructors", json={"uid": "get_test"}
+        f"/api/subjects/{subject_id}/instructors", json={"instructor_uid": "get_test"}
     )
     response = await client.get(f"/api/subjects/{subject_id}/instructors")
     assert response.status_code == 200
@@ -117,7 +116,7 @@ async def test_patch_subject(client: AsyncClient, db: AsyncSession, subject_id: 
 async def test_enroll_student_into_course(client: AsyncClient, db: AsyncSession, subject_id: int):
     await set_admin(db, "test", True)
     response = await client.post(
-        f"/api/subjects/{subject_id}/students", json={"uid": "test"}
+        f"/api/subjects/{subject_id}/students", json={"student_uid": "test"}
     )
     assert response.status_code == 201
 
@@ -137,7 +136,7 @@ async def test_get_students(client: AsyncClient, db: AsyncSession, subject_id: i
     )
     await set_admin(db, "test", True)
     response = await client.post(
-        f"/api/subjects/{subject_id}/students", json=({"uid": "get_test"})
+        f"/api/subjects/{subject_id}/students", json=({"student_uid": "get_test"})
     )
     assert response.status_code == 201
     await set_admin(db, "test", False)
