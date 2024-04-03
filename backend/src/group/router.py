@@ -18,6 +18,7 @@ from src.user.schemas import User
 
 from . import service
 from ..subject.dependencies import teacher_permission_validation
+from ..user.dependencies import instructor_teacher_admin_user_validation
 
 router = APIRouter(
     prefix="/api/groups",
@@ -33,7 +34,7 @@ async def get_groups(groups: list[Group] = Depends(retrieve_groups_by_project)):
 
 
 # CHECK IF AUTHORIZED
-@router.post("/", status_code=201, dependencies=[Depends(teacher_permission_validation)])
+@router.post("/", status_code=201, dependencies=[Depends(instructor_teacher_admin_user_validation)])
 async def create_group(group: GroupCreate, db: AsyncSession = Depends(get_async_db)):
     return await service.create_group(db, group)
 

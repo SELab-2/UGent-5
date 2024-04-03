@@ -20,7 +20,3 @@ class Subject(SubjectBase):
 class SubjectList(BaseModel):
     subjects: Sequence[Subject]
     model_config = ConfigDict(from_attributes=True)
-
-
-class SubjectStudentSchema(BaseModel):
-    uid: str

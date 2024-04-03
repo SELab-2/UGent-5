@@ -10,6 +10,7 @@ from src.dependencies import get_async_db
 from src.group.schemas import GroupList
 from src.project.schemas import ProjectList
 
+from . import service
 from .exceptions import UserNotFound
 from .schemas import User, UserSimple, UserSubjectList
 
@@ -39,6 +40,17 @@ async def teacher_or_admin_user_validation(
 ):
     if not user.is_admin and not user.is_teacher:
         raise NotAuthorized()
+
+
+async def instructor_teacher_admin_user_validation(
+    user: User = Depends(get_authenticated_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    if not user.is_admin and not user.is_teacher:
+        instructors = await service.get_instructors(db)
+        if not list(filter(lambda instructor: instructor.uid == user.uid, instructors)):
+            raise NotAuthorized()
+
 
 
 async def user_id_validation(user_id: str, db: AsyncSession = Depends(get_async_db)):
@@ -80,3 +92,6 @@ async def retrieve_projects(
 ) -> ProjectList:
     projects = await project_service.get_projects_by_user(db, user.uid)
     return ProjectList(projects=projects)
+
+
+

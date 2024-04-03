@@ -1,7 +1,11 @@
+from typing import Sequence
+
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .models import User
 from .schemas import UserCreate
+from ..subject.models import InstructorSubject
 
 
 async def get_by_id(db: AsyncSession, user_id: str) -> User:
@@ -26,3 +30,10 @@ async def set_teacher(db: AsyncSession, user_id: str, value: bool):
     user = await get_by_id(db, user_id)
     user.is_teacher = value
     await db.commit()
+
+
+async def get_instructors(db: AsyncSession) -> Sequence[User]:
+    result = await db.execute(
+        select(User).join(InstructorSubject, User.uid == InstructorSubject.c.uid)
+    )
+    return result.scalars().all()
