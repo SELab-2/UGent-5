@@ -12,7 +12,6 @@ export interface RequestOptions {
     body?: string;
 }
 
-const { token } = useAuthStore();
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -26,6 +25,7 @@ export async function authorized_fetch<T>(
     endpoint: string,
     requestOptions: RequestOptions
 ): Promise<T> {
+    const { token } = useAuthStore();
     const response = await fetch(`${BASE_URL}${endpoint}`, {
         ...requestOptions,
         headers: {
