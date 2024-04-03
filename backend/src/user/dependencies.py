@@ -52,7 +52,6 @@ async def instructor_teacher_admin_user_validation(
             raise NotAuthorized()
 
 
-
 async def user_id_validation(user_id: str, db: AsyncSession = Depends(get_async_db)):
     user = await user_service.get_by_id(db, user_id)
     if not user:
@@ -92,6 +91,3 @@ async def retrieve_projects(
 ) -> ProjectList:
     projects = await project_service.get_projects_by_user(db, user.uid)
     return ProjectList(projects=projects)
-
-
-
