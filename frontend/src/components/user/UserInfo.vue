@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { type User } from "@/helpers/datafetchers/User";
+import type User from "@/models/User";
 import { toRefs } from "vue";
 
 const props = defineProps<{

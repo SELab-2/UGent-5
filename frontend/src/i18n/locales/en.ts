@@ -25,4 +25,17 @@ export default {
         deadline: "Deadline",
         details_button: "Project details",
     },
+    navigation: {
+        home: "Home",
+        courses: "Courses",
+        projects: "Projects",
+        settings: "Settings",
+        help: "Help",
+        admin: "Admin panel",
+    },
+    homescreen: {
+        deadlines: "My deadlines",
+        courses: "My courses",
+        announcements: "Announcements",
+    },
 };

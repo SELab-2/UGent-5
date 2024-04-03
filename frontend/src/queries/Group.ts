@@ -6,11 +6,11 @@ import { computed } from "vue";
 import { getGroupWithProjectId, getUserGroups } from "@/services/group";
 
 function USER_GROUPS_QUERY_KEY(): string[] {
-    return ["groups", "me"];
+    return ["groups"];
 }
 
-function USER_GROUP_QUERY_KEY(projectId: number): (string | number)[] {
-    return ["groups", "me", projectId];
+function PROJECT_USER_GROUP_QUERY_KEY(projectId: number): (string | number)[] {
+    return ["group", "project", projectId];
 }
 
 /**
@@ -34,7 +34,7 @@ export function useUserGroupQuery(
 ): UseQueryReturnType<Group | null, Error> {
     const { data: groups } = useUserGroupsQuery();
     return useQuery<Group | null, Error>({
-        queryKey: computed(() => USER_GROUP_QUERY_KEY(projectId.value!)),
+        queryKey: computed(() => PROJECT_USER_GROUP_QUERY_KEY(projectId.value!)),
         queryFn: () => getGroupWithProjectId(groups.value!, projectId.value!),
         enabled: () => groups.value !== undefined,
     });
