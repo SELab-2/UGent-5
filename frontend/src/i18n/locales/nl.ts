@@ -34,7 +34,7 @@ export default {
         admin: "Beheerderspaneel",
     },
     homescreen: {
-        deadlines: "Mijn deadlines",
+        deadlines: "Project deadlines",
         courses: "Mijn vakken",
         announcements: "Meldingen",
     },
