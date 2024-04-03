@@ -5,12 +5,12 @@ import { useQuery } from "@tanstack/vue-query";
 import { computed } from "vue";
 import { getGroupWithProjectId, getUserGroups } from "@/services/group";
 
-function GROUP_QUERY_KEY(): string[] {
+function USER_GROUPS_QUERY_KEY(): string[] {
     return ["groups", "me"];
 }
 
 function USER_GROUP_QUERY_KEY(projectId: number): (string | number)[] {
-    return ["groups", projectId, "me"];
+    return ["groups", "me", projectId];
 }
 
 /**
@@ -19,14 +19,14 @@ function USER_GROUP_QUERY_KEY(projectId: number): (string | number)[] {
  */
 export function useUserGroupsQuery(): UseQueryReturnType<Group[], Error> {
     return useQuery<Group[], Error>({
-        queryKey: GROUP_QUERY_KEY(),
+        queryKey: USER_GROUPS_QUERY_KEY(),
         queryFn: getUserGroups,
     });
 }
 
 /**
  * Get the group of the current user for a given project
- * @returns The group id, or null if the user is not in a group for this project
+ * @returns The group object, or null if the user is not in a group for this project
  * @param projectId The id of the project
  */
 export function useUserGroupQuery(

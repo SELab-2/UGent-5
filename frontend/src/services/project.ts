@@ -7,8 +7,12 @@ export async function getProject(projectId: number): Promise<Project> {
 }
 
 export async function createSubmission(groupId: number, formData: FormData): Promise<Submission> {
-    return authorized_fetch(`/api/submissions/?group_id=${groupId}`, {
-        method: "POST",
-        body: formData,
-    });
+    return authorized_fetch(
+        `/api/submissions/?group_id=${groupId}`,
+        {
+            method: "POST",
+            body: formData,
+        },
+        true
+    );
 }
