@@ -21,9 +21,10 @@ class UserSimple(Userbase):
 class User(Userbase):
     model_config = ConfigDict(from_attributes=True)
     is_admin: bool = Field(default=False)
+    is_teacher: bool = Field(default=False)
 
 
 class UserSubjectList(BaseModel):
     model_config = ConfigDict(from_attributes=True)
-    as_teacher: Sequence[Subject]
+    as_instructor: Sequence[Subject]
     as_student: Sequence[Subject]

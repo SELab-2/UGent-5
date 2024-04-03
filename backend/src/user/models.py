@@ -9,3 +9,4 @@ class User(Base):
     given_name: Mapped[str]
     mail: Mapped[str]
     is_admin: Mapped[bool] = mapped_column(default=False)
+    is_teacher: Mapped[bool] = mapped_column(default=False)

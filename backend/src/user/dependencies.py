@@ -10,6 +10,7 @@ from src.dependencies import get_async_db
 from src.group.schemas import GroupList
 from src.project.schemas import ProjectList
 
+from . import service
 from .exceptions import UserNotFound
 from .schemas import User, UserSimple, UserSubjectList
 
@@ -34,6 +35,23 @@ async def admin_user_validation(user: User = Depends(get_authenticated_user)):
         raise NotAuthorized()
 
 
+async def teacher_or_admin_user_validation(
+    user: User = Depends(get_authenticated_user),
+):
+    if not user.is_admin and not user.is_teacher:
+        raise NotAuthorized()
+
+
+async def instructor_teacher_admin_user_validation(
+    user: User = Depends(get_authenticated_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    if not user.is_admin and not user.is_teacher:
+        instructors = await service.get_instructors(db)
+        if not list(filter(lambda instructor: instructor.uid == user.uid, instructors)):
+            raise NotAuthorized()
+
+
 async def user_id_validation(user_id: str, db: AsyncSession = Depends(get_async_db)):
     user = await user_service.get_by_id(db, user_id)
     if not user:
@@ -53,10 +71,10 @@ async def retrieve_subjects(
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db),
 ) -> UserSubjectList:
-    teacher_subjects, student_subjects = await subject_service.get_subjects_by_user(
+    instructor_subjects, student_subjects = await subject_service.get_subjects_by_user(
         db, user.uid
     )
-    return UserSubjectList(as_student=student_subjects, as_teacher=teacher_subjects)
+    return UserSubjectList(as_student=student_subjects, as_instructor=instructor_subjects)
 
 
 async def retrieve_groups(
