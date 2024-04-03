@@ -8,11 +8,13 @@
             <RouterView />
         </v-main>
     </v-app>
+    <VueQueryDevtools />
 </template>
 
 <script setup lang="ts">
 import { RouterView, useRouter } from "vue-router";
 import ApolloHeader from "@/components/ApolloHeader.vue";
+import { VueQueryDevtools } from "@tanstack/vue-query-devtools";
 import NavBar from "@/components/navigation/NavBar.vue";
 import { computed, onBeforeMount, ref } from "vue";
 import { useI18n } from "vue-i18n";

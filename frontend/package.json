@@ -18,6 +18,7 @@
         "@intlify/unplugin-vue-i18n": "^3.0.1",
         "@mdi/font": "5.9.55",
         "@tanstack/vue-query": "^5.28.9",
+        "@tanstack/vue-query-devtools": "^5.28.13",
         "pinia": "^2.1.7",
         "roboto-fontface": "*",
         "vue": "^3.4.15",
