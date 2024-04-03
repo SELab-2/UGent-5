@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.user.models import User
 
 from .models import StudentSubject, Subject, InstructorSubject
-from .schemas import SubjectCreate, SubjectStudentSchema
+from .schemas import SubjectCreate
 
 
 async def get_subjects(db: AsyncSession) -> Sequence[Subject]:

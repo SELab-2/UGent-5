@@ -70,7 +70,7 @@ async def update_subject(
 
 
 @router.get("/{subject_id}/instructors", response_model=list[User])
-async def get_subject_teachers(
+async def get_subject_instructors(
     subject_id: int, db: AsyncSession = Depends(get_async_db)
 ):
     return await service.get_instructors(db, subject_id)
