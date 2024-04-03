@@ -22,6 +22,7 @@ const router = createRouter({
                 if (isLoggedIn) {
                     router.replace("/home");
                     next();
+                    return;
                 }
                 const ticket = to.query.ticket?.toString();
                 setNext(from.path);
@@ -39,7 +40,7 @@ const router = createRouter({
         {
             path: "/home",
             name: "home",
-            component: () => import("../views/UserView.vue"),
+            component: () => import("../views/student/HomeScreenStudentView.vue"),
         },
         {
             path: "/:pathMatch(.*)",
