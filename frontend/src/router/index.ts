@@ -42,6 +42,12 @@ const router = createRouter({
             component: () => import("../views/UserView.vue"),
         },
         {
+            path: "/project/:projectId(\\d+)/",
+            name: "onSubmit",
+            component: () => import("../views/ProjectView.vue"),
+            props: (route) => ({ projectId: Number(route.params.projectId) }),
+        },
+        {
             path: "/:pathMatch(.*)",
             name: "default",
             component: () => import("../views/NotFoundView.vue"),
