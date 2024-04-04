@@ -7,8 +7,9 @@ interface Authority {
 }
 
 export const useCASUrl = defineStore("cas_url", () => {
-    const redirectUrl = ref("/login"); // TODO: this should not be a hardcoded ref, is registrated to CAS server
+    const redirectUrl = ref("/login");
     const CASUrl = ref("");
+    const next = ref<string>("/home");
 
     async function fetchAuthority(): Promise<Authority | null> {
         try {
@@ -23,6 +24,10 @@ export const useCASUrl = defineStore("cas_url", () => {
         }
     }
 
+    function setNext(url: string) {
+        next.value = url;
+    }
+
     async function updateCASUrl() {
         const authority = await fetchAuthority();
         if (!authority) {
@@ -32,9 +37,9 @@ export const useCASUrl = defineStore("cas_url", () => {
             console.error("Authority is not a CAS server");
             return;
         }
-        CASUrl.value = `${authority.authority}?service=${encodeURIComponent(`${import.meta.env.VITE_APP_URL}${redirectUrl.value}`)}`;
+        CASUrl.value = `${authority.authority}?service=${encodeURIComponent(`${import.meta.env.VITE_APP_URL}${redirectUrl.value}?redirect=${next.value}`)}`;
     }
     watch(redirectUrl, updateCASUrl, { immediate: true });
 
-    return { CASUrl, redirectUrl };
+    return { CASUrl, redirectUrl, setNext };
 });
