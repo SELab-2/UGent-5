@@ -29,7 +29,7 @@ def upgrade() -> None:
                         ['uid'], ['website_user.uid'], ondelete='CASCADE')
                     )
     op.drop_table('teacher_subject')
-    op.add_column('website_user', sa.Column('is_teacher', sa.Boolean(), nullable=False))
+    op.add_column('website_user', sa.Column('is_teacher', sa.Boolean(), nullable=False, server_default=sa.false()))
     # ### end Alembic commands ###
 
 
