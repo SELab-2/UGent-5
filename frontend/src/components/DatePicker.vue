@@ -34,13 +34,18 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 
+// Controls the visibility of the v-menu
 const menuVisible = ref(false);
+
+// Reactive property bound to the date picker's modelValue
 const date = useVModel(props, 'modelValue', emit);
 
 const displayDate = computed(() => {
     if (date.value) {
-        const selectedDate = new Date(date.value);
+        const selectedDate = date.value;
+        // Adjusting for timezone offset
         selectedDate.setMinutes(selectedDate.getMinutes() - selectedDate.getTimezoneOffset());
+        // Formatting the date to YYYY-MM-DD
         return selectedDate.toISOString().substr(0, 10);
     }
     return '';
@@ -51,12 +56,14 @@ function toggleDatePicker() {
 }
 
 function updateDate(newValue) {
-    console.log("hey");
+    // Logs for debugging
+    console.log("Selected Date:", newValue);
+    // Updating the date value
     date.value = newValue;
+    // Hiding the date picker menu
     menuVisible.value = false;
 }
 </script>
-
 
 
 
@@ -87,4 +94,3 @@ function updateDate(newValue) {
 <!--    gap: var(&#45;&#45;v-grid-gutter, 5px);-->
 <!--}-->
 <!--</style>-->
-

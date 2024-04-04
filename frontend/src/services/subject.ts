@@ -3,7 +3,7 @@ import type Subject from "@/models/Subject";
 import { authorized_fetch } from "@/services";
 
 // Fetches a list of instructors for a given subject
-export async function get_instructors_for_subject(subjectId: string): Promise<User[]> {
+export async function get_instructors_for_subject(subjectId: number): Promise<User[]> {
     return authorized_fetch(`/api/subjects/${subjectId}/instructors`, { method: "GET" });
 }
 

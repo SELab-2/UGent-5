@@ -1,141 +1,116 @@
+<!--<template>-->
+<!--    <QuillEditor theme="snow" />-->
+<!--</template>-->
+
+<!--<script>-->
+<!--import { QuillEditor } from '@vueup/vue-quill'-->
+<!--import '@vueup/vue-quill/dist/vue-quill.snow.css';-->
+
+<!--export default {-->
+<!--    components:{-->
+<!--        QuillEditor-->
+<!--    }-->
+<!--}-->
+<!--</script>-->
+
+
+
+
+
 <template>
     <v-container>
+        <!-- Row for Title and Teachers -->
         <v-row>
-            <v-col cols="12" md="4">
-                <v-text-field
-                    v-model="title"
-                    label="Title"
-                    required
-                    placeholder="Text"
-                ></v-text-field>
+            <v-col cols="12" md="6">
+                <v-text-field v-model="title" label="Title" required placeholder="Enter Title" />
             </v-col>
             <v-col cols="12" md="6">
-                <CheckBox
-                    :title="'Teacher(s)'"
-                    :items="teachers"
-                    placeholder="Receive/answer questions from students"
-                ></CheckBox>
+                <CheckBox :title="'Teacher(s)'" :items="teachers" placeholder="Assign Teachers" />
             </v-col>
         </v-row>
+
+        <!-- Row for Course and Assistants -->
         <v-row>
-<!--            <v-col cols="12" md="4">-->
-<!--                <v-select-->
-<!--                    :items="courses"-->
-<!--                    label="Course"-->
-<!--                    required-->
-<!--                    placeholder="Select Course"-->
-<!--                ></v-select>-->
-<!--            </v-col>-->
             <v-col cols="12" md="6">
-                <CheckBox
-                    :title="'Assistants'"
-                    :items="assistants"
-                    placeholder="Receive/answer questions from students"
-                ></CheckBox>
+                <span v-if="isLoading">Loading subjects...</span>
+                <span v-else-if="isError">Error loading subjects: {{ error.message }}</span>
+                <v-select v-model="selectedCourse" :items="courses" item-value="value" item-title="text" label="Course" required placeholder="Select Course" />
+            </v-col>
+            <v-col cols="12" md="6">
+                <CheckBox :title="'Assistants'" :items="assistants" placeholder="Assign Assistants" />
             </v-col>
         </v-row>
+
+        <!-- Row for Deadline Dates and Radio Buttons for Grouping -->
         <v-row>
-            <v-col cols="12" md="2">
-                <DatePicker v-model="fucku" />
+            <v-col cols="12" md="6">
+                <DatePicker v-model="deadline" label="Deadline" required />
+                <DatePicker v-model="publishDate" label="Publish Date" required />
             </v-col>
-<!--            <v-col cols="12" md="2">-->
-<!--                <RadioButtonList-->
-<!--                    v-model="selectedGroupProject"-->
-<!--                    :title="groupProjectTitle"-->
-<!--                    :options="groupProjectOptions"-->
-<!--                    required-->
-<!--                ></RadioButtonList>-->
-<!--            </v-col>-->
+            <v-col cols="12" md="6">
+                <RadioButtonList v-model="selectedGroupProject" :title="'Group Project Options'" :options="groupProjectOptions" required />
+            </v-col>
         </v-row>
+
+        <!-- Row for Submit Button -->
         <v-row>
-<!--            <v-col cols="12" md="2">-->
-<!--                <DatePicker-->
-<!--                    v-model="publish_date"-->
-<!--                    label="Publish Date"-->
-<!--                    required-->
-<!--                    placeholder="Select Date"-->
-<!--                ></DatePicker>-->
-<!--            </v-col>-->
+            <v-col cols="12">
+                <v-btn @click="submitForm">Submit</v-btn>
+            </v-col>
         </v-row>
-        <v-row>
-            <v-btn @click="submitForm">Submit</v-btn>
-
-        </v-row>
-
-        <!-- Add any additional rows/columns for other fields that are needed -->
-
     </v-container>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watchEffect } from 'vue';
+import CheckBox from '@/components/CheckboxList.vue';
 import DatePicker from '@/components/DatePicker.vue';
 import RadioButtonList from '@/components/RadiobuttonList.vue';
-import CheckBox from '@/components/CheckboxList.vue';
-import { useInstructorsForSubjectQuery } from '@/queries/Subject';
-import {useCreateProjectMutation} from "@/queries/Project";
 import type Project from "@/models/Project";
+import {useInstructorsForSubjectQuery} from "@/queries/Subject";
+import {useMySubjectsQuery} from "@/queries/User";
+import {useCreateProjectMutation} from "@/queries/Project";
 
 const title = ref('');
-const fucku = ref(new Date());
-// const publishDate = ref(new Date()); // add this line for publish date
-// const project_deadline = ref(new Date());
-// const selectedGroupProject = ref('course'); // Default selection or could be reactive based on a prop
+const deadline = ref(new Date());
+const selectedCourse = ref(undefined);
+const publishDate = ref(new Date());
+const selectedGroupProject = ref('course');
 
-// Teachers loading logic
-const { data: teachersData } = useInstructorsForSubjectQuery('1631');
+const { data: instructorsData, error, isLoading, isError } = useInstructorsForSubjectQuery(selectedCourse);
 
-const teachers = computed(() => {
-    return teachersData.value?.map(teacher => ({
-        id: teacher.uid, // assuming teacher object has an id field
-        label: `${teacher.given_name}`, // assuming teacher object has a family_name field
-        checked: true // Initial unchecked state
-        // available: teacher.available // assuming teacher object has an available field
-    })) || [];
-});
+const teachers = computed(() => instructorsData.value?.filter(t => t.is_teacher).map(formatInstructor) || []);
+const assistants = computed(() => instructorsData.value?.filter(a => !a.is_teacher).map(formatInstructor) || []);
 
-// Selected teachers - an array to store the IDs of selected teachers
-const selectedTeachers = ref(teachers.value.filter(t => t.checked).map(t => t.id));
+const { data: mySubjectsData } = useMySubjectsQuery();
+const courses = computed(() => mySubjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []);
 
-// Watch the teachers data and update the selectedTeachers accordingly
-watch(teachers, (newTeachers) => {
-    selectedTeachers.value = newTeachers.filter(t => t.checked).map(t => t.id);
-}, { deep: true });
+watchEffect(() => console.log('Loading:', isLoading.value, 'Data:', mySubjectsData.value));
 
-
-const assistants = ref([
-    // Hardcoded data for assistants, replace with dynamic data if needed
-    { id: 1, label: 'Assistant 1', checked: false, available: true },
-    { id: 2, label: 'Assistant 2', checked: false, available: false },
-]);
-
-// Group project options passed to RadioButtonList component
 const groupProjectOptions = [
     { label: 'Use Course Groups', value: 'course' },
     { label: 'Random Groups', value: 'random' },
     { label: 'Student Picked Groups', value: 'student' },
 ];
+
 const createProjectMutation = useCreateProjectMutation();
+
 async function submitForm() {
     const projectData: Project = {
         name: title.value,
-        deadline: fucku.value.toISOString(),
+        deadline: deadline.value.toISOString(),
         description: 'A default project description',
-        subject_id: '1631',
-        requirements: [],
-        // Add other necessary fields from your form
+        subject_id: selectedCourse.value,
+        // Additional fields here
     };
-    console.log('Submitting project with deadline:', fucku.value.toISOString());
     createProjectMutation.mutate(projectData, {
-        onSuccess: () => {
-            console.log('Project created successfully');
-            // Handle success, e.g., redirect or clear form
-        },
-        onError: (error) => {
-            console.error('Error creating project', error);
-            // Handle error, e.g., show notification
-        },
+        onSuccess: () => console.log('Project created successfully'),
+        onError: (error) => console.error('Error creating project', error),
     });
+}
+
+function formatInstructor({ uid, given_name, checked = false }) {
+    return { id: uid, label: given_name, checked };
 }
 </script>
 
