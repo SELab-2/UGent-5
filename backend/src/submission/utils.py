@@ -13,13 +13,15 @@ from src.submission.exceptions import UnMetRequirements
 
 def upload_files(files: list[UploadFile], project: Project) -> str:
     uuid = str(uuid4())
-    dir_path = os.path.join(config.CONFIG.file_path, uuid)
-    os.makedirs(dir_path)
+    files_path = os.path.join(config.CONFIG.file_path, uuid, "submission")
+    artifacts_path = os.path.join(config.CONFIG.file_path, uuid, "artifacts")
+    os.makedirs(files_path)
+    os.makedirs(artifacts_path)
 
     filelist = []
     for upload_file in files:
         if upload_file.filename and upload_file.content_type:
-            path = os.path.join(dir_path, upload_file.filename)
+            path = os.path.join(files_path, upload_file.filename)
             filelist.append(upload_file.filename)
             with open(path, 'w+b') as f:
                 shutil.copyfileobj(upload_file.file, f)
@@ -39,7 +41,7 @@ def upload_files(files: list[UploadFile], project: Project) -> str:
                           "msg": f"Required file not found: {r.value}"})
 
     if len(errors):
-        shutil.rmtree(dir_path)
+        shutil.rmtree(files_path)
         raise UnMetRequirements(errors)
 
     return uuid

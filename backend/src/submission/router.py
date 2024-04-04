@@ -19,6 +19,7 @@ from src.user.dependencies import admin_user_validation
 
 from . import service
 from .schemas import File, Submission
+from ..docker_tests.utils import launch_docker_tests
 
 router = APIRouter(
     prefix="/api/submissions",
@@ -44,7 +45,9 @@ async def create_submission(files: list[UploadFile],
                             db: AsyncSession = Depends(get_async_db)):
     project = await retrieve_project(group.project_id, db)
     uuid = upload_files(files, project)
-    return await service.create_submission(db, uuid, group.id, group.project_id)
+    submission = await service.create_submission(db, uuid, group.id, group.project_id)
+    launch_docker_tests(submission)
+    return submission
 
 
 @router.delete("/{submission_id}",
@@ -56,7 +59,7 @@ async def delete_submision(submission_id: int, db: AsyncSession = Depends(get_as
 
 @router.get("/{submission_id}/files", response_model=list[File])
 async def get_files(submission: Submission = Depends(retrieve_submission)):
-    submission_dir = os.path.join(config.CONFIG.file_path, submission.files_uuid)
+    submission_dir = os.path.join(config.CONFIG.file_path, submission.files_uuid, "submission")
     output_files = []
 
     for root, _, files in os.walk(submission_dir):

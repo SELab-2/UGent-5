@@ -3,6 +3,7 @@ import sys
 
 from submission.submission import questionable_code
 
+
 def main():
     try:
         print("Test begonnen", flush=True)
@@ -14,7 +15,7 @@ def main():
         print("Alle tests geslaagd")
     except:
         print("Test mislukt!", file=sys.stderr)
-    
+
 
 if __name__ == "__main__":
     main()
