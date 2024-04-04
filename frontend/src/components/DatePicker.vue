@@ -7,9 +7,10 @@
         full-width
     >
         <template v-slot:activator="{ on, attrs }">
+            <!-- Bind the labelText prop to the label attribute -->
             <v-text-field
                 :value="displayDate"
-                label="Deadline"
+                :label="label"
                 readonly
                 v-bind="attrs"
                 @click="toggleDatePicker"
@@ -28,24 +29,21 @@
 import { ref, computed } from 'vue';
 import { useVModel } from '@vueuse/core';
 
+// Define the labelText prop
 const props = defineProps({
-    modelValue: String
+    modelValue: String,
+    label: String // New prop for dynamic label text
 });
 
 const emit = defineEmits(['update:modelValue']);
 
-// Controls the visibility of the v-menu
 const menuVisible = ref(false);
-
-// Reactive property bound to the date picker's modelValue
 const date = useVModel(props, 'modelValue', emit);
 
 const displayDate = computed(() => {
     if (date.value) {
-        const selectedDate = date.value;
-        // Adjusting for timezone offset
+        const selectedDate = new Date(date.value.getTime());
         selectedDate.setMinutes(selectedDate.getMinutes() - selectedDate.getTimezoneOffset());
-        // Formatting the date to YYYY-MM-DD
         return selectedDate.toISOString().substr(0, 10);
     }
     return '';
@@ -56,14 +54,11 @@ function toggleDatePicker() {
 }
 
 function updateDate(newValue) {
-    // Logs for debugging
-    console.log("Selected Date:", newValue);
-    // Updating the date value
-    date.value = newValue;
-    // Hiding the date picker menu
+    date.value = new Date(newValue);
     menuVisible.value = false;
 }
 </script>
+
 
 
 

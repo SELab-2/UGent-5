@@ -15,9 +15,11 @@
                 ></v-radio>
             </v-radio-group>
             <DatePicker
+                v-if="selectedOption === 'student'"
                 v-model="radio_date"
-                label="Deadline"
+                label="Group Selection Deadline"
             ></DatePicker>
+
         </v-container>
     </v-card>
 </template>
