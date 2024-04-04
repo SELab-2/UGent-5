@@ -6,7 +6,6 @@ import {
     getSubjectProjects,
     getSubjects,
     getSubjectStudents,
-    getSubjectTeachers
 } from "@/services/subject";
 import { type Ref, computed } from "vue";
 import type User from "@/models/User";
