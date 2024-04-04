@@ -80,15 +80,15 @@ async function fetchSubject() {
     }
     try {
         loading.value = true
-        const [name, teachers, students, projects] = await Promise.all([
+        const [name, instructors, students, projects] = await Promise.all([
             fetchSubjectName(),
-            fetchSubjectTeachers(),
+            fetchSubjectInstructors(),
             fetchSubjectStudents(),
             fetchSubjectProjects()
         ]);
 
         subject.name = name;
-        subject.teachers = teachers;
+        subject.teachers = instructors;
         subject.students = students;
         subject.projects = projects;
         loading.value = false
@@ -108,8 +108,8 @@ async function fetchSubjectName() {
     return data?.name
 }
 
-async function fetchSubjectTeachers() {
-    const response = await fetch(`${apiUrl}/api/subjects/${props.subjectId}/teachers`, {
+async function fetchSubjectInstructors() {
+    const response = await fetch(`${apiUrl}/api/subjects/${props.subjectId}/instructors`, {
         headers: {Authorization: `${token?.token_type} ${token?.token}`},
     });
 

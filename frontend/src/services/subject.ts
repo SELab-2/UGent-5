@@ -6,8 +6,8 @@ export async function getSubject(subjectId: number): Promise<Subject> {
     return authorized_fetch(`/api/subjects/${subjectId}`, { method: "GET" });
 }
 
-export async function getSubjectTeachers(subjectId: number): Promise<User[]> {
-    return authorized_fetch(`/api/subjects/${subjectId}/teachers`, { method: "GET" });
+export async function getSubjectInstructors(subjectId: number): Promise<User[]> {
+    return authorized_fetch(`/api/subjects/${subjectId}/instructors`, { method: "GET" });
 }
 
 export async function getSubjectStudents(subjectId: number): Promise<User[]> {
