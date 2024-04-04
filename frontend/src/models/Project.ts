@@ -6,4 +6,9 @@ export default interface Project {
     subject_id: String,
     requirements: [],
     description: String
+    id: number;
+    name: string;
+    deadline: Date;
+    description: string;
+    subject_id: number;
 }

@@ -6,5 +6,5 @@ export async function getUser(uid?: string): Promise<User> {
 }
 
 export async function toggleAdmin() {
-    authorized_fetch<void>("/api/users/me", { method: "POST" });
+    return authorized_fetch<void>("/api/users/me", { method: "POST" });
 }

@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import Depends, Body
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.exceptions import NotAuthorized
 from src.dependencies import get_async_db
@@ -34,6 +34,25 @@ async def user_permission_validation(
     db: AsyncSession = Depends(get_async_db),
 ):
     if not user.is_admin:
-        teachers = await service.get_teachers(db, subject_id)
-        if not list(filter(lambda teacher: teacher.uid == user.uid, teachers)):
+        instructors = await service.get_instructors(db, subject_id)
+        if not list(filter(lambda instructor: instructor.uid == user.uid, instructors)):
             raise NotAuthorized()
+
+
+async def add_student_permission_validation(
+    subject_id: int,
+    student_uid: str = Body(..., embed=True),
+    user: User = Depends(get_authenticated_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    if not user.is_admin and user.uid != student_uid:
+        instructors = await service.get_instructors(db, subject_id)
+        if not list(filter(lambda instructor: instructor.uid == user.uid, instructors)):
+            raise NotAuthorized()
+
+
+async def teacher_permission_validation(
+    user: User = Depends(get_authenticated_user)
+):
+    if not (user.is_admin or user.is_teacher):
+        raise NotAuthorized()
