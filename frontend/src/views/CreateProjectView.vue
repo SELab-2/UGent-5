@@ -51,10 +51,32 @@
                 <RadioButtonList v-model="selectedGroupProject" :title="'Group Project Options'" :options="groupProjectOptions" required />
             </v-col>
         </v-row>
-
-        <!-- Row for Submit Button -->
+    </v-container>
+    <v-container>
+        <!-- Header for the Editor -->
         <v-row>
             <v-col cols="12">
+                <v-card class="mb-0">
+                    <v-card-title class="headline">Assignment</v-card-title>
+                </v-card>
+            </v-col>
+        </v-row>
+
+        <!-- Quill Editor -->
+        <v-row>
+            <v-col cols="12">
+                <QuillEditor v-model="quillContent" theme="snow" class="quill-editor" />
+            </v-col>
+        </v-row>
+
+        <!-- Other form components... -->
+        <!-- ... -->
+
+        <!-- Submit Button -->
+    </v-container>
+    <v-container>
+        <v-row>
+            <v-col cols="16">
                 <v-btn @click="submitForm">Submit</v-btn>
             </v-col>
         </v-row>
@@ -70,7 +92,10 @@ import type Project from "@/models/Project";
 import {useInstructorsForSubjectQuery} from "@/queries/Subject";
 import {useMySubjectsQuery} from "@/queries/User";
 import {useCreateProjectMutation} from "@/queries/Project";
+import { QuillEditor } from '@vueup/vue-quill';
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
+const quillContent = ref('');
 const title = ref('');
 const deadline = ref(new Date());
 const selectedCourse = ref(undefined);
