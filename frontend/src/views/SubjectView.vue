@@ -51,23 +51,11 @@
 import {defineProps, ref} from "vue";
 import {useAuthStore} from "@/stores/auth-store";
 import {onMounted, reactive} from "vue";
+import type User from "@/models/User";
+import type Project from "@/models/Project";
 
 const props = defineProps(['subjectId'])
 
-interface User {
-    "uid": string,
-    "given_name": string,
-    "mail": string,
-    "is_admin": false
-}
-
-interface Project {
-    id: number;
-    name: string;
-    deadline: Date;
-    description: string;
-    subject_id: number;
-}
 
 const subject = reactive({
     id: props.subjectId as Number,

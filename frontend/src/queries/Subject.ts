@@ -2,8 +2,8 @@ import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
 import type Subject from "@/models/Subject";
 import {getSubject, getSubjectProjects, getSubjects, getSubjectStudents, getSubjectTeachers} from "@/services/subject";
 import { type Ref, computed } from "vue";
-import User from "@/models/User";
-import Project from "@/models/Project";
+import type User from "@/models/User";
+import type Project from "@/models/Project";
 
 function SUBJECT_QUERY_KEY(subjectId: number): (string | number)[] {
     return ["subject", subjectId];
