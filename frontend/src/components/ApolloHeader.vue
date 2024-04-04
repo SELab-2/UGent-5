@@ -21,7 +21,7 @@ import LocaleSwitcher from "./LocaleSwitcher.vue";
 import DropDownMobile from "@/components/navigation/DropDownMobile.vue";
 import LogoutButton from "@/components/buttons/LogoutButton.vue";
 
-const { smAndDown, mobile } = useDisplay();
+const { smAndDown } = useDisplay();
 
 const emit = defineEmits<{
     (e: "toggleNav"): void;

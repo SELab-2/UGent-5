@@ -3,13 +3,13 @@
         <h1 v-if="isLoading">Loading...</h1>
         <h1 v-else>{{ $t("home.welcome", { name: user!.given_name }) }}</h1>
         <v-container v-if="smAndDown">
-            <div v-for="card in cards" class="mobileCards">
+            <div v-for="card in cards" class="mobileCards" :key="card.title">
                 <HomeScreenCard :title="card.title" />
             </div>
         </v-container>
         <v-container v-else>
             <v-row>
-                <v-col v-for="card in cards">
+                <v-col v-for="card in cards" :key="card.title">
                     <HomeScreenCard :title="card.title" />
                 </v-col>
             </v-row>
