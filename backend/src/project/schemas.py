@@ -11,7 +11,7 @@ class Requirement(BaseModel):
     value: str = Field(min_length=1)
 
 
-class ProjectCreate(BaseModel):
+class ProjectBase(BaseModel):
     name: str = Field(..., min_length=1)
     deadline: datetime
     description: str
@@ -25,17 +25,13 @@ class ProjectCreate(BaseModel):
             raise ValueError("The deadline cannot be in the past")
         return value
 
+class ProjectCreate(ProjectBase):
+    pass
 
-class Project(BaseModel):
+class Project(ProjectBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
-    name: str
-    deadline: datetime
-    description: str
-    subject_id: int
-    requirements: list[Requirement]
-
 
 class ProjectList(BaseModel):
     model_config = ConfigDict(from_attributes=True)

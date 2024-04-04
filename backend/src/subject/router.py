@@ -4,14 +4,16 @@ from src.auth.dependencies import authentication_validation
 from src.dependencies import get_async_db
 from src.project.schemas import ProjectList
 from src.project.service import get_projects_for_subject
-from src.user.dependencies import teacher_or_admin_user_validation
+from src.user.dependencies import get_authenticated_user, teacher_or_admin_user_validation
 from src.user.schemas import User
 
 from . import service
 from .dependencies import (
     retrieve_subject,
+    retrieve_subject_by_uuid,
     retrieve_subjects,
-    add_student_permission_validation, teacher_permission_validation,
+    add_student_permission_validation,
+    retrieve_uuid, teacher_permission_validation,
 )
 from .schemas import Subject, SubjectCreate, SubjectList
 
@@ -32,6 +34,9 @@ async def get_subjects(subjects: SubjectList = Depends(retrieve_subjects)):
 async def get_subject(subject: Subject = Depends(retrieve_subject)):
     return subject
 
+@router.get("/{subject_id}/uuid", dependencies=[Depends(teacher_or_admin_user_validation)])
+async def get_subject_uuid(uuid: str = Depends(retrieve_uuid)):
+    return {"subject_uuid": uuid}
 
 @router.post(
     "/",
@@ -50,7 +55,6 @@ async def create_subject(
 )
 async def delete_subject(subject_id: int, db: AsyncSession = Depends(get_async_db)):
     await service.delete_subject(db, subject_id)
-    return "Successfully deleted"
 
 
 @router.patch(
@@ -59,11 +63,13 @@ async def delete_subject(subject_id: int, db: AsyncSession = Depends(get_async_d
     dependencies=[Depends(teacher_or_admin_user_validation)],
 )
 async def update_subject(
-    subject_update: SubjectCreate, subject_original: Subject = Depends(retrieve_subject)
+    subject_update: SubjectCreate,
+    subject_original: Subject = Depends(retrieve_subject),
+    db: AsyncSession = Depends(get_async_db)
 ) -> Subject:
     update_data = subject_update.model_dump(exclude_unset=True)
     subject_updated = subject_original.model_copy(update=update_data)
-    return subject_updated
+    return await service.update_subject(db,subject_updated)
 
 
 # ---------------Teachers------------
@@ -86,7 +92,6 @@ async def create_subject_instructor(
     db: AsyncSession = Depends(get_async_db)
 ):
     await service.add_instructor_to_subject(db, subject_id, instructor_uid)
-    return "Successfully added"
 
 
 @router.delete(
@@ -114,12 +119,24 @@ async def get_subject_students(
     status_code=201,
 )
 async def add_student_to_subject(
-    subject_id: int,
+    subject: Subject = Depends(retrieve_subject),
     student_uid: str = Body(..., embed=True),
     db: AsyncSession = Depends(get_async_db)
-):
-    await service.create_subject_student(db, subject_id, student_uid)
-    return "Successfully added"
+) -> Subject:
+    await service.create_subject_student(db, subject.id, student_uid)
+    return subject
+
+@router.post(
+    "/join",
+    status_code=201
+)
+async def join_subject(
+        subject: Subject = Depends(retrieve_subject_by_uuid),
+        user: User = Depends(get_authenticated_user),
+        db: AsyncSession = Depends(get_async_db)
+) -> Subject:
+    await service.create_subject_student(db,subject.id,user.uid)
+    return subject
 
 
 @router.delete(
@@ -130,7 +147,6 @@ async def delete_subject_student(
     subject_id: int, user_id: str, db: AsyncSession = Depends(get_async_db)
 ):
     await service.delete_subject_student(db, subject_id, user_id)
-    return "Successfully deleted"
 
 
 # ---------------Projects------------

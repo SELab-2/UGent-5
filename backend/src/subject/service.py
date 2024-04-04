@@ -1,10 +1,11 @@
 from typing import Sequence
 
-from sqlalchemy import delete, select, insert
+from sqlalchemy import delete, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.user.models import User
 
 from .models import StudentSubject, Subject, InstructorSubject
+from . import schemas
 from .schemas import SubjectCreate
 
 
@@ -12,11 +13,19 @@ async def get_subjects(db: AsyncSession) -> Sequence[Subject]:
     subjects = await db.execute(select(Subject))
     return subjects.scalars().all()
 
-
-async def get_subject(db: AsyncSession, subject_id: int) -> Subject:
+async def get_subject(db: AsyncSession, subject_id: int) -> Subject|None:
     result = await db.execute(select(Subject).filter_by(id=subject_id))
     return result.scalars().first()
 
+async def update_subject(db: AsyncSession, subject: schemas.Subject) -> Subject:
+    result = (await db.execute(update(Subject)
+                               .values(**subject.model_dump()).where(Subject.id == subject.id)
+                               .returning(Subject))).scalar_one_or_none()
+    return result
+
+async def get_subject_by_uuid(db: AsyncSession, subject_uuid: str) -> Subject|None:
+    result = await db.execute(select(Subject).filter_by(uuid=subject_uuid))
+    return result.scalars().first()
 
 async def get_subjects_by_user(
     db: AsyncSession, user_id: str
