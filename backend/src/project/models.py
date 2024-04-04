@@ -15,7 +15,6 @@ class Project(Base):
     publish_date: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False)
     name: Mapped[str] = mapped_column(nullable=False)
-    group_selection: Mapped[str] = mapped_column(nullable=True)
     subject_id: Mapped[int] = mapped_column(
         ForeignKey("subject.id", ondelete="CASCADE"), nullable=True
     )
