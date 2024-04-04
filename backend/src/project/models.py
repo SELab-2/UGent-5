@@ -4,6 +4,8 @@ from sqlalchemy import CheckConstraint, DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.database import Base
 from typing import List
+
+
 class Project(Base):
     __tablename__ = "project"
 
@@ -11,7 +13,7 @@ class Project(Base):
     deadline: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False)
     publish_date: Mapped[datetime] = mapped_column(
-            DateTime(timezone=True), nullable=False)
+        DateTime(timezone=True), nullable=False)
     name: Mapped[str] = mapped_column(nullable=False)
     group_selection: Mapped[str] = mapped_column(nullable=True)
     subject_id: Mapped[int] = mapped_column(
