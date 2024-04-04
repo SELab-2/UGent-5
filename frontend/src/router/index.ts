@@ -40,7 +40,7 @@ const router = createRouter({
         {
             path: "/home",
             name: "home",
-            component: () => import("../views/student/HomeScreenStudentView.vue"),
+            component: () => import("../views/HomeScreenView.vue"),
         },
         {
             path: "/:pathMatch(.*)",
