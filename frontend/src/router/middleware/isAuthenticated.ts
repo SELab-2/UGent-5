@@ -1,4 +1,4 @@
-import {storeToRefs} from "pinia";
+import { storeToRefs } from "pinia";
 import { type Middleware } from "./index";
 import { useAuthStore } from "@/stores/auth-store";
 

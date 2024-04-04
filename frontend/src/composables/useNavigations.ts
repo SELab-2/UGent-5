@@ -1,7 +1,7 @@
 import { computed } from "vue";
 import useIsAdmin from "@/composables/useIsAdmin";
-import {useAuthStore} from "@/stores/auth-store";
-import {storeToRefs} from "pinia";
+import { useAuthStore } from "@/stores/auth-store";
+import { storeToRefs } from "pinia";
 
 interface NavigationData {
     icon: string;
@@ -10,8 +10,8 @@ interface NavigationData {
 }
 
 const noLoginNavigations: NavigationData[] = [
-    {icon: "mdi-login", title: "navigation.login", goto: "login"},
-]
+    { icon: "mdi-login", title: "navigation.login", goto: "login" },
+];
 
 const main_navigations: NavigationData[] = [
     { icon: "mdi-home-outline", title: "navigation.home", goto: "home" },
@@ -26,7 +26,7 @@ const admin_navigations: NavigationData[] = [
 ];
 
 export default function useNavigations() {
-    const {isLoggedIn} = storeToRefs(useAuthStore());
+    const { isLoggedIn } = storeToRefs(useAuthStore());
     const { isAdmin } = useIsAdmin();
     const navigations = computed(() => {
         if (!isLoggedIn.value) {
