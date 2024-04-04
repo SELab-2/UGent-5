@@ -14,7 +14,7 @@ from src.submission.dependencies import (
     retrieve_submission,
 )
 from src.submission.exceptions import FileNotFound
-from src.submission.utils import upload_files
+from src.submission.utils import upload_files, get_files_from_dir, SUBMISSION_DIR, ARTIFACT_DIR
 from src.user.dependencies import admin_user_validation
 
 from . import service
@@ -59,20 +59,29 @@ async def delete_submision(submission_id: int, db: AsyncSession = Depends(get_as
 
 @router.get("/{submission_id}/files", response_model=list[File])
 async def get_files(submission: Submission = Depends(retrieve_submission)):
-    submission_dir = os.path.join(config.CONFIG.file_path, submission.files_uuid, "submission")
-    output_files = []
-
-    for root, _, files in os.walk(submission_dir):
-        for file in files:
-            path = os.path.join(root, file)
-            output_files.append(FileResponse(
-                filename=path.replace(f"{submission_dir}/", ""), path=path))
-    return output_files
+    submission_dir = os.path.join(config.CONFIG.file_path, submission.files_uuid, SUBMISSION_DIR)
+    return get_files_from_dir(submission_dir)
 
 
 @router.get("/{submission_id}/files/{path:path}", response_class=FileResponse)
 async def get_file(path: str, submission: Submission = Depends(get_submission)):
-    path = os.path.join(config.CONFIG.file_path, submission.files_uuid, path)
+    path = os.path.join(config.CONFIG.file_path, submission.files_uuid, SUBMISSION_DIR, path)
+
+    if not os.path.isfile(path):
+        raise FileNotFound
+
+    return FileResponse(path=path)
+
+
+@router.get("/{submission_id}/artifacts", response_model=list[File])
+async def get_artifacts(submission: Submission = Depends(retrieve_submission)):
+    artifact_dir = os.path.join(config.CONFIG.file_path, submission.files_uuid, ARTIFACT_DIR)
+    return get_files_from_dir(artifact_dir)
+
+
+@router.get("/{submission_id}/artifacts/{path:path}", response_class=FileResponse)
+async def get_artifact(path: str, submission: Submission = Depends(get_submission)):
+    path = os.path.join(config.CONFIG.file_path, submission.files_uuid, ARTIFACT_DIR, path)
 
     if not os.path.isfile(path):
         raise FileNotFound

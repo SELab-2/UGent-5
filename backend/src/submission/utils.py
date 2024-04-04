@@ -5,16 +5,21 @@ import fnmatch
 from uuid import uuid4
 
 from fastapi import UploadFile
+from starlette.responses import FileResponse
 
 from src import config
 from src.project.schemas import Project
 from src.submission.exceptions import UnMetRequirements
 
 
+SUBMISSION_DIR: str = "submission"
+ARTIFACT_DIR: str = "artifacts"
+
+
 def upload_files(files: list[UploadFile], project: Project) -> str:
     uuid = str(uuid4())
-    files_path = os.path.join(config.CONFIG.file_path, uuid, "submission")
-    artifacts_path = os.path.join(config.CONFIG.file_path, uuid, "artifacts")
+    files_path = os.path.join(config.CONFIG.file_path, uuid, SUBMISSION_DIR)
+    artifacts_path = os.path.join(config.CONFIG.file_path, uuid, ARTIFACT_DIR)
     os.makedirs(files_path)
     os.makedirs(artifacts_path)
 
@@ -45,3 +50,14 @@ def upload_files(files: list[UploadFile], project: Project) -> str:
         raise UnMetRequirements(errors)
 
     return uuid
+
+
+def get_files_from_dir(dir_path: str) -> list[FileResponse]:
+    output_files = []
+
+    for root, _, files in os.walk(dir_path):
+        for file in files:
+            path = os.path.join(root, file)
+            output_files.append(FileResponse(
+                filename=path.replace(f"{dir_path}/", ""), path=path))
+    return output_files
