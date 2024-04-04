@@ -1,51 +1,51 @@
 import {
     useMutation,
-    type UseMutationReturnType,
     useQuery,
+    type UseMutationReturnType,
     type UseQueryReturnType,
+    useQueryClient,
 } from "@tanstack/vue-query";
 import type Project from "@/models/Project";
-import { getProject, createSubmission } from "@/services/project";
-import { type Ref, computed } from "vue";
 import type Submission from "@/models/Submission";
+import { getProject, createSubmission, createProject } from "@/services/project";
+import { type Ref, computed } from "vue";
 
-function PROJECT_QUERY_KEY(projectId: number): (string | number)[] {
+// Key generator for project queries
+function projectQueryKey(projectId: number): (string | number)[] {
     return ["project", projectId];
 }
 
-export function useProjectQuery(
-    projectId: Ref<number | undefined>
-): UseQueryReturnType<Project, Error> {
+// Hook for fetching project details
+export function useProjectQuery(projectId: Ref<number | undefined>): UseQueryReturnType<Project, Error> {
     return useQuery<Project, Error>({
-        queryKey: computed(() => PROJECT_QUERY_KEY(projectId.value!)),
+        queryKey: computed(() => projectQueryKey(projectId.value!)),
         queryFn: () => getProject(projectId.value!),
-        enabled: () => projectId.value !== undefined,
+        enabled: computed(() => projectId.value !== undefined),
     });
 }
 
-export function useCreateSubmissionMutation(
-    groupId: Ref<number | undefined>
-): UseMutationReturnType<Submission, Error, FormData, void> {
-    return useMutation({
+// Hook for creating a new submission
+export function useCreateSubmissionMutation(groupId: Ref<number | undefined>): UseMutationReturnType<Submission, Error, FormData, void> {
+    return useMutation<Submission, Error, FormData>({
         mutationFn: (formData) => createSubmission(groupId.value!, formData),
-        onError: (e) => {
-            // todo
-            alert(e.message);
-import { useMutation, useQueryClient } from "@tanstack/vue-query";
-import { createProject } from "@/services/project"; // Ensure the path is correct
+        onError: (error) => {
+            console.error("Submission creation failed", error);
+            alert("Could not create submission. Please try again.");
+        },
+    });
+}
 
-const PROJECT_QUERY_KEY = "projects"; // If you want to invalidate all project queries, you might not need the subject_id here
-
-export function useCreateProjectMutation() {
+// Hook for creating a new project
+export function useCreateProjectMutation(): UseMutationReturnType<Project, Error, Project, void> {
     const queryClient = useQueryClient();
-    return useMutation({
+    return useMutation<Project, Error, Project>({
         mutationFn: createProject,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: PROJECT_QUERY_KEY });
+            queryClient.invalidateQueries({ queryKey: ["projects"] });
         },
         onError: (error) => {
-            console.error("Could not create project", error);
-            alert("Could not create project");
+            console.error("Project creation failed", error);
+            alert("Could not create project. Please try again.");
         },
     });
 }

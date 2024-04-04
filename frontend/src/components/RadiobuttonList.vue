@@ -1,37 +1,30 @@
 <template>
-    <div class="radio-button-list">
-        <div class="header">
-            <input
-                type="checkbox"
-                id="toggle"
-                v-model="isToggled"
-                class="toggle-checkbox"
-            >
-            <label for="toggle" class="toggle-label">{{ title }}</label>
-        </div>
-        <div class="options" v-if="isToggled">
-            <div v-for="option in options" :key="option.value" class="option">
-                <input
-                    type="radio"
-                    :id="option.value"
+    <v-card class="radio-button-list">
+        <v-switch
+            v-model="isToggled"
+            :label="title"
+            class="header"
+        ></v-switch>
+        <v-container v-if="isToggled">
+            <v-radio-group v-model="selectedOption" column>
+                <v-radio
+                    v-for="option in options"
+                    :key="option.value"
+                    :label="option.label"
                     :value="option.value"
-                    v-model="selectedOption"
-                    class="radio-button"
-                    :disabled="!isToggled"
-                >
-                <label :for="option.value" class="radio-label">{{ option.label }}</label>
-            </div>
+                ></v-radio>
+            </v-radio-group>
             <DatePicker
-                v-model="deadline"
-                v-if="isToggled"
-            />
-        </div>
-    </div>
+                v-model="radio_date"
+                label="Deadline"
+            ></DatePicker>
+        </v-container>
+    </v-card>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, watch, PropType } from 'vue';
-import DatePicker from './DatePicker.vue';
+import DatePicker from './DatePicker.vue'; // Import your custom DatePicker component
 
 interface RadioButtonOption {
     label: string;
@@ -41,7 +34,7 @@ interface RadioButtonOption {
 export default defineComponent({
     name: 'RadioButtonList',
     components: {
-        DatePicker
+        DatePicker // Register your custom DatePicker component
     },
     props: {
         title: {
@@ -57,110 +50,27 @@ export default defineComponent({
             default: ''
         }
     },
-    emits: ['update:modelValue', 'update:deadline'],
+    emits: ['update:modelValue', 'update:radio_date'],
     setup(props, { emit }) {
         const isToggled = ref(true);
         const selectedOption = ref(props.modelValue);
-        const deadline = ref(new Date());
+        const radio_date = ref(new Date());
 
         watch(selectedOption, (newValue) => {
             emit('update:modelValue', newValue);
         });
 
-        watch(deadline, (newDate) => {
-            // If you need the date in a specific format e.g., ISO string:
-            const formattedDate = newDate.toISOString();
-            emit('update:deadline', formattedDate);
+        // Listen for changes in the deadline from the DatePicker component
+        watch(radio_date, (newValue) => {
+            emit('update:radio_date', newValue);
         });
 
         return {
             isToggled,
             selectedOption,
-            deadline,
+            radio_date,
         };
     }
 });
 </script>
 
-
-<style scoped>
-.radio-button-list {
-    font-family: 'Arial', sans-serif;
-    color: #3e3e3e;
-}
-
-.header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 16px;
-}
-
-.toggle-checkbox {
-    appearance: none;
-    margin-right: 10px;
-    cursor: pointer;
-    width: 40px;
-    height: 20px;
-    background-color: #ccc;
-    border-radius: 20px;
-    position: relative;
-    transition: background-color 0.3s;
-}
-
-.toggle-checkbox:checked {
-    background-color: #3e3e3e;
-}
-
-.toggle-checkbox:checked::before {
-    transform: translateX(20px);
-}
-
-.toggle-checkbox:before {
-    content: "";
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    border-radius: 18px;
-    top: 1px;
-    left: 1px;
-    background-color: white;
-    transition: transform 0.3s;
-}
-
-.toggle-label {
-    user-select: none;
-    font-weight: bold;
-}
-
-.options {
-    display: flex;
-    flex-direction: column;
-}
-
-.option {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-}
-
-.radio-button {
-    margin-right: 8px;
-    accent-color: #000000; /* Change the color of the radio button */
-}
-
-.radio-label {
-    font-size: 14px;
-    user-select: none;
-}
-
-@media (max-width: 600px) {
-    .radio-button-list {
-        padding: 10px;
-    }
-
-    .option {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-}
-</style>

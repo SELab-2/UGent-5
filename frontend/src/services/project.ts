@@ -1,26 +1,29 @@
 import type Project from '@/models/Project';
-import {authorized_fetch} from "@/services/index";
-export async function createProject(projectData: Project) {
+import type Submission from '@/models/Submission';
+import { authorized_fetch } from "@/services";
+
+// Function to create a new project
+export async function createProject(projectData: Project): Promise<void> {
     try {
         await authorized_fetch(`/api/projects/`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(projectData), // Ensure projectData is not nested inside { project: ... }
+            body: JSON.stringify(projectData),
         });
     } catch (error) {
         console.error("Error in creating project:", error);
-        throw error;
+        throw error; // Rethrow the error for further handling or showing a user-friendly message
     }
-import { authorized_fetch } from "@/services";
-import type Project from "@/models/Project";
-import type Submission from "@/models/Submission";
+}
 
+// Function to fetch a specific project by its ID
 export async function getProject(projectId: number): Promise<Project> {
     return authorized_fetch(`/api/projects/${projectId}`, { method: "GET" });
 }
 
+// Function to create a new submission for a specific group
 export async function createSubmission(groupId: number, formData: FormData): Promise<Submission> {
     return authorized_fetch(
         `/api/submissions/?group_id=${groupId}`,
@@ -28,6 +31,6 @@ export async function createSubmission(groupId: number, formData: FormData): Pro
             method: "POST",
             body: formData,
         },
-        true
+        true // If this flag is intended for handling multipart/form-data or a different response, consider adding a comment to clarify its purpose
     );
 }

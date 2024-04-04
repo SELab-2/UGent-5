@@ -58,14 +58,4 @@ export default defineComponent({
     margin-right: 0.5rem;
 }
 
-.checkbox label.teacher-name {
-    margin-right: 1rem;
-    color: #111; /* Very dark gray color for teacher names */
-}
-
-.description {
-    font-size: 0.875rem;
-    color: #666;
-    margin-top: 1rem; /* Add some space above the description */
-}
 </style>
