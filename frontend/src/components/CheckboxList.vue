@@ -1,16 +1,18 @@
 <template>
-    <div class="checkbox-list">
-        <h2>{{ title }}</h2>
-        <ul>
-            <li v-for="item in items" :key="item.id" class="checkbox-item">
-                <span class="checkbox">
-                    <input type="checkbox" :id="`checkbox-${item.id}`" v-model="item.checked" />
-                    <label :for="`checkbox-${item.id}`" class="teacher-name">{{ item.label }}</label>
-                </span>
-            </li>
-        </ul>
-        <p class="description">{{ description }}</p>
-    </div>
+    <v-card class="checkbox-list">
+        <v-card-title>{{ title }}</v-card-title>
+        <v-list>
+            <v-list-item v-for="item in items" :key="item.id" class="checkbox-item">
+                <v-list-item-action>
+                    <v-checkbox :input-value="item.checked" @change="val => item.checked = val"></v-checkbox>
+                </v-list-item-action>
+                <v-list-item-content>
+                    <v-list-item-title>{{ item.label }}</v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+        </v-list>
+        <v-card-text class="description">{{ description }}</v-card-text>
+    </v-card>
 </template>
 
 <script lang="ts">
@@ -42,20 +44,21 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.checkbox-list {
-    /* Adjusted styles for better layout without the status indicators */
-    display: block;
-}
 
-.checkbox-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.5rem; /* Adjust spacing between items */
-}
+<!--<style scoped>-->
+<!--.checkbox-list {-->
+<!--    /* Adjusted styles for better layout without the status indicators */-->
+<!--    display: block;-->
+<!--}-->
 
-.checkbox input[type="checkbox"] {
-    margin-right: 0.5rem;
-}
+<!--.checkbox-item {-->
+<!--    display: flex;-->
+<!--    align-items: center;-->
+<!--    margin-bottom: 0.5rem; /* Adjust spacing between items */-->
+<!--}-->
 
-</style>
+<!--.checkbox input[type="checkbox"] {-->
+<!--    margin-right: 0.5rem;-->
+<!--}-->
+
+<!--</style>-->
