@@ -17,9 +17,8 @@
 </template>
 
 <script setup lang="ts">
-import LocaleSwitcher from "@/components/LocaleSwitcher.vue"
-import LogoutButton from "@/components/buttons/LogoutButton.vue"
-
+import LocaleSwitcher from "@/components/LocaleSwitcher.vue";
+import LogoutButton from "@/components/buttons/LogoutButton.vue";
 </script>
 
 <style scoped>
@@ -33,5 +32,4 @@ import LogoutButton from "@/components/buttons/LogoutButton.vue"
     flex-direction: column;
     align-items: center;
 }
-
 </style>

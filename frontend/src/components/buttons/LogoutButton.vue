@@ -3,11 +3,9 @@
 </template>
 
 <script setup lang="ts">
-import {useAuthStore} from "@/stores/auth-store";
+import { useAuthStore } from "@/stores/auth-store";
 
 const { logout } = useAuthStore();
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
