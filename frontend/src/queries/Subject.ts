@@ -61,3 +61,42 @@ export function useSubjectsQuery(): UseQueryReturnType<Subject[], Error> {
         queryFn: () => getSubjects(),
     });
 }
+
+
+// todo make this work or implement all sub-queries as normal in the component
+export function useSubjectDetailsQuery(subjectId){
+    const subjectQueryResult = useSubjectQuery(subjectId);
+    const instructorsQueryResult = useSubjectInstructorsQuery(subjectId);
+    const studentsQueryResult = useSubjectStudentsQuery(subjectId);
+    const projectsQueryResult = useSubjectProjectsQuery(subjectId);
+
+    const isLoading =
+        subjectQueryResult.isLoading ||
+        instructorsQueryResult.isLoading ||
+        studentsQueryResult.isLoading ||
+        projectsQueryResult.isLoading;
+
+    const isError =
+        subjectQueryResult.isError ||
+        instructorsQueryResult.isError ||
+        studentsQueryResult.isError ||
+        projectsQueryResult.isError;
+
+    const data = {
+        id: subjectQueryResult.data?.id,
+        name: subjectQueryResult.data?.name,
+        instructors: instructorsQueryResult.data || [],
+        students: studentsQueryResult.data || [],
+        projects: projectsQueryResult.data || []
+    };
+
+    const error = subjectQueryResult.error || instructorsQueryResult.error || studentsQueryResult.error || projectsQueryResult.error;
+
+    return {
+        isLoading,
+        isError,
+        data,
+        error
+    };
+}
+

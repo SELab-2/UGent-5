@@ -7,11 +7,11 @@
                 <h3>Academy year...</h3>
                 <div>
                     <p
-                        v-if="subject.teachers.length === 0"
+                        v-if="subject.instructors.length === 0"
                     >No teachers available</p>
                     <p
                         v-else
-                        v-for="teacher in subject.teachers"
+                        v-for="teacher in subject.instructors"
                         :key="teacher.uid"
                     >{{ teacher.given_name }}</p>
                 </div>
@@ -57,10 +57,11 @@ import type Project from "@/models/Project";
 const props = defineProps(['subjectId'])
 
 
+
 const subject = reactive({
     id: props.subjectId as Number,
     name: String,
-    teachers: [] as User[],
+    instructors: [] as User[],
     students: [] as User[],
     projects: [] as Project[]
 })
@@ -88,7 +89,7 @@ async function fetchSubject() {
         ]);
 
         subject.name = name;
-        subject.teachers = instructors;
+        subject.instructors = instructors;
         subject.students = students;
         subject.projects = projects;
         loading.value = false
