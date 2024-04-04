@@ -8,7 +8,7 @@
             <DropDownMobile />
         </div>
         <div class="leftContent" v-else>
-            <LogoutButton class="logout" />
+            <LogoutButton class="logout" v-if="isLoggedIn"/>
             <LocaleSwitcher />
         </div>
     </v-app-bar>
@@ -20,12 +20,16 @@ import { useDisplay } from "vuetify";
 import LocaleSwitcher from "./LocaleSwitcher.vue";
 import DropDownMobile from "@/components/navigation/DropDownMobile.vue";
 import LogoutButton from "@/components/buttons/LogoutButton.vue";
+import { useAuthStore } from "@/stores/auth-store";
+import { storeToRefs } from "pinia";
 
 const { smAndDown } = useDisplay();
 
 const emit = defineEmits<{
     (e: "toggleNav"): void;
 }>();
+
+const { isLoggedIn } = storeToRefs(useAuthStore());
 </script>
 
 <style scoped>

@@ -40,4 +40,3 @@ const { data: subject, isLoading: isSubjectLoading } = useSubjectQuery(
 </script>
 
 <style scoped></style>
-<style scoped></style>

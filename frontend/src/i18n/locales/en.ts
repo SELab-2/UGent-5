@@ -32,6 +32,8 @@ export default {
         settings: "Settings",
         help: "Help",
         admin: "Admin panel",
+        login: "Login",
+        about: "About",
     },
     homescreen: {
         deadlines: "Project deadlines",

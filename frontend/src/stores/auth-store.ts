@@ -34,12 +34,11 @@ export const useAuthStore = defineStore("auth", () => {
                 if (!response.ok) {
                     throw new Error("Failed to verify ticket");
                 }
-                const new_token = await response.json();
-                token.value = new_token;
+                token.value = await response.json();
                 localStorage.setItem("token", JSON.stringify(token.value));
                 return redirectTo;
             } catch (e) {
-                router.replace({ query: { ticket: null } });
+                await router.replace({ query: { ticket: null } });
                 alert("Failed to login");
             }
         }

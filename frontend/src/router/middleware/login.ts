@@ -1,8 +1,10 @@
+import {storeToRefs} from "pinia";
 import { type Middleware } from "./index";
 import { useAuthStore } from "@/stores/auth-store";
 
 const login: Middleware = async ({ to, next, router }) => {
-    const { isLoggedIn, login, setRedirect } = useAuthStore();
+    const {isLoggedIn} = storeToRefs(useAuthStore());
+    const { login, setRedirect } = useAuthStore();
     const nextPage = to.query.redirect?.toString() || "/home";
     if (isLoggedIn) {
         router.replace(nextPage);
