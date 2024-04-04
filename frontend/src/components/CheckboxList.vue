@@ -43,22 +43,3 @@ export default defineComponent({
     },
 });
 </script>
-
-
-<!--<style scoped>-->
-<!--.checkbox-list {-->
-<!--    /* Adjusted styles for better layout without the status indicators */-->
-<!--    display: block;-->
-<!--}-->
-
-<!--.checkbox-item {-->
-<!--    display: flex;-->
-<!--    align-items: center;-->
-<!--    margin-bottom: 0.5rem; /* Adjust spacing between items */-->
-<!--}-->
-
-<!--.checkbox input[type="checkbox"] {-->
-<!--    margin-right: 0.5rem;-->
-<!--}-->
-
-<!--</style>-->
