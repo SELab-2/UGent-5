@@ -9,11 +9,11 @@ StudentSubject = Table(
     Column("subject_id", ForeignKey("subject.id")),
 )
 
-TeacherSubject = Table(
-    "teacher_subject",
+InstructorSubject = Table(
+    "instructor_subject",
     Base.metadata,
-    Column("uid", ForeignKey("website_user.uid")),
-    Column("subject_id", ForeignKey("subject.id")),
+    Column("uid", ForeignKey("website_user.uid",  ondelete="CASCADE")),
+    Column("subject_id", ForeignKey("subject.id", ondelete="CASCADE")),
 )
 
 

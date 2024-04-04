@@ -3,6 +3,8 @@ import "@mdi/font/css/materialdesignicons.css";
 
 import { createApp } from "vue";
 import { createPinia } from "pinia";
+import { VueQueryPlugin } from "@tanstack/vue-query";
+
 import App from "./App.vue";
 import router from "./router";
 
@@ -24,9 +26,17 @@ const vuetify = createVuetify({
         defaultSet: "mdi",
     },
     theme: {
-        defaultTheme: "myTheme",
+        defaultTheme: "lightTheme",
         themes: {
-            myTheme: {
+            lightTheme: {
+                dark: false,
+                colors: {
+                    background: "#ffffff",
+                    surface: "#1d357e",
+                    // TODO: Add rest of colors
+                },
+            },
+            darkTheme: {
                 dark: true,
                 colors: {
                     background: "#222222",
@@ -42,5 +52,6 @@ app.use(router);
 app.use(pinia);
 app.use(vuetify);
 app.use(i18n);
+app.use(VueQueryPlugin);
 
 app.mount("#app");

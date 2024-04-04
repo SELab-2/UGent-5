@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.dependencies import authentication_validation
+from src.dependencies import get_async_db
 from src.group.schemas import GroupList
 from src.project.schemas import ProjectList
 
@@ -11,6 +13,7 @@ from .dependencies import (
     retrieve_user,
 )
 from .schemas import User, UserSimple, UserSubjectList
+from .service import set_admin
 
 router = APIRouter(
     prefix="/api/users",
@@ -62,3 +65,26 @@ async def list_groups(groups: GroupList = Depends(retrieve_groups)) -> GroupList
     Get the groups of the current user
     """
     return groups
+
+
+# FIXME: This is for showing how mutations work in the frontend, it should be removed
+@router.post("/me")
+async def toggle_admin(
+    user: User = Depends(get_authenticated_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """
+    Toggle the admin status of the current user
+    """
+    await set_admin(db, user.uid, not user.is_admin)
+
+
+@router.post("/{user_id}/teacher")
+async def set_teacher(
+    user: UserSimple = Depends(retrieve_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """
+    Set the teacher status of a user
+    """
+    await set_admin(db, user.uid, True)
