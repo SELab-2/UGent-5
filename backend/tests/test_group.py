@@ -4,7 +4,7 @@ import pytest
 import pytest_asyncio
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.user.service import set_admin
+from src.user.service import set_admin, set_teacher
 
 subject = {"name": "test subject"}
 future_date = datetime.now(timezone.utc) + timedelta(weeks=1)
@@ -14,6 +14,7 @@ project = {
     "deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
     "description": "test",
     "enroll_deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
+    "requirements": []
 }
 group_data = {"team_name": "test group", "project_id": 0}
 
@@ -45,7 +46,11 @@ async def group_id(client: AsyncClient, db: AsyncSession, project_id: int):
 @pytest.mark.asyncio
 async def test_create_group(client: AsyncClient, db: AsyncSession, project_id: int):
     group_data = {"team_name": "test group", "project_id": project_id}
-    await set_admin(db, "test", True)
+    await set_admin(db, "test", False)
+    response = await client.post("/api/groups/", json=group_data)
+    assert response.status_code == 403
+
+    await set_teacher(db, "test", True)
     response = await client.post("/api/groups/", json=group_data)
     assert response.status_code == 201  # Created
     assert response.json()["team_name"] == group_data["team_name"]

@@ -1,6 +1,6 @@
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
-from datetime import datetime, timezone
+from datetime import datetime
 import enum
 from src.database import Base
 
@@ -18,6 +18,7 @@ class Submission(Base):
     date: Mapped[datetime] = mapped_column(default=datetime.now(),
                                            nullable=False)
     status: Mapped[Status] = mapped_column(default=Status.InProgress, nullable=False)
+    files_uuid: Mapped[str] = mapped_column(nullable=False)
 
     group_id: Mapped[int] = mapped_column(
         ForeignKey("team.id", ondelete="CASCADE"),

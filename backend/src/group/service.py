@@ -44,12 +44,12 @@ async def get_users_by_group(db: AsyncSession, group_id: int) -> Sequence[User]:
     )
 
 
-async def get_teachers_by_group(db: AsyncSession, group_id: int) -> Sequence[User]:
+async def get_instructors_by_group(db: AsyncSession, group_id: int) -> Sequence[User]:
     return (
         (
             await db.execute(
                 select(User)
-                .join(subjectModels.TeacherSubject)
+                .join(subjectModels.InstructorSubject)
                 .join(subjectModels.Subject)
                 .join(projectModels.Project)
                 .join(Group)
