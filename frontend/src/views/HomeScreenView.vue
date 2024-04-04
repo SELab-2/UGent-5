@@ -24,13 +24,13 @@ import { useUserQuery } from "@/queries/User";
 import { useDisplay } from "vuetify";
 
 const { data: user, isLoading } = useUserQuery(null);
-const { smAndDown } = useDisplay()
+const { smAndDown } = useDisplay();
 
 const cards = [
-    {title: "homescreen.deadlines"},
-    {title:  "homescreen.courses"},
-    {title: "homescreen.announcements"}
-]
+    { title: "homescreen.deadlines" },
+    { title: "homescreen.courses" },
+    { title: "homescreen.announcements" },
+];
 </script>
 
 <style scoped lang="scss">
@@ -38,7 +38,7 @@ const cards = [
     margin-bottom: 30px;
 }
 
-.mobileCards{
+.mobileCards {
     margin: 15px;
 }
 </style>

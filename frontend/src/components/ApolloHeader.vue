@@ -8,7 +8,7 @@
             <DropDownMobile />
         </div>
         <div class="leftContent" v-else>
-            <LogoutButton class="logout"/>
+            <LogoutButton class="logout" />
             <LocaleSwitcher />
         </div>
     </v-app-bar>
@@ -16,18 +16,16 @@
 
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
-import { useDisplay } from 'vuetify'
+import { useDisplay } from "vuetify";
 import LocaleSwitcher from "./LocaleSwitcher.vue";
-import DropDownMobile from "@/components/navigation/DropDownMobile.vue"
-import LogoutButton from "@/components/buttons/LogoutButton.vue"
+import DropDownMobile from "@/components/navigation/DropDownMobile.vue";
+import LogoutButton from "@/components/buttons/LogoutButton.vue";
 
-
-const { smAndDown, mobile } = useDisplay()
+const { smAndDown, mobile } = useDisplay();
 
 const emit = defineEmits<{
     (e: "toggleNav"): void;
 }>();
-
 </script>
 
 <style scoped>
