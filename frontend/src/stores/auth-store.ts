@@ -50,5 +50,7 @@ export const useAuthStore = defineStore("auth", () => {
         localStorage.removeItem("token");
         await router.replace({ name: "login" });
     }
-    return { token, isLoggedIn, login, logout, setRedirect: setNext };
+
+    // TODO: Implement token refresh, now just logs out
+    return { token, isLoggedIn, login, logout, refresh: logout, setRedirect: setNext };
 });

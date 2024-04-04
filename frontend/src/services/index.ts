@@ -16,6 +16,7 @@ export async function authorized_fetch<T>(
     omitContentType: boolean = false
 ): Promise<T> {
     const { token, isLoggedIn } = storeToRefs(useAuthStore());
+    const { refresh } = useAuthStore();
     if (!isLoggedIn) {
         throw new Error("User is not logged in");
     }
@@ -33,7 +34,10 @@ export async function authorized_fetch<T>(
         ...requestOptions,
         headers: headers,
     });
-    if (!response.ok) {
+    if (response.status === 401) {
+        await refresh();
+        throw new Error("Not authenticated");
+    } else if (!response.ok) {
         throw new Error(response.statusText);
     }
     return response.json();
