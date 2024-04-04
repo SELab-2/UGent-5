@@ -25,6 +25,7 @@ import LogoutButton from "@/components/buttons/LogoutButton.vue"
 <style scoped>
 .menu {
     margin-right: 10px;
+    font-size: 18px;
 }
 
 .items {
@@ -32,4 +33,5 @@ import LogoutButton from "@/components/buttons/LogoutButton.vue"
     flex-direction: column;
     align-items: center;
 }
+
 </style>
