@@ -4,6 +4,7 @@ from src.auth.exceptions import NotAuthorized
 from src.dependencies import get_async_db
 from src.user.dependencies import get_authenticated_user
 from src.user.schemas import User
+from src.utils import has_subject_privileges
 
 from . import service
 from .exceptions import SubjectNotFound
@@ -47,8 +48,8 @@ async def user_permission_validation(
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db),
 ):
-    if not user.is_admin and not await service.is_instructor(db,subject_id,user.uid):
-            raise NotAuthorized()
+    if not await has_subject_privileges(subject_id,user,db):
+        raise NotAuthorized()
 
 async def teacher_permission_validation(
     user: User = Depends(get_authenticated_user)

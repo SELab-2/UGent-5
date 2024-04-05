@@ -17,6 +17,7 @@ class ProjectBase(BaseModel):
     description: str
     subject_id: int
     requirements: List[Requirement]
+    is_visible: bool = Field(default=False)
 
     # Check if deadline is not in the past
     @field_validator("deadline")
@@ -43,6 +44,7 @@ class ProjectUpdate(BaseModel):
     deadline: Optional[datetime] = None
     description: Optional[str] = None
     requirements: Optional[List[Requirement]] = None
+    is_visible: Optional[bool] = None
 
     @field_validator("deadline")
     def validate_deadline(cls, value: datetime) -> datetime:

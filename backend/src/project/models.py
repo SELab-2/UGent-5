@@ -17,7 +17,7 @@ class Project(Base):
         ForeignKey("subject.id", ondelete="CASCADE"), nullable=False
     )
     description: Mapped[str] = mapped_column(nullable=True)
-    is_visible: Mapped[bool] = mapped_column(nullable=True,default=False)
+    is_visible: Mapped[bool] = mapped_column(nullable=False)
     enroll_deadline: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=True
     )

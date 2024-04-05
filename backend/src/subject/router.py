@@ -7,6 +7,7 @@ from src.project.service import get_projects_for_subject
 from src.subject.exceptions import AlreadyInstructor, AlreadyRegistered
 from src.user.dependencies import get_authenticated_user, retrieve_user, teacher_or_admin_user_validation
 from src.user.schemas import User
+from src.utils import has_subject_privileges
 
 from . import service
 from .dependencies import (
@@ -157,7 +158,12 @@ async def delete_subject_student(
 
 @router.get("/{subject_id}/projects")
 async def list_projects(
-    subject_id: int, db: AsyncSession = Depends(get_async_db)
+    subject_id: int, db: AsyncSession = Depends(get_async_db),
+    user: User = Depends(get_authenticated_user)
 ) -> ProjectList:
     projects = await get_projects_for_subject(db, subject_id)
+
+    if not await has_subject_privileges(subject_id,user,db):
+        projects.projects = list(filter(lambda x: x.is_visible,projects.projects))
+
     return projects

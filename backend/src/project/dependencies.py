@@ -4,15 +4,19 @@ from src.dependencies import get_async_db
 from src.subject.dependencies import retrieve_subject, user_permission_validation
 from src.user.dependencies import get_authenticated_user
 from src.user.schemas import User
+from src.utils import has_subject_privileges
 
 from .schemas import Project, ProjectCreate
 from .service import get_project
 from .exceptions import ProjectNotFoundException
 
 
-async def retrieve_project(project_id: int, db: AsyncSession = Depends(get_async_db)):
+async def retrieve_project(project_id: int,
+                           user: User = Depends(get_authenticated_user),
+                           db: AsyncSession = Depends(get_async_db)):
     project = await get_project(db, project_id)
-    if not project:
+    if not project or \
+        (not project.is_visible and not await has_subject_privileges(project.subject_id,user,db)):
         raise ProjectNotFoundException()
     return project
 
