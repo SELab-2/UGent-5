@@ -4,7 +4,8 @@ from src.auth.dependencies import authentication_validation
 from src.dependencies import get_async_db
 from src.project.schemas import ProjectList
 from src.project.service import get_projects_for_subject
-from src.user.dependencies import get_authenticated_user, teacher_or_admin_user_validation
+from src.subject.exceptions import AlreadyInstructor, AlreadyRegistered
+from src.user.dependencies import get_authenticated_user, retrieve_user, teacher_or_admin_user_validation
 from src.user.schemas import User
 
 from . import service
@@ -12,8 +13,8 @@ from .dependencies import (
     retrieve_subject,
     retrieve_subject_by_uuid,
     retrieve_subjects,
-    add_student_permission_validation,
     retrieve_uuid, teacher_permission_validation,
+    user_permission_validation,
 )
 from .schemas import Subject, SubjectCreate, SubjectList
 
@@ -88,10 +89,12 @@ async def get_subject_instructors(
     status_code=201,
 )
 async def create_subject_instructor(
-    subject_id: int, instructor_uid: str = Body(..., embed=True),
+    subject_id: int, user: User = Depends(retrieve_user),
     db: AsyncSession = Depends(get_async_db)
 ):
-    await service.add_instructor_to_subject(db, subject_id, instructor_uid)
+    if await service.is_instructor(db,subject_id,user.uid):
+        raise AlreadyInstructor()
+    await service.add_instructor_to_subject(db, subject_id, user.uid)
 
 
 @router.delete(
@@ -115,29 +118,29 @@ async def get_subject_students(
 
 @router.post(
     "/{subject_id}/students",
-    dependencies=[Depends(add_student_permission_validation)],
+    dependencies=[Depends(user_permission_validation)],
     status_code=201,
 )
 async def add_student_to_subject(
     subject: Subject = Depends(retrieve_subject),
-    student_uid: str = Body(..., embed=True),
+    user: User = Depends(retrieve_user),
     db: AsyncSession = Depends(get_async_db)
 ) -> Subject:
-    await service.create_subject_student(db, subject.id, student_uid)
+    if await service.is_student(db,subject.id,user.uid):
+        raise AlreadyRegistered()
+    await service.create_subject_student(db, subject.id, user.uid)
     return subject
 
 @router.post(
-    "/join",
+    "/register",
     status_code=201
 )
-async def join_subject(
+async def register_to_subject(
         subject: Subject = Depends(retrieve_subject_by_uuid),
         user: User = Depends(get_authenticated_user),
         db: AsyncSession = Depends(get_async_db)
 ) -> Subject:
-    await service.create_subject_student(db,subject.id,user.uid)
-    return subject
-
+    return await add_student_to_subject(subject,user,db)
 
 @router.delete(
     "/{subject_id}/students/{user_id}",
