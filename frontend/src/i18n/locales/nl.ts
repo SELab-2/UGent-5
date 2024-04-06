@@ -12,6 +12,19 @@ export default {
         welcome: "Welkom {name}",
         logout: "Uitloggen",
     },
+    submit: {
+        submit_title: "Oplossing indienen",
+        submit_button: "Indienen",
+        remarks: "Opmerkingen",
+        add_files: "Voeg bestanden toe",
+        add_files_button: "Bestanden toevoegen",
+        no_files_added: "Je hebt nog geen bestanden toegevoegd.",
+        no_files_warning: "Voeg ten minste een bestand toe om een indiening te maken.",
+    },
+    project: {
+        deadline: "Deadline",
+        details_button: "Naar project",
+    },
     navigation: {
         home: "Hoofdscherm",
         courses: "Vakken",

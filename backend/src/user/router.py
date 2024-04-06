@@ -77,3 +77,14 @@ async def toggle_admin(
     Toggle the admin status of the current user
     """
     await set_admin(db, user.uid, not user.is_admin)
+
+
+@router.post("/{user_id}/teacher")
+async def set_teacher(
+    user: UserSimple = Depends(retrieve_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """
+    Set the teacher status of a user
+    """
+    await set_admin(db, user.uid, True)
