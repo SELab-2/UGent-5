@@ -6,9 +6,10 @@
 
 <script setup lang="ts">
 import type Project from "@/models/Project";
-defineProps<{
+const props = defineProps<{
     project: Project;
 }>();
+
 </script>
 
 <style scoped></style>

@@ -1,6 +1,6 @@
 <template>
-    <h2 v-if="isLoading" class="welcome">Loading...</h2>
-    <h2 v-else-if="isError" class="welcome">No such project found!</h2>
+    <h1 v-if="isLoading" class="welcome">Loading...</h1>
+    <h1 v-else-if="isError" class="welcome">No such project found!</h1>
     <div v-else class="projectInfo">
         <ProjectInfo :project="project!" />
     </div>
