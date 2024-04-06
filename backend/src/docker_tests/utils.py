@@ -1,13 +1,14 @@
 import docker
 
-from src.submission.schemas import Submission
+from src.project.utils import get_checks_path
 from src.submission.utils import get_submission_path, get_artifacts_path
 
 
-def launch_docker_tests(submission: Submission):
-    submission_dir = get_submission_path(submission.files_uuid)
-    artifact_dir = get_artifacts_path(submission.files_uuid)
-    run_docker_tests_detatched(submission_dir, artifact_dir)
+def launch_docker_tests(submission_uuid: str, checks_uuid: str):
+    submission_dir = get_submission_path(submission_uuid)
+    artifact_dir = get_artifacts_path(submission_uuid)
+    checks_dir = get_checks_path(checks_uuid)
+    run_docker_tests_detached(submission_dir, artifact_dir, checks_dir)
 
 
 async def build_image():
@@ -22,8 +23,7 @@ async def build_image():
     client.images.prune()
 
 
-async def run_docker_tests_detatched(submission_dir: str, artifact_dir: str):
-    checks_dir = '/Users/pieterjanin/UGent-5/backend/src/docker_tests/docker_default/checks'
+def run_docker_tests_detached(submission_dir: str, artifact_dir: str, checks_dir: str):
     client = docker.from_env()
     container = client.containers.run(
         image='default_image',

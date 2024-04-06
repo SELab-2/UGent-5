@@ -15,5 +15,5 @@ async def test():
 
 @router.get("/")
 async def test_detatched():
-    await utils.run_docker_tests_detatched()
+    await utils.run_docker_tests_detached()
     return [{"success"}]

@@ -13,7 +13,7 @@ from src.submission.exceptions import UnMetRequirements
 
 
 def get_submission_path(uuid: str, *paths: str) -> str:
-    return str(os.path.join(config.CONFIG.file_path, "submissions", uuid, *paths))
+    return str(os.path.join(config.CONFIG.file_path, "submissions", uuid, "submission", *paths))
 
 
 def get_artifacts_path(uuid: str, *paths) -> str:

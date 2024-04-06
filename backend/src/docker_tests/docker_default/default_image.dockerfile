@@ -2,7 +2,7 @@ FROM python:3
 
 WORKDIR /home/runner
 
-COPY checks/* /home/runner/
+COPY ../../../files/projects/fca49c14-53d0-4faa-8632-e5c6f4652a73/checks/* /home/runner/
 COPY entrypoint /home/runner/
 
 RUN useradd -m runner

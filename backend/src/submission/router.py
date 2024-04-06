@@ -1,7 +1,7 @@
 import os
 from typing import Sequence
 
-from fastapi import APIRouter, Depends, UploadFile
+from fastapi import APIRouter, Depends, UploadFile, BackgroundTasks
 from fastapi.responses import FileResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.dependencies import get_async_db
@@ -40,13 +40,13 @@ async def get_submission(submission: Submission = Depends(retrieve_submission)) 
 @router.post("/", response_model=Submission, status_code=201,
              dependencies=[Depends(group_id_validation)])
 async def create_submission(files: list[UploadFile],
+                            background_tasks: BackgroundTasks,
                             group: Group = Depends(retrieve_group),
                             db: AsyncSession = Depends(get_async_db)):
     project = await retrieve_project(group.project_id, db)
-    uuid = upload_files(files, project)
-    submission = await service.create_submission(db, uuid, group.id, group.project_id)
-    launch_docker_tests(submission)
-    return submission
+    submission_uuid = upload_files(files, project)
+    background_tasks.add_task(launch_docker_tests, submission_uuid, project.check_files_uuid)
+    return await service.create_submission(db, submission_uuid, group.id, group.project_id)
 
 
 @router.delete("/{submission_id}",
