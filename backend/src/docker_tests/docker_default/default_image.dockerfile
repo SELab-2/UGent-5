@@ -15,6 +15,7 @@ RUN apt-get update && \
         coreutils \
         curl \
 		wget \
+        tree \
         # C utils
         gcc \
         g++ \

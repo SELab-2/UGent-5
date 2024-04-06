@@ -17,6 +17,7 @@ class ProjectCreate(BaseModel):
     description: str
     subject_id: int
     requirements: List[Requirement]
+    check_files_uuid: str
 
     # Check if deadline is not in the past
     @field_validator("deadline")
@@ -35,6 +36,7 @@ class Project(BaseModel):
     description: str
     subject_id: int
     requirements: list[Requirement]
+    check_files_uuid: str
 
 
 class ProjectList(BaseModel):

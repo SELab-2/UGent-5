@@ -4,7 +4,6 @@ from typing import Sequence
 from fastapi import APIRouter, Depends, UploadFile
 from fastapi.responses import FileResponse
 from sqlalchemy.ext.asyncio import AsyncSession
-from src import config
 from src.dependencies import get_async_db
 from src.group.dependencies import retrieve_group
 from src.group.schemas import Group
@@ -14,7 +13,7 @@ from src.submission.dependencies import (
     retrieve_submission,
 )
 from src.submission.exceptions import FileNotFound
-from src.submission.utils import upload_files, get_files_from_dir, SUBMISSION_DIR, ARTIFACT_DIR
+from src.submission.utils import upload_files, get_files_from_dir, get_submission_path, get_artifacts_path
 from src.user.dependencies import admin_user_validation
 
 from . import service
@@ -59,13 +58,13 @@ async def delete_submision(submission_id: int, db: AsyncSession = Depends(get_as
 
 @router.get("/{submission_id}/files", response_model=list[File])
 async def get_files(submission: Submission = Depends(retrieve_submission)):
-    submission_dir = os.path.join(config.CONFIG.file_path, submission.files_uuid, SUBMISSION_DIR)
+    submission_dir = get_submission_path(submission.files_uuid)
     return get_files_from_dir(submission_dir)
 
 
 @router.get("/{submission_id}/files/{path:path}", response_class=FileResponse)
 async def get_file(path: str, submission: Submission = Depends(get_submission)):
-    path = os.path.join(config.CONFIG.file_path, submission.files_uuid, SUBMISSION_DIR, path)
+    path = get_submission_path(submission.files_uuid, path)
 
     if not os.path.isfile(path):
         raise FileNotFound
@@ -75,13 +74,13 @@ async def get_file(path: str, submission: Submission = Depends(get_submission)):
 
 @router.get("/{submission_id}/artifacts", response_model=list[File])
 async def get_artifacts(submission: Submission = Depends(retrieve_submission)):
-    artifact_dir = os.path.join(config.CONFIG.file_path, submission.files_uuid, ARTIFACT_DIR)
+    artifact_dir = get_artifacts_path(submission.files_uuid)
     return get_files_from_dir(artifact_dir)
 
 
 @router.get("/{submission_id}/artifacts/{path:path}", response_class=FileResponse)
 async def get_artifact(path: str, submission: Submission = Depends(get_submission)):
-    path = os.path.join(config.CONFIG.file_path, submission.files_uuid, ARTIFACT_DIR, path)
+    path = get_artifacts_path(submission.files_uuid, path)
 
     if not os.path.isfile(path):
         raise FileNotFound
