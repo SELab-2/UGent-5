@@ -18,6 +18,7 @@ class Project(Base):
     )
     description: Mapped[str] = mapped_column(nullable=True)
     is_visible: Mapped[bool] = mapped_column(nullable=False)
+    capacity: Mapped[int] = mapped_column(nullable=False)
     enroll_deadline: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=True
     )

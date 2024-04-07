@@ -14,6 +14,8 @@ project = {
     "deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
     "description": "test",
     "enroll_deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
+    "is_visible": True,
+    "capacity": 1,
     "requirements": []
 }
 group_data = {"team_name": "test group", "project_id": 0}
@@ -32,6 +34,7 @@ async def project_id(client: AsyncClient, db: AsyncSession, subject_id: int):
     project["subject_id"] = subject_id
     await set_admin(db, "test", True)
     response = await client.post("/api/projects/", json=project)
+    await set_admin(db, "test", False)
     return response.json()["id"]
 
 
@@ -46,7 +49,6 @@ async def group_id(client: AsyncClient, db: AsyncSession, project_id: int):
 @pytest.mark.asyncio
 async def test_create_group(client: AsyncClient, db: AsyncSession, project_id: int):
     group_data = {"team_name": "test group", "project_id": project_id}
-    await set_admin(db, "test", False)
     response = await client.post("/api/groups/", json=group_data)
     assert response.status_code == 403
 

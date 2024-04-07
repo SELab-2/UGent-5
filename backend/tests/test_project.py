@@ -17,6 +17,7 @@ project = {
     "description": "test",
     "enroll_deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
     "is_visible": True,
+    "capacity": 1,
     "requirements": []
 }
 

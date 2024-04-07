@@ -4,7 +4,7 @@ from src.auth.exceptions import NotAuthorized
 from src.dependencies import get_async_db
 from src.user.dependencies import get_authenticated_user
 from src.user.schemas import User
-from src.utils import has_subject_privileges
+from src.subject.utils import has_subject_privileges
 
 from . import service
 from .exceptions import SubjectNotFound

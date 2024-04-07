@@ -4,7 +4,7 @@ from src.dependencies import get_async_db
 from src.subject.dependencies import retrieve_subject, user_permission_validation
 from src.user.dependencies import get_authenticated_user
 from src.user.schemas import User
-from src.utils import has_subject_privileges
+from src.subject.utils import has_subject_privileges
 
 from .schemas import Project, ProjectCreate
 from .service import get_project

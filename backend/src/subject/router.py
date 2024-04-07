@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Body
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.dependencies import authentication_validation
 from src.dependencies import get_async_db
@@ -7,7 +7,7 @@ from src.project.service import get_projects_for_subject
 from src.subject.exceptions import AlreadyInstructor, AlreadyRegistered
 from src.user.dependencies import get_authenticated_user, retrieve_user, teacher_or_admin_user_validation
 from src.user.schemas import User
-from src.utils import has_subject_privileges
+from src.subject.utils import has_subject_privileges
 
 from . import service
 from .dependencies import (
