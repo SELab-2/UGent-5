@@ -14,7 +14,8 @@ project = {
     "deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
     "description": "test",
     "enroll_deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
-    "requirements": []
+    "requirements": [],
+    "test_files": [],
 }
 group_data = {"team_name": "test group", "project_id": 0}
 
