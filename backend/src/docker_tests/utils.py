@@ -3,7 +3,7 @@ import shutil
 
 import docker
 
-from src.project.utils import get_checks_path
+from src.project.utils import get_tests_path
 from src.submission.utils import get_submission_path, get_artifacts_path, get_feedback_path
 
 
@@ -18,7 +18,7 @@ def read_feedback_file(path: str) -> list[str]:
     return [line.strip() for line in test_feedback]
 
 
-def launch_docker_tests(submission_uuid: str, checks_uuid: str):
+def launch_docker_tests(submission_uuid: str, tests_uuid: str):
     artifact_dir = get_artifacts_path(submission_uuid)
     os.makedirs(artifact_dir)
 
@@ -27,13 +27,13 @@ def launch_docker_tests(submission_uuid: str, checks_uuid: str):
     os.makedirs(feedback_dir)
     touch(os.path.join(feedback_dir, "correct"), os.path.join(feedback_dir, "failed"))
 
-    build_image(checks_uuid)  # this will not consume time if image is already built
+    build_image(tests_uuid)  # this will not consume time if image is already built
 
     run_docker_tests(
         get_submission_path(submission_uuid),
         artifact_dir,
         feedback_dir,
-        get_checks_path(checks_uuid),
+        get_tests_path(tests_uuid),
     )
 
     print("correct: ", read_feedback_file(os.path.join(feedback_dir, "correct")))
@@ -45,7 +45,7 @@ def launch_docker_tests(submission_uuid: str, checks_uuid: str):
 
 def build_image(checks_uuid: str):
     client = docker.from_env()
-    checks_dir = get_checks_path(checks_uuid)
+    checks_dir = get_tests_path(checks_uuid)
 
     # build custom docker image if dockerfile is present in checks directory
     if os.path.isfile(os.path.join(checks_dir, "Dockerfile")):
@@ -63,23 +63,25 @@ def build_image(checks_uuid: str):
     client.images.prune()  # cleanup dangling images
 
 
-def run_docker_tests(submission_dir: str, artifact_dir: str, feedback_dir: str, checks_dir: str):
+def run_docker_tests(submission_dir: str, artifact_dir: str, feedback_dir: str, tests_dir: str) -> str:
     client = docker.from_env()
-    client.containers.run(
+    return client.containers.run(
         image='default_image',
         volumes={
             submission_dir: {'bind': '/submission', 'mode': 'ro'},
             artifact_dir: {'bind': '/artifacts', 'mode': 'rw'},
             feedback_dir: {'bind': '/feedback', 'mode': 'rw'},
-            checks_dir: {'bind': '/checks', 'mode': 'ro'},
+            tests_dir: {'bind': '/tests', 'mode': 'ro'},
         },
         environment={
             'SUBMISSION_DIR': '/submission',
             'ARTIFACT_DIR': '/artifacts',
             'CORRECT_PATH': '/feedback/correct',
             'FAILED_PATH': '/feedback/failed',
-            'CHECKS_DIR': '/checks',
+            'TESTS_DIR': '/tests',
         },
         detach=False,
         remove=True,
+        stdout=True,
+        stderr=True,
     )

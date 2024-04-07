@@ -1,5 +1,4 @@
 from typing import Sequence
-from uuid import uuid4
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -10,15 +9,17 @@ from .exceptions import ProjectNotFoundException
 from .models import Project, Requirement
 from .schemas import ProjectCreate, ProjectList, ProjectUpdate
 from src.user.models import User
+from .utils import upload_test_files
 
 
 async def create_project(db: AsyncSession, project_in: ProjectCreate) -> Project:
+    test_files_uuid = upload_test_files(project_in.test_files)
     new_project = Project(
         name=project_in.name,
         deadline=project_in.deadline,
         subject_id=project_in.subject_id,
         description=project_in.description,
-        check_files_uuid=str(uuid4()),
+        test_files_uuid=test_files_uuid,
         requirements=[Requirement(**r.model_dump()) for r in project_in.requirements],
     )
     db.add(new_project)

@@ -45,7 +45,8 @@ async def create_submission(files: list[UploadFile],
                             db: AsyncSession = Depends(get_async_db)):
     project = await retrieve_project(group.project_id, db)
     submission_uuid = upload_files(files, project)
-    background_tasks.add_task(launch_docker_tests, submission_uuid, project.check_files_uuid)
+    if project.test_files_uuid is not None:
+        background_tasks.add_task(launch_docker_tests, submission_uuid, project.test_files_uuid)
     return await service.create_submission(db, submission_uuid, group.id, group.project_id)
 
 

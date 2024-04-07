@@ -1,5 +1,7 @@
+from typing import List
+
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
 import enum
 from src.database import Base
@@ -29,3 +31,22 @@ class Submission(Base):
         ForeignKey("project.id", ondelete="CASCADE"),
         nullable=False
     )
+
+    feedback: Mapped[List["Testresult"]] = relationship(
+        back_populates="submission", lazy="joined"
+    )
+
+
+class Testresult(Base):
+    __tablename__ = "testresult"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    submission_id: Mapped[int] = mapped_column(
+        ForeignKey("submission.id", ondelete="CASCADE"),
+        nullable=False
+    )
+    submission: Mapped["Submission"] = relationship(back_populates="feedback")
+
+    # true if test succeeded, false if not
+    succeeded: Mapped[bool] = mapped_column(nullable=False)
+    value: Mapped[str] = mapped_column(nullable=False)

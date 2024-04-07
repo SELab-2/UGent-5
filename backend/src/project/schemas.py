@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Optional, Sequence, List
 
+from fastapi import UploadFile
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
@@ -17,7 +18,7 @@ class ProjectCreate(BaseModel):
     description: str
     subject_id: int
     requirements: List[Requirement]
-    check_files_uuid: str
+    test_files: List[UploadFile]
 
     # Check if deadline is not in the past
     @field_validator("deadline")
@@ -36,7 +37,7 @@ class Project(BaseModel):
     description: str
     subject_id: int
     requirements: list[Requirement]
-    check_files_uuid: str
+    test_files_uuid: str
 
 
 class ProjectList(BaseModel):
