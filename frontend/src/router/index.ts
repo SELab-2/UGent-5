@@ -43,10 +43,30 @@ const router = createRouter({
             component: () => import("../views/student/HomeScreenStudentView.vue"),
         },
         {
+            path: "/projects",
+            name: "projects",
+            component: () => import("../views/ProjectsView.vue"),
+        },
+        {
             path: "/project/:projectId(\\d+)/submit",
             name: "onSubmit",
             component: () => import("../views/SubmitView.vue"),
             props: (route) => ({ projectId: Number(route.params.projectId) }),
+        },
+        {
+            path: "/courses",
+            name: "courses",
+            component: () => import("../views/CoursesView.vue"),
+        },
+        {
+            path: "/settings",
+            name: "settings",
+            component: () => import("../views/SettingsView.vue"),
+        },
+        {
+            path: "/admin",
+            name: "admin",
+            component: () => import("../views/AdminView.vue"),
         },
         {
             path: "/:pathMatch(.*)",
