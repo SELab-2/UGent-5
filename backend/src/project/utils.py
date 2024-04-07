@@ -11,7 +11,10 @@ def get_tests_path(uuid: str, *paths) -> str:
     return str(os.path.join(config.CONFIG.file_path, "projects", uuid, *paths))
 
 
-def upload_test_files(files: list[UploadFile]) -> str:
+def upload_test_files(files: list[UploadFile]) -> str | None:
+    if not len(files):
+        return None
+
     uuid = str(uuid4())
     files_path = get_tests_path(uuid)
     os.makedirs(files_path)

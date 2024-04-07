@@ -27,9 +27,11 @@ def launch_docker_tests(submission_uuid: str, tests_uuid: str):
     os.makedirs(feedback_dir)
     touch(os.path.join(feedback_dir, "correct"), os.path.join(feedback_dir, "failed"))
 
-    build_image(tests_uuid)  # this will not consume time if image is already built
+    image_tag = build_image(tests_uuid)  # this will not consume time if image is already built
 
+    # TODO: zorgen dat tests niet gemount worden als custom docker image gemaakt wordt
     run_docker_tests(
+        image_tag,
         get_submission_path(submission_uuid),
         artifact_dir,
         feedback_dir,
@@ -39,18 +41,18 @@ def launch_docker_tests(submission_uuid: str, tests_uuid: str):
     print("correct: ", read_feedback_file(os.path.join(feedback_dir, "correct")))
     print("failed: ", read_feedback_file(os.path.join(feedback_dir, "failed")))
 
-    # feedback is stored in the db
+    # feedback is stored in the db only
     shutil.rmtree(feedback_dir)
 
 
-def build_image(checks_uuid: str):
+def build_image(tests_uuid: str):
     client = docker.from_env()
-    checks_dir = get_tests_path(checks_uuid)
+    tests_dir = get_tests_path(tests_uuid)
 
-    # build custom docker image if dockerfile is present in checks directory
-    if os.path.isfile(os.path.join(checks_dir, "Dockerfile")):
-        path = checks_dir
-        tag = checks_uuid
+    # build custom docker image if dockerfile is present in tests directory
+    if os.path.isfile(os.path.join(tests_dir, "Dockerfile")):
+        path = tests_dir
+        tag = tests_uuid
     else:
         path = "src/docker_tests/docker_default"
         tag = "default_image"
@@ -61,12 +63,13 @@ def build_image(checks_uuid: str):
         forcerm=True
     )
     client.images.prune()  # cleanup dangling images
+    return tag
 
 
-def run_docker_tests(submission_dir: str, artifact_dir: str, feedback_dir: str, tests_dir: str) -> str:
+def run_docker_tests(image_tag: str, submission_dir: str, artifact_dir: str, feedback_dir: str, tests_dir: str) -> str:
     client = docker.from_env()
     return client.containers.run(
-        image='default_image',
+        image=image_tag,
         volumes={
             submission_dir: {'bind': '/submission', 'mode': 'ro'},
             artifact_dir: {'bind': '/artifacts', 'mode': 'rw'},

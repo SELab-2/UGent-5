@@ -13,7 +13,7 @@ from .utils import upload_test_files
 
 
 async def create_project(db: AsyncSession, project_in: ProjectCreate) -> Project:
-    test_files_uuid = upload_test_files(project_in.test_files)
+    test_files_uuid = upload_test_files(project_in.test_files)  # will be None if no files are included
     new_project = Project(
         name=project_in.name,
         deadline=project_in.deadline,

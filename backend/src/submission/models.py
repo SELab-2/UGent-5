@@ -32,7 +32,7 @@ class Submission(Base):
         nullable=False
     )
 
-    feedback: Mapped[List["Testresult"]] = relationship(
+    testresults: Mapped[List["Testresult"]] = relationship(
         back_populates="submission", lazy="joined"
     )
 
@@ -45,7 +45,7 @@ class Testresult(Base):
         ForeignKey("submission.id", ondelete="CASCADE"),
         nullable=False
     )
-    submission: Mapped["Submission"] = relationship(back_populates="feedback")
+    submission: Mapped["Submission"] = relationship(back_populates="testresults")
 
     # true if test succeeded, false if not
     succeeded: Mapped[bool] = mapped_column(nullable=False)

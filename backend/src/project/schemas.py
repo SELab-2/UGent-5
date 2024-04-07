@@ -37,7 +37,7 @@ class Project(BaseModel):
     description: str
     subject_id: int
     requirements: list[Requirement]
-    test_files_uuid: str
+    test_files_uuid: str | None
 
 
 class ProjectList(BaseModel):
