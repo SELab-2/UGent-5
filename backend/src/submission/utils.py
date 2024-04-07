@@ -20,12 +20,14 @@ def get_artifacts_path(uuid: str, *paths) -> str:
     return str(os.path.join(config.CONFIG.file_path, "submissions", uuid, "artifacts", *paths))
 
 
+def get_feedback_path(uuid: str, *paths) -> str:
+    return str(os.path.join(config.CONFIG.file_path, "submissions", uuid, "feedback", *paths))
+
+
 def upload_files(files: list[UploadFile], project: Project) -> str:
     uuid = str(uuid4())
     files_path = get_submission_path(uuid)
-    artifacts_path = get_artifacts_path(uuid)
     os.makedirs(files_path)
-    os.makedirs(artifacts_path)
 
     filelist = []
     for upload_file in files:

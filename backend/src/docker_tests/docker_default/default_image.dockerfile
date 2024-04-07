@@ -2,7 +2,6 @@ FROM python:3
 
 WORKDIR /home/runner
 
-COPY ../../../files/projects/fca49c14-53d0-4faa-8632-e5c6f4652a73/checks/* /home/runner/
 COPY entrypoint /home/runner/
 
 RUN useradd -m runner
@@ -21,8 +20,8 @@ RUN apt-get update && \
         g++ \
         make
 
-
 # Python packages
 RUN pip install --no-cache-dir --upgrade numpy pandas
+
 
 ENTRYPOINT ["/home/runner/entrypoint"]
