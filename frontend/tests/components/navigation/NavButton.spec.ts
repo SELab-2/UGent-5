@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { expect, describe, it} from 'vitest'
-import NavButton from '../navigation/NavButton.vue'
+import NavButton from '../../../src/components/navigation/NavButton.vue'
 
 describe('NavButton', () => {
     it('render title correctly', () => {
