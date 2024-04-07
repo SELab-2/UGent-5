@@ -11,9 +11,9 @@ from . import service
 
 
 async def group_permission_validation(group_id: int,
-                              user: User = Depends(get_authenticated_user),
-                              db: AsyncSession = Depends(get_async_db)):
-    if not await has_group_privileges(group_id,user,db):
+                                      user: User = Depends(get_authenticated_user),
+                                      db: AsyncSession = Depends(get_async_db)):
+    if not await has_group_privileges(group_id, user, db):
         raise NotAuthorized()
 
 

@@ -27,13 +27,16 @@ class ProjectBase(BaseModel):
             raise ValueError("The deadline cannot be in the past")
         return value
 
+
 class ProjectCreate(ProjectBase):
     pass
+
 
 class Project(ProjectBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+
 
 class ProjectList(BaseModel):
     model_config = ConfigDict(from_attributes=True)

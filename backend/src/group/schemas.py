@@ -10,6 +10,7 @@ class Groupbase(BaseModel):
     score: int = 0
     team_name: str = Field(min_length=1)
 
+
 class GroupCreate(Groupbase):
     pass
 

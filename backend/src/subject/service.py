@@ -13,9 +13,11 @@ async def get_subjects(db: AsyncSession) -> Sequence[Subject]:
     subjects = await db.execute(select(Subject))
     return subjects.scalars().all()
 
-async def get_subject(db: AsyncSession, subject_id: int) -> Subject|None:
+
+async def get_subject(db: AsyncSession, subject_id: int) -> Subject | None:
     result = await db.execute(select(Subject).filter_by(id=subject_id))
     return result.scalars().first()
+
 
 async def update_subject(db: AsyncSession, subject: schemas.Subject) -> Subject:
     result = (await db.execute(update(Subject)
@@ -23,9 +25,11 @@ async def update_subject(db: AsyncSession, subject: schemas.Subject) -> Subject:
                                .returning(Subject))).scalar_one_or_none()
     return result
 
-async def get_subject_by_uuid(db: AsyncSession, subject_uuid: str) -> Subject|None:
+
+async def get_subject_by_uuid(db: AsyncSession, subject_uuid: str) -> Subject | None:
     result = await db.execute(select(Subject).filter_by(uuid=subject_uuid))
     return result.scalars().first()
+
 
 async def get_subjects_by_user(
     db: AsyncSession, user_id: str
@@ -49,11 +53,13 @@ async def get_instructors(db: AsyncSession, subject_id: int) -> Sequence[User]:
     )
     return result.scalars().all()
 
-async def is_instructor(db:AsyncSession, subject_id: int, uid: str) -> bool:
+
+async def is_instructor(db: AsyncSession, subject_id: int, uid: str) -> bool:
     result = await db.execute(select(InstructorSubject)
                               .where(InstructorSubject.c.subject_id == subject_id)
                               .where(InstructorSubject.c.uid == uid))
     return result.scalar_one_or_none() != None
+
 
 async def create_subject(db: AsyncSession, subject: SubjectCreate) -> Subject:
     db_subject = Subject(name=subject.name)
@@ -98,11 +104,13 @@ async def get_students(db: AsyncSession, subject_id: int) -> Sequence[User]:
     )
     return result.scalars().all()
 
-async def is_student(db:AsyncSession, subject_id: int, uid: str) -> bool:
+
+async def is_student(db: AsyncSession, subject_id: int, uid: str) -> bool:
     result = await db.execute(select(StudentSubject)
                               .where(StudentSubject.c.subject_id == subject_id)
                               .where(StudentSubject.c.uid == uid))
     return result.scalar_one_or_none() != None
+
 
 async def delete_subject_student(db: AsyncSession, subject_id: int, user_id: str):
     await db.execute(

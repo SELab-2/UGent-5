@@ -53,6 +53,7 @@ async def delete_project_for_subject(
 ):
     await delete_project(db, project_id)
 
+
 @router.patch(
     "/{project_id}",
     response_model=Project,

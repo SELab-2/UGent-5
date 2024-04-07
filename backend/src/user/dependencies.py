@@ -40,6 +40,7 @@ async def teacher_or_admin_user_validation(
     if not user.is_admin and not user.is_teacher:
         raise NotAuthorized()
 
+
 async def user_id_validation(user_id: str, db: AsyncSession = Depends(get_async_db)):
     user = await user_service.get_by_id(db, user_id)
     if not user:

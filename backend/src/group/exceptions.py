@@ -12,6 +12,7 @@ class AlreadyInGroup(HTTPException):
         """Raised when person is already in group"""
         super().__init__(status_code=403, detail="Already in Group")
 
+
 class MaxCapacity(HTTPException):
     def __init__(self):
         """Raised when user wants to join group at max capacity"""

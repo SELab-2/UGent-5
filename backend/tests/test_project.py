@@ -112,6 +112,7 @@ async def test_patch_project(client: AsyncClient, db: AsyncSession, project_id: 
     response = await client.get(f"/api/projects/{project_id}")
     assert response.json()["description"] == "new description"
 
+
 @pytest.mark.asyncio
 async def test_is_visible_project(client: AsyncClient, db: AsyncSession, project_id: int):
 
@@ -123,17 +124,15 @@ async def test_is_visible_project(client: AsyncClient, db: AsyncSession, project
     await set_admin(db, "test", False)
 
     response = await client.get(f"/api/projects/{project_id}")
-    assert response.status_code == 404 # Not found as project is not visible
+    assert response.status_code == 404  # Not found as project is not visible
 
     response = await client.get(f"/api/subjects/{subject_id}/projects")
     assert len(response.json()["projects"]) == 0
 
     # Now privileged get request
-    await make_instructor(subject_id,"test",db,client)
+    await make_instructor(subject_id, "test", db, client)
     response = await client.get(f"/api/projects/{project_id}")
     assert response.status_code == 200
 
     response = await client.get(f"/api/subjects/{subject_id}/projects")
     assert len(response.json()["projects"]) == 1
-
-

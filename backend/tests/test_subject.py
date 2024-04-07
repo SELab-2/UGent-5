@@ -66,17 +66,17 @@ async def test_create_instructor(client: AsyncClient, db: AsyncSession, subject_
     )
     assert response.status_code == 201
 
-
     # Non existing user
     response = await client.post(
         f"/api/subjects/{subject_id}/instructors", params={"user_id": "non_existing"}
     )
     assert response.status_code == 404
 
-async def make_instructor(subject_id: int, uid: str, db:AsyncSession, client: AsyncClient):
-    await set_admin(db,"test",True)
+
+async def make_instructor(subject_id: int, uid: str, db: AsyncSession, client: AsyncClient):
+    await set_admin(db, "test", True)
     await client.post(f"/api/subjects/{subject_id}/instructors", params={"user_id": uid})
-    await set_admin(db,"test",False)
+    await set_admin(db, "test", False)
 
 
 @pytest.mark.asyncio
@@ -139,7 +139,7 @@ async def test_enroll_student_into_course(client: AsyncClient, db: AsyncSession,
     )
     assert response.status_code == 403
 
-    await make_instructor(subject_id,"test",db,client)
+    await make_instructor(subject_id, "test", db, client)
 
     # Non existing user
     response = await client.post(
@@ -218,14 +218,15 @@ async def test_delete_student(client: AsyncClient, db: AsyncSession, subject_id:
         student['uid'] == user_uid for student in students), "The student should have been deleted."
     assert len(students) == 0, "There should be no students in the course."
 
+
 @pytest.mark.asyncio
-async def test_invite_link(client:AsyncClient, db: AsyncSession, subject_id: int):
+async def test_invite_link(client: AsyncClient, db: AsyncSession, subject_id: int):
 
     # Not Authorized to get uuid
     response = await client.get(f"/api/subjects/{subject_id}/uuid")
     assert response.status_code == 403
 
-    await set_teacher(db,"test",True)
+    await set_teacher(db, "test", True)
 
     response = await client.get(f"/api/subjects/{subject_id}/uuid")
     assert response.status_code == 200
@@ -233,7 +234,7 @@ async def test_invite_link(client:AsyncClient, db: AsyncSession, subject_id: int
 
     # Register to subject
     response = await client.post(f"/api/subjects/register",
-                                 params={"subject_uuid":response.json().get("subject_uuid")})
+                                 params={"subject_uuid": response.json().get("subject_uuid")})
     assert response.status_code == 201
 
     response = await client.get(f"/api/subjects/{subject_id}/students")

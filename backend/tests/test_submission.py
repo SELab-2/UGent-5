@@ -16,14 +16,15 @@ async def test_create_submission(client: AsyncClient, group_id: int):
     with open("testfile2.txt", "w") as f:
         f.write("content2")
 
-    files = [('files',open('testfile1.txt', 'rb')), ('files', open('testfile2.txt', 'rb'))]
+    files = [('files', open('testfile1.txt', 'rb')),
+             ('files', open('testfile2.txt', 'rb'))]
 
     response = await client.post(f"/api/submissions/", params={"group_id": group_id}, files=files)
     assert response.status_code == NotAuthorized().status_code
     assert response.json()["detail"] == NotAuthorized().detail
 
     # Submit
-    await client.post(f"/api/groups/{group_id}") # Join group
+    await client.post(f"/api/groups/{group_id}")  # Join group
     response = await client.post(f"/api/submissions/", params={"group_id": group_id}, files=files)
     assert response.status_code == 201
 
@@ -33,9 +34,9 @@ async def test_create_submission(client: AsyncClient, group_id: int):
     # List files
     id = response.json()['id']
     response = await client.get(f"/api/submissions/{id}/files")
-    assert response.status_code == NotAuthorized().status_code # Not authorized
+    assert response.status_code == NotAuthorized().status_code  # Not authorized
 
-    await client.post(f"/api/groups/{group_id}") # Join group
+    await client.post(f"/api/groups/{group_id}")  # Join group
     response = await client.get(f"/api/submissions/{id}/files")
     assert response.status_code == 200
     assert len(response.json()) == 2
@@ -46,9 +47,9 @@ async def test_create_submission(client: AsyncClient, group_id: int):
     await client.delete(f"/api/groups/{group_id}")
 
     response = await client.get(f"/api/submissions/{id}/files/testfile1.txt")
-    assert response.status_code == NotAuthorized().status_code # Not authorized
+    assert response.status_code == NotAuthorized().status_code  # Not authorized
 
-    await client.post(f"/api/groups/{group_id}") # Join group
+    await client.post(f"/api/groups/{group_id}")  # Join group
     response = await client.get(f"/api/submissions/{id}/files/testfile1.txt")
     assert response.status_code == 200
     assert next(response.iter_bytes()) == b"content1"
@@ -60,4 +61,4 @@ async def test_create_submission(client: AsyncClient, group_id: int):
     os.remove("testfile2.txt")
 
 
-#TODO:  check submission with project requirements
+# TODO:  check submission with project requirements

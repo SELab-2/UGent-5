@@ -14,7 +14,6 @@ from tests.test_subject import make_instructor, subject_id
 from tests.test_project import project_id
 
 
-
 subject = {"name": "test subject"}
 future_date = datetime.now(timezone.utc) + timedelta(weeks=1)
 project = {
@@ -37,7 +36,6 @@ async def group_id(client: AsyncClient, db: AsyncSession, project_id: int):
     response = await client.post("/api/groups/", json=group_data)
     await set_admin(db, "test", False)
     return response.json()["id"]
-
 
 
 @pytest.mark.asyncio
@@ -65,7 +63,7 @@ async def test_join_user(client: AsyncClient, group_id: int):
     assert response.status_code == 201
 
     response = await client.post(f"/api/groups/{group_id}")
-    assert response.status_code == 403 # Already in group error
+    assert response.status_code == 403  # Already in group error
 
 
 @pytest.mark.asyncio
@@ -80,9 +78,9 @@ async def test_remove_user(client: AsyncClient, group_id: int):
 @pytest.mark.asyncio
 async def test_list_submissions(client: AsyncClient, group_id: int, db: AsyncSession):
     response = await client.get(f"/api/groups/{group_id}/submissions")
-    assert response.status_code == 403 # No permission
+    assert response.status_code == 403  # No permission
 
-    await client.post(f"/api/groups/{group_id}") # Join group
+    await client.post(f"/api/groups/{group_id}")  # Join group
 
     response = await client.get(f"/api/groups/{group_id}/submissions")
     assert response.status_code == 200
@@ -91,10 +89,11 @@ async def test_list_submissions(client: AsyncClient, group_id: int, db: AsyncSes
     response = await client.delete(f"/api/groups/{group_id}")
 
     response = await client.get(f"/api/groups/{group_id}/submissions")
-    assert response.status_code == 403 # No permission again
+    assert response.status_code == 403  # No permission again
 
-    response = await client.get(f"/api/groups/{group_id}") # Get group
-    response = await client.get(f"/api/projects/{response.json()['project_id']}") # Get project
+    response = await client.get(f"/api/groups/{group_id}")  # Get group
+    # Get project
+    response = await client.get(f"/api/projects/{response.json()['project_id']}")
     await make_instructor(response.json()["subject_id"], "test", db, client)
 
     response = await client.get(f"/api/groups/{group_id}/submissions")
@@ -105,14 +104,13 @@ async def test_list_submissions(client: AsyncClient, group_id: int, db: AsyncSes
 @pytest.mark.asyncio
 async def test_capacity_group(client: AsyncClient, group_id: int, db:  AsyncSession):
 
-    await client.post(f"/api/groups/{group_id}") # Join group
+    await client.post(f"/api/groups/{group_id}")  # Join group
 
     username = "test2"
     token = create_jwt_token(username)
     await create_user(db, UserCreate(uid=username, given_name="tester", mail="test@test.test"))
 
-    response = await client.post(f"/api/groups/{group_id}", headers={"Authorization": f"Bearer {token.token}"}) # Join group
+    # Join group
+    response = await client.post(f"/api/groups/{group_id}", headers={"Authorization": f"Bearer {token.token}"})
     assert response.status_code == 403
     assert response.json()["detail"] == MaxCapacity().detail
-
-

@@ -44,7 +44,7 @@ async def create_submission(files: list[UploadFile],
                             group: Group = Depends(retrieve_group),
                             user: User = Depends(get_authenticated_user),
                             db: AsyncSession = Depends(get_async_db)):
-    project = await retrieve_project(group.project_id,user, db)
+    project = await retrieve_project(group.project_id, user, db)
     uuid = upload_files(files, project)
     return await service.create_submission(db, uuid, group.id, group.project_id)
 

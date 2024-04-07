@@ -29,6 +29,7 @@ async def get_groups_by_user(db: AsyncSession, user_id: str) -> Sequence[Group]:
         .all()
     )
 
+
 async def create_group(db: AsyncSession, group: schemas.GroupCreate) -> Group:
     db_group = Group(**group.model_dump())
     db.add(db_group)

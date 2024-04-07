@@ -36,6 +36,7 @@ async def get_groups(groups: list[Group] = Depends(retrieve_groups_by_project)):
 async def create_group(group: GroupCreate, db: AsyncSession = Depends(get_async_db)):
     return await service.create_group(db, group)
 
+
 @router.get("/{group_id}")
 async def get_group(group: Group = Depends(retrieve_group)):
     return group
@@ -53,7 +54,7 @@ async def leave_group(
     await service.leave_group(db, group.id, user.uid)
 
 
-@router.post("/{group_id}",status_code=201,)
+@router.post("/{group_id}", status_code=201,)
 async def join_group(group: Group = Depends(join_group)) -> Group:
     return group
 

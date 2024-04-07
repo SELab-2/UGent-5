@@ -36,9 +36,11 @@ async def get_subjects(subjects: SubjectList = Depends(retrieve_subjects)):
 async def get_subject(subject: Subject = Depends(retrieve_subject)):
     return subject
 
+
 @router.get("/{subject_id}/uuid", dependencies=[Depends(teacher_or_admin_user_validation)])
 async def get_subject_uuid(uuid: str = Depends(retrieve_uuid)):
     return {"subject_uuid": uuid}
+
 
 @router.post(
     "/",
@@ -71,7 +73,7 @@ async def update_subject(
 ) -> Subject:
     update_data = subject_update.model_dump(exclude_unset=True)
     subject_updated = subject_original.model_copy(update=update_data)
-    return await service.update_subject(db,subject_updated)
+    return await service.update_subject(db, subject_updated)
 
 
 # ---------------Teachers------------
@@ -93,7 +95,7 @@ async def create_subject_instructor(
     subject_id: int, user: User = Depends(retrieve_user),
     db: AsyncSession = Depends(get_async_db)
 ):
-    if await service.is_instructor(db,subject_id,user.uid):
+    if await service.is_instructor(db, subject_id, user.uid):
         raise AlreadyInstructor()
     await service.add_instructor_to_subject(db, subject_id, user.uid)
 
@@ -127,10 +129,11 @@ async def add_student_to_subject(
     user: User = Depends(retrieve_user),
     db: AsyncSession = Depends(get_async_db)
 ) -> Subject:
-    if await service.is_student(db,subject.id,user.uid):
+    if await service.is_student(db, subject.id, user.uid):
         raise AlreadyRegistered()
     await service.create_subject_student(db, subject.id, user.uid)
     return subject
+
 
 @router.post(
     "/register",
@@ -141,7 +144,8 @@ async def register_to_subject(
         user: User = Depends(get_authenticated_user),
         db: AsyncSession = Depends(get_async_db)
 ) -> Subject:
-    return await add_student_to_subject(subject,user,db)
+    return await add_student_to_subject(subject, user, db)
+
 
 @router.delete(
     "/{subject_id}/students/{user_id}",
@@ -163,7 +167,7 @@ async def list_projects(
 ) -> ProjectList:
     projects = await get_projects_for_subject(db, subject_id)
 
-    if not await has_subject_privileges(subject_id,user,db):
-        projects.projects = list(filter(lambda x: x.is_visible,projects.projects))
+    if not await has_subject_privileges(subject_id, user, db):
+        projects.projects = list(filter(lambda x: x.is_visible, projects.projects))
 
     return projects

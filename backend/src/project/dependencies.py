@@ -16,7 +16,7 @@ async def retrieve_project(project_id: int,
                            db: AsyncSession = Depends(get_async_db)):
     project = await get_project(db, project_id)
     if not project or \
-        (not project.is_visible and not await has_subject_privileges(project.subject_id,user,db)):
+            (not project.is_visible and not await has_subject_privileges(project.subject_id, user, db)):
         raise ProjectNotFoundException()
     return project
 

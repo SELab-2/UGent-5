@@ -22,4 +22,4 @@ class Group(Base):
     project_id: Mapped[int] = mapped_column(
         ForeignKey("project.id", ondelete="CASCADE"), nullable=False
     )
-    members: Mapped[List["User"]] = relationship(secondary=StudentGroup,lazy="joined")
+    members: Mapped[List["User"]] = relationship(secondary=StudentGroup, lazy="joined")

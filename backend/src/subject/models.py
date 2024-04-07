@@ -23,6 +23,7 @@ class Subject(Base):
     __tablename__ = "subject"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    academic_year: Mapped[int] = mapped_column(nullable=False, default=datetime.now().year)
+    academic_year: Mapped[int] = mapped_column(
+        nullable=False, default=datetime.now().year)
     uuid: Mapped[str] = mapped_column(default=str(uuid4()))
     name: Mapped[str]

@@ -35,26 +35,29 @@ async def retrieve_groups_by_project(
     groups = await service.get_groups_by_project(db, project_id)
     return GroupList(groups=groups)
 
+
 async def create_group_validation(
     group: GroupCreate,
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db)
 ):
-    project = await retrieve_project(group.project_id,user,db)
-    if not await has_subject_privileges(project.subject_id,user,db):
+    project = await retrieve_project(group.project_id, user, db)
+    if not await has_subject_privileges(project.subject_id, user, db):
         raise NotAuthorized()
 
 # TODO: take enroll_date into consideration
+
+
 async def join_group(
     group: Group = Depends(retrieve_group),
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db)
 ) -> Group:
-    project = await retrieve_project(group.project_id,user,db)
+    project = await retrieve_project(group.project_id, user, db)
     if user in group.members:
         raise AlreadyInGroup()
     if len(group.members) >= project.capacity:
         raise MaxCapacity()
 
-    await service.join_group(db,group.id,user.uid)
+    await service.join_group(db, group.id, user.uid)
     return group

@@ -20,17 +20,19 @@ async def retrieve_subject(
 
     return Subject.model_validate(subject)
 
+
 async def retrieve_subject_by_uuid(
     subject_uuid: str, db: AsyncSession = Depends(get_async_db)
 ) -> Subject:
-    subject = await service.get_subject_by_uuid(db,subject_uuid)
+    subject = await service.get_subject_by_uuid(db, subject_uuid)
     if not subject:
         raise SubjectNotFound()
 
     return Subject.model_validate(subject)
 
+
 async def retrieve_uuid(subject_id: int, db: AsyncSession = Depends(get_async_db)) -> str:
-    subject = await service.get_subject(db,subject_id)
+    subject = await service.get_subject(db, subject_id)
     if not subject:
         raise SubjectNotFound()
     return subject.uuid
@@ -48,8 +50,9 @@ async def user_permission_validation(
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db),
 ):
-    if not await has_subject_privileges(subject_id,user,db):
+    if not await has_subject_privileges(subject_id, user, db):
         raise NotAuthorized()
+
 
 async def teacher_permission_validation(
     user: User = Depends(get_authenticated_user)
