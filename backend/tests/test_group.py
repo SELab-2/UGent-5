@@ -8,7 +8,12 @@ from src.auth.utils import create_jwt_token
 from src.group.exceptions import MaxCapacity
 from src.user.schemas import UserCreate
 from src.user.service import create_user, set_admin, set_teacher
-from tests.test_subject import make_instructor
+
+# Import fixtures
+from tests.test_subject import make_instructor, subject_id
+from tests.test_project import project_id
+
+
 
 subject = {"name": "test subject"}
 future_date = datetime.now(timezone.utc) + timedelta(weeks=1)
@@ -26,30 +31,13 @@ group_data = {"team_name": "test group", "project_id": 0}
 
 
 @pytest_asyncio.fixture
-async def subject_id(client: AsyncClient, db: AsyncSession) -> int:
-    """Create new subject"""
-    await set_admin(db, "test", True)
-    response = await client.post("/api/subjects/", json=subject)
-    await set_admin(db, "test", False)
-    return response.json()["id"]
-
-
-@pytest_asyncio.fixture
-async def project_id(client: AsyncClient, db: AsyncSession, subject_id: int):
-    project["subject_id"] = subject_id
-    await set_admin(db, "test", True)
-    response = await client.post("/api/projects/", json=project)
-    await set_admin(db, "test", False)
-    return response.json()["id"]
-
-
-@pytest_asyncio.fixture
 async def group_id(client: AsyncClient, db: AsyncSession, project_id: int):
     group_data["project_id"] = project_id
     await set_admin(db, "test", True)
     response = await client.post("/api/groups/", json=group_data)
     await set_admin(db, "test", False)
     return response.json()["id"]
+
 
 
 @pytest.mark.asyncio

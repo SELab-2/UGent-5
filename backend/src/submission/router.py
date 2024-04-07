@@ -70,7 +70,7 @@ async def get_files(submission: Submission = Depends(retrieve_submission)):
 
 
 @router.get("/{submission_id}/files/{path:path}", response_class=FileResponse)
-async def get_file(path: str, submission: Submission = Depends(get_submission)):
+async def get_file(path: str, submission: Submission = Depends(retrieve_submission)):
     path = os.path.join(config.CONFIG.file_path, submission.files_uuid, path)
 
     if not os.path.isfile(path):
