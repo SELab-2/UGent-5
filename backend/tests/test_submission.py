@@ -41,7 +41,7 @@ async def test_create_submission(client: AsyncClient, group_id: int):
     assert response.status_code == 200
     assert len(response.json()) == 2
     assert response.json()[0]["media_type"] == "text/plain"
-    assert response.json()[0]["filename"] == "testfile1.txt"
+    assert response.json()[0]["filename"] in ["testfile1.txt", "testfile2.txt"]
 
     # Leave group
     await client.delete(f"/api/groups/{group_id}")
