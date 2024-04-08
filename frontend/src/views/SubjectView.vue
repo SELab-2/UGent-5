@@ -11,7 +11,14 @@
         </div>
 
         <div class="v-container">
-            <h1>kak</h1>
+            <BackgroundContainer>
+                <SubjectHeaderCard
+                    :title="subject?.name"
+                    academic-year="2023-2024"
+                    :instructors="subject?.instructors"
+                >
+                </SubjectHeaderCard>
+            </BackgroundContainer>
         </div>
 
     </div>
@@ -22,6 +29,9 @@
 
 import {defineProps, toRefs,} from "vue";
 import {useSubjectDetailsQuery} from "@/queries/Subject";
+import BackgroundContainer from "@/components/BackgroundContainer.vue";
+import SubjectHeaderCard from "@/components/cards/subject/SubjectHeaderCard.vue";
+import type SubjectDetails from "@/models/SubjectDetails";
 
 const props = defineProps(['subjectId'])
 
@@ -32,7 +42,7 @@ const {
     error,
     isLoading,
     isError
-} = useSubjectDetailsQuery(subjectId);
+} = useSubjectDetailsQuery(subjectId) as SubjectDetails;
 
 </script>
 ;
