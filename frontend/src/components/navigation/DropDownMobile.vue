@@ -7,7 +7,7 @@
         </template>
         <v-list class="items">
             <v-list-item>
-                <LogoutButton />
+                <LogoutButton v-if="isLoggedIn" />
             </v-list-item>
             <v-list-item>
                 <LocaleSwitcher />
@@ -19,6 +19,11 @@
 <script setup lang="ts">
 import LocaleSwitcher from "@/components/LocaleSwitcher.vue";
 import LogoutButton from "@/components/buttons/LogoutButton.vue";
+
+import { useAuthStore } from "@/stores/auth-store";
+import { storeToRefs } from "pinia";
+
+const { isLoggedIn } = storeToRefs(useAuthStore());
 </script>
 
 <style scoped>
