@@ -11,7 +11,7 @@
         </div>
 
         <div class="v-container">
-            <h1>{{ subject?.name }}</h1>
+            <h1>kak</h1>
         </div>
 
     </div>
@@ -20,9 +20,8 @@
 
 <script setup lang="ts">
 
-import {computed, defineProps, toRefs} from "vue";
+import {computed, defineProps, ref, toRefs, watchEffect} from "vue";
 import {
-    useSubjectDetailsQuery,
     useSubjectInstructorsQuery,
     useSubjectProjectsQuery,
     useSubjectQuery,
@@ -33,46 +32,21 @@ const props = defineProps(['subjectId'])
 
 const {subjectId} = toRefs(props);
 
-const {
-    data: subject,
-    error: subjectErr,
-    isLoading: isSubjectLoading,
-    isError: isSubjectErr
-} = useSubjectQuery(subjectId)
 
 const {
     data: instructorsData,
     error: instructorsErr,
     isLoading: isInstructorsLoading,
     isError: isInstructorsErr
-} = useSubjectInstructorsQuery(subjectId)
-
-const {
-    data: studentsData,
-    error: studentsErr,
-    isLoading: isStudentsLoading,
-    isError: isStudentsErr
-} = useSubjectStudentsQuery(subjectId)
-
-const {
-    data: projectsData,
-    error: projectsErr,
-    isLoading: isProjectsLoading,
-    isError: isProjectsErr
-} = useSubjectProjectsQuery(subjectId)
+} = useSubjectInstructorsQuery(subjectId);
 
 
-const isLoading = computed(() =>
-    isSubjectLoading || isInstructorsLoading || isStudentsLoading || isProjectsLoading
-)
 
-const isError = computed(() =>
-    isSubjectErr || isInstructorsErr || isStudentsErr || isProjectsErr
-)
+// Initialize reactive variables with default values
+const isLoading = ref<boolean>(false);
+const isError = ref<boolean>(false);
+const error = ref<string>('');
 
-const error = computed(() =>
-    subjectErr || instructorsErr || studentsErr || projectsErr
-)
 
 
 </script>
