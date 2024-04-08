@@ -32,6 +32,8 @@ export default {
         settings: "Instellingen",
         help: "Help",
         admin: "Beheerderspaneel",
+        login: "Inloggen",
+        about: "Meer Info",
     },
     homescreen: {
         deadlines: "Project deadlines",

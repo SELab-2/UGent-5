@@ -1,4 +1,5 @@
 import { useAuthStore } from "@/stores/auth-store";
+import { storeToRefs } from "pinia";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -14,9 +15,13 @@ export async function authorized_fetch<T>(
     requestOptions: RequestInit,
     omitContentType: boolean = false
 ): Promise<T> {
-    const { token } = useAuthStore();
+    const { token, isLoggedIn } = storeToRefs(useAuthStore());
+    const { refresh } = useAuthStore();
+    if (!isLoggedIn) {
+        throw new Error("User is not logged in");
+    }
     const { "Content-Type": contentType, ...strippedHeaders } = {
-        Authorization: `${token?.token_type} ${token?.token}`,
+        Authorization: `${token.value!.token_type} ${token.value!.token}`,
         "Content-Type": "application/json",
         ...requestOptions.headers,
     };
@@ -29,7 +34,10 @@ export async function authorized_fetch<T>(
         ...requestOptions,
         headers: headers,
     });
-    if (!response.ok) {
+    if (response.status === 401) {
+        await refresh();
+        throw new Error("Not authenticated");
+    } else if (!response.ok) {
         throw new Error(response.statusText);
     }
     return response.json();
