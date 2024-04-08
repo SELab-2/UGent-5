@@ -34,7 +34,7 @@ export default {
         admin: "Admin panel",
     },
     homescreen: {
-        deadlines: "My deadlines",
+        deadlines: "Project deadlines",
         courses: "My courses",
         announcements: "Announcements",
     },

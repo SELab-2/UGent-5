@@ -25,6 +25,16 @@ const vuetify = createVuetify({
     icons: {
         defaultSet: "mdi",
     },
+    display: {
+        mobileBreakpoint: "lg",
+        thresholds: {
+            xs: 0,
+            sm: 340,
+            md: 770,
+            lg: 1080,
+            xl: 1280,
+        },
+    },
     theme: {
         defaultTheme: "lightTheme",
         themes: {
