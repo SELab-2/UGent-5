@@ -8,7 +8,7 @@
             <DropDownMobile />
         </div>
         <div class="leftContent" v-else>
-            <LogoutButton class="logout" v-if="isLoggedIn"/>
+            <LogoutButton class="logout" v-if="isLoggedIn" />
             <LocaleSwitcher />
         </div>
     </v-app-bar>

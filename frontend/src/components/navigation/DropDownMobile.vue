@@ -7,7 +7,7 @@
         </template>
         <v-list class="items">
             <v-list-item>
-                <LogoutButton v-if="isLoggedIn"/>
+                <LogoutButton v-if="isLoggedIn" />
             </v-list-item>
             <v-list-item>
                 <LocaleSwitcher />
