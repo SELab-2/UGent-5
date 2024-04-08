@@ -34,11 +34,21 @@ const {subjectId} = toRefs(props);
 
 
 const {
-    data: instructorsData,
+    data: subject,
+    error: subjectErr,
+    isLoading: isSubjectLoading,
+    isError: isSubjectErr
+} = useSubjectQuery(subjectId);
+
+
+const {
+    data: instructors,
     error: instructorsErr,
     isLoading: isInstructorsLoading,
     isError: isInstructorsErr
 } = useSubjectInstructorsQuery(subjectId);
+
+
 
 
 

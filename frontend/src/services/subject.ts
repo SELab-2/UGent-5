@@ -8,9 +8,7 @@ export async function getSubject(subjectId: number): Promise<Subject> {
 }
 
 export async function getSubjectInstructors(subjectId: number): Promise<User[]> {
-    return authorized_fetch<{ instructors: User[] }>(`/api/subjects/${subjectId}/instructors`, {method: "GET"}).then(
-        (data) => data.instructors
-    );
+    return authorized_fetch(`/api/subjects/${subjectId}/instructors`, {method: "GET"});
 }
 
 export async function getSubjectStudents(subjectId: number): Promise<User[]> {
@@ -18,7 +16,8 @@ export async function getSubjectStudents(subjectId: number): Promise<User[]> {
 }
 
 export async function getSubjectProjects(subjectId: number): Promise<Project[]> {
-    return authorized_fetch(`/api/subjects/${subjectId}/projects`, {method: "GET"});
+    const data = await authorized_fetch<{ projects: Project[]}>(`/api/subjects/${subjectId}/projects`, {method: "GET"});
+    return data.projects;
 }
 
 export async function getSubjects(): Promise<Subject[]> {
