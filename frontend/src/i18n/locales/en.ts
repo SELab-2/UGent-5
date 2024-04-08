@@ -40,4 +40,7 @@ export default {
         courses: "My courses",
         announcements: "Announcements",
     },
+    subject: {
+        academy_year: "Academic year",
+    }
 };

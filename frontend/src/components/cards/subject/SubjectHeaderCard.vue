@@ -11,7 +11,7 @@
                     <v-card-text>
                         <v-row>
                             <v-col>
-                                <HeaderSubtitleButton :title="`academic year ${academicYear}`" :clickable="false"/>
+                                <HeaderSubtitleButton :title="$t('subject.academy_year') + ' ' + academicYear" :clickable="false"/>
                             </v-col>
                         </v-row>
                         <v-row>

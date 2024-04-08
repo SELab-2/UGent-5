@@ -40,4 +40,8 @@ export default {
         courses: "Mijn vakken",
         announcements: "Meldingen",
     },
+
+    subject: {
+        academy_year: "Academiejaar",
+    },
 };
