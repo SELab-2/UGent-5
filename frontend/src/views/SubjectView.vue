@@ -16,6 +16,7 @@
                     :title="subject?.name"
                     academic-year="2023-2024"
                     :instructors="subject?.instructors"
+                    :isLoading="isLoading"
                 >
                 </SubjectHeaderCard>
             </BackgroundContainer>
