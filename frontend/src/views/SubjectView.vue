@@ -1,45 +1,17 @@
 <template>
     <div class="v-container">
         <router-link to="/subjects">Back</router-link>
-        <div v-if="!loading" class="v-container rounded bg-white pa-5 align-center">
-            <div class="v-container">
-                <h1>{{ subject.name }}</h1>
-                <h3>Academy year...</h3>
-                <div>
-                    <p
-                        v-if="subject.instructors.length === 0"
-                    >No teachers available</p>
-                    <p
-                        v-else
-                        v-for="teacher in subject.instructors"
-                        :key="teacher.uid"
-                    >{{ teacher.given_name }}</p>
-                </div>
-            </div>
-            <div class="v-container">
-                <h2>Projects</h2>
-                <ul>
-                    <li
-                        v-for="project in subject.projects"
-                        :key="project.id"
-                    >
-                        <div class="v-container">
-                            <h2>{{project.name}}</h2>
-                            <p>{{project.deadline}}</p>
-                            <router-link :to="`/projects/${project.id}}`" >To Project</router-link>
-                        </div>
-                    </li>
-                </ul>
 
-            </div>
+        <div v-if="isLoading" class="v-container">
+            <p>Loading...</p>
         </div>
 
-
-        <div v-else-if="error" class="v-container">
+        <div v-else-if="isError" class="v-container">
             <p>Error: {{ error }}</p>
         </div>
-        <div v-else class="v-container">
-            <p>Loading...</p>
+
+        <div class="v-container">
+            <h1>{{ subject?.name }}</h1>
         </div>
 
     </div>
@@ -48,94 +20,63 @@
 
 <script setup lang="ts">
 
-import {defineProps, ref} from "vue";
-import {useAuthStore} from "@/stores/auth-store";
-import {onMounted, reactive} from "vue";
-import type User from "@/models/User";
-import type Project from "@/models/Project";
+import {computed, defineProps, toRefs} from "vue";
+import {
+    useSubjectDetailsQuery,
+    useSubjectInstructorsQuery,
+    useSubjectProjectsQuery,
+    useSubjectQuery,
+    useSubjectStudentsQuery
+} from "@/queries/Subject";
 
 const props = defineProps(['subjectId'])
 
+const {subjectId} = toRefs(props);
+
+const {
+    data: subject,
+    error: subjectErr,
+    isLoading: isSubjectLoading,
+    isError: isSubjectErr
+} = useSubjectQuery(subjectId)
+
+const {
+    data: instructorsData,
+    error: instructorsErr,
+    isLoading: isInstructorsLoading,
+    isError: isInstructorsErr
+} = useSubjectInstructorsQuery(subjectId)
+
+const {
+    data: studentsData,
+    error: studentsErr,
+    isLoading: isStudentsLoading,
+    isError: isStudentsErr
+} = useSubjectStudentsQuery(subjectId)
+
+const {
+    data: projectsData,
+    error: projectsErr,
+    isLoading: isProjectsLoading,
+    isError: isProjectsErr
+} = useSubjectProjectsQuery(subjectId)
 
 
-const subject = reactive({
-    id: props.subjectId as Number,
-    name: String,
-    instructors: [] as User[],
-    students: [] as User[],
-    projects: [] as Project[]
-})
-const apiUrl = import.meta.env.VITE_API_URL;
-const {token, logout} = useAuthStore();
+const isLoading = computed(() =>
+    isSubjectLoading || isInstructorsLoading || isStudentsLoading || isProjectsLoading
+)
 
-const loading = ref(true);
-const error = ref("");
+const isError = computed(() =>
+    isSubjectErr || isInstructorsErr || isStudentsErr || isProjectsErr
+)
 
-onMounted(async () => {
-    await fetchSubject();
-});
-
-async function fetchSubject() {
-    if (!token) {
-        return;
-    }
-    try {
-        loading.value = true
-        const [name, instructors, students, projects] = await Promise.all([
-            fetchSubjectName(),
-            fetchSubjectInstructors(),
-            fetchSubjectStudents(),
-            fetchSubjectProjects()
-        ]);
-
-        subject.name = name;
-        subject.instructors = instructors;
-        subject.students = students;
-        subject.projects = projects;
-        loading.value = false
-    } catch (err) {
-        error.value = err.message || "Unknown Error"
-        console.error('Error fetching subjects:', err);
-        loading.value = false
-    }
-}
-
-async function fetchSubjectName() {
-    const response = await fetch(`${apiUrl}/api/subjects/${props.subjectId}`, {
-        headers: {Authorization: `${token?.token_type} ${token?.token}`},
-    });
-
-    const data = await response.json()
-    return data?.name
-}
-
-async function fetchSubjectInstructors() {
-    const response = await fetch(`${apiUrl}/api/subjects/${props.subjectId}/instructors`, {
-        headers: {Authorization: `${token?.token_type} ${token?.token}`},
-    });
-
-    return await response.json()
-}
-
-async function fetchSubjectStudents() {
-    const response = await fetch(`${apiUrl}/api/subjects/${props.subjectId}/students`, {
-        headers: {Authorization: `${token?.token_type} ${token?.token}`},
-    });
-
-    return await response.json()
-}
-
-async function fetchSubjectProjects() {
-    const response = await fetch(`${apiUrl}/api/subjects/${props.subjectId}/projects`, {
-        headers: {Authorization: `${token?.token_type} ${token?.token}`},
-    });
-    const data = await response.json()
-    return data.projects
-}
+const error = computed(() =>
+    subjectErr || instructorsErr || studentsErr || projectsErr
+)
 
 
 </script>
-
+;
 <style scoped>
 
 </style>
