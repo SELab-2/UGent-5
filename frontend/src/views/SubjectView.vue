@@ -20,44 +20,19 @@
 
 <script setup lang="ts">
 
-import {computed, defineProps, ref, toRefs, watchEffect} from "vue";
-import {
-    useSubjectInstructorsQuery,
-    useSubjectProjectsQuery,
-    useSubjectQuery,
-    useSubjectStudentsQuery
-} from "@/queries/Subject";
+import {defineProps, toRefs,} from "vue";
+import {useSubjectDetailsQuery} from "@/queries/Subject";
 
 const props = defineProps(['subjectId'])
 
 const {subjectId} = toRefs(props);
 
-
 const {
     data: subject,
-    error: subjectErr,
-    isLoading: isSubjectLoading,
-    isError: isSubjectErr
-} = useSubjectQuery(subjectId);
-
-
-const {
-    data: instructors,
-    error: instructorsErr,
-    isLoading: isInstructorsLoading,
-    isError: isInstructorsErr
-} = useSubjectInstructorsQuery(subjectId);
-
-
-
-
-
-// Initialize reactive variables with default values
-const isLoading = ref<boolean>(false);
-const isError = ref<boolean>(false);
-const error = ref<string>('');
-
-
+    error,
+    isLoading,
+    isError
+} = useSubjectDetailsQuery(subjectId);
 
 </script>
 ;
