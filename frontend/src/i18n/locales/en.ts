@@ -42,5 +42,8 @@ export default {
     },
     subject: {
         academy_year: "Academic year",
+        projects: "Projects",
+        announcements: "Announcements",
+        groups: "Groups",
     }
 };

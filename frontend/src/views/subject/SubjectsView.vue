@@ -35,7 +35,7 @@
 
 import {useSubjectsQuery} from "@/queries/Subject";
 
-const {data, error, isLoading, isError} = useSubjectsQuery()
+const {data, error, isLoading, isError} = useSubjectsQuery();
 
 </script>
 

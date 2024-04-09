@@ -60,13 +60,13 @@ const router = createRouter({
         {
             path: "/subjects",
             name: "subjects",
-            component: () => import("../views/SubjectsView.vue"),
+            component: () => import("../views/subject/SubjectsView.vue"),
             children: []
         },
         {
             path: "/subjects/:subjectId",
             name: "subject",
-            component: () => import("../views/SubjectView.vue"),
+            component: () => import("../views/subject/SubjectView.vue"),
             props: true
         },
         {

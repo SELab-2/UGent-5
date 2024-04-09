@@ -43,5 +43,8 @@ export default {
 
     subject: {
         academy_year: "Academiejaar",
+        projects: "Projecten",
+        announcements: "Meldingen",
+        groups: "Groepen",
     },
 };
