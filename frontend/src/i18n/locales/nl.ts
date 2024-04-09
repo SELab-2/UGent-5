@@ -46,5 +46,10 @@ export default {
         projects: "Projecten",
         announcements: "Meldingen",
         groups: "Groepen",
+        projectsPage: {
+            all: "Alle",
+            active: "Actief",
+            completed: "Voltooid",
+        }
     },
 };

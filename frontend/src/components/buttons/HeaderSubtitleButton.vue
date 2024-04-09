@@ -1,8 +1,9 @@
 <template>
     <v-btn
+        size="small"
         variant="outlined"
         rounded="xl"
-        :class="[!clickable ? 'not-clickable' : '', 'header-button']"
+        :class="!clickable ? 'not-clickable' : ''"
         color="#9FB6FF"
     >
         <span class="button-text">{{ title }}</span>
@@ -12,7 +13,7 @@
 <script setup lang="ts">
 import {defineProps} from 'vue';
 
-const props = defineProps<{
+defineProps<{
     title: string,
     clickable: boolean,
 }>();
@@ -34,7 +35,4 @@ const props = defineProps<{
     letter-spacing: -0.5px;
 }
 
-.header-button {
-    margin-bottom: -10px;
-}
 </style>

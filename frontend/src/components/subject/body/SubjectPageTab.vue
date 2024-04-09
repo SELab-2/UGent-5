@@ -29,9 +29,9 @@
 </template>
 
 <script setup lang="ts">
-import SubjectProjectsPage from "@/components/subject/body/SubjectProjectsPage.vue";
-import SubjectAnnouncementsPage from "@/components/subject/body/SubjectAnnouncementsPage.vue";
-import SubjectGroupsPage from "@/components/subject/body/SubjectGroupsPage.vue";
+import SubjectProjectsPage from "@/components/subject/body/projects/SubjectProjectsPage.vue";
+import SubjectAnnouncementsPage from "@/components/subject/body/announcements/SubjectAnnouncementsPage.vue";
+import SubjectGroupsPage from "@/components/subject/body/groups/SubjectGroupsPage.vue";
 
 import {ref} from "vue";
 import type Project from "@/models/Project";
@@ -65,6 +65,7 @@ const tab = ref(0);
     background-color: white;
     padding-top: 16px;
     height: 30px;
+    margin-bottom: 20px;
 }
 
 </style>

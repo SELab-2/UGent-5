@@ -45,5 +45,11 @@ export default {
         projects: "Projects",
         announcements: "Announcements",
         groups: "Groups",
+        projectsPage: {
+            all: "All",
+            active: "Active",
+            completed: "Completed",
+        }
+
     }
 };
