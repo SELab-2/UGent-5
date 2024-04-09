@@ -1,14 +1,17 @@
 <template>
-    <v-tabs v-model="tab" align-tabs="center" grow slider-color="#003EFF">
-        <v-tab
-            v-for="(item, index) in items"
-            :key="index"
-            :value="index"
-            class="page-tab"
+    <div class="tab-container">
+        <v-tabs v-model="tab" align-tabs="center" grow slider-color="#3F3BE1">
+            <v-tab
+                height="25px"
+                v-for="(item, index) in items"
+                :key="index"
+                :value="index"
+                :class="{'page-tab': true, 'active': index === tab}"
 
-        >{{ $t(`subject.${item}`) }}
-        </v-tab>
-    </v-tabs>
+            >{{ $t(`subject.${item}`) }}
+            </v-tab>
+        </v-tabs>
+    </div>
 
     <v-window v-model="tab">
         <v-window-item :value="0">
@@ -44,14 +47,24 @@ const tab = ref(0);
 
 <style scoped>
 
+.active {
+    color: #003EFF;
+}
+
 .page-tab {
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 500;
     font-family: 'Poppins', sans-serif;
     text-transform: capitalize;
     background-color: white;
-
 }
 
+.tab-container {
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
+    background-color: white;
+    padding-top: 16px;
+    height: 30px;
+}
 
 </style>

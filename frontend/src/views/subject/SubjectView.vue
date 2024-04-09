@@ -25,7 +25,7 @@
                 </v-row>
                 <v-row>
                     <v-col>
-                        <SubjectBodyCard :projects="subject?.projects ?? []"></SubjectBodyCard>
+                        <SubjectBody :projects="subject?.projects ?? []"></SubjectBody>
                     </v-col>
                 </v-row>
 
@@ -44,7 +44,7 @@ import {useSubjectDetailsQuery} from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import type SubjectDetails from "@/models/SubjectDetails";
 import SubjectHeaderContainer from "@/components/subject/header/SubjectHeaderContainer.vue";
-import SubjectBodyCard from "@/components/subject/body/SubjectBodyCard.vue";
+import SubjectBody from "@/components/subject/body/SubjectBody.vue";
 
 const props = defineProps(['subjectId'])
 
