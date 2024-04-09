@@ -25,7 +25,7 @@
                 </v-row>
                 <v-row>
                     <v-col>
-                        <SubjectBodyCard/>
+                        <SubjectBodyCard :projects="subject?.projects ?? []"></SubjectBodyCard>
                     </v-col>
                 </v-row>
 

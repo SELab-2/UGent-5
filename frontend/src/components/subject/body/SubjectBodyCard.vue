@@ -1,7 +1,7 @@
 <template>
     <v-card variant="text" class="page-card">
         <v-card-title>
-            <SubjectPageTab/>
+            <SubjectPageTab :projects="projects"></SubjectPageTab>
         </v-card-title>
     </v-card>
 </template>
@@ -9,6 +9,11 @@
 <script setup lang="ts">
 
 import SubjectPageTab from "@/components/subject/body/SubjectPageTab.vue";
+import type Project from "@/models/Project";
+
+defineProps<{
+    projects: Project[] | undefined;
+}>();
 </script>
 
 <style scoped>
