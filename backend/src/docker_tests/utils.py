@@ -3,8 +3,8 @@ import shutil
 
 import docker
 
-from src.project.utils import get_tests_path
-from src.submission.utils import get_submission_path, get_artifacts_path, get_feedback_path
+from src.project.utils import tests_path
+from src.submission.utils import submission_path, artifacts_path, feedback_path
 
 
 def touch(*paths: str):
@@ -19,11 +19,11 @@ def read_feedback_file(path: str) -> list[str]:
 
 
 def launch_docker_tests(submission_uuid: str, tests_uuid: str):
-    artifact_dir = get_artifacts_path(submission_uuid)
+    artifact_dir = artifacts_path(submission_uuid)
     os.makedirs(artifact_dir)
 
     # create files for test feedback
-    feedback_dir = get_feedback_path(submission_uuid)
+    feedback_dir = feedback_path(submission_uuid)
     os.makedirs(feedback_dir)
     touch(os.path.join(feedback_dir, "correct"), os.path.join(feedback_dir, "failed"))
 
@@ -32,10 +32,10 @@ def launch_docker_tests(submission_uuid: str, tests_uuid: str):
     # TODO: zorgen dat tests niet gemount worden als custom docker image gemaakt wordt
     run_docker_tests(
         image_tag,
-        get_submission_path(submission_uuid),
+        submission_path(submission_uuid),
         artifact_dir,
         feedback_dir,
-        get_tests_path(tests_uuid),
+        tests_path(tests_uuid),
     )
 
     print("correct: ", read_feedback_file(os.path.join(feedback_dir, "correct")))
@@ -47,7 +47,7 @@ def launch_docker_tests(submission_uuid: str, tests_uuid: str):
 
 def build_image(tests_uuid: str):
     client = docker.from_env()
-    tests_dir = get_tests_path(tests_uuid)
+    tests_dir = tests_path(tests_uuid)
 
     # build custom docker image if dockerfile is present in tests directory
     if os.path.isfile(os.path.join(tests_dir, "Dockerfile")):

@@ -48,15 +48,29 @@ async def group_id(client: AsyncClient, db: AsyncSession, project_id: int):
 
 
 @pytest.mark.asyncio
-async def test_create_submission(client: AsyncClient, db: AsyncSession, group_id: int, project_id: int):
-    with open("submission_files/correct.py", "rb") as f:
+async def test_no_docker_tests(client: AsyncClient, group_id: int, project_id: int):
+    with open("docker_test_files/submission_files/correct.py", "rb") as f:
         response = await client.post("/api/submissions/",
-                                     files={"files": ("correct.py", f, "text/x-python-script")},
+                                     files={"files": ("correct.py", f)},
                                      params={"group_id": group_id},
                                      )
 
     assert response.status_code == 201
     assert response.json()["group_id"] == group_id
     assert response.json()["project_id"] == project_id
-    assert response.json()["status"] == [Status.InProgress.value[0]]
+    assert response.json()["status"] == Status.Accepted
     assert response.json()["testresults"] == []
+
+    submission_id = response.json()["id"]
+    assert submission_id != ""
+
+    artifact_response = await client.get(f"/api/submissions/{submission_id}/artifacts")
+
+    assert artifact_response.json() == []  # no artifacts generated because no tests were run
+
+
+@pytest.mark.asyncio
+async def test_default_tests_success(client: AsyncClient, group_id: int, project_id: int):
+    files = [('run', open('docker_test_files/test_files/run', 'rb')),
+             ('test.py', open('docker_test_files/test_files/test.py', 'rb'))]
+    await client.patch(f"/api/projects/{project_id}", files={"test_files": files})

@@ -7,10 +7,10 @@ import enum
 from src.database import Base
 
 
-class Status(enum.Enum):
+class Status(enum.IntEnum):
     InProgress = 1,
     Accepted = 2,
-    Denied = 3
+    Rejected = 3
 
 
 class Submission(Base):

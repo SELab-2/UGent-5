@@ -12,21 +12,21 @@ from src.project.schemas import Project
 from src.submission.exceptions import UnMetRequirements
 
 
-def get_submission_path(uuid: str, *paths: str) -> str:
+def submission_path(uuid: str, *paths: str) -> str:
     return str(os.path.join(config.CONFIG.file_path, "submissions", uuid, "submission", *paths))
 
 
-def get_artifacts_path(uuid: str, *paths) -> str:
+def artifacts_path(uuid: str, *paths) -> str:
     return str(os.path.join(config.CONFIG.file_path, "submissions", uuid, "artifacts", *paths))
 
 
-def get_feedback_path(uuid: str, *paths) -> str:
+def feedback_path(uuid: str, *paths) -> str:
     return str(os.path.join(config.CONFIG.file_path, "submissions", uuid, "feedback", *paths))
 
 
 def upload_files(files: list[UploadFile], project: Project) -> str:
     uuid = str(uuid4())
-    files_path = get_submission_path(uuid)
+    files_path = submission_path(uuid)
     os.makedirs(files_path)
 
     filelist = []

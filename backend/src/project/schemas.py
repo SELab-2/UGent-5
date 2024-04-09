@@ -50,6 +50,7 @@ class ProjectUpdate(BaseModel):
     deadline: Optional[datetime] = None
     description: Optional[str] = None
     requirements: Optional[List[Requirement]] = None
+    test_files: List[UploadFile] = None
 
     @field_validator("deadline")
     def validate_deadline(cls, value: datetime) -> datetime:

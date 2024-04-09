@@ -13,10 +13,11 @@ from src.submission.dependencies import (
     retrieve_submission,
 )
 from src.submission.exceptions import FileNotFound
-from src.submission.utils import upload_files, get_files_from_dir, get_submission_path, get_artifacts_path
+from src.submission.utils import upload_files, get_files_from_dir, submission_path, artifacts_path
 from src.user.dependencies import admin_user_validation
 
 from . import service
+from .models import Status
 from .schemas import File, Submission
 from ..docker_tests.utils import launch_docker_tests
 
@@ -45,9 +46,12 @@ async def create_submission(files: list[UploadFile],
                             db: AsyncSession = Depends(get_async_db)):
     project = await retrieve_project(group.project_id, db)
     submission_uuid = upload_files(files, project)
-    if project.test_files_uuid is not None:
+    if project.test_files_uuid is not None:  # run docker tests if there are any
+        status = Status.InProgress
         background_tasks.add_task(launch_docker_tests, submission_uuid, project.test_files_uuid)
-    return await service.create_submission(db, submission_uuid, group.id, group.project_id)
+    else:
+        status = Status.Accepted
+    return await service.create_submission(db, submission_uuid, status, group.id, group.project_id)
 
 
 @router.delete("/{submission_id}",
@@ -59,13 +63,13 @@ async def delete_submision(submission_id: int, db: AsyncSession = Depends(get_as
 
 @router.get("/{submission_id}/files", response_model=list[File])
 async def get_files(submission: Submission = Depends(retrieve_submission)):
-    submission_dir = get_submission_path(submission.files_uuid)
+    submission_dir = submission_path(submission.files_uuid)
     return get_files_from_dir(submission_dir)
 
 
 @router.get("/{submission_id}/files/{path:path}", response_class=FileResponse)
 async def get_file(path: str, submission: Submission = Depends(get_submission)):
-    path = get_submission_path(submission.files_uuid, path)
+    path = submission_path(submission.files_uuid, path)
 
     if not os.path.isfile(path):
         raise FileNotFound
@@ -75,13 +79,13 @@ async def get_file(path: str, submission: Submission = Depends(get_submission)):
 
 @router.get("/{submission_id}/artifacts", response_model=list[File])
 async def get_artifacts(submission: Submission = Depends(retrieve_submission)):
-    artifact_dir = get_artifacts_path(submission.files_uuid)
+    artifact_dir = artifacts_path(submission.files_uuid)
     return get_files_from_dir(artifact_dir)
 
 
 @router.get("/{submission_id}/artifacts/{path:path}", response_class=FileResponse)
 async def get_artifact(path: str, submission: Submission = Depends(get_submission)):
-    path = get_artifacts_path(submission.files_uuid, path)
+    path = artifacts_path(submission.files_uuid, path)
 
     if not os.path.isfile(path):
         raise FileNotFound

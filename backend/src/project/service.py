@@ -13,7 +13,7 @@ from .utils import upload_test_files
 
 
 async def create_project(db: AsyncSession, project_in: ProjectCreate) -> Project:
-    test_files_uuid = upload_test_files(project_in.test_files)  # will be None if no files are included
+    test_files_uuid = upload_test_files(project_in.test_files, None)  # will be None if no files are included
     new_project = Project(
         name=project_in.name,
         deadline=project_in.deadline,
@@ -79,6 +79,8 @@ async def update_project(
     if project_update.requirements is not None:
         project.requirements = [Requirement(**r.model_dump())
                                 for r in project_update.requirements]
+    if project_update.test_files is not None:
+        project.test_files_uuid = upload_test_files(project_update.test_files, project.test_files_uuid)
 
     await db.commit()
     await db.refresh(project)

@@ -7,18 +7,28 @@ from fastapi import UploadFile
 from src import config
 
 
-def get_tests_path(uuid: str, *paths) -> str:
+def tests_path(uuid: str, *paths) -> str:
     return str(os.path.join(config.CONFIG.file_path, "projects", uuid, *paths))
 
 
-def upload_test_files(files: list[UploadFile]) -> str | None:
-    if not len(files):
-        return None
+def upload_test_files(files: list[UploadFile], uuid: str | None) -> str | None:
+    if uuid is None:
+        uuid = str(uuid4())  # there were no tests before this
+    else:
+        files_path = tests_path(uuid)
+        shutil.rmtree(files_path)  # remove present files
 
-    uuid = str(uuid4())
-    files_path = get_tests_path(uuid)
+    if len(files) == 0:
+        return None  # no tests anymore for this project
+
+    files_path = tests_path(uuid)
     os.makedirs(files_path)
 
+    write_and_unzip_files(files, files_path)
+    return uuid
+
+
+def write_and_unzip_files(files: list[UploadFile], files_path: str):
     for upload_file in files:
         if upload_file.filename and upload_file.content_type:
             path = os.path.join(files_path, upload_file.filename)
@@ -27,5 +37,3 @@ def upload_test_files(files: list[UploadFile]) -> str | None:
 
             if upload_file.content_type == "application/zip":
                 shutil.unpack_archive(path, files_path)
-
-    return uuid

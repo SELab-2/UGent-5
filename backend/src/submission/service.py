@@ -3,6 +3,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from . import models
+from .exceptions import SubmissionNotFound
+from .models import Status, Submission
 
 
 async def get_submissions(db: AsyncSession) -> Sequence[models.Submission]:
@@ -24,16 +26,17 @@ async def get_submissions_by_group(db: AsyncSession,
 
 async def get_submission(db: AsyncSession, submission_id: int) -> models.Submission:
     return (await db.execute(select(models.Submission)
-                             .filter_by(id=submission_id))).scalar_one_or_none()
+                             .filter_by(id=submission_id))).unique().scalar_one_or_none()
 
 
 async def create_submission(db: AsyncSession,
                             uuid: str,
+                            status: Status,
                             group_id: int,
                             subject_id: int
                             ) -> models.Submission:
     db_submission = models.Submission(
-        group_id=group_id, project_id=subject_id, files_uuid=uuid)
+        group_id=group_id, status=status, project_id=subject_id, files_uuid=uuid)
     db.add(db_submission)
     await db.commit()
     await db.refresh(db_submission)
@@ -45,3 +48,18 @@ async def delete_submission(db: AsyncSession, submission_id: int):
                                    filter_by(id=submission_id))).scalar()
     await db.delete(submission)
     await db.commit()
+
+
+async def update_submission_status(
+    db: AsyncSession, submission_id: int, status: Status
+) -> Submission:
+    result = await db.execute(select(Submission).filter_by(id=submission_id))
+    submission = result.scalars().first()
+    if not submission:
+        raise SubmissionNotFound()
+
+    submission.status = status
+
+    await db.commit()
+    await db.refresh(submission)
+    return submission

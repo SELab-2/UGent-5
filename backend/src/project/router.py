@@ -38,8 +38,7 @@ router = APIRouter(
 async def create_project(
     project_in: ProjectCreate, db: AsyncSession = Depends(get_async_db)
 ):
-    project = await service.create_project(db, project_in)
-    return project
+    return await service.create_project(db, project_in)
 
 
 @router.get("/{project_id}", response_model=Project)
