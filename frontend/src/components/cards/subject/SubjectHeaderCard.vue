@@ -1,5 +1,5 @@
 <template>
-    <v-card variant="text" class="title-card" width="500px">
+    <v-card variant="text" class="title-card" max-width="500px" height="200">
         <v-skeleton-loader :loading="isLoading" type="card" color="white">
             <v-row>
                 <v-col>
@@ -32,9 +32,9 @@ import type User from "@/models/User";
 import HeaderSubtitleButton from "@/components/buttons/HeaderSubtitleButton.vue";
 
 defineProps<{
-    title: string,
+    title: string | undefined,
     academicYear: string,
-    instructors: User[],
+    instructors: User[] | undefined,
     isLoading: boolean,
 }>();
 

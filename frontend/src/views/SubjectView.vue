@@ -12,13 +12,13 @@
 
         <div class="v-container">
             <BackgroundContainer>
-                <SubjectHeaderCard
+                <SubjectHeaderContainer
                     :title="subject?.name"
-                    academic-year="2023-2024"
                     :instructors="subject?.instructors"
-                    :isLoading="isLoading"
-                >
-                </SubjectHeaderCard>
+                    academic-year="2023-2024"
+                    :is-loading="isLoading"
+                    image-path="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                ></SubjectHeaderContainer>
             </BackgroundContainer>
         </div>
 
@@ -33,6 +33,7 @@ import {useSubjectDetailsQuery} from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectHeaderCard from "@/components/cards/subject/SubjectHeaderCard.vue";
 import type SubjectDetails from "@/models/SubjectDetails";
+import SubjectHeaderContainer from "@/components/subject/SubjectHeaderContainer.vue";
 
 const props = defineProps(['subjectId'])
 
