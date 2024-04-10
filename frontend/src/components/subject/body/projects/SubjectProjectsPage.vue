@@ -9,7 +9,7 @@
             ></SubjectProjectsList>
         </v-col>
         <v-col cols="7">
-            <v-window v-model="selectedTab">
+            <v-window v-model="selectedTab" direction="vertical">
                 <v-window-item v-for="(project, index) in filteredProjects" :key="index" :value="index">
                     <SubjectProjectPage
                         :selected-tab="selectedTab"
@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import SubjectProjectsList from "@/components/subject/body/projects/SubjectProjectsList.vue";
+import SubjectProjectsList from "@/components/subject/body/projects/list/SubjectProjectsList.vue";
 
 import type Project from "@/models/Project";
 import {FilterOptions} from "@/models/Project";

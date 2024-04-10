@@ -55,6 +55,7 @@ defineProps<{
 .title {
     font-size: 32px;
     letter-spacing: -0.5px;
+    text-transform: capitalize;
     font-weight: bold;
     margin-bottom: 12px;
     font-family: 'Poppins', sans-serif;
