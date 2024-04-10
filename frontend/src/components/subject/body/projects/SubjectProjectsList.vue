@@ -8,21 +8,21 @@
                 <HeaderSubtitleButton
                     :title="$t('subject.projectsPage.all')"
                     clickable
-                    :active="activeButton === 'all'"
-                    @click="activeButton = 'all'"
+                    :active="activeButton === FilterOptions.All"
+                    @click="activeButton = FilterOptions.All"
                 ></HeaderSubtitleButton>
                 <HeaderSubtitleButton
                     :title="$t('subject.projectsPage.active')"
                     clickable
-                    :active="activeButton === 'active'"
-                    @click="activeButton = 'active'"
+                    :active="activeButton === FilterOptions.Active"
+                    @click="activeButton = FilterOptions.Active"
                 ></HeaderSubtitleButton
                 >
                 <HeaderSubtitleButton
                     :title="$t('subject.projectsPage.completed')"
                     clickable
-                    :active="activeButton === 'completed'"
-                    @click="activeButton = 'completed'"
+                    :active="activeButton === FilterOptions.Completed"
+                    @click="activeButton = FilterOptions.Completed"
                 ></HeaderSubtitleButton>
             </div>
         </v-card-subtitle>
@@ -42,6 +42,7 @@
 
 import HeaderSubtitleButton from "@/components/buttons/HeaderSubtitleButton.vue";
 import type Project from "@/models/Project";
+import {FilterOptions} from "@/models/Project";
 import {ref, watch} from "vue";
 
 const props = defineProps<{
@@ -51,7 +52,7 @@ const props = defineProps<{
 
 const selectedTab = ref(props.selectedTab);
 
-const activeButton = ref("all");
+const activeButton = ref(FilterOptions.All);
 
 const emit = defineEmits<{
     (e: 'tab-changed', projectId: number): void;

@@ -26,10 +26,10 @@
 import SubjectProjectsList from "@/components/subject/body/projects/SubjectProjectsList.vue";
 
 import type Project from "@/models/Project";
+import {FilterOptions} from "@/models/Project";
 import {computed, ref, toRefs} from "vue";
 import SubjectProjectPage from "@/components/subject/body/projects/SubjectProjectPage.vue";
 
-type FilterOption = "active" | "all" | "completed";
 
 const props = defineProps<{
     projects: Project[] | undefined;
@@ -38,14 +38,14 @@ const props = defineProps<{
 const {projects} = toRefs(props);
 
 const selectedTab = ref(0);
-const filterOption = ref<FilterOption>("all");
+const filterOption = ref<FilterOptions>(FilterOptions.All);
 const filteredProjects = computed(() => {
     const currentDate = new Date();
-    if (filterOption.value === "all") {
+    if (filterOption.value === FilterOptions.All) {
         return projects.value || [];
-    } else if (filterOption.value === "active") {
+    } else if (filterOption.value === FilterOptions.Active) {
         return (projects.value || []).filter(project => project.deadline > currentDate);
-    } else if (filterOption.value === "completed") {
+    } else if (filterOption.value === FilterOptions.Completed) {
         return (projects.value || []).filter(project => project.deadline <= currentDate);
     }
     console.error("Invalid filter option");
