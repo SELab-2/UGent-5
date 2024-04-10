@@ -4,24 +4,19 @@
             <span class="title">{{$t('subject.projects')}}</span>
         </v-card-title>
         <v-card-subtitle>
-            <v-row>
-                <v-col>
-                    <HeaderSubtitleButton :title="$t('subject.projectsPage.all')" clickable></HeaderSubtitleButton>
-                </v-col>
-                <v-col>
-                    <HeaderSubtitleButton :title="$t('subject.projectsPage.active')" clickable></HeaderSubtitleButton>
-                </v-col>
-                <v-col>
-                    <HeaderSubtitleButton :title="$t('subject.projectsPage.completed')" clickable></HeaderSubtitleButton>
-                </v-col>
-            </v-row>
+            <div class="d-flex justify-start">
+                <HeaderSubtitleButton :title="$t('subject.projectsPage.all')" clickable></HeaderSubtitleButton>
+                <HeaderSubtitleButton :title="$t('subject.projectsPage.active')" clickable></HeaderSubtitleButton>
+                <HeaderSubtitleButton :title="$t('subject.projectsPage.completed')" clickable></HeaderSubtitleButton>
+            </div>
         </v-card-subtitle>
         <v-card-item>
-            <v-virtual-scroll :items="projects">
+            <ProjectCard :project="projects[0]"></ProjectCard>
+            <!--v-virtual-scroll :items="projects">
                 <template v-slot="{ item }">
                     <ProjectCard :project="item"></ProjectCard>
                 </template>
-            </v-virtual-scroll>
+            </v-virtual-scroll-->
         </v-card-item>
     </v-card>
 

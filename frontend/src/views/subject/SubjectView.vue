@@ -39,14 +39,14 @@
 
 <script setup lang="ts">
 
-import {defineProps, toRefs,} from "vue";
+import {toRefs} from "vue";
 import {useSubjectDetailsQuery} from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import type SubjectDetails from "@/models/SubjectDetails";
 import SubjectHeaderContainer from "@/components/subject/header/SubjectHeaderContainer.vue";
 import SubjectBody from "@/components/subject/body/SubjectBody.vue";
 
-const props = defineProps(['subjectId'])
+const props = defineProps<{ subjectId: number }>();
 
 const {subjectId} = toRefs(props);
 

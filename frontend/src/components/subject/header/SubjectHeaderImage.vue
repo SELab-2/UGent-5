@@ -25,6 +25,6 @@ const {isLoading} = toRef( props, 'isLoading');
 <style scoped>
 .header-img {
     border-radius: 20px;
-    height: 200px;
+    height: 165px;
 }
 </style>

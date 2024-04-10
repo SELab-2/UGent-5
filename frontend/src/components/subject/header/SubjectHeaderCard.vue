@@ -1,5 +1,5 @@
 <template>
-    <v-card variant="text" class="title-card" height="200">
+    <v-card variant="text" class="title-card" height="165">
         <v-skeleton-loader :loading="isLoading" type="card" color="white">
             <v-row>
                 <v-col>
@@ -9,16 +9,15 @@
                         {{ title }}
                     </v-card-title>
                     <v-card-text>
-                        <v-row>
-                            <v-col>
-                                <HeaderSubtitleButton :title="$t('subject.academy_year') + ' ' + academicYear" :clickable="false"/>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col v-for="instructor in instructors" :key="instructor?.uid">
-                                <HeaderSubtitleButton :title="instructor?.given_name" :clickable="false"/>
-                            </v-col>
-                        </v-row>
+                        <HeaderSubtitleButton :title="$t('subject.academy_year') + ' ' + academicYear"
+                                              :clickable="false"/>
+                        <div class="d-flex justify-start instr-container">
+                            <HeaderSubtitleButton
+                                v-for="instructor in instructors"
+                                :key="instructor?.uid"
+                                :title="instructor?.given_name"
+                                :clickable="false"/>
+                        </div>
                     </v-card-text>
                 </v-col>
             </v-row>
@@ -52,8 +51,13 @@ defineProps<{
     font-size: 32px;
     letter-spacing: -0.5px;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
     font-family: 'Poppins', sans-serif;
+}
+
+.instr-container {
+    margin-top: 10px;
+    margin-bottom: 5px;
 }
 
 

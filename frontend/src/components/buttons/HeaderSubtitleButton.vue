@@ -3,7 +3,7 @@
         size="small"
         variant="outlined"
         rounded="xl"
-        :class="!clickable ? 'not-clickable' : ''"
+        :class="[!clickable ? 'not-clickable' : '', 'subtitle-button']"
         color="#9FB6FF"
     >
         <span class="button-text">{{ title }}</span>
@@ -23,6 +23,10 @@ defineProps<{
 .not-clickable {
     cursor: default;
     pointer-events: none;
+}
+
+.subtitle-button {
+    margin-right: 10px;
 }
 
 .button-text {
