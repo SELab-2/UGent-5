@@ -1,7 +1,5 @@
 <template>
     <div class="v-container">
-        <router-link to="/subjects">Back</router-link>
-
         <div v-if="isLoading" class="v-container">
             <p>Loading...</p>
         </div>
@@ -46,7 +44,7 @@ import type SubjectDetails from "@/models/SubjectDetails";
 import SubjectHeaderContainer from "@/components/subject/header/SubjectHeaderContainer.vue";
 import SubjectBody from "@/components/subject/body/SubjectBody.vue";
 
-const props = defineProps<{ subjectId: number }>();
+const props = defineProps<{ subjectId: number | undefined}>();
 
 const {subjectId} = toRefs(props);
 

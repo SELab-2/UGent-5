@@ -1,23 +1,23 @@
 <template>
-    <v-card variant="text" class="projects-card">
+    <v-card variant="text" class="projects-card" max-height="400px">
         <v-card-title>
-            <span class="title">{{$t('subject.projects')}}</span>
+            <span class="title">{{ $t('subject.projects') }}</span>
         </v-card-title>
         <v-card-subtitle>
-            <div class="d-flex justify-start">
+            <div class="d-flex justify-start filter-btn-container">
                 <HeaderSubtitleButton :title="$t('subject.projectsPage.all')" clickable></HeaderSubtitleButton>
                 <HeaderSubtitleButton :title="$t('subject.projectsPage.active')" clickable></HeaderSubtitleButton>
                 <HeaderSubtitleButton :title="$t('subject.projectsPage.completed')" clickable></HeaderSubtitleButton>
             </div>
         </v-card-subtitle>
-        <v-card-item>
-            <ProjectCard :project="projects[0]"></ProjectCard>
-            <!--v-virtual-scroll :items="projects">
-                <template v-slot="{ item }">
-                    <ProjectCard :project="item"></ProjectCard>
-                </template>
-            </v-virtual-scroll-->
-        </v-card-item>
+        <v-card-text class="projects-tab">
+            <v-tabs direction="vertical" show-arrows v-model="selectedTab" class="projects-tab">
+                <v-tab v-for="project in projects" :key="project.id">
+                    <v-icon left>mdi-calendar-clock</v-icon>
+                    <span class="project-name">{{ project?.name }}</span>
+                </v-tab>
+            </v-tabs>
+        </v-card-text>
     </v-card>
 
 </template>
@@ -26,18 +26,36 @@
 
 import HeaderSubtitleButton from "@/components/buttons/HeaderSubtitleButton.vue";
 import type Project from "@/models/Project";
-import ProjectCard from "@/components/subject/body/projects/ProjectCard.vue";
-defineProps<{
+import {ref, watch} from "vue";
+
+const props = defineProps<{
     projects: Project[] | undefined;
+    selectedTab: number | undefined;
 }>();
+
+const selectedTab = ref(props.selectedTab);
+
+const emit = defineEmits<{
+    (e: 'tab-changed', projectId: number): void;
+}>();
+
+watch(selectedTab, (newVal: number | undefined) => {
+    if (newVal !== undefined) {
+        emit('tab-changed', newVal);
+    }
+});
+
 </script>
 
 <style scoped>
+
 
 .projects-card {
     background-color: white;
     padding: 20px;
     border-radius: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 .title {
@@ -46,6 +64,27 @@ defineProps<{
     font-weight: bold;
     margin-bottom: 20px;
     font-family: 'Poppins', sans-serif;
+}
+
+.projects-tab {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.projects-tab::-webkit-scrollbar {
+    width: 0; /* For Chrome, Safari, and Opera */
+}
+
+.filter-btn-container {
+    overflow-x: auto;
+}
+
+.filter-btn-container::-webkit-scrollbar {
+    width: 0; /* For Chrome, Safari, and Opera */
+}
+
+.project-name {
+    margin-left: 10px; /* Add spacing between icon and project name */
 }
 
 </style>
