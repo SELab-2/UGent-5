@@ -5,9 +5,25 @@
         </v-card-title>
         <v-card-subtitle>
             <div class="d-flex justify-start filter-btn-container">
-                <HeaderSubtitleButton :title="$t('subject.projectsPage.all')" clickable></HeaderSubtitleButton>
-                <HeaderSubtitleButton :title="$t('subject.projectsPage.active')" clickable></HeaderSubtitleButton>
-                <HeaderSubtitleButton :title="$t('subject.projectsPage.completed')" clickable></HeaderSubtitleButton>
+                <HeaderSubtitleButton
+                    :title="$t('subject.projectsPage.all')"
+                    clickable
+                    :active="activeButton === 'all'"
+                    @click="activeButton = 'all'"
+                ></HeaderSubtitleButton>
+                <HeaderSubtitleButton
+                    :title="$t('subject.projectsPage.active')"
+                    clickable
+                    :active="activeButton === 'active'"
+                    @click="activeButton = 'active'"
+                ></HeaderSubtitleButton
+                >
+                <HeaderSubtitleButton
+                    :title="$t('subject.projectsPage.completed')"
+                    clickable
+                    :active="activeButton === 'completed'"
+                    @click="activeButton = 'completed'"
+                ></HeaderSubtitleButton>
             </div>
         </v-card-subtitle>
         <v-card-text class="projects-tab">
@@ -35,14 +51,21 @@ const props = defineProps<{
 
 const selectedTab = ref(props.selectedTab);
 
+const activeButton = ref("all");
+
 const emit = defineEmits<{
     (e: 'tab-changed', projectId: number): void;
+    (e: 'filter-changed', filter: string): void;
 }>();
 
 watch(selectedTab, (newVal: number | undefined) => {
     if (newVal !== undefined) {
         emit('tab-changed', newVal);
     }
+});
+
+watch(activeButton, (newVal: string) => {
+    emit('filter-changed', newVal);
 });
 
 </script>

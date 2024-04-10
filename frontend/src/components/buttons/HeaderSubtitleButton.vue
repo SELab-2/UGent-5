@@ -3,7 +3,7 @@
         size="small"
         variant="outlined"
         rounded="xl"
-        :class="[!clickable ? 'not-clickable' : '', 'subtitle-button']"
+        :class="[!clickable ? 'not-clickable' : '', 'subtitle-button', active ? 'subtitle-button-active' : '']"
         color="#9FB6FF"
     >
         <span class="button-text">{{ title }}</span>
@@ -16,6 +16,7 @@ import {defineProps} from 'vue';
 defineProps<{
     title: string,
     clickable: boolean,
+    active: boolean
 }>();
 </script>
 
@@ -27,6 +28,10 @@ defineProps<{
 
 .subtitle-button {
     margin-right: 10px;
+}
+
+.subtitle-button-active {
+    background-color: #9FB6FF;
 }
 
 .button-text {

@@ -9,14 +9,19 @@
                         {{ title }}
                     </v-card-title>
                     <v-card-text>
-                        <HeaderSubtitleButton :title="$t('subject.academy_year') + ' ' + academicYear"
-                                              :clickable="false"/>
+                        <HeaderSubtitleButton
+                            :title="$t('subject.academy_year') + ' ' + academicYear"
+                            :clickable="false"
+                            :active="false"
+                        ></HeaderSubtitleButton>
                         <div class="d-flex justify-start instr-container">
                             <HeaderSubtitleButton
                                 v-for="instructor in instructors"
                                 :key="instructor?.uid"
                                 :title="instructor?.given_name"
-                                :clickable="false"/>
+                                :clickable="false"
+                                :active="false"
+                            ></HeaderSubtitleButton>
                         </div>
                     </v-card-text>
                 </v-col>
