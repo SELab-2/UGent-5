@@ -50,6 +50,15 @@ export default {
             all: "Alle",
             active: "Actief",
             completed: "Voltooid",
+        },
+        project: {
+            assignment: "Opdracht",
+            group: "Groep",
+            submissions: "Indieningen",
         }
     },
+
+    subjects: {
+        title: "Mijn vakken",
+    }
 };

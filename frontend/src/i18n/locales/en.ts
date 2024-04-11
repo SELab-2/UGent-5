@@ -49,7 +49,14 @@ export default {
             all: "All",
             active: "Active",
             completed: "Completed",
+        },
+        project: {
+            assignment: "Assignment",
+            group: "Group",
+            submissions: "Submissions",
         }
-
-    }
+    },
+    subjects: {
+        title: "My Courses",
+    },
 };

@@ -14,16 +14,16 @@
     </div>
 
     <v-window v-model="tab">
-        <v-window-item :value="0">
+        <v-window-item value="0" key="0">
             <SubjectProjectsPage
                 :projects="projects"
                 :is-loading="isLoading"
             ></SubjectProjectsPage>
         </v-window-item>
-        <v-window-item :value="1">
+        <v-window-item value="1" key="1" >
             <SubjectAnnouncementsPage/>
         </v-window-item>
-        <v-window-item :value="2">
+        <v-window-item value="2" key="2">
             <SubjectGroupsPage/>
         </v-window-item>
     </v-window>

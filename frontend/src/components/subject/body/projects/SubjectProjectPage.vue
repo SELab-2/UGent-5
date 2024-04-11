@@ -101,7 +101,6 @@ const assignmentLength = 100;
     justify-content: space-between;
     position: relative;
     margin-bottom: 10px;
-    width: 425px;
 }
 
 .colored-zone {
@@ -132,7 +131,6 @@ const assignmentLength = 100;
 .project-container {
     overflow: auto;
     max-height: 400px;
-    width: 100%;
 }
 
 .project-container::-webkit-scrollbar {

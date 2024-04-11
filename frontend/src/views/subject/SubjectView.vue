@@ -1,37 +1,26 @@
 <template>
-    <div class="v-container">
-        <div v-if="isLoading" class="v-container">
-            <p>Loading...</p>
-        </div>
-
-        <div v-else-if="isError" class="v-container">
-            <p>Error: {{ error }}</p>
-        </div>
-
-        <div class="v-container">
-            <BackgroundContainer>
-                <v-row>
-                    <v-col>
-                        <SubjectHeaderContainer
-                            :title="subject?.name"
-                            :instructors="subject?.instructors"
-                            academic-year="2023-2024"
-                            :is-loading="isLoading"
-                            image-path="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                        ></SubjectHeaderContainer>
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col>
-                        <SubjectBody :projects="subject?.projects ?? []" :is-loading="isLoading"></SubjectBody>
-                    </v-col>
-                </v-row>
-
-
-            </BackgroundContainer>
-        </div>
-
+    <div v-if="isError" class="v-container">
+        <p>Error: {{ error }}</p>
     </div>
+
+    <BackgroundContainer v-else>
+        <v-row>
+            <v-col>
+                <SubjectHeaderContainer
+                    :title="subject?.name"
+                    :instructors="subject?.instructors"
+                    academic-year="2023-2024"
+                    :is-loading="isLoading"
+                    image-path="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                ></SubjectHeaderContainer>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col>
+                <SubjectBody :projects="subject?.projects ?? []" :is-loading="isLoading"></SubjectBody>
+            </v-col>
+        </v-row>
+    </BackgroundContainer>
 
 </template>
 
@@ -44,7 +33,7 @@ import type SubjectDetails from "@/models/SubjectDetails";
 import SubjectHeaderContainer from "@/components/subject/header/SubjectHeaderContainer.vue";
 import SubjectBody from "@/components/subject/body/SubjectBody.vue";
 
-const props = defineProps<{ subjectId: number | undefined}>();
+const props = defineProps<{ subjectId: number | undefined }>();
 
 const {subjectId} = toRefs(props);
 
