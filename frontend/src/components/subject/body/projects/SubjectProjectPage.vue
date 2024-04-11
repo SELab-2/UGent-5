@@ -131,6 +131,7 @@ const assignmentLength = 100;
 .project-container {
     overflow: auto;
     max-height: 400px;
+    scrollbar-width: none; /* For Firefox */
 }
 
 .project-container::-webkit-scrollbar {

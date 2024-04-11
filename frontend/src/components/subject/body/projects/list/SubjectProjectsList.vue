@@ -106,6 +106,7 @@ watch(activeButton, (newVal: string) => {
 .projects-tab {
     flex-grow: 1;
     overflow-y: auto;
+    scrollbar-width: none; /* For Firefox */
 }
 
 .projects-tab::-webkit-scrollbar {
@@ -114,6 +115,7 @@ watch(activeButton, (newVal: string) => {
 
 .filter-btn-container {
     overflow-x: auto;
+    scrollbar-width: none; /* For Firefox */
 }
 
 .filter-btn-container::-webkit-scrollbar {

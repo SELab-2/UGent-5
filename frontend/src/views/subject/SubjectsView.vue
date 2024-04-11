@@ -14,7 +14,7 @@
                 :key="index"
                 v-for="(row, index) in data?.subjects.reduce(
                    (acc, subject, index) => (
-                       index % 3 === 0 ? acc.push([subject]) : acc[acc.length - 1].push(subject)
+                       index % 2 === 0 ? acc.push([subject]) : acc[acc.length - 1].push(subject)
                    ) && acc, []
                 )"
             >
