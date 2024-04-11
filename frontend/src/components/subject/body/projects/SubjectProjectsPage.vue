@@ -24,7 +24,6 @@
 
 <script setup lang="ts">
 import SubjectProjectsList from "@/components/subject/body/projects/list/SubjectProjectsList.vue";
-
 import type Project from "@/models/Project";
 import {FilterOptions} from "@/models/Project";
 import {computed, ref, toRefs} from "vue";
@@ -36,20 +35,22 @@ const props = defineProps<{
 }>();
 
 const {projects} = toRefs(props);
-
 const selectedTab = ref(0);
 const filterOption = ref<FilterOptions>(FilterOptions.All);
+
 const filteredProjects = computed(() => {
     const currentDate = new Date();
+    let sortedProjects = [...(projects.value || [])];
+    sortedProjects.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
     if (filterOption.value === FilterOptions.All) {
-        return projects.value || [];
+        return sortedProjects;
     } else if (filterOption.value === FilterOptions.Active) {
-        return (projects.value || []).filter(project => project.deadline > currentDate);
+        return sortedProjects.filter(project => new Date(project.deadline) > currentDate);
     } else if (filterOption.value === FilterOptions.Completed) {
-        return (projects.value || []).filter(project => project.deadline <= currentDate);
+        return sortedProjects.filter(project => new Date(project.deadline) <= currentDate);
     }
     console.error("Invalid filter option");
-    return [];
+    return sortedProjects
 });
 
 const updateSelectedTab = (tabIndex) => {
@@ -58,6 +59,7 @@ const updateSelectedTab = (tabIndex) => {
 
 const updateFilterOption = (option) => {
     filterOption.value = option;
+    selectedTab.value = 0;
 };
 
 </script>

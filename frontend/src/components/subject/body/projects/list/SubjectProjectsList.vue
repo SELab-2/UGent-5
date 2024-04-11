@@ -29,8 +29,8 @@
         <v-card-text class="projects-tab">
             <v-tabs direction="vertical" show-arrows v-model="selectedTab" class="projects-tab">
                 <v-tab v-for="project in projects" :key="project.id">
-                    <v-icon left>mdi-calendar-clock</v-icon>
-                    <span class="project-name">{{ project?.name }}</span>
+                    <SubjectTab :projectName="project?.name"></SubjectTab>
+
                 </v-tab>
             </v-tabs>
         </v-card-text>
@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-
+import SubjectTab from "@/components/subject/body/projects/list/SubjectTab.vue"
 import HeaderSubtitleButton from "@/components/buttons/HeaderSubtitleButton.vue";
 import type Project from "@/models/Project";
 import {FilterOptions} from "@/models/Project";
@@ -49,6 +49,7 @@ const props = defineProps<{
     projects: Project[] | undefined;
     selectedTab: number | undefined;
 }>();
+
 
 const selectedTab = ref(props.selectedTab);
 
@@ -107,8 +108,6 @@ watch(activeButton, (newVal: string) => {
     width: 0; /* For Chrome, Safari, and Opera */
 }
 
-.project-name {
-    margin-left: 10px; /* Add spacing between icon and project name */
-}
+
 
 </style>
