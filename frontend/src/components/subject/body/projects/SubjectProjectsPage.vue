@@ -16,6 +16,12 @@
                         :project="project"
                     ></SubjectProjectPage>
                 </v-window-item>
+
+                <v-window-item v-if="filteredProjects?.length === 0" :key="'placeholder'">
+                    <div class="placeholder">
+                        <p>No projects available.</p>
+                    </div>
+                </v-window-item>
             </v-window>
 
         </v-col>
@@ -65,5 +71,20 @@ const updateFilterOption = (option) => {
 </script>
 
 <style scoped>
+
+.placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 400px; /* Adjust height as needed */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.placeholder p {
+    font-size: 18px;
+    color: #666;
+}
+
 
 </style>

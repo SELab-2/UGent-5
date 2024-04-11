@@ -1,5 +1,5 @@
 <template>
-    <v-card variant="text" class="projects-card" max-height="400px">
+    <v-card variant="text" class="projects-card" height="400px">
         <v-card-title>
             <span class="title">{{ $t('subject.projects') }}</span>
         </v-card-title>
@@ -27,12 +27,19 @@
             </div>
         </v-card-subtitle>
         <v-card-text class="projects-tab">
-            <v-tabs direction="vertical" show-arrows v-model="selectedTab" class="projects-tab">
+            <v-tabs
+                v-if="projects?.length > 0"
+                direction="vertical"
+                v-model="selectedTab"
+                class="projects-tab"
+            >
                 <v-tab v-for="project in projects" :key="project.id">
                     <SubjectTab :projectName="project?.name"></SubjectTab>
-
                 </v-tab>
             </v-tabs>
+            <div v-else class="placeholder">
+                <p>No projects available.</p>
+            </div>
         </v-card-text>
     </v-card>
 
@@ -52,6 +59,7 @@ const props = defineProps<{
 
 
 const selectedTab = ref(props.selectedTab);
+
 
 const activeButton = ref(FilterOptions.All);
 
@@ -109,6 +117,18 @@ watch(activeButton, (newVal: string) => {
     width: 0; /* For Chrome, Safari, and Opera */
 }
 
+.placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px; /* Adjust height as needed */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
 
+.placeholder p {
+    font-size: 18px;
+    color: #666;
+}
 
 </style>
