@@ -17,6 +17,7 @@
         <v-window-item :value="0">
             <SubjectProjectsPage
                 :projects="projects"
+                :is-loading="isLoading"
             ></SubjectProjectsPage>
         </v-window-item>
         <v-window-item :value="1">
@@ -38,6 +39,7 @@ import type Project from "@/models/Project";
 
 defineProps<{
     projects: Project[] | undefined;
+    isLoading: boolean | undefined
 }>()
 
 const items = ["projects", "announcements", "groups"];

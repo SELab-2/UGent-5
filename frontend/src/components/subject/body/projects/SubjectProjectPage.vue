@@ -1,9 +1,8 @@
 <template>
     <div class="project-container">
+
         <v-card class="project-card" variant="text" rounded="xl">
-
             <div class="colored-zone"></div>
-
 
             <v-card-title class="title">
                 <v-row>
@@ -76,6 +75,7 @@ import {ref} from "vue";
 defineProps<{
     selectedTab: number;
     project: Project | undefined;
+    isLoading: boolean | undefined;
 }>();
 
 const expanded = ref(false);
@@ -101,6 +101,7 @@ const assignmentLength = 100;
     justify-content: space-between;
     position: relative;
     margin-bottom: 10px;
+    width: 425px;
 }
 
 .colored-zone {
@@ -131,6 +132,7 @@ const assignmentLength = 100;
 .project-container {
     overflow: auto;
     max-height: 400px;
+    width: 100%;
 }
 
 .project-container::-webkit-scrollbar {

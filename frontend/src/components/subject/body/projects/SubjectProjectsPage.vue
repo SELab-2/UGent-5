@@ -4,6 +4,7 @@
             <SubjectProjectsList
                 :projects="filteredProjects"
                 :selected-tab="selectedTab"
+                :is-loading="isLoading"
                 @tab-changed="updateSelectedTab"
                 @filter-changed="updateFilterOption"
             ></SubjectProjectsList>
@@ -14,6 +15,7 @@
                     <SubjectProjectPage
                         :selected-tab="selectedTab"
                         :project="project"
+                        :is-loading="isLoading"
                     ></SubjectProjectPage>
                 </v-window-item>
 
@@ -23,7 +25,6 @@
                     </div>
                 </v-window-item>
             </v-window>
-
         </v-col>
     </v-row>
 </template>
@@ -38,6 +39,7 @@ import SubjectProjectPage from "@/components/subject/body/projects/SubjectProjec
 
 const props = defineProps<{
     projects: Project[] | undefined;
+    isLoading: boolean | undefined
 }>();
 
 const {projects} = toRefs(props);

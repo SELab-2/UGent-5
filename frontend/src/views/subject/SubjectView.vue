@@ -23,7 +23,7 @@
                 </v-row>
                 <v-row>
                     <v-col>
-                        <SubjectBody :projects="subject?.projects ?? []"></SubjectBody>
+                        <SubjectBody :projects="subject?.projects ?? []" :is-loading="isLoading"></SubjectBody>
                     </v-col>
                 </v-row>
 

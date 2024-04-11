@@ -26,21 +26,23 @@
                 ></HeaderSubtitleButton>
             </div>
         </v-card-subtitle>
-        <v-card-text class="projects-tab">
-            <v-tabs
-                v-if="projects?.length > 0"
-                direction="vertical"
-                v-model="selectedTab"
-                class="projects-tab"
-            >
-                <v-tab v-for="project in projects" :key="project.id">
-                    <SubjectTab :projectName="project?.name"></SubjectTab>
-                </v-tab>
-            </v-tabs>
-            <div v-else class="placeholder">
-                <p>No projects available.</p>
-            </div>
-        </v-card-text>
+        <v-skeleton-loader type="card" :loading="isLoading" color="white">
+            <v-card-text class="projects-tab">
+                <v-tabs
+                    v-if="projects?.length > 0"
+                    direction="vertical"
+                    v-model="selectedTab"
+                    class="projects-tab"
+                >
+                    <v-tab v-for="project in projects" :key="project.id">
+                        <SubjectTab :projectName="project?.name"></SubjectTab>
+                    </v-tab>
+                </v-tabs>
+                <div v-else class="placeholder">
+                    <p>No projects available.</p>
+                </div>
+            </v-card-text>
+        </v-skeleton-loader>
     </v-card>
 
 </template>
@@ -55,6 +57,7 @@ import {ref, watch} from "vue";
 const props = defineProps<{
     projects: Project[] | undefined;
     selectedTab: number | undefined;
+    isLoading: boolean | undefined;
 }>();
 
 
