@@ -17,6 +17,7 @@ class GroupCreate(Groupbase):
 
 class Group(Groupbase):
     id: int
+    members: list[User]
 
 
 class GroupPreview(Group):
