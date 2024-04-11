@@ -59,7 +59,7 @@ const updateSelectedTab = (tabIndex) => {
 
 const updateFilterOption = (option) => {
     filterOption.value = option;
-    selectedTab.value = 0;
+    updateSelectedTab(0);
 };
 
 </script>

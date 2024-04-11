@@ -68,6 +68,7 @@ watch(selectedTab, (newVal: number | undefined) => {
 
 watch(activeButton, (newVal: string) => {
     emit('filter-changed', newVal);
+    selectedTab.value = 0
 });
 
 </script>
