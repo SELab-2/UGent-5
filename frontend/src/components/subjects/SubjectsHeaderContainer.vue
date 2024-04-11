@@ -1,7 +1,7 @@
 <template>
     <SubjectsHeaderCard :is-loading="isLoading">
-
     </SubjectsHeaderCard>
+
 
 </template>
 

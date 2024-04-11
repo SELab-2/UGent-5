@@ -1,35 +1,37 @@
 <template>
     <div v-if="isError" class="v-container">
-        <p>Error: {{error}}</p>
+        <p>Error: {{ error }}</p>
     </div>
 
     <BackgroundContainer v-else>
-        <SubjectsHeaderContainer :is-loading="isLoading"></SubjectsHeaderContainer>
-        <SubjectCard
-            v-for="subject in data?.subjects"
-            :key="subject.id"
-            :subject="subject"
-        >
-
-        </SubjectCard>
-    </BackgroundContainer>
-
-    <div
-        class="v-container"
-    >
-        <ul class="pa-5">
-            <li
-                v-for="subject in data?.subjects"
-                :key="subject.id"
+        <v-row>
+            <v-col>
+                <SubjectsHeaderContainer :is-loading="isLoading"></SubjectsHeaderContainer>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-row
+                :key="index"
+                v-for="(row, index) in data?.subjects.reduce(
+                   (acc, subject, index) => (
+                       index % 3 === 0 ? acc.push([subject]) : acc[acc.length - 1].push(subject)
+                   ) && acc, []
+                )"
             >
-                <router-link :to="{ name: 'subject', params: { subjectId: subject.id }}">
-                    {{ subject.name }}
-                </router-link>
-            </li>
-
-        </ul>
-    </div>
-
+                <v-col
+                    :key="index"
+                    v-for="(subject, index) in row"
+                    class="ma-3"
+                >
+                    <SubjectCard
+                        :subject="subject"
+                        :is-loading="isLoading"
+                    >
+                    </SubjectCard>
+                </v-col>
+            </v-row>
+        </v-row>
+    </BackgroundContainer>
 </template>
 
 <script setup lang="ts">

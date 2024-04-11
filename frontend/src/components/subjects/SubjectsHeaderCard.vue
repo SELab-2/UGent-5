@@ -1,5 +1,5 @@
 <template>
-    <v-card variant="text" class="title-card" height="165" width="50%">
+    <v-card variant="text" class="title-card" height="165" width="50%" rounded="xl">
         <v-skeleton-loader :loading="isLoading" type="card" color="white">
             <v-row>
                 <v-col>
@@ -48,7 +48,6 @@ const academicYears = ["2023-2024", "2022-2023", "2021-2022"];
 .title-card {
     background-color: white;
     padding: 20px;
-    border-radius: 20px;
 }
 
 .title {
@@ -58,11 +57,6 @@ const academicYears = ["2023-2024", "2022-2023", "2021-2022"];
     font-weight: bold;
     margin-bottom: 12px;
     font-family: 'Poppins', sans-serif;
-}
-
-.instr-container {
-    margin-top: 10px;
-    margin-bottom: 5px;
 }
 
 </style>
