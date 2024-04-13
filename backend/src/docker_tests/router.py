@@ -22,9 +22,9 @@ async def test():
     return [{"success"}]
 
 
-@router.get("/{project_id}", response_model=Project)
+@router.get("/{project_id}/test_files", response_model=Project)
 async def get_test_files(project: Project = Depends(retrieve_project)):
-    return project
+    return project  # todo
 
 
 @router.patch(
@@ -40,7 +40,7 @@ async def patch_test_files(
     return await update_test_files(db, project_id, files)
 
 
-@router.delete("/{project_id}", dependencies=[Depends(delete_permission_validation)])
+@router.delete("/{project_id}/test_files", dependencies=[Depends(delete_permission_validation)])
 async def delete_test_files(
     project_id: int, db: AsyncSession = Depends(get_async_db)
 ):
