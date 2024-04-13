@@ -1,16 +1,14 @@
-from typing import Sequence, List
+from typing import Sequence
 
-from fastapi import UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from src.subject.models import StudentSubject, Subject
 
+from src.subject.models import StudentSubject, Subject
 from src.subject.service import get_instructors
+from src.user.models import User
 from .exceptions import ProjectNotFoundException
 from .models import Project, Requirement
 from .schemas import ProjectCreate, ProjectList, ProjectUpdate
-from src.user.models import User
-from .utils import upload_test_files
 
 
 async def create_project(db: AsyncSession, project_in: ProjectCreate) -> Project:
@@ -78,21 +76,6 @@ async def update_project(
     if project_update.requirements is not None:
         project.requirements = [Requirement(**r.model_dump())
                                 for r in project_update.requirements]
-
-    await db.commit()
-    await db.refresh(project)
-    return project
-
-
-async def update_project_test_files(
-    db: AsyncSession, project_id: int, test_files: List[UploadFile]
-):
-    result = await db.execute(select(Project).filter_by(id=project_id))
-    project = result.scalars().first()
-    if not project:
-        raise ProjectNotFoundException()
-
-    project.test_files_uuid = upload_test_files(test_files, project.test_files_uuid)
 
     await db.commit()
     await db.refresh(project)

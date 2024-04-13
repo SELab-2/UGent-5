@@ -1,13 +1,14 @@
-from typing import Sequence, List
-from fastapi import APIRouter, Depends, UploadFile, File, Form
+from typing import Sequence
+
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.auth.dependencies import authentication_validation
 from src.dependencies import get_async_db
 from src.group.dependencies import retrieve_groups_by_project
 from src.group.schemas import GroupList
 from src.submission.schemas import Submission
 from src.submission.service import get_submissions_by_project
-
 from . import service
 from .dependencies import (
     create_permission_validation,
@@ -18,8 +19,7 @@ from .dependencies import (
 from .schemas import Project, ProjectCreate, ProjectUpdate
 from .service import (
     delete_project,
-    update_project, upload_test_files, update_project_test_files,
-)
+    update_project, )
 
 router = APIRouter(
     prefix="/api/projects",
@@ -77,12 +77,3 @@ async def list_submissions(group_id: int,
                            db: AsyncSession = Depends(get_async_db)
                            ) -> Sequence[Submission]:
     return await get_submissions_by_project(db, group_id)
-
-
-@router.post(
-    "/{project_id}/test_files",
-    response_model=Project,
-    dependencies=[Depends(patch_permission_validation)]
-)
-async def post_test_files(project_id: int, files: List[UploadFile], db: AsyncSession = Depends(get_async_db)):
-    return await update_project_test_files(db, project_id, files)

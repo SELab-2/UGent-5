@@ -1,9 +1,10 @@
 import os
-from typing import Sequence, List
+from typing import Sequence
 
-from fastapi import APIRouter, Depends, UploadFile, BackgroundTasks, Form
+from fastapi import APIRouter, Depends, BackgroundTasks
 from fastapi.responses import FileResponse
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.dependencies import get_async_db
 from src.group.dependencies import retrieve_group
 from src.group.schemas import Group
@@ -15,11 +16,10 @@ from src.submission.dependencies import (
 from src.submission.exceptions import FileNotFound
 from src.submission.utils import upload_files, get_files_from_dir, submission_path, artifacts_path
 from src.user.dependencies import admin_user_validation
-
 from . import service
 from .models import Status
 from .schemas import File, Submission, SubmissionCreate
-from ..docker_tests.utils import launch_docker_tests
+from ..docker_tests.docker_tests import launch_docker_tests
 
 router = APIRouter(
     prefix="/api/submissions",
