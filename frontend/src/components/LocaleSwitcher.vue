@@ -30,6 +30,8 @@ function handleLocaleChange(selectedLocale: string) {
 <style lang="scss" scoped>
 .switcher {
     color: var(--color-text-on-primary);
+    display: flex;
+    align-items: center;
 }
 
 .locale-option {

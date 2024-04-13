@@ -32,9 +32,11 @@ export default {
         settings: "Settings",
         help: "Help",
         admin: "Admin panel",
+        login: "Login",
+        about: "About",
     },
     homescreen: {
-        deadlines: "My deadlines",
+        deadlines: "Project deadlines",
         courses: "My courses",
         announcements: "Announcements",
     },
