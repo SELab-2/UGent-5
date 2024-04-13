@@ -9,7 +9,6 @@ const mockRouter = {
 };
 
 vi.mock('@/composables/useIsAdmin')
-vi.mock('@/stores/auth-store')
 
 // Mock useRouter to return the mock router
 vi.mock('vue-router', () => ({
