@@ -1,5 +1,6 @@
-from typing import Sequence
+from typing import Sequence, List
 
+from fastapi import UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from src.subject.models import StudentSubject, Subject
@@ -13,13 +14,11 @@ from .utils import upload_test_files
 
 
 async def create_project(db: AsyncSession, project_in: ProjectCreate) -> Project:
-    test_files_uuid = upload_test_files(project_in.test_files, None)  # will be None if no files are included
     new_project = Project(
         name=project_in.name,
         deadline=project_in.deadline,
         subject_id=project_in.subject_id,
         description=project_in.description,
-        test_files_uuid=test_files_uuid,
         requirements=[Requirement(**r.model_dump()) for r in project_in.requirements],
     )
     db.add(new_project)
@@ -79,8 +78,21 @@ async def update_project(
     if project_update.requirements is not None:
         project.requirements = [Requirement(**r.model_dump())
                                 for r in project_update.requirements]
-    if project_update.test_files is not None:
-        project.test_files_uuid = upload_test_files(project_update.test_files, project.test_files_uuid)
+
+    await db.commit()
+    await db.refresh(project)
+    return project
+
+
+async def update_project_test_files(
+    db: AsyncSession, project_id: int, test_files: List[UploadFile]
+):
+    result = await db.execute(select(Project).filter_by(id=project_id))
+    project = result.scalars().first()
+    if not project:
+        raise ProjectNotFoundException()
+
+    project.test_files_uuid = upload_test_files(test_files, project.test_files_uuid)
 
     await db.commit()
     await db.refresh(project)

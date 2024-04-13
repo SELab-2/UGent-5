@@ -54,7 +54,7 @@ def build_image(tests_uuid: str):
         path = tests_dir
         tag = tests_uuid
     else:
-        path = "src/docker_tests/docker_default"
+        path = "src/docker_tests/docker_default"  # todo werkt niet in tests
         tag = "default_image"
 
     client.images.build(

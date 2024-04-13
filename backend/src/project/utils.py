@@ -11,21 +11,23 @@ def tests_path(uuid: str, *paths) -> str:
     return str(os.path.join(config.CONFIG.file_path, "projects", uuid, *paths))
 
 
-def upload_test_files(files: list[UploadFile], uuid: str | None) -> str | None:
+def upload_test_files(files: list[UploadFile], uuid: str | None) -> str:
     if uuid is None:
         uuid = str(uuid4())  # there were no tests before this
     else:
         files_path = tests_path(uuid)
         shutil.rmtree(files_path)  # remove present files
 
-    if len(files) == 0:
-        return None  # no tests anymore for this project
-
     files_path = tests_path(uuid)
     os.makedirs(files_path)
 
     write_and_unzip_files(files, files_path)
     return uuid
+
+
+def remove_test_files(uuid: str):
+    files_path = tests_path(uuid)
+    shutil.rmtree(files_path)
 
 
 def write_and_unzip_files(files: list[UploadFile], files_path: str):

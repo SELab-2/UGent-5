@@ -1,7 +1,7 @@
 import os
-from typing import Sequence
+from typing import Sequence, List
 
-from fastapi import APIRouter, Depends, UploadFile, BackgroundTasks
+from fastapi import APIRouter, Depends, UploadFile, BackgroundTasks, Form
 from fastapi.responses import FileResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.dependencies import get_async_db
@@ -18,7 +18,7 @@ from src.user.dependencies import admin_user_validation
 
 from . import service
 from .models import Status
-from .schemas import File, Submission
+from .schemas import File, Submission, SubmissionCreate
 from ..docker_tests.utils import launch_docker_tests
 
 router = APIRouter(
@@ -40,17 +40,18 @@ async def get_submission(submission: Submission = Depends(retrieve_submission)) 
 
 @router.post("/", response_model=Submission, status_code=201,
              dependencies=[Depends(group_id_validation)])
-async def create_submission(files: list[UploadFile],
-                            background_tasks: BackgroundTasks,
+async def create_submission(background_tasks: BackgroundTasks,
+                            submission_in: SubmissionCreate = Depends(),
                             group: Group = Depends(retrieve_group),
                             db: AsyncSession = Depends(get_async_db)):
     project = await retrieve_project(group.project_id, db)
-    submission_uuid = upload_files(files, project)
+    submission_uuid = upload_files(submission_in.files, project)
     if project.test_files_uuid is not None:  # run docker tests if there are any
         status = Status.InProgress
         background_tasks.add_task(launch_docker_tests, submission_uuid, project.test_files_uuid)
     else:
         status = Status.Accepted
+    print(submission_in.remarks)  # TODO
     return await service.create_submission(db, submission_uuid, status, group.id, group.project_id)
 
 

@@ -15,10 +15,9 @@ project = {
     "subject_id": 0,  # temp needs to be filled in by actual subject id
     "deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
     "description": "test",
-    "enroll_deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
-    "requirements": [],
-    "test_files": [],
+    "requirements": [{"mandatory": "true", "value": "*.py"}],
 }
+
 group_data = {"team_name": "test group", "project_id": 0}
 
 
@@ -70,7 +69,27 @@ async def test_no_docker_tests(client: AsyncClient, group_id: int, project_id: i
 
 
 @pytest.mark.asyncio
-async def test_default_tests_success(client: AsyncClient, group_id: int, project_id: int):
-    files = [('run', open('docker_test_files/test_files/run', 'rb')),
-             ('test.py', open('docker_test_files/test_files/test.py', 'rb'))]
-    await client.patch(f"/api/projects/{project_id}", files={"test_files": files})
+async def test_default_tests_success(client: AsyncClient, db: AsyncSession, group_id: int, project_id: int):
+    test_files = [
+        ('files', ('run', open('docker_test_files/test_files/run', 'rb'))),
+        ('files', ('test.py', open('docker_test_files/test_files/test.py', 'rb')))
+    ]
+    response = await client.post(
+        f"/api/projects/{project_id}/test_files",
+        files=test_files
+    )
+
+    assert response.status_code == 200
+    assert response.json()["test_files_uuid"] is not None
+
+    files = [
+        ('files', ('correct.py', open('docker_test_files/submission_files/correct.py', 'rb'))),
+    ]
+
+    response = await client.post("/api/submissions/",
+                                 files=files,
+                                 params={"group_id": group_id},
+                                 )
+
+    assert response.json() == ""
+    assert response.status_code == 200
