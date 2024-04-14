@@ -52,7 +52,6 @@ async def delete_project_for_subject(
     project_id: int, db: AsyncSession = Depends(get_async_db)
 ):
     await delete_project(db, project_id)
-    return {"message": "Project deleted successfully"}
 
 
 @router.patch(

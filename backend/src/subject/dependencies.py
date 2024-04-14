@@ -1,9 +1,10 @@
-from fastapi import Depends, Body
+from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.exceptions import NotAuthorized
 from src.dependencies import get_async_db
 from src.user.dependencies import get_authenticated_user
 from src.user.schemas import User
+from src.subject.utils import has_subject_privileges
 
 from . import service
 from .exceptions import SubjectNotFound
@@ -20,8 +21,24 @@ async def retrieve_subject(
     return Subject.model_validate(subject)
 
 
+async def retrieve_subject_by_uuid(
+    subject_uuid: str, db: AsyncSession = Depends(get_async_db)
+) -> Subject:
+    subject = await service.get_subject_by_uuid(db, subject_uuid)
+    if not subject:
+        raise SubjectNotFound()
+
+    return Subject.model_validate(subject)
+
+
+async def retrieve_uuid(subject_id: int, db: AsyncSession = Depends(get_async_db)) -> str:
+    subject = await service.get_subject(db, subject_id)
+    if not subject:
+        raise SubjectNotFound()
+    return subject.uuid
+
+
 async def retrieve_subjects(
-    user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db),
 ) -> SubjectList:
     subjects = await service.get_subjects(db)
@@ -33,22 +50,8 @@ async def user_permission_validation(
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db),
 ):
-    if not user.is_admin:
-        instructors = await service.get_instructors(db, subject_id)
-        if not list(filter(lambda instructor: instructor.uid == user.uid, instructors)):
-            raise NotAuthorized()
-
-
-async def add_student_permission_validation(
-    subject_id: int,
-    student_uid: str = Body(..., embed=True),
-    user: User = Depends(get_authenticated_user),
-    db: AsyncSession = Depends(get_async_db),
-):
-    if not user.is_admin and user.uid != student_uid:
-        instructors = await service.get_instructors(db, subject_id)
-        if not list(filter(lambda instructor: instructor.uid == user.uid, instructors)):
-            raise NotAuthorized()
+    if not await has_subject_privileges(subject_id, user, db):
+        raise NotAuthorized()
 
 
 async def teacher_permission_validation(
