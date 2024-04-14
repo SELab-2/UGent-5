@@ -1,4 +1,6 @@
+import asyncio
 import os
+from concurrent.futures import ProcessPoolExecutor
 from typing import Sequence
 
 from fastapi import APIRouter, Depends, BackgroundTasks
@@ -45,17 +47,24 @@ async def create_submission(background_tasks: BackgroundTasks,
                             group: Group = Depends(retrieve_group),
                             db: AsyncSession = Depends(get_async_db)):
     project = await retrieve_project(group.project_id, db)
-    submission_uuid = upload_files(submission_in.files, project)  # TODO somehow is dit 0
+    test_files_uuid = project.test_files_uuid
+    submission_uuid = upload_files(submission_in.files, project)
 
+    # accept submission immediately if no tests are present
+    status = Status.Accepted if test_files_uuid is None else Status.InProgress
 
-    if not project.test_files_uuid:  # don't run docker tests if there aren't any
-        return await service.create_submission(
-            db, submission_uuid, submission_in.remarks, Status.Accepted, group.id, group.project_id
-        )
     submission = await service.create_submission(
-        db, uuid=submission_uuid, remarks=submission_in.remarks, status=Status.InProgress, group_id=group.id, project_id=group.project_id
+        db, uuid=submission_uuid, remarks=submission_in.remarks, status=status, group_id=group.id, project_id=group.project_id
     )
-    # background_tasks.add_task(launch_docker_tests, submission.id, project.test_files_uuid)
+
+    # launch docker tests
+    if test_files_uuid is not None:
+        background_tasks.add_task(launch_docker_tests, submission, test_files_uuid)
+        # await launch_docker_tests(db, submission, test_files_uuid)
+
+        # with ProcessPoolExecutor() as executor:
+        #     executor.submit(launch_docker_tests, db, submission, test_files_uuid)
+
     return submission
 
 

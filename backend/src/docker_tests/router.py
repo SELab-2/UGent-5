@@ -20,12 +20,6 @@ router = APIRouter(
 )
 
 
-@router.get("/build")
-async def test():
-    build_docker_image("bla")
-    return [{"success"}]
-
-
 @router.get("/{project_id}/test_files", response_model=Project)
 async def get_test_files(project: Project = Depends(retrieve_project)):
     return project  # todo

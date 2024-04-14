@@ -1,3 +1,4 @@
+import shutil
 import time
 from datetime import datetime, timedelta, timezone
 
@@ -6,6 +7,7 @@ import pytest_asyncio
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.docker_tests.utils import tests_path
 from src.submission.models import Status
 from src.user.service import set_admin
 
@@ -36,7 +38,27 @@ async def project_id(client: AsyncClient, db: AsyncSession, subject_id: int) -> 
     project["subject_id"] = subject_id
     await set_admin(db, "test", True)
     response = await client.post("/api/projects/", json=project)
-    return response.json()["id"]
+    project_id = response.json()["id"]
+    return project_id
+
+
+@pytest_asyncio.fixture
+async def project_with_tests_id(client: AsyncClient, db: AsyncSession, project_id: int) -> int:
+    """upload test files for project"""
+    test_files = [
+        ('files', ('run', open('docker_test_files/test_files/run', 'rb'))),
+        ('files', ('test.py', open('docker_test_files/test_files/test.py', 'rb')))
+    ]
+    response = await client.put(
+        f"/api/projects/{project_id}/test_files",
+        files=test_files
+    )
+    assert response.status_code == 200
+    assert response.json()["test_files_uuid"]
+    yield project_id
+
+    # cleanup project files
+    shutil.rmtree(tests_path(response.json()["test_files_uuid"]))
 
 
 @pytest_asyncio.fixture
@@ -68,25 +90,14 @@ async def test_no_docker_tests(client: AsyncClient, group_id: int, project_id: i
 
 
 @pytest.mark.asyncio
-async def test_default_tests_success(client: AsyncClient, db: AsyncSession, group_id: int, project_id: int):
-    # upload test files for project
-    test_files = [
-        ('files', ('run', open('docker_test_files/test_files/run', 'rb'))),
-        ('files', ('test.py', open('docker_test_files/test_files/test.py', 'rb')))
-    ]
-    response = await client.put(
-        f"/api/projects/{project_id}/test_files",
-        files=test_files
-    )
-    assert response.status_code == 200
-    assert response.json()["test_files_uuid"]
-
+async def test_default_tests_success(client: AsyncClient, db: AsyncSession, group_id: int, project_with_tests_id: int):
     # make submission
     files = [
         ('files', ('submission.py', open('docker_test_files/submission_files/correct.py', 'rb'))),
     ]
     response = await client.post("/api/submissions/",
                                  files=files,
+                                 data={"remarks": "test"},
                                  params={"group_id": group_id},
                                  )
 
@@ -99,12 +110,15 @@ async def test_default_tests_success(client: AsyncClient, db: AsyncSession, grou
     assert artifact_response.status_code == 404  # no artifacts generated because tests aren't finished yet
 
     # wait for tests to finish
-    time.sleep(1.1)
+    time.sleep(2)
 
     submission = await client.get(f"/api/submissions/{submission_id}")
     assert submission.status_code == 200
+    assert response.json() == ""
     assert response.json()["status"] == Status.Accepted
     assert submission.json()["testresults"] == ""
 
     artifact_response = await client.get(f"/api/submissions/{submission_id}/artifacts")
     assert artifact_response.json() == []  # generated artifacts
+
+

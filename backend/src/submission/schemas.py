@@ -22,14 +22,14 @@ class SubmissionBase(BaseModel):
 @dataclass
 class SubmissionCreate:
     files: List[UploadFile]
-    remarks: str = Form(None, min_length=1)
+    remarks: str | None = Form(None, min_length=1)
 
 
 class Submission(SubmissionBase):
     model_config = ConfigDict(from_attributes=True)
 
     files_uuid: str
-    remarks: str
+    remarks: str | None
     id: int
     date: datetime
     project_id: int

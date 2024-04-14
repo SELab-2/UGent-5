@@ -1,3 +1,4 @@
+import asyncio
 import os
 import shutil
 from pathlib import Path
@@ -7,6 +8,7 @@ from docker.errors import ContainerError
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.database import AsyncSessionLocal
 from src.dependencies import get_async_db
 from src.docker_tests.utils import tests_path
 from src.submission.models import Status
@@ -26,12 +28,12 @@ def read_feedback_file(path: str) -> list[str]:
     return [line.strip() for line in test_feedback]
 
 
-def launch_docker_tests(submission_uuid: str, tests_uuid: str):
-    artifact_dir = artifacts_path(submission_uuid)
+async def launch_docker_tests(submission: Submission, tests_uuid: str):
+    artifact_dir = artifacts_path(submission.files_uuid)
     os.makedirs(artifact_dir)
 
     # create files for test feedback
-    feedback_dir = feedback_path(submission_uuid)
+    feedback_dir = feedback_path(submission.files_uuid)
     os.makedirs(feedback_dir)
     touch(os.path.join(feedback_dir, "correct"), os.path.join(feedback_dir, "failed"))
 
@@ -48,9 +50,9 @@ def launch_docker_tests(submission_uuid: str, tests_uuid: str):
         build_docker_image(path, image_tag)  # todo
 
     try:
-        logs = run_docker_tests(
+        logs = await asyncio.to_thread(run_docker_tests,
             image_tag,
-            submission_path(submission_uuid),
+            submission_path(submission.files_uuid),
             artifact_dir,
             feedback_dir,
             tests_path(tests_uuid),
@@ -60,13 +62,13 @@ def launch_docker_tests(submission_uuid: str, tests_uuid: str):
         status = Status.Rejected
         print(e.stderr)  # todo
 
-    print(logs.decode('utf-8'))
+    # print(logs.decode('utf-8'))  # todo
 
     correct = read_feedback_file(os.path.join(feedback_dir, "correct"))
     failed = read_feedback_file(os.path.join(feedback_dir, "failed"))
 
-    with get_async_db() as db:
-        update_submission_status(db, 123, status, correct, failed)
+    async with AsyncSessionLocal() as db:
+        await update_submission_status(db, submission.id, status, correct, failed)
 
     # feedback is stored in the db only
     shutil.rmtree(feedback_dir)

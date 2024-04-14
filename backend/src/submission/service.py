@@ -31,7 +31,7 @@ async def get_submission(db: AsyncSession, submission_id: int) -> models.Submiss
 
 async def create_submission(db: AsyncSession,
                             uuid: str,
-                            remarks: str,
+                            remarks: str | None,
                             status: Status,
                             group_id: int,
                             project_id: int
@@ -60,10 +60,10 @@ async def update_submission_status(
         raise SubmissionNotFound()
 
     submission.status = status
-    for result in succeeded_tests:
-        await create_testresult(db, submission_id, True, result)
-    for result in failed_tests:
-        await create_testresult(db, submission_id, False, result)
+    for value in succeeded_tests:
+        await create_testresult(db, submission_id, True, value)
+    for value in failed_tests:
+        await create_testresult(db, submission_id, False, value)
 
     await db.commit()
     await db.refresh(submission)
