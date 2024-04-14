@@ -1,12 +1,12 @@
 <template>
     <BackgroundContainer>
-    <v-container align="center">
-        <h1> {{ $t("subject.register" )}} </h1>
-        <v-row justify="center" >
-            <v-btn variant="text" class="register" @click="refetch"> Ok </v-btn>
-            <!-- <v-btn variant="text" class="cancel" @click="logout"> Cancel </v-btn> -->
-        </v-row>
-    </v-container>
+        <v-container align="center">
+            <h1>{{ $t("subject.register") }}</h1>
+            <v-row justify="center">
+                <v-btn variant="text" class="register" @click="refetch"> Ok </v-btn>
+                <!-- <v-btn variant="text" class="cancel" @click="logout"> Cancel </v-btn> -->
+            </v-row>
+        </v-container>
     </BackgroundContainer>
 </template>
 
@@ -18,7 +18,6 @@ const props = defineProps<{
 }>();
 
 const { refetch } = registerSubjectQuery(props.uuid);
-
 </script>
 
 <style scoped lang="scss">

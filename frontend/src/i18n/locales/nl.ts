@@ -26,7 +26,7 @@ export default {
         details_button: "Naar project",
     },
     subject: {
-        register: "Registreer bij een vak"
+        register: "Registreer bij een vak",
     },
     navigation: {
         home: "Hoofdscherm",

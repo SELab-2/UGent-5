@@ -17,9 +17,7 @@ export function useSubjectQuery(
     });
 }
 
-export function registerSubjectQuery(
-    uuid: string
-): UseQueryReturnType<Subject, Error> {
+export function registerSubjectQuery(uuid: string): UseQueryReturnType<Subject, Error> {
     return useQuery<Subject, Error>({
         queryKey: computed(() => SUBJECT_QUERY_KEY(uuid)),
         queryFn: () => registerToSubject(uuid),

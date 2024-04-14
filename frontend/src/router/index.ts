@@ -61,7 +61,7 @@ const router = createRouter({
             path: "/courses/register",
             name: "registerCourse",
             component: () => import("../views/SubjectRegisterView.vue"),
-            props: (route) => ({uuid: String(route.query.uuid)})
+            props: (route) => ({ uuid: String(route.query.uuid) }),
         },
         {
             path: "/settings",
