@@ -9,8 +9,7 @@
                 </v-col>
                 <v-col cols="2">
                     <router-link :to="`/projects/${projectId}/groups`">
-                        <v-btn>
-                            <v-icon>mdi-account-group</v-icon>
+                        <v-btn prepend-icon="mdi-account-group">
                             Join Group
                         </v-btn>
                     </router-link>
