@@ -7,7 +7,6 @@ COPY entrypoint /home/runner/
 RUN useradd -m runner
 RUN chown -R runner:runner /home/runner/
 
-# C u
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         # cmd line utils

@@ -19,7 +19,8 @@ from .dependencies import (
 from .schemas import Project, ProjectCreate, ProjectUpdate
 from .service import (
     delete_project,
-    update_project, )
+    update_project,
+)
 
 router = APIRouter(
     prefix="/api/projects",
