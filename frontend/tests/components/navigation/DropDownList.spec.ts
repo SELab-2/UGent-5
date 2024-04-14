@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { expect, describe, it, vi, beforeEach} from 'vitest'
+import { expect, describe, it, vi} from 'vitest'
 import DropDownList from '@/components/navigation/DropDownList.vue'
 import {ref} from "vue";
 
