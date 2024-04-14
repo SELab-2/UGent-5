@@ -37,7 +37,7 @@ const { projectId } = toRefs(props);
 
 const { data: project, isLoading, isError } = useProjectQuery(projectId);
 
-const { data2 : group, isError2 } = useUserGroupQuery(projectId);
+const { data : group, isError: isGroupError } = useUserGroupQuery(projectId);
 </script>
 
 <style scoped>

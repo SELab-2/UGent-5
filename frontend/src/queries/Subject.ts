@@ -8,6 +8,10 @@ function SUBJECT_QUERY_KEY(subjectId: number): (string | number)[] {
     return ["subject", subjectId];
 }
 
+function SUBJECT_INSTRUCTORS_QUERY_KEY(subjectId: number): (string | number)[] {
+    return ["subject", subjectId, "instructors"];
+}
+
 export function useSubjectQuery(
     subjectId: Ref<number | undefined>
 ): UseQueryReturnType<Subject, Error> {
@@ -18,11 +22,11 @@ export function useSubjectQuery(
     });
 }
 
-export function getSubjectInstructorsQuery(
+export function useSubjectInstructorsQuery(
     subjectId: Ref<number | undefined>
 ): UseQueryReturnType<User[] | null, Error> {
     return useQuery<User[] | null, Error>({
-        queryKey: computed(() => SUBJECT_QUERY_KEY(subjectId.value!)),
+        queryKey: computed(() => SUBJECT_INSTRUCTORS_QUERY_KEY(subjectId.value!)),
         queryFn: () => getSubjectInstructors(subjectId.value!),
         enabled: () => subjectId.value !== undefined,
     });

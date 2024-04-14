@@ -1,7 +1,6 @@
 <template>
     <div>
-        <v-btn @click="sendEmail">
-            <v-icon>mdi-email</v-icon>
+        <v-btn @click="sendEmail" prepend-icon="mdi-email">
             Need help
         </v-btn>
     </div>

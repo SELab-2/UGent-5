@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 import type Project from "@/models/Project";
-import {getSubjectInstructorsQuery, useSubjectQuery} from "@/queries/Subject";
+import {useSubjectInstructorsQuery, useSubjectQuery} from "@/queries/Subject";
 import {computed} from "vue";
 import { toRefs } from "vue";
 
@@ -53,20 +53,9 @@ const { data: subject, isLoading: isSubjectLoading } = useSubjectQuery(
     computed(() => project.value?.subject_id)
 );
 
-const { data2: instructors} = getSubjectInstructorsQuery(
+const { data: instructors} = useSubjectInstructorsQuery(
     computed( () => project.value?.subject_id)
 );
-console.log(subject);
-
-console.log("Instructors:");
-
-if (instructors) {
-    instructors.forEach((instructor: any) => {
-        console.log(instructor.uid);
-    });
-} else {
-    console.log("No instructors data available.");
-}
 
 const formattedDeadline = new Date(project.value?.deadline).toLocaleString();
 
