@@ -2,6 +2,6 @@ import time
 
 
 def questionable_code(path):
-    time.sleep(2)
+    time.sleep(1)
 
-    raise Exception()
+    raise RuntimeError()

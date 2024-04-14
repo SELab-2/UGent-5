@@ -1,10 +1,12 @@
+import os
 from typing import List
 from uuid import uuid4
 
 from fastapi import UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.docker_tests.utils import write_and_unpack_files, remove_test_files
+from src.docker_tests.docker_tests import build_docker_image
+from src.docker_tests.utils import write_and_unpack_files, remove_test_files, tests_path
 from src.project.service import get_project
 
 
@@ -16,7 +18,10 @@ async def update_test_files(db: AsyncSession, project_id: int, test_files: List[
     else:
         uuid = str(project.test_files_uuid)
 
-    write_and_unpack_files(test_files, str(project.test_files_uuid))
+    write_and_unpack_files(test_files, uuid)
+
+    if os.path.isfile(os.path.join(tests_path(uuid), "Dockerfile")):
+        build_docker_image(tests_path(uuid), uuid)  # build custom docker image if dockerfile is present
 
     project.test_files_uuid = uuid
     await db.commit()

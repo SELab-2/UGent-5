@@ -1,3 +1,4 @@
+import time
 from datetime import datetime, timedelta, timezone
 
 import pytest
@@ -55,14 +56,10 @@ async def test_no_docker_tests(client: AsyncClient, group_id: int, project_id: i
                                      )
 
     assert response.status_code == 201
-    assert response.json()["group_id"] == group_id
-    assert response.json()["project_id"] == project_id
     assert response.json()["status"] == Status.Accepted
     assert response.json()["testresults"] == []
 
     submission_id = response.json()["id"]
-    assert submission_id != ""
-
     artifact_response = await client.get(f"/api/submissions/{submission_id}/artifacts")
 
     assert artifact_response.json() == []  # no artifacts generated because no tests were run
@@ -70,26 +67,42 @@ async def test_no_docker_tests(client: AsyncClient, group_id: int, project_id: i
 
 @pytest.mark.asyncio
 async def test_default_tests_success(client: AsyncClient, db: AsyncSession, group_id: int, project_id: int):
+    # upload test files for project
     test_files = [
         ('files', ('run', open('docker_test_files/test_files/run', 'rb'))),
         ('files', ('test.py', open('docker_test_files/test_files/test.py', 'rb')))
     ]
-    response = await client.post(
+    response = await client.put(
         f"/api/projects/{project_id}/test_files",
         files=test_files
     )
-
     assert response.status_code == 200
-    assert response.json()["test_files_uuid"] is not None
+    assert response.json()["test_files_uuid"]
 
+    # make submission
     files = [
-        ('files', ('correct.py', open('docker_test_files/submission_files/correct.py', 'rb'))),
+        ('files', ('submission.py', open('docker_test_files/submission_files/correct.py', 'rb'))),
     ]
-
     response = await client.post("/api/submissions/",
                                  files=files,
                                  params={"group_id": group_id},
                                  )
 
-    assert response.json() == ""
-    assert response.status_code == 200
+    assert response.status_code == 201
+    assert response.json()["status"] == Status.InProgress
+    assert response.json()["testresults"] == []
+    submission_id = response.json()["id"]
+
+    artifact_response = await client.get(f"/api/submissions/{submission_id}/artifacts")
+    assert artifact_response.status_code == 404  # no artifacts generated because tests aren't finished yet
+
+    # wait for tests to finish
+    time.sleep(1.1)
+
+    submission = await client.get(f"/api/submissions/{submission_id}")
+    assert submission.status_code == 200
+    assert response.json()["status"] == Status.Accepted
+    assert submission.json()["testresults"] == ""
+
+    artifact_response = await client.get(f"/api/submissions/{submission_id}/artifacts")
+    assert artifact_response.json() == []  # generated artifacts

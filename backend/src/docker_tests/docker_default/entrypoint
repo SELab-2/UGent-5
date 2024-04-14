@@ -1,6 +1,6 @@
 #!/bin/sh
-cp -R /checks/. /home/runner
+cp -R /tests/. /home/runner
 cp -R /submission /home/runner
 chown -R runner:runner /home/runner/submission
 chmod a+wx /artifacts
-su runner -c '/home/runner/run'
+su runner -c 'sh /home/runner/run'

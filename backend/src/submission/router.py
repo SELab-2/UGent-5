@@ -13,7 +13,7 @@ from src.submission.dependencies import (
     group_id_validation,
     retrieve_submission,
 )
-from src.submission.exceptions import FileNotFound
+from src.submission.exceptions import FileNotFound, FilesNotFound
 from src.submission.utils import upload_files, get_files_from_dir, submission_path, artifacts_path
 from src.user.dependencies import admin_user_validation
 from . import service
@@ -80,12 +80,17 @@ async def get_file(path: str, submission: Submission = Depends(get_submission)):
 
 @router.get("/{submission_id}/artifacts", response_model=list[File])
 async def get_artifacts(submission: Submission = Depends(retrieve_submission)):
+    if submission.status == Status.InProgress:
+        raise FilesNotFound
     artifact_dir = artifacts_path(submission.files_uuid)
     return get_files_from_dir(artifact_dir)
 
 
 @router.get("/{submission_id}/artifacts/{path:path}", response_class=FileResponse)
 async def get_artifact(path: str, submission: Submission = Depends(get_submission)):
+    if submission.status == Status.InProgress:
+        raise FileNotFound
+
     path = artifacts_path(submission.files_uuid, path)
 
     if not os.path.isfile(path):
