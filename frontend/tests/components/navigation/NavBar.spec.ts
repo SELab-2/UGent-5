@@ -15,14 +15,18 @@ vi.mock('vue-router', () => ({
     useRouter: () => mockRouter
 }));
 
-describe('NavBar', () => {
-    vi.mock('@/stores/auth-store', () => ({
-        __esModule: true,
-        useAuthStore: () => ({
-            isLoggedIn: ref(true),
-        }),
-    }));
+const testAuthStore = {
+    isLoggedIn: ref(true),
+    setLoggedIn(value) {
+        this.isLoggedIn.value = value;
+    }
+};
 
+vi.mock('@/stores/auth-store', () => ({
+    useAuthStore: vi.fn(() => testAuthStore),
+}));
+
+describe('NavBar', () => {
     const ResizeObserverMock = vi.fn(() => ({
         observe: vi.fn(),
         unobserve: vi.fn(),
@@ -47,6 +51,7 @@ describe('NavBar', () => {
         expect(wrapper.find('[data-test="navigation.settings"]').exists()).toBeTruthy();
 
         expect(wrapper.find('[data-test="navigation.admin"]').exists()).toBeFalsy();
+        expect(wrapper.find('[data-test="navigation.login"]').exists()).toBeFalsy();
     });
 
     it('render correct navigations for admin', async () => {
@@ -62,5 +67,25 @@ describe('NavBar', () => {
         expect(wrapper.find('[data-test="navigation.projects"]').exists()).toBeTruthy();
         expect(wrapper.find('[data-test="navigation.settings"]').exists()).toBeTruthy();
         expect(wrapper.find('[data-test="navigation.admin"]').exists()).toBeTruthy();
+
+        expect(wrapper.find('[data-test="navigation.login"]').exists()).toBeFalsy();
+    })
+
+    it('render correct navigations not logged in', async () => {
+        const adminStore = await import('@/composables/useIsAdmin')
+        adminStore.default = () => ({ isAdmin: computed(() => false) });
+        testAuthStore.setLoggedIn(false);
+        const wrapper = mount(VLayout, {
+            slots: {
+                default: h(NavBar)
+            }
+        })
+        expect(wrapper.find('[data-test="navigation.login"]').exists()).toBeTruthy();
+
+        expect(wrapper.find('[data-test="navigation.home"]').exists()).toBeFalsy();
+        expect(wrapper.find('[data-test="navigation.courses"]').exists()).toBeFalsy();
+        expect(wrapper.find('[data-test="navigation.projects"]').exists()).toBeFalsy();
+        expect(wrapper.find('[data-test="navigation.settings"]').exists()).toBeFalsy();
+        expect(wrapper.find('[data-test="navigation.admin"]').exists()).toBeFalsy();
     })
 })
