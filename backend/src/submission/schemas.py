@@ -29,6 +29,7 @@ class Submission(SubmissionBase):
     model_config = ConfigDict(from_attributes=True)
 
     files_uuid: str
+    remarks: str
     id: int
     date: datetime
     project_id: int

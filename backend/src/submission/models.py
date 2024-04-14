@@ -20,6 +20,7 @@ class Submission(Base):
     date: Mapped[datetime] = mapped_column(default=datetime.now(),
                                            nullable=False)
     status: Mapped[Status] = mapped_column(default=Status.InProgress, nullable=False)
+    remarks: Mapped[str] = mapped_column(nullable=True)
     files_uuid: Mapped[str] = mapped_column(nullable=False)
 
     group_id: Mapped[int] = mapped_column(

@@ -33,9 +33,10 @@ async def delete_test_files(db: AsyncSession, project_id: int):
     project = await get_project(db, project_id)
 
     if not project.test_files_uuid:
-        raise Exception
+        raise Exception  # todo
 
     remove_test_files(str(project.test_files_uuid))
 
     await db.delete(project)
     await db.commit()
+

@@ -4,8 +4,14 @@ from pathlib import Path
 
 import docker
 from docker.errors import ContainerError
+from fastapi import Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.dependencies import get_async_db
 from src.docker_tests.utils import tests_path
+from src.submission.models import Status
+from src.submission.schemas import Submission
+from src.submission.service import update_submission_status
 from src.submission.utils import submission_path, artifacts_path, feedback_path
 
 
@@ -30,6 +36,7 @@ def launch_docker_tests(submission_uuid: str, tests_uuid: str):
     touch(os.path.join(feedback_dir, "correct"), os.path.join(feedback_dir, "failed"))
 
     # TODO: zorgen dat tests niet gemount worden als custom docker image gemaakt wordt
+    # TODO: failed of succeeded afhankelijk van exit code, zodat tests optioneel kunnen zijn
 
     if os.path.isfile(os.path.join(tests_path(tests_uuid), "Dockerfile")):
         image_tag = tests_uuid
@@ -48,13 +55,18 @@ def launch_docker_tests(submission_uuid: str, tests_uuid: str):
             feedback_dir,
             tests_path(tests_uuid),
         )
+        status = Status.Accepted
     except ContainerError as e:
+        status = Status.Rejected
         print(e.stderr)  # todo
 
     print(logs.decode('utf-8'))
 
-    print("correct: ", read_feedback_file(os.path.join(feedback_dir, "correct")))
-    print("failed: ", read_feedback_file(os.path.join(feedback_dir, "failed")))
+    correct = read_feedback_file(os.path.join(feedback_dir, "correct"))
+    failed = read_feedback_file(os.path.join(feedback_dir, "failed"))
+
+    with get_async_db() as db:
+        update_submission_status(db, 123, status, correct, failed)
 
     # feedback is stored in the db only
     shutil.rmtree(feedback_dir)

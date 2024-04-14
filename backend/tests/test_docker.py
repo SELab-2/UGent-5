@@ -52,11 +52,13 @@ async def test_no_docker_tests(client: AsyncClient, group_id: int, project_id: i
     with open("docker_test_files/submission_files/correct.py", "rb") as f:
         response = await client.post("/api/submissions/",
                                      files={"files": ("correct.py", f)},
+                                     data={"remarks": "test"},
                                      params={"group_id": group_id},
                                      )
 
     assert response.status_code == 201
     assert response.json()["status"] == Status.Accepted
+    assert response.json()["remarks"] == "test"
     assert response.json()["testresults"] == []
 
     submission_id = response.json()["id"]

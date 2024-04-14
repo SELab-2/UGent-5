@@ -45,14 +45,18 @@ async def create_submission(background_tasks: BackgroundTasks,
                             group: Group = Depends(retrieve_group),
                             db: AsyncSession = Depends(get_async_db)):
     project = await retrieve_project(group.project_id, db)
-    submission_uuid = upload_files(submission_in.files, project)
-    if project.test_files_uuid is not None:  # run docker tests if there are any
-        status = Status.InProgress
-        background_tasks.add_task(launch_docker_tests, submission_uuid, project.test_files_uuid)
-    else:
-        status = Status.Accepted
-    print(submission_in.remarks)  # TODO
-    return await service.create_submission(db, submission_uuid, status, group.id, group.project_id)
+    submission_uuid = upload_files(submission_in.files, project)  # TODO somehow is dit 0
+
+
+    if not project.test_files_uuid:  # don't run docker tests if there aren't any
+        return await service.create_submission(
+            db, submission_uuid, submission_in.remarks, Status.Accepted, group.id, group.project_id
+        )
+    submission = await service.create_submission(
+        db, uuid=submission_uuid, remarks=submission_in.remarks, status=Status.InProgress, group_id=group.id, project_id=group.project_id
+    )
+    # background_tasks.add_task(launch_docker_tests, submission.id, project.test_files_uuid)
+    return submission
 
 
 @router.delete("/{submission_id}",
