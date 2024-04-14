@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { expect, describe, it, vi, beforeEach} from 'vitest'
+import { expect, describe, it} from 'vitest'
 import DropDownMobile from '@/components/navigation/DropDownMobile.vue'
 
 describe('DropDownMobile', () => {

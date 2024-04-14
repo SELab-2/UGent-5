@@ -15,21 +15,19 @@ import LogoutButton from "@/components/buttons/LogoutButton.vue";
 
 import { useAuthStore } from "@/stores/auth-store";
 import { storeToRefs } from "pinia";
-import {ref} from "vue";
+import { ref } from "vue";
 
-const loggedInValue = ref(false)
+const loggedInValue = ref(false);
 
-const beforeCreate = async function beforeCreate(){
+const beforeCreate = async function beforeCreate() {
     const { isLoggedIn } = storeToRefs(useAuthStore());
-    loggedInValue.value = isLoggedIn
-}
+    loggedInValue.value = isLoggedIn;
+};
 
-beforeCreate()
-
+beforeCreate();
 </script>
 
 <style scoped>
-
 .items {
     display: flex;
     flex-direction: column;

@@ -10,8 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import DropDownList from '@/components/navigation/DropDownList.vue'
-
+import DropDownList from "@/components/navigation/DropDownList.vue";
 </script>
 
 <style scoped>

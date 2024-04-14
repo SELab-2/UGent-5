@@ -8,14 +8,13 @@ import { VueQueryPlugin } from "@tanstack/vue-query";
 import App from "./App.vue";
 import router from "./router";
 
-import vuetify from "@/plugins/vuetify.ts"
+import vuetify from "@/plugins/vuetify.ts";
 
 import i18n from "./i18n";
 
 const app = createApp(App);
 
 const pinia = createPinia();
-
 
 app.use(router);
 app.use(pinia);
