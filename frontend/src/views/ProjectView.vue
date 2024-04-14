@@ -9,9 +9,12 @@
                 </v-col>
                 <v-col cols="2">
                     <router-link :to="`/projects/${projectId}/groups`">
-                        <button>Go to Groups</button>
+                        <v-btn>
+                            <v-icon>mdi-account-group</v-icon>
+                            Join Group
+                        </v-btn>
                     </router-link>
-                    <h1>"ask question placeholder"</h1>
+                    <NeedHelpButton :email="'test@test.be'"></NeedHelpButton>
                 </v-col>
             </v-row>
         </div>
@@ -20,8 +23,11 @@
 
 <script setup lang="ts">
 import ProjectInfo from "@/components/project/ProjectInfo.vue";
+
 import { useProjectQuery } from "@/queries/Project";
 import { toRefs } from "vue";
+import NeedHelpButton from "@/components/buttons/NeedHelpButton.vue";
+import {useUserGroupQuery} from "@/queries/Group";
 
 const props = defineProps<{
     projectId: number;
@@ -30,6 +36,11 @@ const props = defineProps<{
 const { projectId } = toRefs(props);
 
 const { data: project, isLoading, isError } = useProjectQuery(projectId);
+
+const { data2 : group, isError2 } = useUserGroupQuery(projectId);
 </script>
 
-<style scoped></style>
+<style scoped>
+
+
+</style>

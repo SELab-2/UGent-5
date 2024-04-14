@@ -1,6 +1,9 @@
 <template>
     <div>
-        <v-btn @click="sendEmail"> Need help? </v-btn>
+        <v-btn @click="sendEmail">
+            <v-icon>mdi-email</v-icon>
+            Need help
+        </v-btn>
     </div>
 </template>
 
