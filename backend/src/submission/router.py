@@ -10,12 +10,13 @@ from src.group.dependencies import retrieve_group
 from src.group.schemas import Group
 from src.project.dependencies import retrieve_project
 from src.submission.dependencies import (
-    group_id_validation,
+    group_permission_validation,
     retrieve_submission,
 )
 from src.submission.exceptions import FileNotFound
 from src.submission.utils import upload_files
-from src.user.dependencies import admin_user_validation
+from src.user.dependencies import admin_user_validation, get_authenticated_user
+from src.user.schemas import User
 
 from . import service
 from .schemas import File, Submission
@@ -38,11 +39,12 @@ async def get_submission(submission: Submission = Depends(retrieve_submission)) 
 
 
 @router.post("/", response_model=Submission, status_code=201,
-             dependencies=[Depends(group_id_validation)])
+             dependencies=[Depends(group_permission_validation)])
 async def create_submission(files: list[UploadFile],
                             group: Group = Depends(retrieve_group),
+                            user: User = Depends(get_authenticated_user),
                             db: AsyncSession = Depends(get_async_db)):
-    project = await retrieve_project(group.project_id, db)
+    project = await retrieve_project(group.project_id, user, db)
     uuid = upload_files(files, project)
     return await service.create_submission(db, uuid, group.id, group.project_id)
 
@@ -68,7 +70,7 @@ async def get_files(submission: Submission = Depends(retrieve_submission)):
 
 
 @router.get("/{submission_id}/files/{path:path}", response_class=FileResponse)
-async def get_file(path: str, submission: Submission = Depends(get_submission)):
+async def get_file(path: str, submission: Submission = Depends(retrieve_submission)):
     path = os.path.join(config.CONFIG.file_path, submission.files_uuid, path)
 
     if not os.path.isfile(path):

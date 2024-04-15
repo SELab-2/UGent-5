@@ -2,13 +2,16 @@ from typing import Sequence
 
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.auth.exceptions import NotAuthorized
 from src.dependencies import get_async_db
-from src.group.schemas import Group, GroupList
+from src.group.schemas import Group, GroupCreate, GroupList
+from src.project.dependencies import retrieve_project
 from src.user.dependencies import get_authenticated_user
 from src.user.schemas import User
+from src.subject.utils import has_subject_privileges
 
 from . import service
-from .exceptions import AlreadyInGroup, GroupNotFound
+from .exceptions import AlreadyInGroup, GroupNotFound, MaxCapacity
 
 
 async def retrieve_group(
@@ -33,22 +36,28 @@ async def retrieve_groups_by_project(
     return GroupList(groups=groups)
 
 
-async def is_authorized_to_leave(
-    group_id: int,
+async def create_group_validation(
+    group: GroupCreate,
     user: User = Depends(get_authenticated_user),
-    db: AsyncSession = Depends(get_async_db),
+    db: AsyncSession = Depends(get_async_db)
 ):
-    groups = await service.get_groups_by_user(db, user.uid)
-    if not any(group.id == group_id for group in groups):
-        raise GroupNotFound()
-
+    project = await retrieve_project(group.project_id, user, db)
+    if not await has_subject_privileges(project.subject_id, user, db):
+        raise NotAuthorized()
 
 # TODO: take enroll_date into consideration
-async def is_authorized_to_join(
-    group_id: int,
+
+
+async def join_group(
+    group: Group = Depends(retrieve_group),
     user: User = Depends(get_authenticated_user),
-    db: AsyncSession = Depends(get_async_db),
-):
-    groups = await service.get_groups_by_user(db, user.uid)
-    if any(group.id == group_id for group in groups):
+    db: AsyncSession = Depends(get_async_db)
+) -> Group:
+    project = await retrieve_project(group.project_id, user, db)
+    if user in group.members:
         raise AlreadyInGroup()
+    if len(group.members) >= project.capacity:
+        raise MaxCapacity()
+
+    await service.join_group(db, group.id, user.uid)
+    return group
