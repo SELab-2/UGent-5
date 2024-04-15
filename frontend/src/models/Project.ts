@@ -11,4 +11,5 @@ export default interface Project {
     deadline: Date;
     description: string;
     subject_id: number;
+    capacity: number;
 }

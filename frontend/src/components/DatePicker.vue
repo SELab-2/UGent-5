@@ -6,15 +6,13 @@
         offset-y
         full-width
     >
-        <template v-slot:activator="{ on, attrs }">
-            <!-- Bind the labelText prop to the label attribute -->
+        <template v-slot:activator="{ attrs }">
             <v-text-field
-                :value="displayDate"
+                v-model="displayDate"
                 :label="label"
                 readonly
                 v-bind="attrs"
                 @click="toggleDatePicker"
-                v-on="on"
             ></v-text-field>
         </template>
         <v-date-picker
@@ -29,10 +27,9 @@
 import { ref, computed } from 'vue';
 import { useVModel } from '@vueuse/core';
 
-// Define the labelText prop
 const props = defineProps({
-    modelValue: String,
-    label: String // New prop for dynamic label text
+    modelValue: Date,  // Expecting a Date object
+    label: String
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -40,6 +37,7 @@ const emit = defineEmits(['update:modelValue']);
 const menuVisible = ref(false);
 const date = useVModel(props, 'modelValue', emit);
 
+// Computed to format the date as ISO string (just the date part)
 const displayDate = computed(() => {
     if (date.value) {
         const selectedDate = new Date(date.value.getTime());
@@ -54,7 +52,8 @@ function toggleDatePicker() {
 }
 
 function updateDate(newValue) {
-    date.value = new Date(newValue);
+    console.log(newValue);
+    date.value = new Date(newValue);  // Ensure newValue is a Date object
     menuVisible.value = false;
 }
 </script>

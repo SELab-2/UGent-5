@@ -29,7 +29,13 @@
                 <DatePicker v-model="publishDate" label="Publish Date" required />
             </v-col>
             <v-col cols="12" md="6">
-                <RadioButtonList v-model="selectedGroupProject" :title="'Group Project Options'" :options="groupProjectOptions" required />
+                <RadioButtonList
+                    v-model="selectedGroupProject"
+                    :title="'Group Project Options'"
+                    :options="groupProjectOptions"
+                    @update:capacity="handleCapacityChange"
+                    required
+                />
             </v-col>
         </v-row>
     </v-container>
@@ -98,7 +104,7 @@ async function submitForm() {
     const projectData: Project = {
         name: title.value,
         deadline: deadline.value.toISOString(),
-        description: 'A default project description',
+        description: "default",
         subject_id: selectedCourse.value,
         // Additional fields here
     };
@@ -111,6 +117,12 @@ async function submitForm() {
 function formatInstructor({ uid, given_name, checked = false }) {
     return { id: uid, label: given_name, checked };
 }
+
+const handleCapacityChange = (newCapacity) => {
+    // Handle capacity logic here
+    console.log('Updated Capacity:', newCapacity);
+    // You might set other related data properties or emit further changes
+};
 </script>
 
 <style>
