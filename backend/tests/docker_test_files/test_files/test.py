@@ -13,7 +13,7 @@ def main():
 
         except RuntimeError:
             failed.write("Tweede test mislukt!\n")
-            exit(-1)
+            exit(os.environ['EXIT_TEST_FAILED'])
 
 
 if __name__ == "__main__":

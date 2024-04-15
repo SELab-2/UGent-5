@@ -5,7 +5,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from . import service
 from .dependencies import put_permission_validation, delete_permission_validation
-from .docker_tests import build_docker_image
 from .service import update_test_files
 from ..auth.dependencies import authentication_validation
 from ..dependencies import get_async_db
