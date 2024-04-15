@@ -1,18 +1,20 @@
 """add_docker_tests
 
-Revision ID: 6ceb31bcf295
+Revision ID: 06e8c7f8139a
 Revises: a88aec136b59
-Create Date: 2024-04-14 17:28:29.958915
+Create Date: 2024-04-15 18:23:09.224330
 
 """
 from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy.dialects.postgresql import ENUM
 
+from src.submission.models import ResultType, Status
 
 # revision identifiers, used by Alembic.
-revision: str = '6ceb31bcf295'
+revision: str = '06e8c7f8139a'
 down_revision: Union[str, None] = 'a88aec136b59'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -23,7 +25,7 @@ def upgrade() -> None:
     op.create_table('testresult',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('submission_id', sa.Integer(), nullable=False),
-    sa.Column('succeeded', sa.Boolean(), nullable=False),
+    sa.Column('type', ENUM(ResultType, name='resulttype'), nullable=False),
     sa.Column('value', sa.String(), nullable=False),
     sa.ForeignKeyConstraint(['submission_id'], ['submission.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
@@ -38,4 +40,6 @@ def downgrade() -> None:
     op.drop_column('submission', 'remarks')
     op.drop_column('project', 'test_files_uuid')
     op.drop_table('testresult')
+    enum = ENUM(ResultType, name='resulttype')
+    enum.drop(op.get_bind())
     # ### end Alembic commands ###

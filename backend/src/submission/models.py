@@ -11,6 +11,7 @@ class Status(enum.IntEnum):
     InProgress = 1,
     Accepted = 2,
     Rejected = 3,
+    Crashed = 4,
 
 
 class Submission(Base):
@@ -33,12 +34,19 @@ class Submission(Base):
         nullable=False
     )
 
-    testresults: Mapped[List["Testresult"]] = relationship(
+    testresults: Mapped[List["TestResult"]] = relationship(
         back_populates="submission", lazy="joined"
     )
 
 
-class Testresult(Base):
+class ResultType(enum.IntEnum):
+    OK = 1,
+    Failed = 2,
+    StdOut = 3,
+    StdErr = 4,
+
+
+class TestResult(Base):
     __tablename__ = "testresult"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -48,6 +56,5 @@ class Testresult(Base):
     )
     submission: Mapped["Submission"] = relationship(back_populates="testresults")
 
-    # true if test succeeded, false if not
-    succeeded: Mapped[bool] = mapped_column(nullable=False)
+    type: Mapped[ResultType] = mapped_column(nullable=False)
     value: Mapped[str] = mapped_column(nullable=False)

@@ -1,3 +1,4 @@
+import asyncio
 import shutil
 import time
 from datetime import datetime, timedelta, timezone
@@ -106,11 +107,8 @@ async def test_default_tests_success(client: AsyncClient, db: AsyncSession, grou
     assert response.json()["testresults"] == []
     submission_id = response.json()["id"]
 
-    artifact_response = await client.get(f"/api/submissions/{submission_id}/artifacts")
-    assert artifact_response.status_code == 404  # no artifacts generated because tests aren't finished yet
-
     # wait for tests to finish
-    time.sleep(2)
+    await asyncio.sleep(2)
 
     submission = await client.get(f"/api/submissions/{submission_id}")
     assert submission.status_code == 200

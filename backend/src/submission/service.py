@@ -2,9 +2,9 @@ from typing import Sequence, List
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from . import models
+from . import models, schemas
 from .exceptions import SubmissionNotFound
-from .models import Status, Submission, Testresult
+from .models import Status, ResultType
 
 
 async def get_submissions(db: AsyncSession) -> Sequence[models.Submission]:
@@ -52,18 +52,17 @@ async def delete_submission(db: AsyncSession, submission_id: int):
 
 
 async def update_submission_status(
-    db: AsyncSession, submission_id: int, status: Status, succeeded_tests: List[str], failed_tests: List[str]
-) -> Submission:
-    result = await db.execute(select(Submission).filter_by(id=submission_id))
+    db: AsyncSession, submission_id: int, status: Status, test_results: List[schemas.TestResult]
+) -> models.Submission:
+    result = await db.execute(select(models.Submission).filter_by(id=submission_id))
     submission = result.scalars().first()
     if not submission:
         raise SubmissionNotFound()
 
     submission.status = status
-    for value in succeeded_tests:
-        await create_testresult(db, submission_id, True, value)
-    for value in failed_tests:
-        await create_testresult(db, submission_id, False, value)
+
+    for testresult in test_results:
+        await create_testresult(db, submission_id, testresult.type, testresult.value)
 
     await db.commit()
     await db.refresh(submission)
@@ -71,10 +70,10 @@ async def update_submission_status(
 
 
 async def create_testresult(
-    db: AsyncSession, submission_id: int, succeeded: bool, value: str
-) -> Testresult:
-    db_testresult = models.Testresult(
-        submission_id=submission_id, succeeded=succeeded, value=value)
+    db: AsyncSession, submission_id: int, result_type: ResultType, value: str
+) -> models.TestResult:
+    db_testresult = models.TestResult(
+        submission_id=submission_id, type=result_type, value=value)
     db.add(db_testresult)
     await db.commit()
     await db.refresh(db_testresult)

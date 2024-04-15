@@ -59,11 +59,7 @@ async def create_submission(background_tasks: BackgroundTasks,
 
     # launch docker tests
     if test_files_uuid is not None:
-        background_tasks.add_task(launch_docker_tests, submission, test_files_uuid)
-        # await launch_docker_tests(db, submission, test_files_uuid)
-
-        # with ProcessPoolExecutor() as executor:
-        #     executor.submit(launch_docker_tests, db, submission, test_files_uuid)
+        background_tasks.add_task(launch_docker_tests, db, submission, test_files_uuid)
 
     return submission
 

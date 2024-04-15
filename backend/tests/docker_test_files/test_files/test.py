@@ -10,8 +10,10 @@ def main():
         try:
             questionable_code(os.path.join(os.environ['ARTIFACT_DIR'], "artifact.txt"))
             correct.write("Tweede test geslaagd\n")
+
         except RuntimeError:
             failed.write("Tweede test mislukt!\n")
+            exit(-1)
 
 
 if __name__ == "__main__":
