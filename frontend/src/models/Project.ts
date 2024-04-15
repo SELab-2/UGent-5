@@ -4,4 +4,5 @@ export default interface Project {
     deadline: Date;
     description: string;
     subject_id: number;
+    test_files_uuid: string;
 }

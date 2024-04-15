@@ -16,3 +16,7 @@ export async function createSubmission(groupId: number, formData: FormData): Pro
         true
     );
 }
+
+export async function getSubmissions(): Promise<Submission[]> {
+    return authorized_fetch(`/api/submissions/`, { method: "GET" });
+}

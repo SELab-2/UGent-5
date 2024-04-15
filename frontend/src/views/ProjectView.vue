@@ -8,7 +8,12 @@
                     <ProjectInfo :project="project!" />
                 </v-col>
                 <v-col cols="2">
-                    <router-link :to="`/projects/${projectId}/groups`">
+                    <router-link v-if="group" :to="`/api/groups/${group?.id}`">
+                        <v-btn prepend-icon="mdi-account-group">
+                            Group {{group?.id}}
+                        </v-btn>
+                    </router-link>
+                    <router-link v-else :to="`/projects/${projectId}/groups`">
                         <v-btn prepend-icon="mdi-account-group">
                             Join Group
                         </v-btn>
@@ -24,7 +29,7 @@
 import ProjectInfo from "@/components/project/ProjectInfo.vue";
 
 import { useProjectQuery } from "@/queries/Project";
-import { toRefs } from "vue";
+import {computed, toRefs} from "vue";
 import NeedHelpButton from "@/components/buttons/NeedHelpButton.vue";
 import {useUserGroupQuery} from "@/queries/Group";
 
@@ -37,6 +42,8 @@ const { projectId } = toRefs(props);
 const { data: project, isLoading, isError } = useProjectQuery(projectId);
 
 const { data : group, isError: isGroupError } = useUserGroupQuery(projectId);
+const isGroupNull = computed(() => group.value === null);
+
 </script>
 
 <style scoped>

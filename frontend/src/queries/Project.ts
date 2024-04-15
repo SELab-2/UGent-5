@@ -5,7 +5,7 @@ import {
     type UseQueryReturnType,
 } from "@tanstack/vue-query";
 import type Project from "@/models/Project";
-import { getProject, createSubmission } from "@/services/project";
+import {getProject, createSubmission, getSubmissions} from "@/services/project";
 import { type Ref, computed } from "vue";
 import type Submission from "@/models/Submission";
 
@@ -32,5 +32,11 @@ export function useCreateSubmissionMutation(
             // todo
             alert(e.message);
         },
+    });
+}
+
+export function useSubmissionQuery() : UseQueryReturnType<Submission[], Error> {
+    return useQuery<Submission[], Error>({
+        queryFn: () => getSubmissions(),
     });
 }
