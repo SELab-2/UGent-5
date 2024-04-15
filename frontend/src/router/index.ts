@@ -53,11 +53,6 @@ const router = createRouter({
             props: (route) => ({ projectId: Number(route.params.projectId) }),
         },
         {
-            path: "/courses",
-            name: "courses",
-            component: () => import("../views/CoursesView.vue"),
-        },
-        {
             path: "/subjects",
             name: "subjects",
             component: () => import("../views/subject/SubjectsView.vue"),

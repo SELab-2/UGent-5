@@ -15,7 +15,7 @@ const noLoginNavigations: NavigationData[] = [
 
 const main_navigations: NavigationData[] = [
     { icon: "mdi-home-outline", title: "navigation.home", goto: "home" },
-    { icon: "mdi-school-outline", title: "navigation.courses", goto: "courses" },
+    { icon: "mdi-school-outline", title: "navigation.subjects", goto: "subjects" },
     { icon: "mdi-book-check-outline", title: "navigation.projects", goto: "projects" },
     { icon: "mdi-information-outline", title: "navigation.about", goto: "about" },
     { icon: "mdi-cog-outline", title: "navigation.settings", goto: "settings" },
