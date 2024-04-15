@@ -73,10 +73,10 @@ alembic upgrade head
 
 #### Managing the database
 ```bash
-# Start the database container
-docker start my_postgres_container
 # Stop the database container
 docker stop my_postgres_container
+# Start the database container again
+docker start my_postgres_container
 
 # Remove a stopped container
 docker rm my_postgres_container
