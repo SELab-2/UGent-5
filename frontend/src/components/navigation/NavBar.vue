@@ -1,12 +1,14 @@
 <template>
     <v-navigation-drawer v-model="isOpen" app>
-        <NavButton
-            v-for="nav in navigations"
-            :key="nav.title"
-            :title="nav.title"
-            :icon="nav.icon"
-            :goto="nav.goto"
-        />
+        <div class="navbuttons">
+            <NavButton
+                v-for="nav in navigations"
+                :key="nav.title"
+                :title="nav.title"
+                :icon="nav.icon"
+                :goto="nav.goto"
+            />
+        </div>
         <template v-slot:append>
             <div class="ugent-logo">
                 <img
@@ -47,5 +49,9 @@ defineExpose({
 .ugent-logo {
     bottom: 0;
     margin-bottom: 30px;
+}
+
+.navbuttons {
+    margin-top: 20px;
 }
 </style>

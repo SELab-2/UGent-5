@@ -299,7 +299,7 @@ function useSubjectQuery(subjectId: Ref<number | undefined>): UseQueryReturnType
     return useQuery<Subject, Error>({
         queryKey: computed(() => USER_QUERY_KEY(uid.value)),
         queryFn: () => getUser(uid.value),
-        enabled: () => subjectId.value !== undefind,
+        enabled: () => subjectId.value !== undefined,
     });
 }
 ```

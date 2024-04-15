@@ -17,9 +17,11 @@ class Project(Base):
     )
     name: Mapped[str] = mapped_column(nullable=False)
     subject_id: Mapped[int] = mapped_column(
-        ForeignKey("subject.id", ondelete="CASCADE"), nullable=True
+        ForeignKey("subject.id", ondelete="CASCADE"), nullable=False
     )
     description: Mapped[str] = mapped_column(nullable=True)
+    is_visible: Mapped[bool] = mapped_column(nullable=False)
+    capacity: Mapped[int] = mapped_column(nullable=False)
     enroll_deadline: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=True
     )

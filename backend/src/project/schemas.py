@@ -11,11 +11,13 @@ class Requirement(BaseModel):
     value: str = Field(min_length=1)
 
 
-class ProjectCreate(BaseModel):
+class ProjectBase(BaseModel):
     name: str = Field(..., min_length=1)
     deadline: datetime
     description: str
     subject_id: int
+    is_visible: bool = Field(default=False)
+    capacity: int = Field(gt=0)
     requirements: List[Requirement] = []
 
     # Check if deadline is not in the past
@@ -26,7 +28,11 @@ class ProjectCreate(BaseModel):
         return value
 
 
-class Project(BaseModel):
+class ProjectCreate(ProjectBase):
+    pass
+
+
+class Project(ProjectBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
@@ -47,6 +53,7 @@ class ProjectUpdate(BaseModel):
     deadline: Optional[datetime] = None
     description: Optional[str] = None
     requirements: Optional[List[Requirement]] = None
+    is_visible: Optional[bool] = None
 
     @field_validator("deadline")
     def validate_deadline(cls, value: datetime) -> datetime:

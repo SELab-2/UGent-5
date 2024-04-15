@@ -4,11 +4,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from src.subject.models import StudentSubject, Subject
 
-from src.subject.service import get_instructors
 from .exceptions import ProjectNotFoundException
 from .models import Project, Requirement
 from .schemas import ProjectCreate, ProjectList, ProjectUpdate
-from src.user.models import User
 
 
 async def create_project(db: AsyncSession, project_in: ProjectCreate) -> Project:
@@ -17,6 +15,8 @@ async def create_project(db: AsyncSession, project_in: ProjectCreate) -> Project
         deadline=project_in.deadline,
         subject_id=project_in.subject_id,
         description=project_in.description,
+        is_visible=project_in.is_visible,
+        capacity=project_in.capacity,
         requirements=[Requirement(**r.model_dump()) for r in project_in.requirements],
     )
     db.add(new_project)
@@ -28,11 +28,6 @@ async def create_project(db: AsyncSession, project_in: ProjectCreate) -> Project
 async def get_project(db: AsyncSession, project_id: int) -> Project:
     result = await db.execute(select(Project).where(Project.id == project_id))
     return result.scalars().first()
-
-
-async def get_instructors_by_project(db: AsyncSession, project_id: int) -> Sequence[User]:
-    project = await get_project(db, project_id)
-    return await get_instructors(db, project.subject_id)
 
 
 async def get_projects_by_user(db: AsyncSession, user_id: str) -> Sequence[Project]:
@@ -73,6 +68,8 @@ async def update_project(
         project.deadline = project_update.deadline
     if project_update.description is not None:
         project.description = project_update.description
+    if project_update.is_visible is not None:
+        project.is_visible = project_update.is_visible
     if project_update.requirements is not None:
         project.requirements = [Requirement(**r.model_dump())
                                 for r in project_update.requirements]
