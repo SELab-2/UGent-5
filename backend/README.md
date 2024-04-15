@@ -24,6 +24,12 @@ ALGORITHM="HS256" # algorithm used to sign JWT tokens
 FILE_PATH="files" # Location where uploaded files are stored
 ```
 
+### Install docker
+
+To be able to run the automated tests or run a local development database,
+follow the installation instructions for either
+[docker engine](https://docs.docker.com/engine/install/) (CLI) or [docker desktop](https://www.docker.com/get-started/) (GUI, includes docker engine).
+
 ### Usage
 
 #### Activate the environment:
@@ -39,6 +45,43 @@ source venv/bin/activate
 ```
 
 This will start a local development server on port `5173`
+
+## Recommended: run a local instance of the database in a docker container
+
+```bash
+# Pull the latest postgres image
+docker pull postgres
+# Run the postgres deamon in a docker container
+docker run --name my_postgres_container \
+  -p 5432:5432 \
+  -e POSTGRES_USER=username \
+  -e POSTGRES_PASSWORD=password \
+  -e POSTGRES_DB=dbname \
+  -d \
+  postgres
+```
+
+#### Change this line in `.env` to reflect database connection info
+```yml
+DATABASE_URI="postgresql://username:password@localhost:5432/dbname"
+```
+
+#### Run alembic to initialize the database
+```yml
+alembic upgrade head
+```
+
+#### Managing the database
+```bash
+# Start the database container
+docker start my_postgres_container
+# Stop the database container
+docker stop my_postgres_container
+
+# Remove a stopped container
+docker rm my_postgres_container
+```
+If you installed Docker Desktop, you can use the GUI to manage your containers and images.
 
 ## The API
 
