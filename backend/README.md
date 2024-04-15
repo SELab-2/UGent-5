@@ -48,7 +48,7 @@ This will start a local development server on port `5173`
 
 ## Recommended: run a local instance of the database in a docker container
 
-```bash
+```sh
 # Pull the latest postgres image
 docker pull postgres
 # Run the postgres deamon in a docker container
@@ -67,12 +67,12 @@ DATABASE_URI="postgresql://username:password@localhost:5432/dbname"
 ```
 
 #### Run alembic to initialize the database
-```yml
+```sh
 alembic upgrade head
 ```
 
 #### Managing the database
-```bash
+```sh
 # Stop the database container
 docker stop my_postgres_container
 # Start the database container again
