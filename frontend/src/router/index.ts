@@ -1,4 +1,3 @@
-import { useAuthStore } from "@/stores/auth-store";
 import { createRouter, createWebHistory } from "vue-router";
 import { type Middleware, type MiddlewareContext, nextFactory } from "./middleware/index";
 import isAuthenticated from "./middleware/isAuthenticated";
@@ -31,21 +30,6 @@ const router = createRouter({
             path: "/login",
             name: "login",
             component: () => import("../views/LoginView.vue"),
-            beforeEnter: async (to, from, next) => {
-                const { isLoggedIn, login, setNext } = useAuthStore();
-                if (isLoggedIn) {
-                    router.replace("/home");
-                    next();
-                    return;
-                }
-                const ticket = to.query.ticket?.toString();
-                setNext(from.path);
-                const redirect = await login(ticket);
-                if (redirect) {
-                    router.replace(redirect);
-                }
-                next();
-            },
             meta: {
                 requiresAuth: false,
                 hideHeader: true,
@@ -61,6 +45,11 @@ const router = createRouter({
             path: "/projects",
             name: "projects",
             component: () => import("../views/ProjectsView.vue"),
+        },
+        {
+            path: "/create-project",
+            name: "create-project",
+            component: () => import("../views/CreateProjectView.vue"),
         },
         {
             path: "/project/:projectId(\\d+)/submit",

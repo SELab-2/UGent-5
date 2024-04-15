@@ -1,22 +1,3 @@
-<!--<template>-->
-<!--    <QuillEditor theme="snow" />-->
-<!--</template>-->
-
-<!--<script>-->
-<!--import { QuillEditor } from '@vueup/vue-quill'-->
-<!--import '@vueup/vue-quill/dist/vue-quill.snow.css';-->
-
-<!--export default {-->
-<!--    components:{-->
-<!--        QuillEditor-->
-<!--    }-->
-<!--}-->
-<!--</script>-->
-
-
-
-
-
 <template>
     <v-container>
         <!-- Row for Title and Teachers -->
@@ -52,10 +33,10 @@
             </v-col>
         </v-row>
     </v-container>
-    <v-container>
+    <v-container class="flex-container">
         <!-- Header for the Editor -->
         <v-row>
-            <v-col cols="12">
+            <v-col cols="16">
                 <v-card class="mb-0">
                     <v-card-title class="headline">Assignment</v-card-title>
                 </v-card>
@@ -63,20 +44,13 @@
         </v-row>
 
         <!-- Quill Editor -->
-        <v-row>
+        <v-row class="mt-0"> <!-- Reduce top margin -->
             <v-col cols="12">
                 <QuillEditor v-model="quillContent" theme="snow" class="quill-editor" />
             </v-col>
         </v-row>
-
-        <!-- Other form components... -->
-        <!-- ... -->
-
-        <!-- Submit Button -->
-    </v-container>
-    <v-container>
         <v-row>
-            <v-col cols="16">
+            <v-col cols="12" class="text-right">
                 <v-btn @click="submitForm">Submit</v-btn>
             </v-col>
         </v-row>
@@ -138,3 +112,19 @@ function formatInstructor({ uid, given_name, checked = false }) {
     return { id: uid, label: given_name, checked };
 }
 </script>
+
+<style>
+.flex-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.v-row:not(:last-child) {
+    margin-bottom: 16px; /* Adjust as needed */
+}
+
+.quill-editor {
+    /* Add min-height or height as necessary to control the size of the editor */
+    min-height: 150px; /* Example min-height */
+}
+</style>
