@@ -27,7 +27,7 @@ export default {
     },
     navigation: {
         home: "Home",
-        courses: "Courses",
+        subjects: "Subjects",
         projects: "Projects",
         settings: "Settings",
         help: "Help",
@@ -37,7 +37,7 @@ export default {
     },
     homescreen: {
         deadlines: "Project deadlines",
-        courses: "My courses",
+        subjects: "My subjects",
         announcements: "Announcements",
     },
     subject: {
@@ -57,6 +57,6 @@ export default {
         },
     },
     subjects: {
-        title: "My Courses",
+        title: "My Subjects",
     },
 };
