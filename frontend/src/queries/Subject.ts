@@ -1,4 +1,4 @@
-import {useQuery, type UseQueryReturnType} from "@tanstack/vue-query";
+import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
 import type Subject from "@/models/Subject";
 import {
     getSubject,
@@ -7,7 +7,7 @@ import {
     getSubjects,
     getSubjectStudents,
 } from "@/services/subject";
-import {type Ref, computed} from "vue";
+import { type Ref, computed } from "vue";
 import type User from "@/models/User";
 import type Project from "@/models/Project";
 import type SubjectDetails from "@/models/SubjectDetails";
@@ -79,18 +79,19 @@ export function useSubjectsQuery(): UseQueryReturnType<Subject[], Error> {
     });
 }
 
-export function useSubjectDetailsQuery(subjectId: Ref<number | undefined>): UseQueryReturnType<SubjectDetails, Error> {
+export function useSubjectDetailsQuery(
+    subjectId: Ref<number | undefined>
+): UseQueryReturnType<SubjectDetails, Error> {
     return useQuery<SubjectDetails, Error>({
         queryKey: computed(() => SUBJECT_DETAILS_QUERY_KEY(subjectId.value!)),
         queryFn: async () => {
-
             // Fetch data for subject, instructors, students, and projects
-            const [subject, instructors, students, projects] = await Promise.all([
+            const [subject, instructors, students, projects] = (await Promise.all([
                 getSubject(subjectId.value!),
                 getSubjectInstructors(subjectId.value!),
                 getSubjectStudents(subjectId.value!),
-                getSubjectProjects(subjectId.value!)
-            ]) as [Subject, User[], User[], Project[]]
+                getSubjectProjects(subjectId.value!),
+            ])) as [Subject, User[], User[], Project[]];
 
             // Map data into SubjectDetails structure
             return {
@@ -98,10 +99,9 @@ export function useSubjectDetailsQuery(subjectId: Ref<number | undefined>): UseQ
                 name: subject.name,
                 instructors,
                 students,
-                projects
+                projects,
             } as SubjectDetails;
         },
         enabled: () => subjectId.value !== undefined,
     });
 }
-

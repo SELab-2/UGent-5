@@ -3,9 +3,7 @@
         <v-skeleton-loader :loading="isLoading" type="card" color="white">
             <v-row>
                 <v-col>
-                    <v-card-title
-                        class="title"
-                    >
+                    <v-card-title class="title">
                         {{ title }}
                     </v-card-title>
                     <v-card-text>
@@ -26,7 +24,6 @@
                     </v-card-text>
                 </v-col>
             </v-row>
-
         </v-skeleton-loader>
     </v-card>
 </template>
@@ -36,16 +33,14 @@ import type User from "@/models/User";
 import HeaderSubtitleButton from "@/components/buttons/HeaderSubtitleButton.vue";
 
 defineProps<{
-    title: string | undefined,
-    academicYear: string,
-    instructors: User[] | undefined,
-    isLoading: boolean,
+    title: string | undefined;
+    academicYear: string;
+    instructors: User[] | undefined;
+    isLoading: boolean;
 }>();
-
 </script>
 
 <style scoped>
-
 .title-card {
     background-color: white;
     padding: 20px;
@@ -58,13 +53,11 @@ defineProps<{
     text-transform: capitalize;
     font-weight: bold;
     margin-bottom: 12px;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
 }
 
 .instr-container {
     margin-top: 10px;
     margin-bottom: 5px;
 }
-
-
 </style>

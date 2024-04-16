@@ -7,7 +7,7 @@ export default interface Project {
 }
 
 export enum FilterOptions {
-    All = 'All',
-    Completed = 'Completed',
-    Active = 'Active',
+    All = "All",
+    Completed = "Completed",
+    Active = "Active",
 }

@@ -3,10 +3,8 @@
         <v-skeleton-loader :loading="isLoading" type="card" color="white">
             <v-row>
                 <v-col>
-                    <v-card-title
-                        class="title"
-                    >
-                        {{$t('subjects.title')}}
+                    <v-card-title class="title">
+                        {{ $t("subjects.title") }}
                     </v-card-title>
                     <v-card-text>
                         <HeaderSubtitleButton
@@ -27,7 +25,6 @@
                     </v-card-text>
                 </v-col>
             </v-row>
-
         </v-skeleton-loader>
     </v-card>
 </template>
@@ -36,15 +33,13 @@
 import HeaderSubtitleButton from "@/components/buttons/HeaderSubtitleButton.vue";
 
 defineProps<{
-    isLoading: Boolean | undefined,
+    isLoading: Boolean | undefined;
 }>();
 
 const academicYears = ["2023-2024", "2022-2023", "2021-2022"];
-
 </script>
 
 <style scoped>
-
 .title-card {
     background-color: white;
     padding: 20px;
@@ -56,7 +51,6 @@ const academicYears = ["2023-2024", "2022-2023", "2021-2022"];
     text-transform: capitalize;
     font-weight: bold;
     margin-bottom: 12px;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
 }
-
 </style>

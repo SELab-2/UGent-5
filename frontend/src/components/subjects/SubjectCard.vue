@@ -1,9 +1,6 @@
 <template>
-    <router-link
-        :to="{ name: 'subject', params: { subjectId: subject.id }}"
-        class="router-link"
-    >
-        <v-card rounded="xl" class="subject-card">
+    <router-link :to="{ name: 'subject', params: { subjectId: subject.id } }" class="router-link">
+        <v-card rounded="xl" class="subject-card" width="50%">
             <v-skeleton-loader :loading="isLoading">
                 <v-img
                     src="https://cdn.vuetifyjs.com/images/cards/desert.jpg"
@@ -12,7 +9,6 @@
                     cover
                     aspect-ratio="16/9"
                     height="120px"
-
                 >
                     <v-card-title>
                         {{ subject?.name }}
@@ -20,8 +16,6 @@
                     </v-card-title>
                 </v-img>
             </v-skeleton-loader>
-
-
         </v-card>
     </router-link>
 </template>
@@ -30,18 +24,21 @@
 import Subject from "@/models/Subject";
 
 defineProps<{
-    subject: Subject | undefined,
-    isLoading: boolean | undefined,
+    subject: Subject | undefined;
+    isLoading: boolean | undefined;
 }>();
-
-
 </script>
 
 <style scoped>
-
-
 .router-link {
     text-decoration: none;
 }
 
+.subject-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    margin-top: 10px;
+}
 </style>

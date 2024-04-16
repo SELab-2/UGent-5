@@ -3,7 +3,11 @@
         size="small"
         variant="outlined"
         rounded="xl"
-        :class="[!clickable ? 'not-clickable' : '', 'subtitle-button', active ? 'subtitle-button-active' : '']"
+        :class="[
+            !clickable ? 'not-clickable' : '',
+            'subtitle-button',
+            active ? 'subtitle-button-active' : '',
+        ]"
         color="#9FB6FF"
     >
         <span class="button-text">{{ title }}</span>
@@ -11,12 +15,12 @@
 </template>
 
 <script setup lang="ts">
-import {defineProps} from 'vue';
+import { defineProps } from "vue";
 
 defineProps<{
-    title: string,
-    clickable: boolean,
-    active: boolean
+    title: string;
+    clickable: boolean;
+    active: boolean;
 }>();
 </script>
 
@@ -31,17 +35,16 @@ defineProps<{
 }
 
 .subtitle-button-active {
-    background-color: #9FB6FF;
+    background-color: #9fb6ff;
 }
 
 .button-text {
-    color: #003EFF;
+    color: #003eff;
     font-weight: 1000;
     text-transform: uppercase;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     font-size: 10px;
     line-height: 16px;
     letter-spacing: -0.5px;
 }
-
 </style>

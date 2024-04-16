@@ -1,7 +1,7 @@
 <template>
     <v-card variant="text" class="projects-card" height="400px">
         <v-card-title>
-            <span class="title">{{ $t('subject.projects') }}</span>
+            <span class="title">{{ $t("subject.projects") }}</span>
         </v-card-title>
         <v-card-subtitle>
             <div class="d-flex justify-start filter-btn-container">
@@ -16,8 +16,7 @@
                     clickable
                     :active="activeButton === FilterOptions.Active"
                     @click="activeButton = FilterOptions.Active"
-                ></HeaderSubtitleButton
-                >
+                ></HeaderSubtitleButton>
                 <HeaderSubtitleButton
                     :title="$t('subject.projectsPage.completed')"
                     clickable
@@ -44,15 +43,14 @@
             </v-card-text>
         </v-skeleton-loader>
     </v-card>
-
 </template>
 
 <script setup lang="ts">
-import SubjectTab from "@/components/subject/body/projects/list/SubjectTab.vue"
+import SubjectTab from "@/components/subject/body/projects/list/SubjectTab.vue";
 import HeaderSubtitleButton from "@/components/buttons/HeaderSubtitleButton.vue";
 import type Project from "@/models/Project";
-import {FilterOptions} from "@/models/Project";
-import {ref, watch} from "vue";
+import { FilterOptions } from "@/models/Project";
+import { ref, watch } from "vue";
 
 const props = defineProps<{
     projects: Project[] | undefined;
@@ -60,33 +58,28 @@ const props = defineProps<{
     isLoading: boolean | undefined;
 }>();
 
-
 const selectedTab = ref(props.selectedTab);
-
 
 const activeButton = ref(FilterOptions.All);
 
 const emit = defineEmits<{
-    (e: 'tab-changed', projectId: number): void;
-    (e: 'filter-changed', filter: string): void;
+    (e: "tab-changed", projectId: number): void;
+    (e: "filter-changed", filter: string): void;
 }>();
 
 watch(selectedTab, (newVal: number | undefined) => {
     if (newVal !== undefined) {
-        emit('tab-changed', newVal);
+        emit("tab-changed", newVal);
     }
 });
 
 watch(activeButton, (newVal: string) => {
-    emit('filter-changed', newVal);
-    selectedTab.value = 0
+    emit("filter-changed", newVal);
+    selectedTab.value = 0;
 });
-
 </script>
 
 <style scoped>
-
-
 .projects-card {
     background-color: white;
     padding: 20px;
@@ -100,7 +93,7 @@ watch(activeButton, (newVal: string) => {
     letter-spacing: -0.5px;
     font-weight: bold;
     margin-bottom: 20px;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
 }
 
 .projects-tab {
@@ -135,5 +128,4 @@ watch(activeButton, (newVal: string) => {
     font-size: 18px;
     color: #666;
 }
-
 </style>

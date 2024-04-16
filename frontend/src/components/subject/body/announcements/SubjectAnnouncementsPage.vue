@@ -1,11 +1,7 @@
 <template>
-  <h1>Announcements</h1>
+    <h1>Announcements</h1>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts"></script>
 
-</script>
-
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -11,7 +11,11 @@
         </v-col>
         <v-col cols="7">
             <v-window v-model="selectedTab" direction="vertical">
-                <v-window-item v-for="(project, index) in filteredProjects" :key="index" :value="index">
+                <v-window-item
+                    v-for="(project, index) in filteredProjects"
+                    :key="index"
+                    :value="index"
+                >
                     <SubjectProjectPage
                         :selected-tab="selectedTab"
                         :project="project"
@@ -32,17 +36,16 @@
 <script setup lang="ts">
 import SubjectProjectsList from "@/components/subject/body/projects/list/SubjectProjectsList.vue";
 import type Project from "@/models/Project";
-import {FilterOptions} from "@/models/Project";
-import {computed, ref, toRefs} from "vue";
+import { FilterOptions } from "@/models/Project";
+import { computed, ref, toRefs } from "vue";
 import SubjectProjectPage from "@/components/subject/body/projects/SubjectProjectPage.vue";
-
 
 const props = defineProps<{
     projects: Project[] | undefined;
-    isLoading: boolean | undefined
+    isLoading: boolean | undefined;
 }>();
 
-const {projects} = toRefs(props);
+const { projects } = toRefs(props);
 const selectedTab = ref(0);
 const filterOption = ref<FilterOptions>(FilterOptions.All);
 
@@ -53,12 +56,12 @@ const filteredProjects = computed(() => {
     if (filterOption.value === FilterOptions.All) {
         return sortedProjects;
     } else if (filterOption.value === FilterOptions.Active) {
-        return sortedProjects.filter(project => new Date(project.deadline) > currentDate);
+        return sortedProjects.filter((project) => new Date(project.deadline) > currentDate);
     } else if (filterOption.value === FilterOptions.Completed) {
-        return sortedProjects.filter(project => new Date(project.deadline) <= currentDate);
+        return sortedProjects.filter((project) => new Date(project.deadline) <= currentDate);
     }
     console.error("Invalid filter option");
-    return sortedProjects
+    return sortedProjects;
 });
 
 const updateSelectedTab = (tabIndex) => {
@@ -69,11 +72,9 @@ const updateFilterOption = (option) => {
     filterOption.value = option;
     updateSelectedTab(0);
 };
-
 </script>
 
 <style scoped>
-
 .placeholder {
     display: flex;
     justify-content: center;
@@ -87,6 +88,4 @@ const updateFilterOption = (option) => {
     font-size: 18px;
     color: #666;
 }
-
-
 </style>

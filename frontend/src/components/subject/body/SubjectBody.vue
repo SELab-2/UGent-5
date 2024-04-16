@@ -6,25 +6,21 @@
                 v-for="(item, index) in items"
                 :key="index"
                 :value="index"
-                :class="{'page-tab': true, 'active': index === tab}"
-
-            >{{ $t(`subject.${item}`) }}
+                :class="{ 'page-tab': true, active: index === tab }"
+                >{{ $t(`subject.${item}`) }}
             </v-tab>
         </v-tabs>
     </div>
 
     <v-window v-model="tab">
         <v-window-item value="0" key="0">
-            <SubjectProjectsPage
-                :projects="projects"
-                :is-loading="isLoading"
-            ></SubjectProjectsPage>
+            <SubjectProjectsPage :projects="projects" :is-loading="isLoading"></SubjectProjectsPage>
         </v-window-item>
-        <v-window-item value="1" key="1" >
-            <SubjectAnnouncementsPage/>
+        <v-window-item value="1" key="1">
+            <SubjectAnnouncementsPage />
         </v-window-item>
         <v-window-item value="2" key="2">
-            <SubjectGroupsPage/>
+            <SubjectGroupsPage />
         </v-window-item>
     </v-window>
 </template>
@@ -34,29 +30,27 @@ import SubjectProjectsPage from "@/components/subject/body/projects/SubjectProje
 import SubjectAnnouncementsPage from "@/components/subject/body/announcements/SubjectAnnouncementsPage.vue";
 import SubjectGroupsPage from "@/components/subject/body/groups/SubjectGroupsPage.vue";
 
-import {ref} from "vue";
+import { ref } from "vue";
 import type Project from "@/models/Project";
 
 defineProps<{
     projects: Project[] | undefined;
-    isLoading: boolean | undefined
-}>()
+    isLoading: boolean | undefined;
+}>();
 
 const items = ["projects", "announcements", "groups"];
 const tab = ref(0);
-
 </script>
 
 <style scoped>
-
 .active {
-    color: #003EFF;
+    color: #003eff;
 }
 
 .page-tab {
     font-size: 16px;
     font-weight: 500;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     text-transform: capitalize;
     background-color: white;
 }
@@ -69,5 +63,4 @@ const tab = ref(0);
     height: 30px;
     margin-bottom: 20px;
 }
-
 </style>

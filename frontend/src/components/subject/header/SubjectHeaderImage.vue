@@ -11,15 +11,14 @@
 </template>
 
 <script setup lang="ts">
-import {toRef} from "vue";
+import { toRef } from "vue";
 
 const props = defineProps<{
-    imagePath: string,
-    isLoading: boolean,
+    imagePath: string;
+    isLoading: boolean;
 }>();
 
-const {isLoading} = toRef( props, 'isLoading');
-
+const { isLoading } = toRef(props, "isLoading");
 </script>
 
 <style scoped>

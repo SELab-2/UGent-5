@@ -55,10 +55,10 @@ export default {
             assignment: "Opdracht",
             group: "Groep",
             submissions: "Indieningen",
-        }
+        },
     },
 
     subjects: {
         title: "Mijn vakken",
-    }
+    },
 };

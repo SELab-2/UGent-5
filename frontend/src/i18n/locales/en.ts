@@ -54,7 +54,7 @@ export default {
             assignment: "Assignment",
             group: "Group",
             submissions: "Submissions",
-        }
+        },
     },
     subjects: {
         title: "My Courses",
