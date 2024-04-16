@@ -1,5 +1,5 @@
 <template>
-    <v-list-item>
+    <v-list-item :data-test="title">
         <v-btn variant="text" class="btn-wrapper" :to="{ name: goto }">
             <v-icon :icon="icon" />
             <span>{{ $t(title) }}</span>
