@@ -1,6 +1,6 @@
 import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
 import type Subject from "@/models/Subject";
-import { getSubject, registerToSubject } from "@/services/subject";
+import { getSubject, getSubjectByUuid, registerToSubject } from "@/services/subject";
 import { type Ref, computed } from "vue";
 
 function SUBJECT_QUERY_KEY(subjectId: number | string): (string | number)[] {
@@ -14,6 +14,15 @@ export function useSubjectQuery(
         queryKey: computed(() => SUBJECT_QUERY_KEY(subjectId.value!)),
         queryFn: () => getSubject(subjectId.value!),
         enabled: () => subjectId.value !== undefined,
+    });
+}
+
+export function useSubjectUuidQuery(subjectUuid: string): UseQueryReturnType<Subject, Error> {
+    return useQuery<Subject, Error>({
+        queryKey: computed(() => SUBJECT_QUERY_KEY(subjectUuid)),
+        queryFn: () => getSubjectByUuid(subjectUuid),
+        enabled: () => subjectUuid !== undefined,
+        retry: false,
     });
 }
 

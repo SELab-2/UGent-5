@@ -58,7 +58,7 @@ const router = createRouter({
             component: () => import("../views/CoursesView.vue"),
         },
         {
-            path: "/courses/register",
+            path: "/subjects/register",
             name: "registerCourse",
             component: () => import("../views/SubjectRegisterView.vue"),
             props: (route) => ({ uuid: String(route.query.uuid) }),
