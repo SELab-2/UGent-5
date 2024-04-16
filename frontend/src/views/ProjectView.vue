@@ -1,24 +1,24 @@
 <template>
     <v-container>
-        <h1 v-if="isLoading" class="welcome">Loading...</h1>
-        <h1 v-else-if="isError" class="welcome">No such project found!</h1>
+        <h1 v-if="isDataLoading" class="welcome">Loading...</h1>
+        <h1 v-else-if="isProjectError" class="welcome">No such project found!</h1>
         <div v-else class="projectInfo">
             <v-row>
                 <v-col cols="10">
-                    <ProjectInfo :project="project!" />
+                    <ProjectInfo :project="project!" :group="group!" />
                 </v-col>
-                <v-col cols="2">
-                    <router-link v-if="group" :to="`/api/groups/${group?.id}`">
-                        <v-btn prepend-icon="mdi-account-group">
-                            Group {{group?.id}}
+                <v-col cols="2" class="button-container">
+                    <router-link v-if="group" :to="`/api/groups/${group!.id}`">
+                        <v-btn class="group-button" prepend-icon="mdi-account-group">
+                            Group {{ group!.id }}
                         </v-btn>
                     </router-link>
                     <router-link v-else :to="`/projects/${projectId}/groups`">
-                        <v-btn prepend-icon="mdi-account-group">
+                        <v-btn class="group-button" prepend-icon="mdi-account-group">
                             Join Group
                         </v-btn>
                     </router-link>
-                    <NeedHelpButton :email="'test@test.be'"></NeedHelpButton>
+                    <NeedHelpButton class="group-button" :email="'test@test.be'"></NeedHelpButton>
                 </v-col>
             </v-row>
         </div>
@@ -39,14 +39,23 @@ const props = defineProps<{
 
 const { projectId } = toRefs(props);
 
-const { data: project, isLoading, isError } = useProjectQuery(projectId);
+const { data: project, isLoading: isProjectLoading, isError: isProjectError } = useProjectQuery(projectId);
 
-const { data : group, isError: isGroupError } = useUserGroupQuery(projectId);
-const isGroupNull = computed(() => group.value === null);
+const { data : group } = useUserGroupQuery(projectId);
+
+const isDataLoading = computed(() => isProjectLoading.value || (group.value === undefined));
+
 
 </script>
 
 <style scoped>
 
+.button-container {
+    margin-top: 20px;
+}
 
+.group-button{
+    margin-bottom: 5px;
+    min-width: auto;
+}
 </style>

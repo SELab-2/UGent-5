@@ -35,8 +35,9 @@ export function useCreateSubmissionMutation(
     });
 }
 
-export function useSubmissionQuery() : UseQueryReturnType<Submission[], Error> {
+export function useSubmissionQuery(): UseQueryReturnType<Submission[], Error> {
     return useQuery<Submission[], Error>({
-        queryFn: () => getSubmissions(),
+        querykey: ["Submissions"],
+        queryFn: () => getSubmissions()
     });
 }

@@ -1,12 +1,15 @@
 <template>
-    <v-card>
+    <v-card color="white">
         <v-card-title>
             Submission Zone
         </v-card-title>
-        <v-card-subtitle>
+        <v-card-subtitle v-if="latestSubmission">
             Latest submission: {{ latestSubmission.status }}
         </v-card-subtitle>
-        <router-link :to="`/projects/${projectId}/submit`">
+        <v-card-subtitle v-else>
+            No submissions found.
+        </v-card-subtitle>
+        <router-link :to="`/project/${project?.id}/submit`">
             <v-btn>
                 Submit new solution
             </v-btn>
@@ -15,20 +18,25 @@
 </template>
 
 <script setup lang="ts">
-import {useSubmissionQuery} from "@/queries/Project";
+/*import {useSubmissionQuery} from "@/queries/Project";
 import {toRefs} from "vue";
+import type Project from "@/models/Project";
+import type Group from "@/models/Group";
+import type Submission from "@/models/Submission";
 
 const props = defineProps<{
-    groupId: number;
-    projectId: number;
+    group: Group;
+    project: Project;
 }>();
 
-const { groupId } = toRefs(props);
-const { projectId } = toRefs(props);
+const { group } = toRefs(props);
+const { project } = toRefs(props);
 
-const { data: submissions, isError } = useSubmissionQuery();
+const { data: submissions, isLoading: isLoading, isError: isError } = useSubmissionQuery();
 
-const latestSubmission = submissions.filter(submission => submission.group_id === groupId.value && submission.project_id === projectId.value)
+const latestSubmission = submissions?.value.filter((submission: Submission) => {
+    return submission.group_id === group.value.id && submission.project_id === project.value.id;
+});*/
 
 </script>
 
