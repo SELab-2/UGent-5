@@ -2,7 +2,7 @@ import type Project from '@/models/Project';
 import type Submission from '@/models/Submission';
 import { authorized_fetch } from "@/services";
 
-// Function to create a new project
+
 export async function createProject(projectData: Project): Promise<void> {
     try {
         await authorized_fetch(`/api/projects/`, {
@@ -17,6 +17,23 @@ export async function createProject(projectData: Project): Promise<void> {
         throw error; // Rethrow the error for further handling or showing a user-friendly message
     }
 }
+
+
+// export async function createProject(projectData: Project): Promise<Project> {
+//     try {
+//         const response = await authorized_fetch(`/api/projects/`, {
+//             method: "POST",
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify(projectData),
+//         });
+//         return response.json();
+//     } catch (error) {
+//         console.error("Error in creating project:", error);
+//         throw error; // Rethrow the error for further handling or showing a user-friendly message
+//     }
+// }
 
 // Function to fetch a specific project by its ID
 export async function getProject(projectId: number): Promise<Project> {

@@ -15,6 +15,8 @@ function projectQueryKey(projectId: number): (string | number)[] {
     return ["project", projectId];
 }
 
+
+
 // Hook for fetching project details
 export function useProjectQuery(projectId: Ref<number | undefined>): UseQueryReturnType<Project, Error> {
     return useQuery<Project, Error>({
@@ -35,13 +37,13 @@ export function useCreateSubmissionMutation(groupId: Ref<number | undefined>): U
     });
 }
 
-// Hook for creating a new project
+
 export function useCreateProjectMutation(): UseMutationReturnType<Project, Error, Project, void> {
     const queryClient = useQueryClient();
     return useMutation<Project, Error, Project>({
         mutationFn: createProject,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["projects"] });
+            queryClient.invalidateQueries({ queryKey: ["create-project"] });
         },
         onError: (error) => {
             console.error("Project creation failed", error);
@@ -49,3 +51,30 @@ export function useCreateProjectMutation(): UseMutationReturnType<Project, Error
         },
     });
 }
+
+// export function useCreateProjectMutation(): UseMutationReturnType<Project, Error, Project, void> {
+//     const queryClient = useQueryClient();
+//
+//     return useMutation<Project, Error, Project>({
+//         mutationFn: createProject,
+//         onMutate: async (newProject: Project) => {
+//             await queryClient.cancelQueries(['projects']);
+//             const previousProjects = queryClient.getQueryData<Project[]>('projects');
+//
+//             queryClient.setQueryData<Project[]>('projects', old => [...(old || []), newProject]);
+//
+//             return { previousProjects };
+//         },
+//         onError: (error, newProject, context) => {
+//             console.error("Project creation failed", error);
+//             queryClient.setQueryData('projects', context?.previousProjects);
+//             alert("Could not create project. Please try again.");
+//         },
+//         onSuccess: () => {
+//             queryClient.invalidateQueries(['projects']);
+//         },
+//         onSettled: () => {
+//             queryClient.invalidateQueries(['projects']);
+//         },
+//     });
+// }

@@ -41,6 +41,7 @@ class Project(ProjectBase):
     description: str
     subject_id: int
     requirements: list[Requirement] = []
+    capacity: int
 
 
 class ProjectList(BaseModel):
