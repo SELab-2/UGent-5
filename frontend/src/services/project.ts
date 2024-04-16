@@ -1,14 +1,13 @@
-import type Project from '@/models/Project';
-import type Submission from '@/models/Submission';
+import type Project from "@/models/Project";
+import type Submission from "@/models/Submission";
 import { authorized_fetch } from "@/services";
-
 
 export async function createProject(projectData: Project): Promise<void> {
     try {
         await authorized_fetch(`/api/projects/`, {
             method: "POST",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
             },
             body: JSON.stringify(projectData),
         });
@@ -17,7 +16,6 @@ export async function createProject(projectData: Project): Promise<void> {
         throw error; // Rethrow the error for further handling or showing a user-friendly message
     }
 }
-
 
 // export async function createProject(projectData: Project): Promise<Project> {
 //     try {

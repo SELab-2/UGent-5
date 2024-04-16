@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, nextTick } from 'vue';
+import { defineComponent, PropType, nextTick } from "vue";
 
 interface CheckBoxItem {
     id: number;
@@ -25,7 +25,7 @@ interface CheckBoxItem {
 }
 
 export default defineComponent({
-    name: 'CheckBox',
+    name: "CheckBox",
     props: {
         title: {
             type: String,
@@ -37,17 +37,16 @@ export default defineComponent({
         },
         description: {
             type: String,
-            default: '',
+            default: "",
         },
     },
     methods: {
         handleCheckboxChange(item: CheckBoxItem) {
             item.checked = !item.checked;
             this.$nextTick().then(() => {
-                this.$emit('update:items', this.items);
+                this.$emit("update:items", this.items);
             });
-        }
-    }
+        },
+    },
 });
 </script>
-

@@ -6,9 +6,9 @@ import {
     type UseMutationReturnType,
 } from "@tanstack/vue-query";
 import type User from "@/models/User";
-import {getMySubjects, getUser, toggleAdmin} from "@/services/user";
+import { getMySubjects, getUser, toggleAdmin } from "@/services/user";
 import { type Ref, computed } from "vue";
-import type {UserSubjectList} from "@/models/Subject";
+import type { UserSubjectList } from "@/models/Subject";
 
 function USER_QUERY_KEY(uid: string | null): string[] {
     return uid ? ["user", uid] : ["user"];
@@ -46,9 +46,9 @@ export function useToggleAdminMutation(): UseMutationReturnType<void, Error, Use
 // Hook for fetching subjects for a user
 export function useMySubjectsQuery(): UseQueryReturnType<UserSubjectList, Error> {
     return useQuery<UserSubjectList, Error>({
-        queryKey: ['mySubjects'],
+        queryKey: ["mySubjects"],
         queryFn: () => {
-            console.log('Fetching subjects with mock data');
+            console.log("Fetching subjects with mock data");
             return getMySubjects();
         },
     });

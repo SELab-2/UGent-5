@@ -6,14 +6,16 @@ import { type Ref, computed } from "vue";
 
 // Query key for fetching instructors
 function INSTRUCTORS_FOR_SUBJECT_QUERY_KEY(subject_id: number): string[] {
-    return ["subject_instructors", ""+subject_id];
+    return ["subject_instructors", "" + subject_id];
 }
 
 // Hook for fetching instructors for a subject
-export function useInstructorsForSubjectQuery(subject_id: Ref<number | undefined>): UseQueryReturnType<User[], Error> {
+export function useInstructorsForSubjectQuery(
+    subject_id: Ref<number | undefined>
+): UseQueryReturnType<User[], Error> {
     return useQuery<User[], Error>({
         // Make sure the computed property inside queryKey correctly unwraps the ref
-        queryKey: computed(() => ['instructorsForSubject', subject_id.value]),
+        queryKey: computed(() => ["instructorsForSubject", subject_id.value]),
         // The query function should be passed the actual number, not a ref
         queryFn: () => get_instructors_for_subject(subject_id.value),
         // Ensure the enabled property is properly reactive
@@ -27,7 +29,9 @@ function SUBJECT_DETAILS_QUERY_KEY(subjectId: number): (string | number)[] {
 }
 
 // Hook for fetching details of a subject
-export function useSubjectQuery(subjectId: Ref<number | undefined>): UseQueryReturnType<Subject, Error> {
+export function useSubjectQuery(
+    subjectId: Ref<number | undefined>
+): UseQueryReturnType<Subject, Error> {
     console.log(subjectId);
     return useQuery<Subject, Error>({
         queryKey: computed(() => SUBJECT_DETAILS_QUERY_KEY(subjectId.value!)),
@@ -35,4 +39,3 @@ export function useSubjectQuery(subjectId: Ref<number | undefined>): UseQueryRet
         enabled: computed(() => subjectId.value !== undefined),
     });
 }
-

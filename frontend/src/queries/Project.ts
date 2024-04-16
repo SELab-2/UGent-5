@@ -15,10 +15,10 @@ function projectQueryKey(projectId: number): (string | number)[] {
     return ["project", projectId];
 }
 
-
-
 // Hook for fetching project details
-export function useProjectQuery(projectId: Ref<number | undefined>): UseQueryReturnType<Project, Error> {
+export function useProjectQuery(
+    projectId: Ref<number | undefined>
+): UseQueryReturnType<Project, Error> {
     return useQuery<Project, Error>({
         queryKey: computed(() => projectQueryKey(projectId.value!)),
         queryFn: () => getProject(projectId.value!),
@@ -27,7 +27,9 @@ export function useProjectQuery(projectId: Ref<number | undefined>): UseQueryRet
 }
 
 // Hook for creating a new submission
-export function useCreateSubmissionMutation(groupId: Ref<number | undefined>): UseMutationReturnType<Submission, Error, FormData, void> {
+export function useCreateSubmissionMutation(
+    groupId: Ref<number | undefined>
+): UseMutationReturnType<Submission, Error, FormData, void> {
     return useMutation<Submission, Error, FormData>({
         mutationFn: (formData) => createSubmission(groupId.value!, formData),
         onError: (error) => {
@@ -36,7 +38,6 @@ export function useCreateSubmissionMutation(groupId: Ref<number | undefined>): U
         },
     });
 }
-
 
 export function useCreateProjectMutation(): UseMutationReturnType<Project, Error, Project, void> {
     const queryClient = useQueryClient();

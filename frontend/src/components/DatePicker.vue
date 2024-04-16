@@ -15,27 +15,23 @@
                 @click="toggleDatePicker"
             ></v-text-field>
         </template>
-        <v-date-picker
-            v-model="date"
-            no-title
-            @update:modelValue="updateDate"
-        ></v-date-picker>
+        <v-date-picker v-model="date" no-title @update:modelValue="updateDate"></v-date-picker>
     </v-menu>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import { useVModel } from '@vueuse/core';
+import { ref, computed } from "vue";
+import { useVModel } from "@vueuse/core";
 
 const props = defineProps({
-    modelValue: Date,  // Expecting a Date object
-    label: String
+    modelValue: Date, // Expecting a Date object
+    label: String,
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(["update:modelValue"]);
 
 const menuVisible = ref(false);
-const date = useVModel(props, 'modelValue', emit);
+const date = useVModel(props, "modelValue", emit);
 
 // Computed to format the date as ISO string (just the date part)
 const displayDate = computed(() => {
@@ -44,7 +40,7 @@ const displayDate = computed(() => {
         selectedDate.setMinutes(selectedDate.getMinutes() - selectedDate.getTimezoneOffset());
         return selectedDate.toISOString().substr(0, 10);
     }
-    return '';
+    return "";
 });
 
 function toggleDatePicker() {
@@ -53,15 +49,10 @@ function toggleDatePicker() {
 
 function updateDate(newValue) {
     console.log(newValue);
-    date.value = new Date(newValue);  // Ensure newValue is a Date object
+    date.value = new Date(newValue); // Ensure newValue is a Date object
     menuVisible.value = false;
 }
 </script>
-
-
-
-
-
 
 <!--<style scoped>-->
 <!--.date-picker-container {-->

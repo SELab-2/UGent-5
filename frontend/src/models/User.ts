@@ -5,4 +5,3 @@ export default interface User {
     is_teacher: boolean;
     is_admin: boolean;
 }
-
