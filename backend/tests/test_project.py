@@ -5,6 +5,7 @@ import pytest_asyncio
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.user.service import set_admin
+from tests.test_subject import make_instructor
 
 # skeletons for basic json objects
 subject = {"name": "test subject"}
@@ -15,6 +16,8 @@ project = {
     "deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
     "description": "test",
     "enroll_deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
+    "is_visible": True,
+    "capacity": 1,
     "requirements": [],
     "test_files": [],
 }
@@ -25,6 +28,7 @@ async def subject_id(client: AsyncClient, db: AsyncSession) -> int:
     """Create new subject"""
     await set_admin(db, "test", True)
     response = await client.post("/api/subjects/", json=subject)
+    await set_admin(db, "test", False)
     return response.json()["id"]
 
 
@@ -34,20 +38,13 @@ async def project_id(client: AsyncClient, db: AsyncSession, subject_id: int) -> 
     project["subject_id"] = subject_id
     await set_admin(db, "test", True)
     response = await client.post("/api/projects/", json=project)
+    await set_admin(db, "test", False)
     return response.json()["id"]
 
 
 @pytest.mark.asyncio
 async def test_create_project(client: AsyncClient, db: AsyncSession, subject_id: int):
-    future_date = datetime.now(timezone.utc) + timedelta(weeks=1)
-    project = {
-        "name": "test project",
-        "subject_id": subject_id,
-        "deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "description": "test",
-        "requirements": [],
-        "test_files": [],
-    }
+    project["subject_id"] = subject_id
     await set_admin(db, "test", False)
     response = await client.post("/api/projects/", json=project)
     assert response.status_code == 403  # Forbidden, not admin
@@ -71,7 +68,7 @@ async def test_get_projects_for_subject(
 ):
     response = await client.get(f"/api/subjects/{subject_id}/projects")
     assert response.status_code == 200
-    assert len(response.json()) == 1
+    assert len(response.json()["projects"]) == 1
     assert response.json()["projects"][0]["name"] == project["name"]
 
 
@@ -115,3 +112,28 @@ async def test_patch_project(client: AsyncClient, db: AsyncSession, project_id: 
     assert response.status_code == 200
     response = await client.get(f"/api/projects/{project_id}")
     assert response.json()["description"] == "new description"
+
+
+@pytest.mark.asyncio
+async def test_is_visible_project(client: AsyncClient, db: AsyncSession, project_id: int):
+
+    response = await client.get(f"/api/projects/{project_id}")
+    subject_id = response.json()["subject_id"]
+
+    await set_admin(db, "test", True)
+    await client.patch(f"/api/projects/{project_id}", json={"is_visible": False})
+    await set_admin(db, "test", False)
+
+    response = await client.get(f"/api/projects/{project_id}")
+    assert response.status_code == 404  # Not found as project is not visible
+
+    response = await client.get(f"/api/subjects/{subject_id}/projects")
+    assert len(response.json()["projects"]) == 0
+
+    # Now privileged get request
+    await make_instructor(subject_id, "test", db, client)
+    response = await client.get(f"/api/projects/{project_id}")
+    assert response.status_code == 200
+
+    response = await client.get(f"/api/subjects/{subject_id}/projects")
+    assert len(response.json()["projects"]) == 1

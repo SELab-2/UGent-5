@@ -11,4 +11,5 @@ async def get_async_db() -> AsyncGenerator[AsyncSession, Any]:
     try:
         yield db
     finally:
+        await db.commit()
         await db.close()

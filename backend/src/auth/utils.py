@@ -8,9 +8,8 @@ def create_jwt_token(user_id: str) -> Token:
     now = datetime.now(timezone.utc)
     payload = {
         "sub": user_id,
-        "iat": now,
-        # TODO: don't hardcode this
         "exp": now + timedelta(weeks=1),
+        "iat": now,
     }
     token = jwt.encode(
         payload, config.CONFIG.secret_key, algorithm=config.CONFIG.algorithm

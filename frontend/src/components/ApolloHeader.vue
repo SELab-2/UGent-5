@@ -4,39 +4,50 @@
         <RouterLink to="/">
             <img alt="Logo" class="logo" src="@/assets/logo_white_transparant.png" />
         </RouterLink>
-        <v-btn variant="text" class="logout" @click="logout"> logout </v-btn>
-        <LocaleSwitcher style="margin-left: auto" />
+        <div class="leftContent" v-if="smAndDown">
+            <DropDownMobile />
+        </div>
+        <div class="leftContent" v-else>
+            <LogoutButton class="logout" v-if="isLoggedIn" />
+            <LocaleSwitcher />
+        </div>
     </v-app-bar>
 </template>
 
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
+import { useDisplay } from "vuetify";
 import LocaleSwitcher from "./LocaleSwitcher.vue";
+import DropDownMobile from "@/components/navigation/DropDownMobile.vue";
+import LogoutButton from "@/components/buttons/LogoutButton.vue";
 import { useAuthStore } from "@/stores/auth-store";
+import { storeToRefs } from "pinia";
+
+const { smAndDown } = useDisplay();
 
 const emit = defineEmits<{
     (e: "toggleNav"): void;
 }>();
 
-const { logout } = useAuthStore();
+const { isLoggedIn } = storeToRefs(useAuthStore());
 </script>
 
 <style scoped>
 .logo {
-    max-width: 80%;
-    max-height: 70px;
+    max-height: 50px;
     margin-right: auto;
 }
 
 .v-app-bar {
     padding: 5px 0px;
-    width: 100%;
+}
+.leftContent {
+    margin-left: auto;
     display: flex;
-    justify-content: flex-start;
     align-items: center;
 }
 
 .logout {
-    margin-left: 60%;
+    margin-right: 15px;
 }
 </style>

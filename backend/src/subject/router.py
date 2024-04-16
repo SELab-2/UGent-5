@@ -1,17 +1,21 @@
-from fastapi import APIRouter, Depends, Body
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.dependencies import authentication_validation
 from src.dependencies import get_async_db
 from src.project.schemas import ProjectList
 from src.project.service import get_projects_for_subject
-from src.user.dependencies import teacher_or_admin_user_validation
+from src.subject.exceptions import AlreadyInstructor, AlreadyRegistered
+from src.user.dependencies import get_authenticated_user, retrieve_user, teacher_or_admin_user_validation
 from src.user.schemas import User
+from src.subject.utils import has_subject_privileges
 
 from . import service
 from .dependencies import (
     retrieve_subject,
+    retrieve_subject_by_uuid,
     retrieve_subjects,
-    add_student_permission_validation, teacher_permission_validation,
+    retrieve_uuid, teacher_permission_validation,
+    user_permission_validation,
 )
 from .schemas import Subject, SubjectCreate, SubjectList
 
@@ -33,6 +37,11 @@ async def get_subject(subject: Subject = Depends(retrieve_subject)):
     return subject
 
 
+@router.get("/{subject_id}/uuid", dependencies=[Depends(teacher_or_admin_user_validation)])
+async def get_subject_uuid(uuid: str = Depends(retrieve_uuid)):
+    return {"subject_uuid": uuid}
+
+
 @router.post(
     "/",
     response_model=Subject,
@@ -50,7 +59,6 @@ async def create_subject(
 )
 async def delete_subject(subject_id: int, db: AsyncSession = Depends(get_async_db)):
     await service.delete_subject(db, subject_id)
-    return "Successfully deleted"
 
 
 @router.patch(
@@ -59,11 +67,13 @@ async def delete_subject(subject_id: int, db: AsyncSession = Depends(get_async_d
     dependencies=[Depends(teacher_or_admin_user_validation)],
 )
 async def update_subject(
-    subject_update: SubjectCreate, subject_original: Subject = Depends(retrieve_subject)
+    subject_update: SubjectCreate,
+    subject_original: Subject = Depends(retrieve_subject),
+    db: AsyncSession = Depends(get_async_db)
 ) -> Subject:
     update_data = subject_update.model_dump(exclude_unset=True)
     subject_updated = subject_original.model_copy(update=update_data)
-    return subject_updated
+    return await service.update_subject(db, subject_updated)
 
 
 # ---------------Teachers------------
@@ -82,11 +92,12 @@ async def get_subject_instructors(
     status_code=201,
 )
 async def create_subject_instructor(
-    subject_id: int, instructor_uid: str = Body(..., embed=True),
+    subject_id: int, user: User = Depends(retrieve_user),
     db: AsyncSession = Depends(get_async_db)
 ):
-    await service.add_instructor_to_subject(db, subject_id, instructor_uid)
-    return "Successfully added"
+    if await service.is_instructor(db, subject_id, user.uid):
+        raise AlreadyInstructor()
+    await service.add_instructor_to_subject(db, subject_id, user.uid)
 
 
 @router.delete(
@@ -110,16 +121,30 @@ async def get_subject_students(
 
 @router.post(
     "/{subject_id}/students",
-    dependencies=[Depends(add_student_permission_validation)],
+    dependencies=[Depends(user_permission_validation)],
     status_code=201,
 )
 async def add_student_to_subject(
-    subject_id: int,
-    student_uid: str = Body(..., embed=True),
+    subject: Subject = Depends(retrieve_subject),
+    user: User = Depends(retrieve_user),
     db: AsyncSession = Depends(get_async_db)
-):
-    await service.create_subject_student(db, subject_id, student_uid)
-    return "Successfully added"
+) -> Subject:
+    if await service.is_student(db, subject.id, user.uid):
+        raise AlreadyRegistered()
+    await service.create_subject_student(db, subject.id, user.uid)
+    return subject
+
+
+@router.post(
+    "/register",
+    status_code=201
+)
+async def register_to_subject(
+        subject: Subject = Depends(retrieve_subject_by_uuid),
+        user: User = Depends(get_authenticated_user),
+        db: AsyncSession = Depends(get_async_db)
+) -> Subject:
+    return await add_student_to_subject(subject, user, db)
 
 
 @router.delete(
@@ -130,7 +155,6 @@ async def delete_subject_student(
     subject_id: int, user_id: str, db: AsyncSession = Depends(get_async_db)
 ):
     await service.delete_subject_student(db, subject_id, user_id)
-    return "Successfully deleted"
 
 
 # ---------------Projects------------
@@ -138,7 +162,12 @@ async def delete_subject_student(
 
 @router.get("/{subject_id}/projects")
 async def list_projects(
-    subject_id: int, db: AsyncSession = Depends(get_async_db)
+    subject_id: int, db: AsyncSession = Depends(get_async_db),
+    user: User = Depends(get_authenticated_user)
 ) -> ProjectList:
     projects = await get_projects_for_subject(db, subject_id)
+
+    if not await has_subject_privileges(subject_id, user, db):
+        projects.projects = list(filter(lambda x: x.is_visible, projects.projects))
+
     return projects

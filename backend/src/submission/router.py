@@ -1,6 +1,4 @@
-import asyncio
 import os
-from concurrent.futures import ProcessPoolExecutor
 from typing import Sequence
 
 from fastapi import APIRouter, Depends, BackgroundTasks
@@ -12,12 +10,15 @@ from src.group.dependencies import retrieve_group
 from src.group.schemas import Group
 from src.project.dependencies import retrieve_project
 from src.submission.dependencies import (
-    group_id_validation,
+    group_permission_validation,
     retrieve_submission,
 )
-from src.submission.exceptions import FileNotFound, FilesNotFound
-from src.submission.utils import upload_files, get_files_from_dir, submission_path, artifacts_path
-from src.user.dependencies import admin_user_validation
+from src.submission.exceptions import FileNotFound
+from src.submission.exceptions import FilesNotFound
+from src.submission.utils import get_files_from_dir, submission_path, artifacts_path
+from src.submission.utils import upload_files
+from src.user.dependencies import admin_user_validation, get_authenticated_user
+from src.user.schemas import User
 from . import service
 from .models import Status
 from .schemas import File, Submission, SubmissionCreate
@@ -41,24 +42,26 @@ async def get_submission(submission: Submission = Depends(retrieve_submission)) 
 
 
 @router.post("/", response_model=Submission, status_code=201,
-             dependencies=[Depends(group_id_validation)])
+             dependencies=[Depends(group_permission_validation)])
 async def create_submission(background_tasks: BackgroundTasks,
                             submission_in: SubmissionCreate = Depends(),
                             group: Group = Depends(retrieve_group),
+                            user: User = Depends(get_authenticated_user),
                             db: AsyncSession = Depends(get_async_db)):
-    project = await retrieve_project(group.project_id, db)
+    project = await retrieve_project(group.project_id, user, db)
     test_files_uuid = project.test_files_uuid
     submission_uuid = upload_files(submission_in.files, project)
 
     # accept submission immediately if no tests are present
-    status = Status.Accepted if test_files_uuid is None else Status.InProgress
+    docker_tests_present = test_files_uuid is not None
+    status = Status.Accepted if docker_tests_present else Status.InProgress
 
     submission = await service.create_submission(
         db, uuid=submission_uuid, remarks=submission_in.remarks, status=status, group_id=group.id, project_id=group.project_id
     )
 
     # launch docker tests
-    if test_files_uuid is not None:
+    if docker_tests_present:
         background_tasks.add_task(launch_docker_tests, db, submission, test_files_uuid)
 
     return submission

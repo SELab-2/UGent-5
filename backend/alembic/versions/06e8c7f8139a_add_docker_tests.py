@@ -11,11 +11,11 @@ from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import ENUM
 
-from src.submission.models import ResultType, Status
+from src.submission.models import ResultType
 
 # revision identifiers, used by Alembic.
 revision: str = '06e8c7f8139a'
-down_revision: Union[str, None] = 'a88aec136b59'
+down_revision: Union[str, None] = 'aa8ad1b4f8dc'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
