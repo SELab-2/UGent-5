@@ -1,7 +1,7 @@
 import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
 import type User from "@/models/User";
 import type Subject from "@/models/Subject";
-import { get_instructors_for_subject, getSubject } from "@/services/subject";
+import {get_instructors_for_subject, get_students_for_subject, getSubject} from "@/services/subject";
 import { type Ref, computed } from "vue";
 
 // Query key for fetching instructors
@@ -23,6 +23,19 @@ export function useInstructorsForSubjectQuery(
     });
 }
 
+export function useStudentsForSubjectQuery(
+    subject_id: Ref<number | undefined>
+): UseQueryReturnType<User[], Error>{
+    return useQuery<User[], Error>({
+        // Make sure the computed property inside queryKey correctly unwraps the ref
+        queryKey: computed(() => ["studentsForSubject", subject_id.value]),
+        // The query function should be passed the actual number, not a ref
+        queryFn: () => get_students_for_subject(subject_id.value),
+        // Ensure the enabled property is properly reactive
+        enabled: computed(() => subject_id.value !== undefined),
+    });
+}
+
 // Query key for fetching subject details
 function SUBJECT_DETAILS_QUERY_KEY(subjectId: number): (string | number)[] {
     return ["subject_details", subjectId];
@@ -39,3 +52,5 @@ export function useSubjectQuery(
         enabled: computed(() => subjectId.value !== undefined),
     });
 }
+
+

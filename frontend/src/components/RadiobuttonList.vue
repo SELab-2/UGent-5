@@ -62,9 +62,13 @@ export default defineComponent({
         const radio_date = ref(new Date());
         const capacity = ref(1); // Default capacity
 
+        watch(capacity, (newCapacity) => {
+            emit('update:capacity', newCapacity);
+        });
+
         watch(selectedOption, (newValue) => {
             emit("update:modelValue", newValue);
-            if (newValue !== "student") {
+            if (newValue === "course") {
                 capacity.value = 1; // Reset capacity when 'student' is not selected
                 emit("update:capacity", capacity.value);
             }

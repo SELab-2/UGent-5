@@ -84,7 +84,7 @@ import CheckBox from "@/components/CheckboxList.vue";
 import DatePicker from "@/components/DatePicker.vue";
 import RadioButtonList from "@/components/RadiobuttonList.vue";
 import type Project from "@/models/Project";
-import { useInstructorsForSubjectQuery } from "@/queries/Subject";
+import {useInstructorsForSubjectQuery, useStudentsForSubjectQuery} from "@/queries/Subject";
 import { useMySubjectsQuery } from "@/queries/User";
 import { useCreateProjectMutation } from "@/queries/Project";
 import { QuillEditor } from "@vueup/vue-quill";
@@ -118,6 +118,19 @@ const {
     isError,
 } = useInstructorsForSubjectQuery(selectedCourse);
 
+const {
+    data: studentsData,
+    isError: isStudentsError,
+    error: studentsError,
+    isLoading: isStudentsLoading,
+} = useStudentsForSubjectQuery(selectedCourse);
+
+watchEffect(() => {
+    if (studentsData.value) {
+        console.log("Current students data:", studentsData.value);
+    }
+});
+
 const teachers = computed(
     () => instructorsData.value?.filter((t) => t.is_teacher).map(formatInstructor) || []
 );
@@ -142,6 +155,16 @@ const groupProjectOptions = [
 const createProjectMutation = useCreateProjectMutation();
 
 async function submitForm() {
+    if (selectedGroupProject.value === "random" && selectedCourse.value) {
+        console.log("Submitting form with capacity:", capacity.value); // Add this line to log the capacity
+        if (isStudentsError.value) {
+            console.error("Error fetching students:", studentsError.value.message);
+            return;
+        }
+
+        // studentsData is already reactive and contains the latest students
+        divideStudentsIntoGroups(studentsData.value, capacity.value);
+    }
     const editor = quillEditor.value ? quillEditor.value.getQuill() : null;
     const htmlContent = editor ? editor.root.innerHTML : "";
     const projectData: Project = {
@@ -157,12 +180,23 @@ async function submitForm() {
     });
 }
 
+function divideStudentsIntoGroups(students, capacity) {
+    console.log(capacity);
+    let groups = [];
+    for (let i = 0; i < students.length; i += capacity) {
+        groups.push(students.slice(i, i + capacity));
+    }
+
+    console.log("Groups formed:", groups);
+    // // Further processing or state updates can be done here
+}
+
 function formatInstructor({ uid, given_name, checked = false }) {
     return { id: uid, label: given_name, checked };
 }
 
 const handleCapacityChange = (newCapacity) => {
-    console.log("Updated Capacity:", newCapacity);
+    capacity.value = newCapacity;
 };
 </script>
 
