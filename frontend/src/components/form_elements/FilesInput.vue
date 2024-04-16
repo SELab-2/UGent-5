@@ -3,7 +3,9 @@
         <v-row>
             <v-col>
                 <input @change="updateFiles" ref="fileInput" type="file" multiple hidden />
-                <v-btn class="mb-0" @click="onAddFilesClick">{{ $t("submit.add_files_button") }}</v-btn>
+                <v-btn class="mb-0" @click="onAddFilesClick">{{
+                    $t("submit.add_files_button")
+                }}</v-btn>
             </v-col>
         </v-row>
         <v-row class="mt-0">
