@@ -21,7 +21,7 @@
             </v-card-subtitle>
 
             <v-card-text>
-                <h2>{{$t('subject.project.assignment')}}</h2>
+                <h2>{{ $t("subject.project.assignment") }}</h2>
                 <p
                     v-if="project?.description && project?.description.length <= assignmentLength"
                     class="project_description"
@@ -50,11 +50,11 @@
             </div>
         </v-card>
         <v-card class="project-card" rounded="xl" variant="text">
-            <v-card-title class="title">{{$t('subject.project.group')}}</v-card-title>
+            <v-card-title class="title">{{ $t("subject.project.group") }}</v-card-title>
         </v-card>
 
         <v-card class="project-card" rounded="xl" variant="text" height="410px">
-            <v-card-title class="title">{{$t('subject.project.submissions')}}</v-card-title>
+            <v-card-title class="title">{{ $t("subject.project.submissions") }}</v-card-title>
         </v-card>
     </div>
 </template>
