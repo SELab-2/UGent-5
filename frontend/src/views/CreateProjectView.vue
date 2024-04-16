@@ -3,7 +3,7 @@
         <v-container>
             <v-row>
                 <v-col cols="12" md="6">
-                    <v-text-field v-model="title" label="Title" required placeholder="Enter Title" />
+                    <v-text-field v-model="project_title" label="Title" required placeholder="Enter Title" />
                 </v-col>
                 <v-col cols="12" md="6">
                     <CheckBox :title="'Teacher(s)'" :items="teachers" placeholder="Assign Teachers" />
@@ -74,8 +74,7 @@ import { QuillEditor } from '@vueup/vue-quill';
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 
-// const quillContent = ref('');
-const title = ref('Default Title'); // Set a default title
+const project_title = ref("");
 const deadline = ref(new Date());
 const capacity = ref(1);
 const selectedCourse = ref(undefined);
@@ -94,10 +93,6 @@ onMounted(() => {
 defineProps<{
     title: string;
 }>();
-
-watchEffect(() => {
-    console.log("Title:", title.value);
-});
 
 
 const { data: instructorsData, error, isLoading, isError } = useInstructorsForSubjectQuery(selectedCourse);
