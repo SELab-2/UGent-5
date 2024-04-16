@@ -32,8 +32,14 @@ const courses = [
     { id: 3, name: 'course C', teacher: "chris" },
 ];
 
+const deadlines = [
+    { id: 1, name: 'project A', course: 'course A', deadline: new Date(2024, 4, 28, 23, 59) ,status: 'none'},
+    { id: 2, name: 'project B', course: 'course B', deadline: new Date(2024, 6, 2, 17, 0),status: 'accepted'},
+    { id: 3, name: 'project C', course: 'course C',deadline: new Date(2024, 5, 5, 22, 0), status: 'rejected'},
+];
+
 const cards = [
-    { title: "homescreen.deadlines", data: [] , type:"deadlines" },
+    { title: "homescreen.deadlines", data: deadlines , type:"deadlines" },
     { title: "homescreen.courses", data: courses, type: "courses" },
     { title: "homescreen.announcements", data: [], type: "announcements" },
 ];
