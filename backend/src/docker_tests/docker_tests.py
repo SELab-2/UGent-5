@@ -7,7 +7,6 @@ import docker
 from docker.models.containers import Container
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.dependencies import get_async_db
 from src.docker_tests.utils import tests_path, submission_path, feedback_path, artifacts_path
 from src.submission.models import Status, ResultType
 from src.submission.schemas import TestResult

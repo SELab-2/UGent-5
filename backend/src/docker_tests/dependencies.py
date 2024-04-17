@@ -1,6 +1,0 @@
-from src.project import dependencies as project_dependencies
-
-
-put_permission_validation = project_dependencies.patch_permission_validation
-
-delete_permission_validation = project_dependencies.patch_permission_validation
