@@ -158,8 +158,8 @@ async def test_default_tests_failure(client: AsyncClient, group_id_with_default_
     # check that result is incorrect after tests finished
     response = await client.get(f"/api/submissions/{submission_id}")
     assert sorted([(r['succeeded'], r['value']) for r in response.json()['testresults']]) == [
-        (True, 'Eerste test geslaagd'),
         (False, 'Tweede test mislukt!'),
+        (True, 'Eerste test geslaagd'),
     ]
     assert response.json()['stdout'] == 'hello stdout\n'
     assert response.json()['stderr'] == 'hello stderr\n'
