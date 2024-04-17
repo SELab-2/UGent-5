@@ -25,6 +25,9 @@ export default {
         deadline: "Deadline",
         details_button: "Naar project",
     },
+    subject: {
+        register: "Registreer bij vak:",
+    },
     navigation: {
         home: "Hoofdscherm",
         courses: "Vakken",

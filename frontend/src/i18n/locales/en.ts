@@ -25,6 +25,9 @@ export default {
         deadline: "Deadline",
         details_button: "Project details",
     },
+    subject: {
+        register: "Register to subject:",
+    },
     navigation: {
         home: "Home",
         courses: "Courses",
