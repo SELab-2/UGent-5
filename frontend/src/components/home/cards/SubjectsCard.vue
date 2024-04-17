@@ -11,6 +11,10 @@
 import HomeScreenCard from "@/components/home/cards/HomeScreenCard.vue";
 import HomeScreenSkeletonCard from "@/components/home/cards/HomeScreenSkeletonCard.vue";
 import SubjectItem from "@/components/home/listcontent/SubjectItem.vue";
-import { useSubjectsQuery } from "@/queries/Subject"
-const {data: subjects, isLoading: isSubjectsLoading, isError: isSubjectsError} = useSubjectsQuery();
+import { useSubjectsQuery } from "@/queries/Subject";
+const {
+    data: subjects,
+    isLoading: isSubjectsLoading,
+    isError: isSubjectsError,
+} = useSubjectsQuery();
 </script>

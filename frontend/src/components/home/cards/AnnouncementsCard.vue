@@ -1,6 +1,5 @@
 <template>
-    <HomeScreenCard :title="'homescreen.announcements'">
-    </HomeScreenCard>
+    <HomeScreenCard :title="'homescreen.announcements'"> </HomeScreenCard>
 </template>
 
 <script setup lang="ts">

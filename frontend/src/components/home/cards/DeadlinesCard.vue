@@ -1,6 +1,10 @@
 <template>
     <HomeScreenCard :title="'homescreen.deadlines'">
-        <DeadlineItem v-for="deadline in deadlines" :deadline="deadline" :key="deadline.project.id" />
+        <DeadlineItem
+            v-for="deadline in deadlines"
+            :deadline="deadline"
+            :key="deadline.project.id"
+        />
     </HomeScreenCard>
 </template>
 
@@ -41,5 +45,4 @@ const deadlines = ref<Deadline[]>([
         status: "rejected",
     },
 ]);
-
 </script>

@@ -1,13 +1,15 @@
 <template>
     <v-divider></v-divider>
-        <div class="coursebtn" @click="navigateToCourse">
-            <div>
-                <h3>{{ subject.name }}</h3>
-                <v-skeleton-loader v-if="isInstructorsLoading" type="text" />
-                <p v-else-if="instructors!.length > 0" class="teacher">{{ instructors![0].given_name }}</p>
-            </div>
-            <v-icon class="chevron" icon="mdi-chevron-right" />
+    <div class="coursebtn" @click="navigateToCourse">
+        <div>
+            <h3>{{ subject.name }}</h3>
+            <v-skeleton-loader v-if="isInstructorsLoading" type="text" />
+            <p v-else-if="instructors!.length > 0" class="teacher">
+                {{ instructors![0].given_name }}
+            </p>
         </div>
+        <v-icon class="chevron" icon="mdi-chevron-right" />
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -22,7 +24,9 @@ const props = defineProps<{
 
 const { subject } = toRefs(props);
 
-const { data: instructors, isLoading: isInstructorsLoading } = useSubjectInstructorsQuery(computed(() => subject.value.id));
+const { data: instructors, isLoading: isInstructorsLoading } = useSubjectInstructorsQuery(
+    computed(() => subject.value.id)
+);
 
 const navigateToCourse = () => {
     router.push(`/subjects/${subject.value.id}`);
