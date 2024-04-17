@@ -1,11 +1,11 @@
 import type Group from "@/models/Group";
 import type { Ref } from "vue";
-import type {UseMutationReturnType, UseQueryReturnType} from "@tanstack/vue-query";
-import {useMutation, useQuery, useQueryClient} from "@tanstack/vue-query";
+import type { UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { computed } from "vue";
-import {createGroups, getGroupWithProjectId, getUserGroups, joinGroup} from "@/services/group";
+import { createGroups, getGroupWithProjectId, getUserGroups, joinGroup } from "@/services/group";
 import type Submission from "@/models/Submission";
-import {createProject, createSubmission} from "@/services/project";
+import { createProject, createSubmission } from "@/services/project";
 import type Project from "@/models/Project";
 
 function USER_GROUPS_QUERY_KEY(): string[] {
@@ -43,12 +43,14 @@ export function useUserGroupQuery(
     });
 }
 
-
-
-export function useCreateGroupsMutation(): UseMutationReturnType<void, Error, { projectId: string, groups: Group[] }> {
+export function useCreateGroupsMutation(): UseMutationReturnType<
+    void,
+    Error,
+    { projectId: string; groups: Group[] }
+> {
     const queryClient = useQueryClient();
 
-    return useMutation<void, Error, { projectId: string, groups: Group[] }>({
+    return useMutation<void, Error, { projectId: string; groups: Group[] }>({
         mutationFn: ({ projectId, groups }) => createGroups(projectId, groups),
         onSuccess: () => {
             queryClient.invalidateQueries(/* specify the relevant query key for projects or groups */);
@@ -61,9 +63,13 @@ export function useCreateGroupsMutation(): UseMutationReturnType<void, Error, { 
     });
 }
 
-export function useJoinGroupMutation(): UseMutationReturnType<void, Error, { groupId: number, uid: string }> {
+export function useJoinGroupMutation(): UseMutationReturnType<
+    void,
+    Error,
+    { groupId: number; uid: string }
+> {
     const queryClient = useQueryClient();
-    return useMutation<void, Error, { groupId: number, uid: string }>({
+    return useMutation<void, Error, { groupId: number; uid: string }>({
         mutationFn: ({ groupId, uid }) => joinGroup(groupId, uid), // Call the joinGroup service function
         onSuccess: () => {
             queryClient.invalidateQueries(/* specify the relevant query key */);
@@ -75,8 +81,3 @@ export function useJoinGroupMutation(): UseMutationReturnType<void, Error, { gro
         },
     });
 }
-
-
-
-
-

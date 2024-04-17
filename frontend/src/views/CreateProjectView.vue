@@ -87,7 +87,7 @@ import type Project from "@/models/Project";
 import { useInstructorsForSubjectQuery, useStudentsForSubjectQuery } from "@/queries/Subject";
 import { useMySubjectsQuery } from "@/queries/User";
 import { useCreateGroupsMutation, useJoinGroupMutation } from "@/queries/Group";
-import {useCreateProjectMutation} from "@/queries/Project";
+import { useCreateProjectMutation } from "@/queries/Project";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
@@ -102,18 +102,34 @@ const selectedGroupProject = ref("course");
 const quillEditor = ref(null);
 
 const { data: instructorsData, isLoading, isError } = useInstructorsForSubjectQuery(selectedCourse);
-const { data: studentsData, isError: isStudentsError, error: studentsError, isLoading: isStudentsLoading } = useStudentsForSubjectQuery(selectedCourse);
+const {
+    data: studentsData,
+    isError: isStudentsError,
+    error: studentsError,
+    isLoading: isStudentsLoading,
+} = useStudentsForSubjectQuery(selectedCourse);
 const { data: mySubjectsData } = useMySubjectsQuery();
 
-const teachers = computed(() => instructorsData.value?.filter((t) => t.is_teacher).map(formatInstructor) || []);
-const assistants = computed(() => instructorsData.value?.filter((a) => !a.is_teacher).map(formatInstructor) || []);
+const teachers = computed(
+    () => instructorsData.value?.filter((t) => t.is_teacher).map(formatInstructor) || []
+);
+const assistants = computed(
+    () => instructorsData.value?.filter((a) => !a.is_teacher).map(formatInstructor) || []
+);
 
-const courses = computed(() => mySubjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []);
-const groupProjectOptions = [{ label: "Use Course Groups", value: "course" }, { label: "Random Groups", value: "random" }, { label: "Student Picked Groups", value: "student" }];
+const courses = computed(
+    () =>
+        mySubjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []
+);
+const groupProjectOptions = [
+    { label: "Use Course Groups", value: "course" },
+    { label: "Random Groups", value: "random" },
+    { label: "Student Picked Groups", value: "student" },
+];
 
 const createProjectMutation = useCreateProjectMutation();
 const createGroupsMutation = useCreateGroupsMutation();
-const joinGroupMutation = useJoinGroupMutation();  // Moved to top-level setup
+const joinGroupMutation = useJoinGroupMutation(); // Moved to top-level setup
 
 async function submitForm() {
     if (selectedGroupProject.value === "random" && selectedCourse.value) {
@@ -143,15 +159,18 @@ async function submitForm() {
                 team_name: "Group " + (i + 1),
             }));
 
-            const createdGroups = await createGroupsMutation.mutateAsync({ projectId: createdProjectId, groups: groupsToCreate });
+            const createdGroups = await createGroupsMutation.mutateAsync({
+                projectId: createdProjectId,
+                groups: groupsToCreate,
+            });
             console.log("Created groups with IDs:", createdGroups);
 
             // Use the mutation function directly here
             createdGroups.forEach((groupId, index) => {
-                groups[index].forEach(student => {
+                groups[index].forEach((student) => {
                     joinGroupMutation.mutateAsync({
                         groupId: groupId,
-                        uid: student.uid
+                        uid: student.uid,
                     });
                 });
             });

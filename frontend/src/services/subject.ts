@@ -12,6 +12,6 @@ export async function getSubject(subjectId: number): Promise<Subject> {
     return authorized_fetch(`/api/subjects/${subjectId}`, { method: "GET" });
 }
 
-export async function get_students_for_subject(subjectId: number): Promise<User[]>{
-    return authorized_fetch(`/api/subjects/${subjectId}/students`, {method: "GET"});
+export async function get_students_for_subject(subjectId: number): Promise<User[]> {
+    return authorized_fetch(`/api/subjects/${subjectId}/students`, { method: "GET" });
 }

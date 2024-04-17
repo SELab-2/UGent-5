@@ -12,30 +12,13 @@ export async function createProject(projectData: Project): Promise<string> {
             body: JSON.stringify(projectData),
         });
 
-        // Assuming the response contains the created project data with an ID field
-        const createdProjectId = response.id; // Adjust this according to your API response structure
+        const createdProjectId = response.id;
         return createdProjectId;
     } catch (error) {
         console.error("Error in creating project:", error);
-        throw error; // Rethrow the error for further handling or showing a user-friendly message
+        throw error;
     }
 }
-
-// export async function createProject(projectData: Project): Promise<Project> {
-//     try {
-//         const response = await authorized_fetch(`/api/projects/`, {
-//             method: "POST",
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify(projectData),
-//         });
-//         return response.json();
-//     } catch (error) {
-//         console.error("Error in creating project:", error);
-//         throw error; // Rethrow the error for further handling or showing a user-friendly message
-//     }
-// }
 
 // Function to fetch a specific project by its ID
 export async function getProject(projectId: number): Promise<Project> {
@@ -50,6 +33,6 @@ export async function createSubmission(groupId: number, formData: FormData): Pro
             method: "POST",
             body: formData,
         },
-        true // If this flag is intended for handling multipart/form-data or a different response, consider adding a comment to clarify its purpose
+        true
     );
 }

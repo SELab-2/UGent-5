@@ -63,7 +63,7 @@ export default defineComponent({
         const capacity = ref(1); // Default capacity
 
         watch(capacity, (newCapacity) => {
-            emit('update:capacity', newCapacity);
+            emit("update:capacity", newCapacity);
         });
 
         watch(selectedOption, (newValue) => {
