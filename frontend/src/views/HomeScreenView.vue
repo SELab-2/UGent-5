@@ -13,7 +13,8 @@
                 </HomeScreenCard>
             </div>
             <div class="mobileCard">
-                <HomeScreenCard :title="'homescreen.subjects'">
+                <HomeScreenSkeletonCard v-if="isSubjectsLoading"/>
+                <HomeScreenCard v-else :title="'homescreen.subjects'">
                     <HomeScreenCourses
                         v-for="subject in subjects"
                         :subject="subject"
@@ -27,7 +28,7 @@
         </v-container>
         <v-container v-else>
             <v-row>
-                <div>
+                <v-col>
                     <HomeScreenCard :title="'homescreen.deadlines'">
                         <HomeScreenDeadlines
                             v-for="deadline in deadlines"
@@ -35,21 +36,19 @@
                             :key="deadline.project.id"
                         />
                     </HomeScreenCard>
-                </div>
-                <div>
-                    <HomeScreenCard
-                        :title="'homescreen.subjects'"
-                        :data="subjects"
-                        type="subjects"
-                    />
-                </div>
-                <div>
-                    <HomeScreenCard
-                        :title="'homescreen.announcements'"
-                        :data="[]"
-                        type="announcements"
-                    />
-                </div>
+                </v-col>
+                <v-col>
+                    <HomeScreenCard :title="'homescreen.subjects'">
+                        <HomeScreenCourses
+                            v-for="subject in subjects"
+                            :subject="subject"
+                            :key="subject.id"
+                        />
+                    </HomeScreenCard>
+                </v-col>
+                <v-col>
+                    <HomeScreenCard :title="'homescreen.announcements'" />
+                </v-col>
             </v-row>
         </v-container>
     </BackgroundContainer>
@@ -57,23 +56,20 @@
 
 <script setup lang="ts">
 import HomeScreenCard from "@/components/cards/home/HomeScreenCard.vue";
+import HomeScreenSkeletonCard from "@/components/cards/home/HomeScreenSkeletonCard.vue";
 import HomeScreenDeadlines from "@/components/buttons/HomeScreenDeadlines.vue";
 import HomeScreenCourses from "@/components/cards/home/HomeScreenCourses.vue";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import { useUserQuery } from "@/queries/User";
 import { useDisplay } from "vuetify";
 import { type Deadline } from "@/models/Project";
-import type Subject from "@/models/Subject";
 import { ref } from "vue";
+import { useSubjectsQuery } from "@/queries/Subject"
 
 const { data: user, isLoading } = useUserQuery(null);
 const { smAndDown } = useDisplay();
 
-const subjects: Subject[] = [
-    { id: 1, name: "course A" },
-    { id: 2, name: "course B" },
-    { id: 3, name: "course C" },
-];
+const {data: subjects, isLoading: isSubjectsLoading, isError: isSubjectsError} = useSubjectsQuery();
 
 const deadlines = ref<Deadline[]>([
     {
