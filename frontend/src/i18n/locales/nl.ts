@@ -25,9 +25,6 @@ export default {
         deadline: "Deadline",
         details_button: "Naar project",
     },
-    subject: {
-        register: "Registreer bij vak:",
-    },
     navigation: {
         home: "Hoofdscherm",
         subjects: "Vakken",
@@ -45,6 +42,7 @@ export default {
     },
 
     subject: {
+        register: "Registreer bij vak:",
         academy_year: "Academiejaar",
         projects: "Projecten",
         announcements: "Meldingen",

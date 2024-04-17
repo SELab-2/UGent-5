@@ -46,7 +46,7 @@ describe("NavBar", () => {
         });
 
         expect(wrapper.find('[data-test="navigation.home"]').exists()).toBeTruthy();
-        expect(wrapper.find('[data-test="navigation.courses"]').exists()).toBeTruthy();
+        expect(wrapper.find('[data-test="navigation.subjects"]').exists()).toBeTruthy();
         expect(wrapper.find('[data-test="navigation.projects"]').exists()).toBeTruthy();
         expect(wrapper.find('[data-test="navigation.settings"]').exists()).toBeTruthy();
 
@@ -63,7 +63,7 @@ describe("NavBar", () => {
             },
         });
         expect(wrapper.find('[data-test="navigation.home"]').exists()).toBeTruthy();
-        expect(wrapper.find('[data-test="navigation.courses"]').exists()).toBeTruthy();
+        expect(wrapper.find('[data-test="navigation.subjects"]').exists()).toBeTruthy();
         expect(wrapper.find('[data-test="navigation.projects"]').exists()).toBeTruthy();
         expect(wrapper.find('[data-test="navigation.settings"]').exists()).toBeTruthy();
         expect(wrapper.find('[data-test="navigation.admin"]').exists()).toBeTruthy();

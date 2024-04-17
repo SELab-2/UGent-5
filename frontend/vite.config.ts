@@ -6,6 +6,8 @@ import vue from "@vitejs/plugin-vue";
 import fs from "fs";
 import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
 
+const isTesting = process.env.NODE_ENV === 'test'
+
 export default defineConfig({
     plugins: [
         vue(),
@@ -20,9 +22,9 @@ export default defineConfig({
         },
     },
     server: {
-        https: {
-            key: fs.readFileSync("./local-cert/localhost-key.pem"),
-            cert: fs.readFileSync("./local-cert/localhost.pem"),
+        https: isTesting ? undefined : {
+            key: fs.readFileSync('./local-cert/localhost-key.pem'),
+            cert: fs.readFileSync('./local-cert/localhost.pem')
         },
         port: 8080,
     },
