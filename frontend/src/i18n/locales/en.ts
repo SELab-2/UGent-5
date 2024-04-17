@@ -25,9 +25,6 @@ export default {
         deadline: "Deadline",
         details_button: "Project details",
     },
-    subject: {
-        register: "Register to subject:",
-    },
     navigation: {
         home: "Home",
         subjects: "Subjects",
@@ -44,6 +41,7 @@ export default {
         announcements: "Announcements",
     },
     subject: {
+        register: "Register to subject:",
         academy_year: "Academic year",
         projects: "Projects",
         announcements: "Announcements",
