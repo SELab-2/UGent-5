@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from . import service
 from .dependencies import put_permission_validation, delete_permission_validation
 from .service import update_test_files
+from .utils import tests_path, get_files_from_dir
 from ..auth.dependencies import authentication_validation
 from ..dependencies import get_async_db
 from ..project.dependencies import retrieve_project
@@ -19,9 +20,9 @@ router = APIRouter(
 )
 
 
-@router.get("/{project_id}/test_files", response_model=Project)
+@router.get("/{project_id}/test_files")
 async def get_test_files(project: Project = Depends(retrieve_project)):
-    return project  # todo
+    return get_files_from_dir(tests_path(project.test_files_uuid))
 
 
 @router.put(

@@ -4,15 +4,13 @@ import shutil
 from pathlib import Path
 
 import docker
-from docker.errors import ContainerError
 from docker.models.containers import Container
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.docker_tests.utils import tests_path
+from src.docker_tests.utils import tests_path, submission_path, feedback_path, artifacts_path
 from src.submission.models import Status, ResultType
 from src.submission.schemas import Submission, TestResult
 from src.submission.service import update_submission_status
-from src.submission.utils import submission_path, artifacts_path, feedback_path
 
 
 # if a container exits with this code, the test failed (exit 0 means the test succeeded)
@@ -45,7 +43,8 @@ async def launch_docker_tests(db: AsyncSession, submission: Submission, tests_uu
         image_tag = tests_uuid
     else:
         # relative path independent of working dir (tests will break otherwise)
-        path = os.path.join(Path(__file__).parent, "docker_default")  # path = "./docker_default"
+        # path = "./docker_default"
+        path = os.path.join(Path(__file__).parent, "docker_default")
         image_tag = "default_image"
 
         build_docker_image(path, image_tag)  # todo
@@ -67,8 +66,10 @@ async def launch_docker_tests(db: AsyncSession, submission: Submission, tests_uu
     else:
         status = Status.Crashed
 
-    test_results.append(TestResult(type=ResultType.StdOut, value=container.logs(stdout=True, stderr=False)))
-    test_results.append(TestResult(type=ResultType.StdErr, value=container.logs(stdout=False, stderr=True)))
+    test_results.append(TestResult(type=ResultType.StdOut,
+                        value=container.logs(stdout=True, stderr=False)))
+    test_results.append(TestResult(type=ResultType.StdErr,
+                        value=container.logs(stdout=False, stderr=True)))
 
     container.remove()
 

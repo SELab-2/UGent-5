@@ -1,6 +1,5 @@
 import asyncio
 import shutil
-import time
 from datetime import datetime, timedelta, timezone
 
 import pytest
@@ -118,5 +117,3 @@ async def test_default_tests_success(client: AsyncClient, db: AsyncSession, grou
 
     artifact_response = await client.get(f"/api/submissions/{submission_id}/artifacts")
     assert artifact_response.json() == []  # generated artifacts
-
-

@@ -15,7 +15,6 @@ from src.submission.dependencies import (
 )
 from src.submission.exceptions import FileNotFound
 from src.submission.exceptions import FilesNotFound
-from src.submission.utils import get_files_from_dir, submission_path, artifacts_path
 from src.submission.utils import upload_files
 from src.user.dependencies import admin_user_validation, get_authenticated_user
 from src.user.schemas import User
@@ -23,6 +22,7 @@ from . import service
 from .models import Status
 from .schemas import File, Submission, SubmissionCreate
 from ..docker_tests.docker_tests import launch_docker_tests
+from ..docker_tests.utils import submission_path, get_files_from_dir, artifacts_path
 
 router = APIRouter(
     prefix="/api/submissions",
