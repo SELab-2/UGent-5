@@ -78,5 +78,4 @@ async def retrieve_projects(
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db),
 ) -> ProjectList:
-    projects = await project_service.get_projects_by_user(db, user.uid)
-    return ProjectList(projects=projects)
+    return await project_service.get_projects_by_user(db, user.uid)
