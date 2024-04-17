@@ -1,5 +1,4 @@
 import os
-import sys
 
 from submission.submission import questionable_code  # pyright: ignore
 
