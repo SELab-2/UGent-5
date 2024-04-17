@@ -39,15 +39,16 @@ async def launch_docker_tests(db: AsyncSession, submission_id: int, submission_u
 
     # TODO: zorgen dat tests niet gemount worden als custom docker image gemaakt wordt
 
-    if os.path.isfile(os.path.join(tests_path(tests_uuid), "Dockerfile")):
-        image_tag = tests_uuid
-    else:
+    if using_default_docker_image(tests_uuid):
         # relative path independent of working dir (tests will break otherwise)
         # path = "./docker_default"
         path = os.path.join(Path(__file__).parent, "docker_default")
         image_tag = "default_image"
 
-        build_docker_image(path, image_tag)  # todo
+        # rebuild default image if changes were made
+        build_docker_image(path, image_tag)
+    else:
+        image_tag = tests_uuid
 
     test_results = []
     container = run_docker_tests(
@@ -96,10 +97,15 @@ def build_docker_image(path: str, tag: str):
     client.images.prune()  # cleanup dangling images
 
 
+def using_default_docker_image(tests_uuid: str) -> bool:
+    return not os.path.isfile(os.path.join(tests_path(tests_uuid), "Dockerfile"))
+
+
 def run_docker_tests(
     image_tag: str, submission_dir: str, artifact_dir: str, feedback_dir: str, tests_dir: str
 ) -> Container:
     client = docker.from_env()
+
     return client.containers.run(
         image=image_tag,
         volumes={
@@ -119,4 +125,4 @@ def run_docker_tests(
         detach=True,
         stdout=True,
         stderr=True,
-    )
+    )  # pyright: ignore

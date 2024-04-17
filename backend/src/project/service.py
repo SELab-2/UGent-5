@@ -10,7 +10,7 @@ from src.subject.models import StudentSubject, Subject
 from .exceptions import ProjectNotFound, TestsNotFound
 from .models import Project, Requirement
 from .schemas import ProjectCreate, ProjectList, ProjectUpdate
-from ..docker_tests.docker_tests import build_docker_image
+from ..docker_tests.docker_tests import build_docker_image, using_default_docker_image
 from ..docker_tests.utils import write_and_unpack_files, tests_path, remove_test_files
 
 
@@ -94,7 +94,7 @@ async def update_test_files(db: AsyncSession, project_id: int, test_files: List[
 
     write_and_unpack_files(test_files, uuid)
 
-    if os.path.isfile(os.path.join(tests_path(uuid), "Dockerfile")):
+    if not using_default_docker_image(uuid):
         # build custom docker image if dockerfile is present
         build_docker_image(tests_path(uuid), uuid)
 

@@ -14,7 +14,7 @@ from .dependencies import (
     create_permission_validation,
     delete_permission_validation,
     patch_permission_validation,
-    retrieve_project,
+    retrieve_project, retrieve_test_files_uuid,
 )
 from .schemas import Project, ProjectCreate, ProjectUpdate
 from .service import (
@@ -81,8 +81,8 @@ async def list_submissions(group_id: int,
 
 
 @router.get("/{project_id}/test_files")
-async def get_test_files(project: Project = Depends(retrieve_project)):
-    return get_files_from_dir(tests_path(project.test_files_uuid))
+async def get_test_files(test_files_uuid: str = Depends(retrieve_test_files_uuid)):
+    return get_files_from_dir(tests_path(test_files_uuid))
 
 
 @router.put(

@@ -1,6 +1,6 @@
 import os
 
-from submission.submission import questionable_code
+from submission.submission import questionable_code  # pyright: ignore
 
 
 def main():

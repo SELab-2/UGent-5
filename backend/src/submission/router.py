@@ -62,7 +62,8 @@ async def create_submission(background_tasks: BackgroundTasks,
 
     # launch docker tests
     if docker_tests_present:
-        background_tasks.add_task(launch_docker_tests, db, submission.id, submission.files_uuid, test_files_uuid)
+        background_tasks.add_task(launch_docker_tests, db,
+                                  submission.id, submission.files_uuid, test_files_uuid)
 
     return submission
 

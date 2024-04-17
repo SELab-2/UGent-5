@@ -47,7 +47,7 @@ async def project_id(client: AsyncClient, db: AsyncSession, subject_id: int) -> 
 
 
 @pytest_asyncio.fixture
-async def project_with_tests_id(client: AsyncClient, db: AsyncSession, project_id: int) -> int:
+async def project_with_tests_id(client: AsyncClient, db: AsyncSession, project_id: int):
     """upload test files for project"""
     test_files = [
         ('files', ('run', open('docker_test_files/test_files/run', 'rb'))),

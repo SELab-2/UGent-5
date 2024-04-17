@@ -8,7 +8,7 @@ from src.subject.utils import has_subject_privileges
 
 from .schemas import Project, ProjectCreate
 from .service import get_project
-from .exceptions import ProjectNotFound
+from .exceptions import ProjectNotFound, TestsNotFound
 
 
 async def retrieve_project(project_id: int,
@@ -19,6 +19,12 @@ async def retrieve_project(project_id: int,
             (not project.is_visible and not await has_subject_privileges(project.subject_id, user, db)):
         raise ProjectNotFound
     return project
+
+
+async def retrieve_test_files_uuid(project: Project = Depends(retrieve_project)):
+    if project.test_files_uuid is None:
+        raise TestsNotFound
+    return project.test_files_uuid
 
 
 async def create_permission_validation(
