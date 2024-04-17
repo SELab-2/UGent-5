@@ -1,8 +1,11 @@
+import shutil
+
 import pytest
 from httpx import AsyncClient
 from src.auth.exceptions import NotAuthorized
 import os
 
+from src.docker_tests.utils import submissions_path
 # Import Fixtures
 from tests.test_group import group_id
 from tests.test_project import project_id
@@ -26,6 +29,7 @@ async def test_create_submission(client: AsyncClient, group_id: int):
     # Submit
     await client.post(f"/api/groups/{group_id}")  # Join group
     response = await client.post(f"/api/submissions/", params={"group_id": group_id}, files=files)
+    files_uuid = response.json()['files_uuid']
     assert response.status_code == 201
 
     # Leave group
@@ -57,8 +61,8 @@ async def test_create_submission(client: AsyncClient, group_id: int):
     response = await client.get(f"/api/submissions/{id}/files/testfile2.txt")
     assert next(response.iter_bytes()) == b"content2"
 
-    os.remove("testfile1.txt")
-    os.remove("testfile2.txt")
+    # cleanup files
+    shutil.rmtree(submissions_path(files_uuid))
 
 
 # TODO:  check submission with project requirements

@@ -207,6 +207,6 @@ async def test_default_tests_crash(client: AsyncClient, group_id_with_default_te
 
     artifact_response = await client.get(f"/api/submissions/{submission_id}/artifacts")
     assert artifact_response.json() == []  # no generated artifacts
-    
+
     # cleanup files
     shutil.rmtree(docker_utils.submissions_path(response.json()["files_uuid"]))
