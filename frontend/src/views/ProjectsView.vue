@@ -3,7 +3,7 @@
     <h1 v-else-if="isError" class="welcome">No projects found!</h1>
     <div v-else class="projectInfo">
         <h1>My Projects:</h1>
-        <ProjectMiniCard v-for="project in projects.projects" :key="project.id" :projectId="project.id" />
+        <ProjectMiniCard v-for="project in projects" :key="project.id" :projectId="project.id" />
     </div>
 </template>
 

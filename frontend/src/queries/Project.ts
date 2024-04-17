@@ -17,6 +17,10 @@ function PROJECTS_QUERY_KEY(): string[] {
     return ["projects"];
 }
 
+function SUBMISSIONS_QUERY_KEY(): string[] {
+    return ["submissions"];
+}
+
 export function useProjectQuery(
     projectId: Ref<number | undefined>
 ): UseQueryReturnType<Project, Error> {
@@ -48,7 +52,7 @@ export function useCreateSubmissionMutation(
 
 export function useSubmissionQuery(): UseQueryReturnType<Submission[], Error> {
     return useQuery<Submission[], Error>({
-        querykey: ["Submissions"],
+        queryKey: SUBMISSIONS_QUERY_KEY(),
         queryFn: () => getSubmissions()
     });
 }

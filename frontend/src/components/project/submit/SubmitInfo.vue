@@ -18,8 +18,8 @@
 </template>
 
 <script setup lang="ts">
-/*import {useSubmissionQuery} from "@/queries/Project";
-import {toRefs} from "vue";
+import {useSubmissionQuery} from "@/queries/Project";
+import {toRefs, computed} from "vue";
 import type Project from "@/models/Project";
 import type Group from "@/models/Group";
 import type Submission from "@/models/Submission";
@@ -32,11 +32,11 @@ const props = defineProps<{
 const { group } = toRefs(props);
 const { project } = toRefs(props);
 
-const { data: submissions, isLoading: isLoading, isError: isError } = useSubmissionQuery();
+const { data: submissions, isLoading, isError } = useSubmissionQuery();
 
-const latestSubmission = submissions?.value.filter((submission: Submission) => {
-    return submissionit.group_id === group.value.id && submission.project_id === project.value.id;
-});*/
+const latestSubmission = computed(() => submissions.value?.filter((submission: Submission) => {
+    return submission.group_id === group.value.id && submission.project_id === project.value.id;
+})[0]);
 
 </script>
 
