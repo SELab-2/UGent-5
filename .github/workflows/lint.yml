@@ -45,7 +45,7 @@ jobs:
         run: autopep8 -rd --exit-code backend
  
   pytest:
-    name: Unit Testing
+    name: Backend Unit Testing
     runs-on: self-hosted
     env:
       DATABASE_URI: "${{ secrets.POSTGRES_CONNECTION }}"
@@ -83,6 +83,24 @@ jobs:
       working-directory: backend
       if: always()
       run: alembic downgrade base
+
+  vitest:
+    name: Frontend Unit Testing
+    runs-on: self-hosted
+    env:
+      VITE_APP_URL: https://localhost:8080
+      VITE_API_URL: http://localhost:5173
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+    - name: Install dependencies
+      run: npm install
+    - name: Run Tests
+      run: npm run test:unit
+
   pyright:
     name: Pyright
     runs-on: self-hosted
