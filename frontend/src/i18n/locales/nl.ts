@@ -30,7 +30,7 @@ export default {
     },
     navigation: {
         home: "Hoofdscherm",
-        courses: "Vakken",
+        subjects: "Vakken",
         projects: "Projecten",
         settings: "Instellingen",
         help: "Help",
@@ -40,7 +40,28 @@ export default {
     },
     homescreen: {
         deadlines: "Project deadlines",
-        courses: "Mijn vakken",
+        subjects: "Mijn vakken",
         announcements: "Meldingen",
+    },
+
+    subject: {
+        academy_year: "Academiejaar",
+        projects: "Projecten",
+        announcements: "Meldingen",
+        groups: "Groepen",
+        projectsPage: {
+            all: "Alle",
+            active: "Actief",
+            completed: "Voltooid",
+        },
+        project: {
+            assignment: "Opdracht",
+            group: "Groep",
+            submissions: "Indieningen",
+        },
+    },
+
+    subjects: {
+        title: "Mijn vakken",
     },
 };

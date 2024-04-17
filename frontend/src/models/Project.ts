@@ -5,3 +5,9 @@ export default interface Project {
     description: string;
     subject_id: number;
 }
+
+export enum FilterOptions {
+    All = "All",
+    Completed = "Completed",
+    Active = "Active",
+}
