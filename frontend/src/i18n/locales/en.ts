@@ -32,6 +32,9 @@ export default {
         group: "Group {number}",
         assignment: "Assignment:",
     },
+    subject: {
+        register: "Register to subject:",
+    },
     navigation: {
         home: "Home",
         courses: "Courses",

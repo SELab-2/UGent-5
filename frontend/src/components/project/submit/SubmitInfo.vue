@@ -35,7 +35,7 @@ const { project } = toRefs(props);
 const { data: submissions, isLoading: isLoading, isError: isError } = useSubmissionQuery();
 
 const latestSubmission = submissions?.value.filter((submission: Submission) => {
-    return submission.group_id === group.value.id && submission.project_id === project.value.id;
+    return submissionit.group_id === group.value.id && submission.project_id === project.value.id;
 });*/
 
 </script>

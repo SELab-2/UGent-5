@@ -32,6 +32,9 @@ export default {
         group: "Groep {number}",
         assignment: "Opdracht:",
     },
+    subject: {
+        register: "Registreer bij vak:",
+    },
     navigation: {
         home: "Hoofdscherm",
         courses: "Vakken",
