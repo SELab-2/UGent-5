@@ -25,9 +25,12 @@ export default {
         deadline: "Deadline",
         details_button: "Project details",
     },
+    subject: {
+        register: "Register to subject:",
+    },
     navigation: {
         home: "Home",
-        courses: "Courses",
+        subjects: "Subjects",
         projects: "Projects",
         settings: "Settings",
         help: "Help",
@@ -37,7 +40,26 @@ export default {
     },
     homescreen: {
         deadlines: "Project deadlines",
-        courses: "My courses",
+        subjects: "My subjects",
         announcements: "Announcements",
+    },
+    subject: {
+        academy_year: "Academic year",
+        projects: "Projects",
+        announcements: "Announcements",
+        groups: "Groups",
+        projectsPage: {
+            all: "All",
+            active: "Active",
+            completed: "Completed",
+        },
+        project: {
+            assignment: "Assignment",
+            group: "Group",
+            submissions: "Submissions",
+        },
+    },
+    subjects: {
+        title: "My Subjects",
     },
 };

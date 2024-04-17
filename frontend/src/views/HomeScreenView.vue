@@ -28,7 +28,7 @@ const { smAndDown } = useDisplay();
 
 const cards = [
     { title: "homescreen.deadlines" },
-    { title: "homescreen.courses" },
+    { title: "homescreen.subjects" },
     { title: "homescreen.announcements" },
 ];
 </script>

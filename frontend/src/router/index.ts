@@ -53,9 +53,22 @@ const router = createRouter({
             props: (route) => ({ projectId: Number(route.params.projectId) }),
         },
         {
-            path: "/courses",
-            name: "courses",
-            component: () => import("../views/CoursesView.vue"),
+            path: "/subjects",
+            name: "subjects",
+            component: () => import("../views/subject/SubjectsView.vue"),
+            children: [],
+        },
+        {
+            path: "/subjects/:subjectId(\\d+)",
+            name: "subject",
+            component: () => import("../views/subject/SubjectView.vue"),
+            props: (route) => ({ subjectId: Number(route.params.subjectId) }),
+        },
+        {
+            path: "/subjects/register/:uuid",
+            name: "registerSubject",
+            component: () => import("../views/SubjectRegisterView.vue"),
+            props: (route) => ({ uuid: String(route.params.uuid) }),
         },
         {
             path: "/settings",
