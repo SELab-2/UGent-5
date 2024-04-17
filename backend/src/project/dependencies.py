@@ -8,7 +8,7 @@ from src.subject.utils import has_subject_privileges
 
 from .schemas import Project, ProjectCreate
 from .service import get_project
-from .exceptions import ProjectNotFoundException
+from .exceptions import ProjectNotFound
 
 
 async def retrieve_project(project_id: int,
@@ -17,7 +17,7 @@ async def retrieve_project(project_id: int,
     project = await get_project(db, project_id)
     if not project or \
             (not project.is_visible and not await has_subject_privileges(project.subject_id, user, db)):
-        raise ProjectNotFoundException()
+        raise ProjectNotFound
     return project
 
 

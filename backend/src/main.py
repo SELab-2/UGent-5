@@ -4,7 +4,6 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from src import config
 from src.auth.router import router as auth_router
-from src.docker_tests.router import router as docker_router
 from src.group.router import router as group_router
 from src.project.router import router as project_router
 from src.subject.router import router as subject_router
@@ -44,4 +43,3 @@ app.include_router(subject_router)
 app.include_router(project_router)
 app.include_router(group_router)
 app.include_router(submission_router)
-app.include_router(docker_router)

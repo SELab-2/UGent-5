@@ -1,6 +1,6 @@
-from typing import Sequence
+from typing import Sequence, List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.dependencies import authentication_validation
@@ -19,8 +19,9 @@ from .dependencies import (
 from .schemas import Project, ProjectCreate, ProjectUpdate
 from .service import (
     delete_project,
-    update_project,
+    update_project, update_test_files,
 )
+from ..docker_tests.utils import get_files_from_dir, tests_path
 
 router = APIRouter(
     prefix="/api/projects",
@@ -77,3 +78,29 @@ async def list_submissions(group_id: int,
                            db: AsyncSession = Depends(get_async_db)
                            ) -> Sequence[Submission]:
     return await get_submissions_by_project(db, group_id)
+
+
+@router.get("/{project_id}/test_files")
+async def get_test_files(project: Project = Depends(retrieve_project)):
+    return get_files_from_dir(tests_path(project.test_files_uuid))
+
+
+@router.put(
+    "/{project_id}/test_files",
+    response_model=Project,
+    dependencies=[Depends(patch_permission_validation)],
+)
+async def put_test_files(
+    project_id: int,
+    files: List[UploadFile],
+    db: AsyncSession = Depends(get_async_db)
+):
+    return await update_test_files(db, project_id, files)
+
+
+@router.delete("/{project_id}/test_files", dependencies=[Depends(delete_permission_validation)])
+async def delete_test_files(
+    project_id: int, db: AsyncSession = Depends(get_async_db)
+):
+    await service.delete_test_files(db, project_id)
+    return {"message": "Test files deleted successfully"}

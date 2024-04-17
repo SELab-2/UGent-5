@@ -1,12 +1,17 @@
-from typing import Sequence
+import os
+from typing import Sequence, List
+from uuid import uuid4
 
+from fastapi import UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from src.subject.models import StudentSubject, Subject
-from .exceptions import ProjectNotFoundException
+from .exceptions import ProjectNotFound, TestsNotFound
 from .models import Project, Requirement
 from .schemas import ProjectCreate, ProjectList, ProjectUpdate
+from ..docker_tests.docker_tests import build_docker_image
+from ..docker_tests.utils import write_and_unpack_files, tests_path, remove_test_files
 
 
 async def create_project(db: AsyncSession, project_in: ProjectCreate) -> Project:
@@ -60,7 +65,7 @@ async def update_project(
     result = await db.execute(select(Project).filter_by(id=project_id))
     project = result.scalars().first()
     if not project:
-        raise ProjectNotFoundException()
+        raise ProjectNotFound
 
     if project_update.name is not None:
         project.name = project_update.name
@@ -77,3 +82,35 @@ async def update_project(
     await db.commit()
     await db.refresh(project)
     return project
+
+
+async def update_test_files(db: AsyncSession, project_id: int, test_files: List[UploadFile]):
+    project = await get_project(db, project_id)
+
+    if not project.test_files_uuid:
+        uuid = str(uuid4())
+    else:
+        uuid = str(project.test_files_uuid)
+
+    write_and_unpack_files(test_files, uuid)
+
+    if os.path.isfile(os.path.join(tests_path(uuid), "Dockerfile")):
+        # build custom docker image if dockerfile is present
+        build_docker_image(tests_path(uuid), uuid)
+
+    project.test_files_uuid = uuid
+    await db.commit()
+    await db.refresh(project)
+    return project
+
+
+async def delete_test_files(db: AsyncSession, project_id: int):
+    project = await get_project(db, project_id)
+
+    if not project.test_files_uuid:
+        raise TestsNotFound
+
+    remove_test_files(str(project.test_files_uuid))
+
+    await db.delete(project)
+    await db.commit()
