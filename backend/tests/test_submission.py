@@ -62,6 +62,8 @@ async def test_create_submission(client: AsyncClient, group_id: int):
     assert next(response.iter_bytes()) == b"content2"
 
     # cleanup files
+    os.remove("testfile1.txt")
+    os.remove("testfile2.txt")
     shutil.rmtree(submissions_path(files_uuid))
 
 
