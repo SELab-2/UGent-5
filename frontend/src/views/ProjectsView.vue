@@ -14,7 +14,6 @@
 
 import {useProjectsQuery} from "@/queries/Project";
 import ProjectMiniCard from "@/components/project/ProjectMiniCard.vue";
-import {computed} from "vue";
 
 
 const { data: projects, isLoading, isError} = useProjectsQuery();

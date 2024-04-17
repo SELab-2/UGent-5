@@ -13,6 +13,10 @@ function PROJECT_QUERY_KEY(projectId: number): (string | number)[] {
     return ["project", projectId];
 }
 
+function PROJECTS_QUERY_KEY(): string[] {
+    return ["projects"];
+}
+
 export function useProjectQuery(
     projectId: Ref<number | undefined>
 ): UseQueryReturnType<Project, Error> {
@@ -23,11 +27,9 @@ export function useProjectQuery(
     });
 }
 
-export function useProjectsQuery(
-
-): UseQueryReturnType<Project[], Error> {
+export function useProjectsQuery(): UseQueryReturnType<Project[], Error> {
     return useQuery<Project[], Error>({
-        queryKey: ["Projects"],
+        queryKey: PROJECTS_QUERY_KEY(),
         queryFn: () => getProjects()
     });
 }
