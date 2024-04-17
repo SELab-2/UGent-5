@@ -33,7 +33,7 @@
 import HeaderSubtitleButton from "@/components/buttons/HeaderSubtitleButton.vue";
 
 defineProps<{
-    isLoading: Boolean | undefined;
+    isLoading: boolean;
 }>();
 
 const academicYears = ["2023-2024", "2022-2023", "2021-2022"];

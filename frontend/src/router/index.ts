@@ -59,10 +59,10 @@ const router = createRouter({
             children: [],
         },
         {
-            path: "/subjects/:subjectId",
+            path: "/subjects/:subjectId(\\d+)",
             name: "subject",
             component: () => import("../views/subject/SubjectView.vue"),
-            props: true,
+            props: (route) => ({ subjectId: Number(route.params.subjectId) }),
         },
         {
             path: "/settings",

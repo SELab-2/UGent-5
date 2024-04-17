@@ -34,8 +34,8 @@ import { ref } from "vue";
 import type Project from "@/models/Project";
 
 defineProps<{
-    projects: Project[] | undefined;
-    isLoading: boolean | undefined;
+    projects: Project[];
+    isLoading: boolean;
 }>();
 
 const items = ["projects", "announcements", "groups"];

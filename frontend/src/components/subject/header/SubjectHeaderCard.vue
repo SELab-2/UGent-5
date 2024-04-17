@@ -33,9 +33,9 @@ import type User from "@/models/User";
 import HeaderSubtitleButton from "@/components/buttons/HeaderSubtitleButton.vue";
 
 defineProps<{
-    title: string | undefined;
+    title: string;
     academicYear: string;
-    instructors: User[] | undefined;
+    instructors: User[];
     isLoading: boolean;
 }>();
 </script>

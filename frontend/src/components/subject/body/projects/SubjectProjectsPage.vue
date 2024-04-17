@@ -23,7 +23,7 @@
                     ></SubjectProjectPage>
                 </v-window-item>
 
-                <v-window-item v-if="filteredProjects?.length === 0" :key="'placeholder'">
+                <v-window-item v-if="filteredProjects.length === 0" :key="'placeholder'">
                     <div class="placeholder">
                         <p>No projects available.</p>
                     </div>
@@ -41,8 +41,8 @@ import { computed, ref, toRefs } from "vue";
 import SubjectProjectPage from "@/components/subject/body/projects/SubjectProjectPage.vue";
 
 const props = defineProps<{
-    projects: Project[] | undefined;
-    isLoading: boolean | undefined;
+    projects: Project[];
+    isLoading: boolean;
 }>();
 
 const { projects } = toRefs(props);
@@ -52,7 +52,7 @@ const filterOption = ref<FilterOptions>(FilterOptions.All);
 const filteredProjects = computed(() => {
     const currentDate = new Date();
     let sortedProjects = [...(projects.value || [])];
-    sortedProjects.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+    sortedProjects.sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
     if (filterOption.value === FilterOptions.All) {
         return sortedProjects;
     } else if (filterOption.value === FilterOptions.Active) {
@@ -64,11 +64,11 @@ const filteredProjects = computed(() => {
     return sortedProjects;
 });
 
-const updateSelectedTab = (tabIndex) => {
+const updateSelectedTab = (tabIndex: number) => {
     selectedTab.value = tabIndex;
 };
 
-const updateFilterOption = (option) => {
+const updateFilterOption = (option: FilterOptions) => {
     filterOption.value = option;
     updateSelectedTab(0);
 };

@@ -5,20 +5,17 @@
             cover
             :src="imagePath"
             class="header-img"
-            @load="isLoading === false"
         ></v-img>
     </v-skeleton-loader>
 </template>
 
 <script setup lang="ts">
-import { toRef } from "vue";
 
-const props = defineProps<{
+defineProps<{
     imagePath: string;
     isLoading: boolean;
 }>();
 
-const { isLoading } = toRef(props, "isLoading");
 </script>
 
 <style scoped>

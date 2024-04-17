@@ -12,7 +12,7 @@
         <v-row>
             <v-col>
                 <SubjectCard
-                    v-for="(subject, index) in data?.subjects"
+                    v-for="(subject, index) in data"
                     :subject="subject"
                     :is-loading="isLoading"
                     :key="index"
@@ -28,9 +28,8 @@ import { useSubjectsQuery } from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectsHeaderContainer from "@/components/subjects/SubjectsHeaderContainer.vue";
 import SubjectCard from "@/components/subjects/SubjectCard.vue";
-import type Subject from "@/models/Subject";
 
-const { data, error, isLoading, isError } = useSubjectsQuery() as { data: { subjects: Subject[] } };
+const { data, error, isLoading, isError } = useSubjectsQuery();
 </script>
 
 <style scoped></style>

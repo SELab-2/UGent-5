@@ -6,7 +6,7 @@
 import SubjectsHeaderCard from "@/components/subjects/SubjectsHeaderCard.vue";
 
 defineProps<{
-    isLoading: Boolean | undefined;
+    isLoading: boolean;
 }>();
 </script>
 

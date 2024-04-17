@@ -28,13 +28,13 @@
         <v-skeleton-loader type="card" :loading="isLoading" color="white">
             <v-card-text class="projects-tab">
                 <v-tabs
-                    v-if="projects?.length > 0"
+                    v-if="projects!.length > 0"
                     direction="vertical"
                     v-model="selectedTab"
                     class="projects-tab"
                 >
                     <v-tab v-for="project in projects" :key="project.id">
-                        <SubjectTab :projectName="project?.name"></SubjectTab>
+                        <SubjectTab :projectName="project.name"></SubjectTab>
                     </v-tab>
                 </v-tabs>
                 <div v-else class="placeholder">
@@ -53,9 +53,9 @@ import { FilterOptions } from "@/models/Project";
 import { ref, watch } from "vue";
 
 const props = defineProps<{
-    projects: Project[] | undefined;
-    selectedTab: number | undefined;
-    isLoading: boolean | undefined;
+    projects: Project[];
+    selectedTab: number;
+    isLoading: boolean;
 }>();
 
 const selectedTab = ref(props.selectedTab);
@@ -64,7 +64,7 @@ const activeButton = ref(FilterOptions.All);
 
 const emit = defineEmits<{
     (e: "tab-changed", projectId: number): void;
-    (e: "filter-changed", filter: string): void;
+    (e: "filter-changed", filter: FilterOptions): void;
 }>();
 
 watch(selectedTab, (newVal: number | undefined) => {
@@ -74,7 +74,7 @@ watch(selectedTab, (newVal: number | undefined) => {
 });
 
 watch(activeButton, (newVal: string) => {
-    emit("filter-changed", newVal);
+    emit("filter-changed", FilterOptions[newVal as keyof typeof FilterOptions]);
     selectedTab.value = 0;
 });
 </script>

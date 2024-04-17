@@ -1,7 +1,7 @@
 <template>
     <v-row>
         <v-col cols="4">
-            <SubjectHeaderImage :imagePath="imagePath" :is-loading="true"> </SubjectHeaderImage>
+            <SubjectHeaderImage :imagePath="imagePath" :is-loading="isLoading"> </SubjectHeaderImage>
         </v-col>
         <v-col cols="8">
             <SubjectHeaderCard
@@ -21,9 +21,9 @@ import type User from "@/models/User";
 import SubjectHeaderImage from "@/components/subject/header/SubjectHeaderImage.vue";
 
 defineProps<{
-    title: string | undefined;
+    title: string;
     academicYear: string;
-    instructors: User[] | undefined;
+    instructors: User[];
     isLoading: boolean;
     imagePath: string;
 }>();

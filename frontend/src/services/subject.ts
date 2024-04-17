@@ -24,5 +24,6 @@ export async function getSubjectProjects(subjectId: number): Promise<Project[]> 
 }
 
 export async function getSubjects(): Promise<Subject[]> {
-    return authorized_fetch("/api/subjects", { method: "GET" });
+    const result = await authorized_fetch<{subjects: Subject[]}>("/api/subjects", { method: "GET" });
+    return result.subjects;
 }

@@ -5,7 +5,7 @@
 
 <script setup lang="ts">
 defineProps<{
-    projectName: string | undefined;
+    projectName: string;
 }>();
 </script>
 

@@ -21,11 +21,11 @@
 </template>
 
 <script setup lang="ts">
-import Subject from "@/models/Subject";
+import type Subject from "@/models/Subject";
 
 defineProps<{
-    subject: Subject | undefined;
-    isLoading: boolean | undefined;
+    subject: Subject;
+    isLoading: boolean;
 }>();
 </script>
 

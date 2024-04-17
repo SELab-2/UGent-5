@@ -32,6 +32,10 @@ function SUBJECT_DETAILS_QUERY_KEY(subjectId: number): (string | number)[] {
     return ["subject", "details", subjectId];
 }
 
+function SUBJECTS_QUERY_KEY(): (string | number)[] {
+    return ["subjects"];
+}
+
 export function useSubjectQuery(
     subjectId: Ref<number | undefined>
 ): UseQueryReturnType<Subject, Error> {
@@ -74,7 +78,7 @@ export function useSubjectProjectsQuery(
 
 export function useSubjectsQuery(): UseQueryReturnType<Subject[], Error> {
     return useQuery<Subject[], Error>({
-        queryKey: ["subjects"],
+        queryKey: SUBJECTS_QUERY_KEY(),
         queryFn: () => getSubjects(),
     });
 }

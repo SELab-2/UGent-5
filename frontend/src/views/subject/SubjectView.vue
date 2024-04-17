@@ -7,8 +7,9 @@
         <v-row>
             <v-col>
                 <SubjectHeaderContainer
-                    :title="subject?.name"
-                    :instructors="subject?.instructors"
+                    v-if="subject"
+                    :title="subject!.name"
+                    :instructors="subject!.instructors"
                     academic-year="2023-2024"
                     :is-loading="isLoading"
                     image-path="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
@@ -18,7 +19,8 @@
         <v-row>
             <v-col>
                 <SubjectBody
-                    :projects="subject?.projects ?? []"
+                    v-if="subject"
+                    :projects="subject!.projects"
                     :is-loading="isLoading"
                 ></SubjectBody>
             </v-col>
@@ -30,20 +32,16 @@
 import { toRefs } from "vue";
 import { useSubjectDetailsQuery } from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
-import type SubjectDetails from "@/models/SubjectDetails";
 import SubjectHeaderContainer from "@/components/subject/header/SubjectHeaderContainer.vue";
 import SubjectBody from "@/components/subject/body/SubjectBody.vue";
 
-const props = defineProps<{ subjectId: number | undefined }>();
+const props = defineProps<{
+    subjectId: number
+}>();
 
 const { subjectId } = toRefs(props);
 
-const {
-    data: subject,
-    error,
-    isLoading,
-    isError,
-} = useSubjectDetailsQuery(subjectId) as SubjectDetails;
+const { data: subject, error, isLoading, isError } = useSubjectDetailsQuery(subjectId);
 </script>
 ;
 <style scoped></style>

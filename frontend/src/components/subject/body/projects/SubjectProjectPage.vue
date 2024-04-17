@@ -6,10 +6,10 @@
             <v-card-title class="title">
                 <v-row>
                     <v-col>
-                        <span>{{ project?.name }}</span>
+                        <span>{{ project.name }}</span>
                     </v-col>
                     <v-col class="text-right">
-                        <router-link :to="`/projects/${project?.id}`" class="text-right chevron">
+                        <router-link :to="`/projects/${project.id}`" class="text-right chevron">
                             <v-icon size="small">mdi-arrow-right</v-icon>
                         </router-link>
                     </v-col>
@@ -17,30 +17,30 @@
             </v-card-title>
             <v-card-subtitle class="d-block py-3">
                 <v-icon>mdi-alarm</v-icon>
-                {{ $d(project?.deadline, "long") }}
+                {{ $d(project.deadline, "long") }}
             </v-card-subtitle>
 
             <v-card-text>
                 <h2>{{ $t("subject.project.assignment") }}</h2>
                 <p
-                    v-if="project?.description && project?.description.length <= assignmentLength"
+                    v-if="project.description && project.description.length <= assignmentLength"
                     class="project_description"
                 >
-                    {{ project?.description }}
+                    {{ project.description }}
                 </p>
                 <!-- Show truncated description if not expanded -->
-                <p v-else-if="project?.description && !expanded" class="project_description">
-                    {{ project?.description.substring(0, assignmentLength) + "..." }}
+                <p v-else-if="project.description && !expanded" class="project_description">
+                    {{ project.description.substring(0, assignmentLength) + "..." }}
                 </p>
                 <!-- Show full description if expanded -->
                 <v-expand-transition>
                     <div v-if="expanded">
-                        <p class="project_description">{{ project?.description }}</p>
+                        <p class="project_description">{{ project.description }}</p>
                     </div>
                 </v-expand-transition>
             </v-card-text>
             <!-- Toggle button for expanding/collapsing description -->
-            <div v-if="project?.description && project?.description.length > assignmentLength">
+            <div v-if="project.description && project.description.length > assignmentLength">
                 <v-divider></v-divider>
                 <v-card-actions>
                     <v-btn @click="expanded = !expanded">
@@ -65,8 +65,8 @@ import { ref } from "vue";
 
 defineProps<{
     selectedTab: number;
-    project: Project | undefined;
-    isLoading: boolean | undefined;
+    project: Project;
+    isLoading: boolean;
 }>();
 
 const expanded = ref(false);
