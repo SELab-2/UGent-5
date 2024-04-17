@@ -38,13 +38,13 @@ export function useCreateSubmissionMutation(
         },
     });
 }
-
-export function useCreateProjectMutation(): UseMutationReturnType<Project, Error, Project, void> {
+export function useCreateProjectMutation(): UseMutationReturnType<Project, Error, Project, string> {
     const queryClient = useQueryClient();
-    return useMutation<Project, Error, Project>({
+    return useMutation<Project, Error, Project, string>({
         mutationFn: createProject,
-        onSuccess: () => {
+        onSuccess: (createdProjectId) => {
             queryClient.invalidateQueries({ queryKey: ["create-project"] });
+            console.log("Project created with ID:", createdProjectId);
         },
         onError: (error) => {
             console.error("Project creation failed", error);
@@ -53,29 +53,3 @@ export function useCreateProjectMutation(): UseMutationReturnType<Project, Error
     });
 }
 
-// export function useCreateProjectMutation(): UseMutationReturnType<Project, Error, Project, void> {
-//     const queryClient = useQueryClient();
-//
-//     return useMutation<Project, Error, Project>({
-//         mutationFn: createProject,
-//         onMutate: async (newProject: Project) => {
-//             await queryClient.cancelQueries(['projects']);
-//             const previousProjects = queryClient.getQueryData<Project[]>('projects');
-//
-//             queryClient.setQueryData<Project[]>('projects', old => [...(old || []), newProject]);
-//
-//             return { previousProjects };
-//         },
-//         onError: (error, newProject, context) => {
-//             console.error("Project creation failed", error);
-//             queryClient.setQueryData('projects', context?.previousProjects);
-//             alert("Could not create project. Please try again.");
-//         },
-//         onSuccess: () => {
-//             queryClient.invalidateQueries(['projects']);
-//         },
-//         onSettled: () => {
-//             queryClient.invalidateQueries(['projects']);
-//         },
-//     });
-// }

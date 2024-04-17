@@ -2,15 +2,19 @@ import type Project from "@/models/Project";
 import type Submission from "@/models/Submission";
 import { authorized_fetch } from "@/services";
 
-export async function createProject(projectData: Project): Promise<void> {
+export async function createProject(projectData: Project): Promise<string> {
     try {
-        await authorized_fetch(`/api/projects/`, {
+        const response = await authorized_fetch(`/api/projects/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(projectData),
         });
+
+        // Assuming the response contains the created project data with an ID field
+        const createdProjectId = response.id; // Adjust this according to your API response structure
+        return createdProjectId;
     } catch (error) {
         console.error("Error in creating project:", error);
         throw error; // Rethrow the error for further handling or showing a user-friendly message

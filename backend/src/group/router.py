@@ -64,3 +64,8 @@ async def list_submissions(group_id: int,
                            db: AsyncSession = Depends(get_async_db)
                            ) -> Sequence[Submission]:
     return await get_submissions_by_group(db, group_id)
+
+
+@router.post("/{group_id}/{uid}", status_code=201,)
+async def join_group(group: Group = Depends(join_group)) -> Group:
+    return group
