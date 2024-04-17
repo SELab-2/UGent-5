@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <h1 v-if="isDataLoading" class="welcome">Loading...</h1>
+        <h1 v-if="isDataLoading" class="welcome">{{ $t("default.loading.loading_page") }}</h1>
         <h1 v-else-if="isProjectError" class="welcome">No such project found!</h1>
         <div v-else class="projectInfo">
             <v-row>
@@ -10,12 +10,12 @@
                 <v-col cols="2" class="button-container">
                     <router-link v-if="group" :to="`/api/groups/${group!.id}`">
                         <v-btn class="group-button" prepend-icon="mdi-account-group">
-                            Group {{ group!.id }}
+                            {{ $t("project.group", { number: group!.id }) }}
                         </v-btn>
                     </router-link>
                     <router-link v-else :to="`/projects/${projectId}/groups`">
                         <v-btn class="group-button" prepend-icon="mdi-account-group">
-                            Join Group
+                            {{ $t("group_button") }}
                         </v-btn>
                     </router-link>
                     <NeedHelpButton class="group-button" :email="'test@test.be'"></NeedHelpButton>

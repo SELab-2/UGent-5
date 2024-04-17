@@ -3,6 +3,9 @@ export default {
         error: {
             "not-found": "Pagina niet gevonden",
         },
+        loading: {
+            "loading_page": "Aan het laden..."
+        }
     },
     login: {
         about: "De officiële indienapplicatie van de Universiteit Gent",
@@ -24,6 +27,10 @@ export default {
     project: {
         deadline: "Deadline",
         details_button: "Naar project",
+        group_button:  "Vind Groep",
+        needhelp_button: "Hulp nodig",
+        group: "Groep {number}",
+        assignment: "Opdracht:",
     },
     navigation: {
         home: "Hoofdscherm",

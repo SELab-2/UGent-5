@@ -5,7 +5,7 @@ import {
     type UseQueryReturnType,
 } from "@tanstack/vue-query";
 import type Project from "@/models/Project";
-import {getProject, createSubmission, getSubmissions} from "@/services/project";
+import {getProject, createSubmission, getSubmissions, getProjects} from "@/services/project";
 import { type Ref, computed } from "vue";
 import type Submission from "@/models/Submission";
 
@@ -20,6 +20,15 @@ export function useProjectQuery(
         queryKey: computed(() => PROJECT_QUERY_KEY(projectId.value!)),
         queryFn: () => getProject(projectId.value!),
         enabled: () => projectId.value !== undefined,
+    });
+}
+
+export function useProjectsQuery(
+
+): UseQueryReturnType<Project[], Error> {
+    return useQuery<Project[], Error>({
+        queryKey: ["Projects"],
+        queryFn: () => getProjects()
     });
 }
 

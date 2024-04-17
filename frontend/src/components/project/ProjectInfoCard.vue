@@ -16,7 +16,7 @@
         </v-container>
         <v-card-item>
             <v-card-title>
-                assignment:
+                {{ $t("project.assignment") }}
             </v-card-title>
             <v-card-text>
                 {{ project?.description }}

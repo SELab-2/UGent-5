@@ -6,6 +6,10 @@ export async function getProject(projectId: number): Promise<Project> {
     return authorized_fetch(`/api/projects/${projectId}`, { method: "GET" });
 }
 
+export async function getProjects() : Promise<Project[]> {
+    return authorized_fetch( `/api/users/me/projects`,  { method: "GET"});
+}
+
 export async function createSubmission(groupId: number, formData: FormData): Promise<Submission> {
     return authorized_fetch(
         `/api/submissions/?group_id=${groupId}`,

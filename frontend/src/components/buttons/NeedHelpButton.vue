@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-btn @click="sendEmail" prepend-icon="mdi-email">
-            Need help
+            {{ $t("project.needhelp_button") }}
         </v-btn>
     </div>
 </template>
