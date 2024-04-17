@@ -6,6 +6,11 @@ export default interface Project {
     subject_id: number;
 }
 
+export interface Deadline {
+    project: Project;
+    status: string;
+}
+
 export enum FilterOptions {
     All = "All",
     Completed = "Completed",

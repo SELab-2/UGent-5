@@ -2,41 +2,39 @@
     <v-divider></v-divider>
     <div class="coursebtn" @click="navigateToCourse">
         <div>
-            <h3> {{ name }} </h3>
-            <p class="teacher"> {{ teacher }}</p>
+            <h3>{{ name }}</h3>
+            <p class="teacher">{{ teacher }}</p>
         </div>
         <v-icon class="chevron" icon="mdi-chevron-right" />
     </div>
 </template>
 
 <script setup lang="ts">
-
 import router from "@/router";
 
 const props = defineProps<{
-    id: number,
-    name: string,
-    teacher: string
+    id: number;
+    name: string;
+    teacher: string;
 }>();
 
 const navigateToCourse = () => {
     router.push(`/subjects/${props.id}`);
-}
-
+};
 </script>
 
 <style scoped>
-.coursebtn{
+.coursebtn {
     width: 100%;
     background-color: white;
     padding: 10px;
     display: flex;
     align-items: center;
     transition: background-color 0.3s;
-    cursor:pointer;
+    cursor: pointer;
 }
 
-.coursebtn:hover{
+.coursebtn:hover {
     background-color: lightgray;
 }
 
@@ -46,7 +44,7 @@ const navigateToCourse = () => {
     right: 0;
 }
 
-.teacher{
+.teacher {
     color: lightslategrey;
 }
 </style>
