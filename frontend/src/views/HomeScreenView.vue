@@ -10,7 +10,7 @@
                 <SubjectsCard />
             </div>
             <div class="mobileCard">
-                <HomeScreenCard :title="'homescreen.announcements'" />
+                <AnnouncementsCard />
             </div>
         </v-container>
         <v-container v-else>
@@ -22,7 +22,7 @@
                     <SubjectsCard />
                 </v-col>
                 <v-col>
-                    <HomeScreenCard :title="'homescreen.announcements'" />
+                    <AnnouncementsCard />
                 </v-col>
             </v-row>
         </v-container>
@@ -30,9 +30,9 @@
 </template>
 
 <script setup lang="ts">
-import HomeScreenCard from "@/components/home/cards/HomeScreenCard.vue";
 import SubjectsCard from "@/components/home/cards/SubjectsCard.vue";
 import DeadlinesCard from "@/components/home/cards/DeadlinesCard.vue";
+import AnnouncementsCard from "@/components/home/cards/AnnouncementsCard.vue";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import { useUserQuery } from "@/queries/User";
 import { useDisplay } from "vuetify";

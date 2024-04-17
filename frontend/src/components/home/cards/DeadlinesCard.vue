@@ -1,12 +1,12 @@
 <template>
     <HomeScreenCard :title="'homescreen.deadlines'">
-        <HomeScreenDeadline v-for="deadline in deadlines" :deadline="deadline" :key="deadline.project.id" />
+        <DeadlineItem v-for="deadline in deadlines" :deadline="deadline" :key="deadline.project.id" />
     </HomeScreenCard>
 </template>
 
 <script setup lang="ts">
 import HomeScreenCard from "@/components/home/cards/HomeScreenCard.vue";
-import HomeScreenDeadline from "@/components/home/listcontent/HomeScreenDeadline.vue";
+import DeadlineItem from "@/components/home/listcontent/DeadlineItem.vue";
 import { type Deadline } from "@/models/Project";
 import { ref } from "vue";
 const deadlines = ref<Deadline[]>([
