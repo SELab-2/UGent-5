@@ -79,7 +79,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
 import CheckBox from "@/components/project/CheckboxList.vue";
 import DatePicker from "@/components/project/DatePicker.vue";
 import RadioButtonList from "@/components/project/RadiobuttonList.vue";

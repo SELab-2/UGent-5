@@ -45,7 +45,7 @@ export async function createSubmission(groupId: number, formData: FormData): Pro
 
 export async function joinGroup(groupId: number, uid: string): Promise<void> {
     try {
-        const response = await authorized_fetch(`/api/groups/${groupId}/${uid}`, {
+        await authorized_fetch(`/api/groups/${groupId}/${uid}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

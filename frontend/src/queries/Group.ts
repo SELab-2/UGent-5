@@ -4,9 +4,6 @@ import type { UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-qu
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { computed } from "vue";
 import { createGroups, getGroupWithProjectId, getUserGroups, joinGroup } from "@/services/group";
-import type Submission from "@/models/Submission";
-import { createProject, createSubmission } from "@/services/project";
-import type Project from "@/models/Project";
 
 function USER_GROUPS_QUERY_KEY(): string[] {
     return ["groups"];
