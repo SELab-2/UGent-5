@@ -15,11 +15,16 @@ import type Project from "@/models/Project";
 import type SubjectDetails from "@/models/SubjectDetails";
 
 // Generalized function to create query keys based on subject details
-function createSubjectQueryKey(subjectId: number | string, detail: string = ''): (string | number)[] {
-    return ['subject', subjectId, detail].filter(Boolean);
+function createSubjectQueryKey(
+    subjectId: number | string,
+    detail: string = ""
+): (string | number)[] {
+    return ["subject", subjectId, detail].filter(Boolean);
 }
 
-export function useSubjectQuery(subjectId: Ref<number | undefined>): UseQueryReturnType<Subject, Error> {
+export function useSubjectQuery(
+    subjectId: Ref<number | undefined>
+): UseQueryReturnType<Subject, Error> {
     return useQuery<Subject, Error>({
         queryKey: computed(() => createSubjectQueryKey(subjectId.value!)),
         queryFn: () => getSubject(subjectId.value!),
@@ -27,25 +32,31 @@ export function useSubjectQuery(subjectId: Ref<number | undefined>): UseQueryRet
     });
 }
 
-export function useSubjectInstructorsQuery(subjectId: Ref<number | undefined>): UseQueryReturnType<User[], Error> {
+export function useSubjectInstructorsQuery(
+    subjectId: Ref<number | undefined>
+): UseQueryReturnType<User[], Error> {
     return useQuery<User[], Error>({
-        queryKey: computed(() => createSubjectQueryKey(subjectId.value!, 'instructors')),
+        queryKey: computed(() => createSubjectQueryKey(subjectId.value!, "instructors")),
         queryFn: () => getSubjectInstructors(subjectId.value!),
         enabled: () => subjectId.value !== undefined,
     });
 }
 
-export function useSubjectStudentsQuery(subjectId: Ref<number | undefined>): UseQueryReturnType<User[], Error> {
+export function useSubjectStudentsQuery(
+    subjectId: Ref<number | undefined>
+): UseQueryReturnType<User[], Error> {
     return useQuery<User[], Error>({
-        queryKey: computed(() => createSubjectQueryKey(subjectId.value!, 'students')),
+        queryKey: computed(() => createSubjectQueryKey(subjectId.value!, "students")),
         queryFn: () => getSubjectStudents(subjectId.value!),
         enabled: () => subjectId.value !== undefined,
     });
 }
 
-export function useSubjectProjectsQuery(subjectId: Ref<number | undefined>): UseQueryReturnType<Project[], Error> {
+export function useSubjectProjectsQuery(
+    subjectId: Ref<number | undefined>
+): UseQueryReturnType<Project[], Error> {
     return useQuery<Project[], Error>({
-        queryKey: computed(() => createSubjectQueryKey(subjectId.value!, 'projects')),
+        queryKey: computed(() => createSubjectQueryKey(subjectId.value!, "projects")),
         queryFn: () => getSubjectProjects(subjectId.value!),
         enabled: () => subjectId.value !== undefined,
     });
@@ -53,21 +64,23 @@ export function useSubjectProjectsQuery(subjectId: Ref<number | undefined>): Use
 
 export function useSubjectsQuery(): UseQueryReturnType<Subject[], Error> {
     return useQuery<Subject[], Error>({
-        queryKey: createSubjectQueryKey('all'),
+        queryKey: createSubjectQueryKey("all"),
         queryFn: getSubjects,
     });
 }
 
-export function useSubjectDetailsQuery(subjectId: Ref<number | undefined>): UseQueryReturnType<SubjectDetails, Error> {
+export function useSubjectDetailsQuery(
+    subjectId: Ref<number | undefined>
+): UseQueryReturnType<SubjectDetails, Error> {
     return useQuery<SubjectDetails, Error>({
-        queryKey: computed(() => createSubjectQueryKey(subjectId.value!, 'details')),
+        queryKey: computed(() => createSubjectQueryKey(subjectId.value!, "details")),
         queryFn: async () => {
-            const [subject, instructors, students, projects] = await Promise.all([
+            const [subject, instructors, students, projects] = (await Promise.all([
                 getSubject(subjectId.value!),
                 getSubjectInstructors(subjectId.value!),
                 getSubjectStudents(subjectId.value!),
                 getSubjectProjects(subjectId.value!),
-            ]) as [Subject, User[], User[], Project[]];
+            ])) as [Subject, User[], User[], Project[]];
 
             return {
                 id: subject.id,

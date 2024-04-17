@@ -79,18 +79,18 @@
 </template>
 
 <script setup lang="ts">
-import {ref, computed, watch} from "vue";
+import { ref, computed, watch } from "vue";
 import CheckBox from "@/components/project/CheckboxList.vue";
 import DatePicker from "@/components/project/DatePicker.vue";
 import RadioButtonList from "@/components/project/RadiobuttonList.vue";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
-import { useRoute } from 'vue-router';
+import { useRoute } from "vue-router";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import { useSubjectInstructorsQuery, useSubjectStudentsQuery } from "@/queries/Subject";
 import { useMySubjectsQuery } from "@/queries/User";
 import { useCreateProjectMutation } from "@/queries/Project";
-import {useCreateGroupsMutation, useJoinGroupMutation} from "@/queries/Group";
+import { useCreateGroupsMutation, useJoinGroupMutation } from "@/queries/Group";
 
 const route = useRoute();
 const project_title = ref("");
@@ -105,14 +105,20 @@ const { data: instructorsData, isLoading, isError } = useSubjectInstructorsQuery
 const { data: studentsData } = useSubjectStudentsQuery(selectedCourse);
 const { data: mySubjectsData } = useMySubjectsQuery();
 
-
-const teachers = computed(() => instructorsData.value?.filter(t => t.is_teacher).map(formatInstructor) || []);
-const assistants = computed(() => instructorsData.value?.filter(a => !a.is_teacher).map(formatInstructor) || []);
-const courses = computed(() => mySubjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []);
+const teachers = computed(
+    () => instructorsData.value?.filter((t) => t.is_teacher).map(formatInstructor) || []
+);
+const assistants = computed(
+    () => instructorsData.value?.filter((a) => !a.is_teacher).map(formatInstructor) || []
+);
+const courses = computed(
+    () =>
+        mySubjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []
+);
 
 const groupProjectOptions = [
     { label: "Random Groups", value: "random" },
-    { label: "Student Picked Groups", value: "student" }
+    { label: "Student Picked Groups", value: "student" },
 ];
 
 const createProjectMutation = useCreateProjectMutation();
@@ -134,7 +140,10 @@ async function submitForm() {
 
         if (selectedGroupProject.value === "student") {
             const emptyGroup = { project_id: createdProjectId, score: 0, team_name: "Group 1" };
-            await createGroupsMutation.mutateAsync({ projectId: createdProjectId, groups: [emptyGroup] });
+            await createGroupsMutation.mutateAsync({
+                projectId: createdProjectId,
+                groups: [emptyGroup],
+            });
             console.log("One empty group created");
         } else if (selectedGroupProject.value === "random") {
             const groups = divideStudentsIntoGroups(studentsData.value, capacity.value);
@@ -143,7 +152,10 @@ async function submitForm() {
                 score: 0,
                 team_name: "Group " + (i + 1),
             }));
-            const createdGroups = await createGroupsMutation.mutateAsync({ projectId: createdProjectId, groups: groupsToCreate });
+            const createdGroups = await createGroupsMutation.mutateAsync({
+                projectId: createdProjectId,
+                groups: groupsToCreate,
+            });
             console.log("Random groups created");
 
             createdGroups.forEach((groupId, index) => {
@@ -163,14 +175,17 @@ async function submitForm() {
 
 function shuffle(array) {
     let shuffledArray = [...array];
-    let currentIndex = shuffledArray.length, randomIndex;
+    let currentIndex = shuffledArray.length,
+        randomIndex;
 
     while (currentIndex !== 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex--;
 
         [shuffledArray[currentIndex], shuffledArray[randomIndex]] = [
-            shuffledArray[randomIndex], shuffledArray[currentIndex]];
+            shuffledArray[randomIndex],
+            shuffledArray[currentIndex],
+        ];
     }
 
     return shuffledArray;
@@ -195,7 +210,6 @@ const handleCapacityChange = (newCapacity) => {
     capacity.value = newCapacity;
 };
 </script>
-
 
 <style>
 .flex-container {
