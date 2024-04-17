@@ -1,4 +1,3 @@
-import asyncio
 import shutil
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -9,8 +8,7 @@ from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import src.docker_tests.utils as docker_utils
-from src.submission.models import Status, ResultType
-from src.submission.service import get_submission
+from src.submission.models import Status
 from src.user.service import set_admin
 from tests.test_subject import subject_id
 
@@ -127,12 +125,12 @@ async def test_default_tests_success(client: AsyncClient, group_id_with_default_
 
     # check that result is correct, apparently pytest somehow waits for docker test to finish
     response = await client.get(f"/api/submissions/{submission_id}")
-    assert sorted([(r['type'], r['value']) for r in response.json()['testresults']]) == [
-        (ResultType.OK, 'Eerste test geslaagd'),
-        (ResultType.OK, 'Tweede test geslaagd'),
-        (ResultType.StdOut, ''),
-        (ResultType.StdErr, ''),
+    assert sorted([(r['succeeded'], r['value']) for r in response.json()['testresults']]) == [
+        (True, 'Eerste test geslaagd'),
+        (True, 'Tweede test geslaagd'),
     ]
+    assert response.json()['stdout'] == 'hello stdout\n'
+    assert response.json()['stderr'] == 'hello stderr\n'
     assert response.json()['status'] == Status.Accepted
 
     artifact_response = await client.get(f"/api/submissions/{submission_id}/artifacts")
@@ -159,13 +157,45 @@ async def test_default_tests_failure(client: AsyncClient, group_id_with_default_
 
     # check that result is incorrect after tests finished
     response = await client.get(f"/api/submissions/{submission_id}")
-    assert sorted([(r['type'], r['value']) for r in response.json()['testresults']]) == [
-        (ResultType.OK, 'Eerste test geslaagd'),
-        (ResultType.Failed, 'Tweede test mislukt!'),
-        (ResultType.StdOut, ''),
-        (ResultType.StdErr, ''),
+    assert sorted([(r['succeeded'], r['value']) for r in response.json()['testresults']]) == [
+        (True, 'Eerste test geslaagd'),
+        (False, 'Tweede test mislukt!'),
     ]
+    assert response.json()['stdout'] == 'hello stdout\n'
+    assert response.json()['stderr'] == 'hello stderr\n'
     assert response.json()['status'] == Status.Rejected
+
+    artifact_response = await client.get(f"/api/submissions/{submission_id}/artifacts")
+    assert artifact_response.json() == []  # no generated artifacts
+
+
+@pytest.mark.asyncio
+async def test_default_tests_crash(client: AsyncClient, group_id_with_default_tests: int):
+    # make submission
+    files = [
+        ('files', ('submission.py', open(test_files_path / 'submission_files/crashed.py', 'rb'))),
+    ]
+    response = await client.post("/api/submissions/",
+                                 files=files,
+                                 data={"remarks": "test"},
+                                 params={"group_id": group_id_with_default_tests},
+                                 )
+
+    assert response.status_code == 201
+    assert response.json()["status"] == Status.InProgress
+    assert response.json()["testresults"] == []
+    submission_id = response.json()["id"]
+
+    # check that result is incorrect after tests finished
+    response = await client.get(f"/api/submissions/{submission_id}")
+    assert sorted([(r['succeeded'], r['value']) for r in response.json()['testresults']]) == [
+        (True, 'Eerste test geslaagd'),
+    ]
+    assert response.json()['stdout'] is None
+    print(response.json()['stderr'])
+    assert response.json()[
+        'stderr'][:60] == 'Traceback (most recent call last):\n  File "/home/runner/test'
+    assert response.json()['status'] == Status.Crashed
 
     artifact_response = await client.get(f"/api/submissions/{submission_id}/artifacts")
     assert artifact_response.json() == []  # no generated artifacts

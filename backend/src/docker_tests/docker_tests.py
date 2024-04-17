@@ -8,7 +8,7 @@ from docker.models.containers import Container
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.docker_tests.utils import tests_path, submission_path, feedback_path, artifacts_path
-from src.submission.models import Status, ResultType
+from src.submission.models import Status
 from src.submission.schemas import TestResult
 from src.submission.service import update_submission_status
 
@@ -50,7 +50,6 @@ async def launch_docker_tests(db: AsyncSession, submission_id: int, submission_u
     else:
         image_tag = tests_uuid
 
-    test_results = []
     container = run_docker_tests(
         image_tag,
         submission_path(submission_uuid),
@@ -67,19 +66,22 @@ async def launch_docker_tests(db: AsyncSession, submission_id: int, submission_u
     else:
         status = Status.Crashed
 
-    test_results.append(TestResult(type=ResultType.StdOut,
-                        value=container.logs(stdout=True, stderr=False)))
-    test_results.append(TestResult(type=ResultType.StdErr,
-                        value=container.logs(stdout=False, stderr=True)))
+    test_results = []
+    for line in read_feedback_file(os.path.join(feedback_dir, "correct")):
+        test_results.append(TestResult(succeeded=True, value=line))
+    for line in read_feedback_file(os.path.join(feedback_dir, "failed")):
+        test_results.append(TestResult(succeeded=False, value=line))
 
+    stdout = container.logs(stdout=True, stderr=False).decode("utf-8")
+    stderr = container.logs(stdout=False, stderr=True).decode("utf-8")
     container.remove()
 
-    for line in read_feedback_file(os.path.join(feedback_dir, "correct")):
-        test_results.append(TestResult(type=ResultType.OK, value=line))
-    for line in read_feedback_file(os.path.join(feedback_dir, "failed")):
-        test_results.append(TestResult(type=ResultType.Failed, value=line))
+    await update_submission_status(
+        db, submission_id, status, test_results,
+        stdout=stdout if stdout else None,
+        stderr=stderr if stderr else None,
+    )
 
-    await update_submission_status(db, submission_id, status, test_results)
     await db.close()
 
     # feedback is stored in the db only

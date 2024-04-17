@@ -4,13 +4,13 @@ from typing import List
 
 from fastapi import Form, UploadFile
 from pydantic import BaseModel, ConfigDict, Field
-from .models import Status, ResultType
+from .models import Status
 
 
 class TestResult(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    type: ResultType
+    succeeded: bool
     value: str
 
 
@@ -33,6 +33,8 @@ class Submission(SubmissionBase):
     date: datetime
     project_id: int
     status: Status
+    stdout: str | None
+    stderr: str | None
     testresults: list[TestResult]
 
 

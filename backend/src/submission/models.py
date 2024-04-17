@@ -34,16 +34,12 @@ class Submission(Base):
         nullable=False
     )
 
+    stdout: Mapped[str] = mapped_column(nullable=True)
+    stderr: Mapped[str] = mapped_column(nullable=True)
+
     testresults: Mapped[List["TestResult"]] = relationship(
         back_populates="submission", lazy="joined"
     )
-
-
-class ResultType(enum.IntEnum):
-    OK = 1
-    Failed = 2
-    StdOut = 3
-    StdErr = 4
 
 
 class TestResult(Base):
@@ -56,5 +52,5 @@ class TestResult(Base):
     )
     submission: Mapped["Submission"] = relationship(back_populates="testresults")
 
-    type: Mapped[ResultType] = mapped_column(nullable=False)
+    succeeded: Mapped[bool] = mapped_column(nullable=False)
     value: Mapped[str] = mapped_column(nullable=False)

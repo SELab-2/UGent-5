@@ -4,7 +4,7 @@ from sqlalchemy.future import select
 
 from . import models, schemas
 from .exceptions import SubmissionNotFound
-from .models import Status, ResultType
+from .models import Status
 
 
 async def get_submissions(db: AsyncSession) -> Sequence[models.Submission]:
@@ -52,7 +52,7 @@ async def delete_submission(db: AsyncSession, submission_id: int):
 
 
 async def update_submission_status(
-    db: AsyncSession, submission_id: int, status: Status, test_results: List[schemas.TestResult]
+    db: AsyncSession, submission_id: int, status: Status, test_results: List[schemas.TestResult], stdout: str | None, stderr: str | None
 ) -> models.Submission:
     result = await db.execute(select(models.Submission).filter_by(id=submission_id))
     submission = result.scalars().first()
@@ -60,9 +60,13 @@ async def update_submission_status(
         raise SubmissionNotFound()
 
     submission.status = status
+    if stdout is not None:
+        submission.stdout = stdout
+    if stderr is not None:
+        submission.stderr = stderr
 
     for testresult in test_results:
-        await create_testresult(db, submission_id, testresult.type, testresult.value)
+        await create_testresult(db, submission_id, testresult.succeeded, testresult.value)
 
     await db.commit()
     await db.refresh(submission)
@@ -70,10 +74,10 @@ async def update_submission_status(
 
 
 async def create_testresult(
-    db: AsyncSession, submission_id: int, result_type: ResultType, value: str
+    db: AsyncSession, submission_id: int, succeeded: bool, value: str
 ) -> models.TestResult:
     db_testresult = models.TestResult(
-        submission_id=submission_id, type=result_type, value=value)
+        submission_id=submission_id, succeeded=succeeded, value=value)
     db.add(db_testresult)
     await db.commit()
     await db.refresh(db_testresult)
