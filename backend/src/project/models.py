@@ -33,6 +33,7 @@ class Project(Base):
         CheckConstraint("deadline >= CURRENT_DATE", name="deadline_check"),
     )
 
+
 InstructorProject = Table(
     "instructor_project",
     Base.metadata,
