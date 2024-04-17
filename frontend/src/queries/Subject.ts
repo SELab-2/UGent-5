@@ -17,19 +17,19 @@ export function useSubjectQuery(
     });
 }
 
-export function useSubjectUuidQuery(subjectUuid: string): UseQueryReturnType<Subject, Error> {
+export function useSubjectUuidQuery(subjectUuid: Ref<string>): UseQueryReturnType<Subject, Error> {
     return useQuery<Subject, Error>({
-        queryKey: computed(() => SUBJECT_QUERY_KEY(subjectUuid)),
-        queryFn: () => getSubjectByUuid(subjectUuid),
+        queryKey: computed(() => SUBJECT_QUERY_KEY(subjectUuid.value)),
+        queryFn: () => getSubjectByUuid(subjectUuid.value),
         enabled: () => subjectUuid !== undefined,
         retry: false,
     });
 }
 
-export function registerSubjectQuery(uuid: string): UseQueryReturnType<Subject, Error> {
+export function registerSubjectQuery(uuid: Ref<string>): UseQueryReturnType<Subject, Error> {
     return useQuery<Subject, Error>({
-        queryKey: computed(() => SUBJECT_QUERY_KEY(uuid)),
-        queryFn: () => registerToSubject(uuid),
+        queryKey: computed(() => SUBJECT_QUERY_KEY(uuid.value)),
+        queryFn: () => registerToSubject(uuid.value),
         enabled: () => false,
     });
 }
