@@ -47,11 +47,6 @@ const router = createRouter({
             component: () => import("../views/ProjectsView.vue"),
         },
         {
-            path: "/create-project",
-            name: "create-project",
-            component: () => import("../views/CreateProjectView.vue"),
-        },
-        {
             path: "/project/:projectId(\\d+)/submit",
             name: "onSubmit",
             component: () => import("../views/SubmitView.vue"),
@@ -67,6 +62,12 @@ const router = createRouter({
             path: "/subjects/:subjectId(\\d+)",
             name: "subject",
             component: () => import("../views/subject/SubjectView.vue"),
+            props: (route) => ({ subjectId: Number(route.params.subjectId) }),
+        },
+        {
+            path: "/subjects/:subjectId(\\d+)/create-project",
+            name: "create-project",
+            component: () => import("../views/CreateProjectView.vue"),
             props: (route) => ({ subjectId: Number(route.params.subjectId) }),
         },
         {

@@ -79,93 +79,73 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watchEffect, onMounted } from "vue";
-import CheckBox from "@/components/CheckboxList.vue";
-import DatePicker from "@/components/DatePicker.vue";
-import RadioButtonList from "@/components/RadiobuttonList.vue";
-import type Project from "@/models/Project";
-import { useInstructorsForSubjectQuery, useStudentsForSubjectQuery } from "@/queries/Subject";
-import { useMySubjectsQuery } from "@/queries/User";
-import { useCreateGroupsMutation, useJoinGroupMutation } from "@/queries/Group";
-import { useCreateProjectMutation } from "@/queries/Project";
+import {ref, computed, watch} from "vue";
+import CheckBox from "@/components/project/CheckboxList.vue";
+import DatePicker from "@/components/project/DatePicker.vue";
+import RadioButtonList from "@/components/project/RadiobuttonList.vue";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
+import { useRoute } from 'vue-router';
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
-import type Group from "@/models/Group";
+import { useSubjectInstructorsQuery, useSubjectStudentsQuery } from "@/queries/Subject";
+import { useMySubjectsQuery } from "@/queries/User";
+import { useCreateProjectMutation } from "@/queries/Project";
+import {useCreateGroupsMutation, useJoinGroupMutation} from "@/queries/Group";
 
+const route = useRoute();
 const project_title = ref("");
 const deadline = ref(new Date());
 const capacity = ref(1);
-const selectedCourse = ref(undefined);
+const selectedCourse = ref(Number(route.params.subjectId));
 const publishDate = ref(new Date());
-const selectedGroupProject = ref("course");
+const selectedGroupProject = ref("student");
 const quillEditor = ref(null);
 
-const { data: instructorsData, isLoading, isError } = useInstructorsForSubjectQuery(selectedCourse);
-const {
-    data: studentsData,
-    isError: isStudentsError,
-    error: studentsError,
-    isLoading: isStudentsLoading,
-} = useStudentsForSubjectQuery(selectedCourse);
+const { data: instructorsData, isLoading, isError } = useSubjectInstructorsQuery(selectedCourse);
+const { data: studentsData } = useSubjectStudentsQuery(selectedCourse);
 const { data: mySubjectsData } = useMySubjectsQuery();
 
-const teachers = computed(
-    () => instructorsData.value?.filter((t) => t.is_teacher).map(formatInstructor) || []
-);
-const assistants = computed(
-    () => instructorsData.value?.filter((a) => !a.is_teacher).map(formatInstructor) || []
-);
 
-const courses = computed(
-    () =>
-        mySubjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []
-);
+const teachers = computed(() => instructorsData.value?.filter(t => t.is_teacher).map(formatInstructor) || []);
+const assistants = computed(() => instructorsData.value?.filter(a => !a.is_teacher).map(formatInstructor) || []);
+const courses = computed(() => mySubjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []);
+
 const groupProjectOptions = [
-    { label: "Use Course Groups", value: "course" },
     { label: "Random Groups", value: "random" },
-    { label: "Student Picked Groups", value: "student" },
+    { label: "Student Picked Groups", value: "student" }
 ];
 
 const createProjectMutation = useCreateProjectMutation();
 const createGroupsMutation = useCreateGroupsMutation();
-const joinGroupMutation = useJoinGroupMutation(); // Moved to top-level setup
+const joinGroupMutation = useJoinGroupMutation();
 
 async function submitForm() {
-    if (selectedGroupProject.value === "random" && selectedCourse.value) {
-        if (isStudentsError.value) {
-            console.error("Error fetching students:", studentsError.value.message);
-            return;
-        }
+    const projectData = {
+        name: project_title.value,
+        deadline: deadline.value.toISOString(),
+        description: quillEditor.value?.getQuill().root.innerHTML || "",
+        subject_id: selectedCourse.value,
+        capacity: capacity.value,
+    };
 
-        const students = studentsData.value;
-        const groups = divideStudentsIntoGroups(students, capacity.value);
+    try {
+        const createdProjectId = await createProjectMutation.mutateAsync(projectData);
+        console.log("Project created successfully with ID:", createdProjectId);
 
-        const projectData = {
-            name: project_title.value,
-            deadline: deadline.value.toISOString(),
-            description: quillEditor.value?.getQuill().root.innerHTML || "",
-            subject_id: selectedCourse.value,
-            capacity: capacity.value,
-        };
-
-        try {
-            const createdProjectId = await createProjectMutation.mutateAsync(projectData);
-            console.log("Project created successfully with ID:", createdProjectId);
-
+        if (selectedGroupProject.value === "student") {
+            const emptyGroup = { project_id: createdProjectId, score: 0, team_name: "Group 1" };
+            await createGroupsMutation.mutateAsync({ projectId: createdProjectId, groups: [emptyGroup] });
+            console.log("One empty group created");
+        } else if (selectedGroupProject.value === "random") {
+            const groups = divideStudentsIntoGroups(studentsData.value, capacity.value);
             const groupsToCreate = groups.map((group, i) => ({
                 project_id: createdProjectId,
                 score: 0,
                 team_name: "Group " + (i + 1),
             }));
+            const createdGroups = await createGroupsMutation.mutateAsync({ projectId: createdProjectId, groups: groupsToCreate });
+            console.log("Random groups created");
 
-            const createdGroups = await createGroupsMutation.mutateAsync({
-                projectId: createdProjectId,
-                groups: groupsToCreate,
-            });
-            console.log("Created groups with IDs:", createdGroups);
-
-            // Use the mutation function directly here
             createdGroups.forEach((groupId, index) => {
                 groups[index].forEach((student) => {
                     joinGroupMutation.mutateAsync({
@@ -174,20 +154,36 @@ async function submitForm() {
                     });
                 });
             });
-
             console.log("Students have been added to the groups successfully");
-        } catch (error) {
-            console.error("Error during project or group creation:", error);
         }
+    } catch (error) {
+        console.error("Error during project or group creation:", error);
     }
 }
 
-function divideStudentsIntoGroups(students, capacity) {
-    console.log("Groups formed:", students.length, capacity);
-    let groups = [];
-    for (let i = 0; i < students.length; i += capacity) {
-        groups.push(students.slice(i, i + capacity));
+function shuffle(array) {
+    let shuffledArray = [...array];
+    let currentIndex = shuffledArray.length, randomIndex;
+
+    while (currentIndex !== 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        [shuffledArray[currentIndex], shuffledArray[randomIndex]] = [
+            shuffledArray[randomIndex], shuffledArray[currentIndex]];
     }
+
+    return shuffledArray;
+}
+
+function divideStudentsIntoGroups(students, capacity) {
+    students = shuffle(students);
+    let groups = [];
+    const numberOfGroups = Math.ceil(students.length / capacity);
+    for (let i = 0; i < numberOfGroups; i++) {
+        groups.push(students.slice(i * capacity, (i + 1) * capacity));
+    }
+
     return groups;
 }
 
@@ -199,6 +195,7 @@ const handleCapacityChange = (newCapacity) => {
     capacity.value = newCapacity;
 };
 </script>
+
 
 <style>
 .flex-container {

@@ -1,11 +1,4 @@
 import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
-import type User from "@/models/User";
-import type Subject from "@/models/Subject";
-import {
-    get_instructors_for_subject,
-    get_students_for_subject,
-    getSubject,
-} from "@/services/subject";
 import {
     getSubject,
     getSubjectInstructors,
@@ -17,105 +10,42 @@ import {
 } from "@/services/subject";
 import { type Ref, computed } from "vue";
 import type User from "@/models/User";
+import type Subject from "@/models/Subject";
 import type Project from "@/models/Project";
 import type SubjectDetails from "@/models/SubjectDetails";
 
-// Query key for fetching instructors
-function INSTRUCTORS_FOR_SUBJECT_QUERY_KEY(subject_id: number): string[] {
-    return ["subject_instructors", "" + subject_id];
+// Generalized function to create query keys based on subject details
+function createSubjectQueryKey(subjectId: number | string, detail: string = ''): (string | number)[] {
+    return ['subject', subjectId, detail].filter(Boolean);
 }
 
-// Hook for fetching instructors for a subject
-export function useInstructorsForSubjectQuery(
-    subject_id: Ref<number | undefined>
-): UseQueryReturnType<User[], Error> {
-    return useQuery<User[], Error>({
-        // Make sure the computed property inside queryKey correctly unwraps the ref
-        queryKey: computed(() => ["instructorsForSubject", subject_id.value]),
-        // The query function should be passed the actual number, not a ref
-        queryFn: () => get_instructors_for_subject(subject_id.value),
-        // Ensure the enabled property is properly reactive
-        enabled: computed(() => subject_id.value !== undefined),
-    });
-}
-
-export function useStudentsForSubjectQuery(
-    subject_id: Ref<number | undefined>
-): UseQueryReturnType<User[], Error> {
-    return useQuery<User[], Error>({
-        // Make sure the computed property inside queryKey correctly unwraps the ref
-        queryKey: computed(() => ["studentsForSubject", subject_id.value]),
-        // The query function should be passed the actual number, not a ref
-        queryFn: () => get_students_for_subject(subject_id.value),
-        // Ensure the enabled property is properly reactive
-        enabled: computed(() => subject_id.value !== undefined),
-    });
-function SUBJECT_QUERY_KEY(subjectId: number | string): (string | number)[] {
-    return ["subject", subjectId];
-}
-
-// Query key for fetching subject details
-function SUBJECT_DETAILS_QUERY_KEY(subjectId: number): (string | number)[] {
-    return ["subject_details", subjectId];
-}
-
-// Hook for fetching details of a subject
-function SUBJECT_INSTRUCTORS_QUERY_KEY(subjectId: number): (string | number)[] {
-    return ["subject", subjectId, "instructors"];
-}
-
-function SUBJECT_STUDENTS_QUERY_KEY(subjectId: number): (string | number)[] {
-    return ["subject", subjectId, "students"];
-}
-
-function SUBJECT_PROJECTS_QUERY_KEY(subjectId: number): (string | number)[] {
-    return ["subject", subjectId, "projects"];
-}
-
-function SUBJECT_DETAILS_QUERY_KEY(subjectId: number): (string | number)[] {
-    return ["subject", "details", subjectId];
-}
-
-function SUBJECTS_QUERY_KEY(): (string | number)[] {
-    return ["subjects"];
-}
-
-export function useSubjectQuery(
-    subjectId: Ref<number | undefined>
-): UseQueryReturnType<Subject, Error> {
-    console.log(subjectId);
+export function useSubjectQuery(subjectId: Ref<number | undefined>): UseQueryReturnType<Subject, Error> {
     return useQuery<Subject, Error>({
-        queryKey: computed(() => SUBJECT_DETAILS_QUERY_KEY(subjectId.value!)),
+        queryKey: computed(() => createSubjectQueryKey(subjectId.value!)),
         queryFn: () => getSubject(subjectId.value!),
         enabled: computed(() => subjectId.value !== undefined),
     });
 }
 
-export function useSubjectInstructorsQuery(
-    subjectId: Ref<number | undefined>
-): UseQueryReturnType<User[], Error> {
+export function useSubjectInstructorsQuery(subjectId: Ref<number | undefined>): UseQueryReturnType<User[], Error> {
     return useQuery<User[], Error>({
-        queryKey: computed(() => SUBJECT_INSTRUCTORS_QUERY_KEY(subjectId.value!)),
+        queryKey: computed(() => createSubjectQueryKey(subjectId.value!, 'instructors')),
         queryFn: () => getSubjectInstructors(subjectId.value!),
         enabled: () => subjectId.value !== undefined,
     });
 }
 
-export function useSubjectStudentsQuery(
-    subjectId: Ref<number | undefined>
-): UseQueryReturnType<User[], Error> {
+export function useSubjectStudentsQuery(subjectId: Ref<number | undefined>): UseQueryReturnType<User[], Error> {
     return useQuery<User[], Error>({
-        queryKey: computed(() => SUBJECT_STUDENTS_QUERY_KEY(subjectId.value!)),
+        queryKey: computed(() => createSubjectQueryKey(subjectId.value!, 'students')),
         queryFn: () => getSubjectStudents(subjectId.value!),
         enabled: () => subjectId.value !== undefined,
     });
 }
 
-export function useSubjectProjectsQuery(
-    subjectId: Ref<number | undefined>
-): UseQueryReturnType<Project[], Error> {
+export function useSubjectProjectsQuery(subjectId: Ref<number | undefined>): UseQueryReturnType<Project[], Error> {
     return useQuery<Project[], Error>({
-        queryKey: computed(() => SUBJECT_PROJECTS_QUERY_KEY(subjectId.value!)),
+        queryKey: computed(() => createSubjectQueryKey(subjectId.value!, 'projects')),
         queryFn: () => getSubjectProjects(subjectId.value!),
         enabled: () => subjectId.value !== undefined,
     });
@@ -123,33 +53,29 @@ export function useSubjectProjectsQuery(
 
 export function useSubjectsQuery(): UseQueryReturnType<Subject[], Error> {
     return useQuery<Subject[], Error>({
-        queryKey: SUBJECTS_QUERY_KEY(),
-        queryFn: () => getSubjects(),
+        queryKey: createSubjectQueryKey('all'),
+        queryFn: getSubjects,
     });
 }
 
-export function useSubjectDetailsQuery(
-    subjectId: Ref<number | undefined>
-): UseQueryReturnType<SubjectDetails, Error> {
+export function useSubjectDetailsQuery(subjectId: Ref<number | undefined>): UseQueryReturnType<SubjectDetails, Error> {
     return useQuery<SubjectDetails, Error>({
-        queryKey: computed(() => SUBJECT_DETAILS_QUERY_KEY(subjectId.value!)),
+        queryKey: computed(() => createSubjectQueryKey(subjectId.value!, 'details')),
         queryFn: async () => {
-            // Fetch data for subject, instructors, students, and projects
-            const [subject, instructors, students, projects] = (await Promise.all([
+            const [subject, instructors, students, projects] = await Promise.all([
                 getSubject(subjectId.value!),
                 getSubjectInstructors(subjectId.value!),
                 getSubjectStudents(subjectId.value!),
                 getSubjectProjects(subjectId.value!),
-            ])) as [Subject, User[], User[], Project[]];
+            ]) as [Subject, User[], User[], Project[]];
 
-            // Map data into SubjectDetails structure
             return {
                 id: subject.id,
                 name: subject.name,
                 instructors,
                 students,
                 projects,
-            } as SubjectDetails;
+            };
         },
         enabled: () => subjectId.value !== undefined,
     });
@@ -157,7 +83,7 @@ export function useSubjectDetailsQuery(
 
 export function useSubjectUuidQuery(subjectUuid: Ref<string>): UseQueryReturnType<Subject, Error> {
     return useQuery<Subject, Error>({
-        queryKey: computed(() => SUBJECT_QUERY_KEY(subjectUuid.value)),
+        queryKey: computed(() => createSubjectQueryKey(subjectUuid.value)),
         queryFn: () => getSubjectByUuid(subjectUuid.value),
         enabled: () => subjectUuid !== undefined,
         retry: false,
@@ -166,7 +92,7 @@ export function useSubjectUuidQuery(subjectUuid: Ref<string>): UseQueryReturnTyp
 
 export function registerSubjectQuery(uuid: Ref<string>): UseQueryReturnType<Subject, Error> {
     return useQuery<Subject, Error>({
-        queryKey: computed(() => SUBJECT_QUERY_KEY(uuid.value)),
+        queryKey: computed(() => createSubjectQueryKey(uuid.value)),
         queryFn: () => registerToSubject(uuid.value),
         enabled: () => false,
     });
