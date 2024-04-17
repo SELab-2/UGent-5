@@ -7,7 +7,7 @@ import pytest_asyncio
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.docker_tests.utils import tests_path
+import src.docker_tests.utils as docker_utils
 from src.submission.models import Status
 from src.user.service import set_admin
 
@@ -18,7 +18,11 @@ project = {
     "subject_id": 0,  # temp needs to be filled in by actual subject id
     "deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
     "description": "test",
+    "enroll_deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
+    "is_visible": True,
+    "capacity": 1,
     "requirements": [{"mandatory": "true", "value": "*.py"}],
+    "test_files": [],
 }
 
 group_data = {"team_name": "test group", "project_id": 0}
@@ -58,7 +62,7 @@ async def project_with_tests_id(client: AsyncClient, db: AsyncSession, project_i
     yield project_id
 
     # cleanup project files
-    shutil.rmtree(tests_path(response.json()["test_files_uuid"]))
+    shutil.rmtree(docker_utils.tests_path(response.json()["test_files_uuid"]))
 
 
 @pytest_asyncio.fixture

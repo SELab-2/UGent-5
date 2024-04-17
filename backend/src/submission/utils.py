@@ -43,4 +43,3 @@ def upload_files(files: list[UploadFile], project: Project) -> str:
         raise UnMetRequirements(errors)
 
     return uuid
-

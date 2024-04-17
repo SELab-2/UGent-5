@@ -8,10 +8,10 @@ from src.database import Base
 
 
 class Status(enum.IntEnum):
-    InProgress = 1,
-    Accepted = 2,
-    Rejected = 3,
-    Crashed = 4,
+    InProgress = 1
+    Accepted = 2
+    Rejected = 3
+    Crashed = 4
 
 
 class Submission(Base):
@@ -40,10 +40,10 @@ class Submission(Base):
 
 
 class ResultType(enum.IntEnum):
-    OK = 1,
-    Failed = 2,
-    StdOut = 3,
-    StdErr = 4,
+    OK = 1
+    Failed = 2
+    StdOut = 3
+    StdErr = 4
 
 
 class TestResult(Base):

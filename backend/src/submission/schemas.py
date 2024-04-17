@@ -11,7 +11,7 @@ class TestResult(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     type: ResultType
-    value: str = Field(min_length=1)
+    value: str
 
 
 class SubmissionBase(BaseModel):

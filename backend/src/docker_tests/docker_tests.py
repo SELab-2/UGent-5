@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.docker_tests.utils import tests_path, submission_path, feedback_path, artifacts_path
 from src.submission.models import Status, ResultType
-from src.submission.schemas import Submission, TestResult
+from src.submission.schemas import TestResult
 from src.submission.service import update_submission_status
 
 
@@ -28,12 +28,12 @@ def read_feedback_file(path: str) -> list[str]:
     return [line.strip() for line in test_feedback]
 
 
-async def launch_docker_tests(db: AsyncSession, submission: Submission, tests_uuid: str):
-    artifact_dir = artifacts_path(submission.files_uuid)
+async def launch_docker_tests(db: AsyncSession, submission_id: int, submission_uuid: str, tests_uuid: str):
+    artifact_dir = artifacts_path(submission_uuid)
     os.makedirs(artifact_dir)
 
     # create files for test feedback
-    feedback_dir = feedback_path(submission.files_uuid)
+    feedback_dir = feedback_path(submission_uuid)
     os.makedirs(feedback_dir)
     touch(os.path.join(feedback_dir, "correct"), os.path.join(feedback_dir, "failed"))
 
@@ -52,7 +52,7 @@ async def launch_docker_tests(db: AsyncSession, submission: Submission, tests_uu
     test_results = []
     container = run_docker_tests(
         image_tag,
-        submission_path(submission.files_uuid),
+        submission_path(submission_uuid),
         artifact_dir,
         feedback_dir,
         tests_path(tests_uuid),
@@ -78,7 +78,7 @@ async def launch_docker_tests(db: AsyncSession, submission: Submission, tests_uu
     for line in read_feedback_file(os.path.join(feedback_dir, "failed")):
         test_results.append(TestResult(type=ResultType.Failed, value=line))
 
-    await update_submission_status(db, submission.id, status, test_results)
+    await update_submission_status(db, submission_id, status, test_results)
     await db.close()
 
     # feedback is stored in the db only
