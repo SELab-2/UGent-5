@@ -8,20 +8,20 @@ from .models import Status, ResultType
 
 
 async def get_submissions(db: AsyncSession) -> Sequence[models.Submission]:
-    return (await db.execute(select(models.Submission))).scalars().all()
+    return (await db.execute(select(models.Submission))).unique().scalars().all()
 
 
 async def get_submissions_by_project(db: AsyncSession,
                                      project_id: int) -> Sequence[models.Submission]:
 
     return (await db.execute(select(models.Submission).
-                             filter_by(project_id=project_id))).scalars().all()
+                             filter_by(project_id=project_id))).unique().scalars().all()
 
 
 async def get_submissions_by_group(db: AsyncSession,
                                    group_id: int) -> Sequence[models.Submission]:
     return (await db.execute(select(models.Submission).
-                             filter_by(group_id=group_id))).scalars().all()
+                             filter_by(group_id=group_id))).unique().scalars().all()
 
 
 async def get_submission(db: AsyncSession, submission_id: int) -> models.Submission:

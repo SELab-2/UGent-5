@@ -7,6 +7,7 @@ import docker
 from docker.models.containers import Container
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.dependencies import get_async_db
 from src.docker_tests.utils import tests_path, submission_path, feedback_path, artifacts_path
 from src.submission.models import Status, ResultType
 from src.submission.schemas import TestResult
@@ -46,7 +47,7 @@ async def launch_docker_tests(db: AsyncSession, submission_id: int, submission_u
         image_tag = "default_image"
 
         # rebuild default image if changes were made
-        build_docker_image(path, image_tag)
+        await asyncio.to_thread(build_docker_image, path, image_tag)
     else:
         image_tag = tests_uuid
 
@@ -58,7 +59,7 @@ async def launch_docker_tests(db: AsyncSession, submission_id: int, submission_u
         feedback_dir,
         tests_path(tests_uuid),
     )
-    exit_code = await asyncio.to_thread(container.wait)
+    exit_code = (await asyncio.to_thread(container.wait))['StatusCode']
 
     if exit_code == 0:
         status = Status.Accepted

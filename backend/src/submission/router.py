@@ -54,7 +54,7 @@ async def create_submission(background_tasks: BackgroundTasks,
 
     # accept submission immediately if no tests are present
     docker_tests_present = test_files_uuid is not None
-    status = Status.Accepted if docker_tests_present else Status.InProgress
+    status = Status.InProgress if docker_tests_present else Status.Accepted
 
     submission = await service.create_submission(
         db, uuid=submission_uuid, remarks=submission_in.remarks, status=status, group_id=group.id, project_id=group.project_id

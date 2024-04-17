@@ -1,4 +1,5 @@
 import os
+import sys
 
 from submission.submission import questionable_code  # pyright: ignore
 
@@ -13,7 +14,7 @@ def main():
 
         except RuntimeError:
             failed.write("Tweede test mislukt!\n")
-            exit(os.environ['EXIT_TEST_FAILED'])
+            exit(int(os.environ['EXIT_TEST_FAILED']))
 
 
 if __name__ == "__main__":
