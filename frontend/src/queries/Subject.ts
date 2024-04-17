@@ -6,13 +6,15 @@ import {
     getSubjectProjects,
     getSubjects,
     getSubjectStudents,
+    getSubjectByUuid,
+    registerToSubject
 } from "@/services/subject";
 import { type Ref, computed } from "vue";
 import type User from "@/models/User";
 import type Project from "@/models/Project";
 import type SubjectDetails from "@/models/SubjectDetails";
 
-function SUBJECT_QUERY_KEY(subjectId: number): (string | number)[] {
+function SUBJECT_QUERY_KEY(subjectId: number | string): (string | number)[] {
     return ["subject", subjectId];
 }
 
@@ -107,5 +109,22 @@ export function useSubjectDetailsQuery(
             } as SubjectDetails;
         },
         enabled: () => subjectId.value !== undefined,
+    })
+}
+
+export function useSubjectUuidQuery(subjectUuid: Ref<string>): UseQueryReturnType<Subject, Error> {
+    return useQuery<Subject, Error>({
+        queryKey: computed(() => SUBJECT_QUERY_KEY(subjectUuid.value)),
+        queryFn: () => getSubjectByUuid(subjectUuid.value),
+        enabled: () => subjectUuid !== undefined,
+        retry: false,
+    });
+}
+
+export function registerSubjectQuery(uuid: Ref<string>): UseQueryReturnType<Subject, Error> {
+    return useQuery<Subject, Error>({
+        queryKey: computed(() => SUBJECT_QUERY_KEY(uuid.value)),
+        queryFn: () => registerToSubject(uuid.value),
+        enabled: () => false,
     });
 }

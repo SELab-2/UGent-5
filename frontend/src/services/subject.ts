@@ -27,3 +27,13 @@ export async function getSubjects(): Promise<Subject[]> {
     const result = await authorized_fetch<{subjects: Subject[]}>("/api/subjects", { method: "GET" });
     return result.subjects;
 }
+
+export async function getSubjectByUuid(subjectUuid: string): Promise<Subject> {
+    return authorized_fetch(`/api/subjects/uuid/${subjectUuid}`, { method: "GET" });
+}
+
+export async function registerToSubject(subjectUuid: string): Promise<Subject> {
+    return authorized_fetch(`/api/subjects/register?subject_uuid=${subjectUuid}`, {
+        method: "POST",
+    });
+}

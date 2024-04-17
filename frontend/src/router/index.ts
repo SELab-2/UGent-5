@@ -65,6 +65,12 @@ const router = createRouter({
             props: (route) => ({ subjectId: Number(route.params.subjectId) }),
         },
         {
+            path: "/subjects/register/:uuid",
+            name: "registerSubject",
+            component: () => import("../views/SubjectRegisterView.vue"),
+            props: (route) => ({ uuid: String(route.params.uuid) }),
+        },
+        {
             path: "/settings",
             name: "settings",
             component: () => import("../views/SettingsView.vue"),
