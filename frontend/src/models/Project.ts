@@ -13,3 +13,9 @@ export default interface Project {
     subject_id: number;
     capacity: number;
 }
+
+export enum FilterOptions {
+    All = "All",
+    Completed = "Completed",
+    Active = "Active",
+}

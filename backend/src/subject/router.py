@@ -135,6 +135,13 @@ async def add_student_to_subject(
     return subject
 
 
+@router.get("/uuid/{subject_uuid}")
+async def get_subject_by_uuid(
+        subject: Subject = Depends(retrieve_subject_by_uuid)
+) -> Subject:
+    return subject
+
+
 @router.post(
     "/register",
     status_code=201

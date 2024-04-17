@@ -1,5 +1,3 @@
-from typing import Sequence
-
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from src.subject.models import StudentSubject, Subject
@@ -30,14 +28,15 @@ async def get_project(db: AsyncSession, project_id: int) -> Project:
     return result.scalars().first()
 
 
-async def get_projects_by_user(db: AsyncSession, user_id: str) -> Sequence[Project]:
+async def get_projects_by_user(db: AsyncSession, user_id: str) -> ProjectList:
     result = await db.execute(
         select(Project)
         .join(Subject, Project.subject_id == Subject.id)
         .join(StudentSubject, StudentSubject.c.subject_id == Subject.id)
         .where(StudentSubject.c.uid == user_id)
     )
-    return result.scalars().all()
+    projects = result.scalars().unique().all()
+    return ProjectList(projects=projects)
 
 
 async def get_projects_for_subject(db: AsyncSession, subject_id: int) -> ProjectList:
