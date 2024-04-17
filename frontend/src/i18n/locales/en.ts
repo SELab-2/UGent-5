@@ -43,4 +43,7 @@ export default {
         courses: "My courses",
         announcements: "Announcements",
     },
+    admin: {
+        users: "Users",
+    },
 };

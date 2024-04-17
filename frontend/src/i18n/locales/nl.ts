@@ -43,4 +43,7 @@ export default {
         courses: "Mijn vakken",
         announcements: "Meldingen",
     },
+    admin: {
+        users: "Gebruikers",
+    },
 };
