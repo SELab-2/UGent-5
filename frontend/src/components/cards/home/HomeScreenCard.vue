@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import HomeScreenCourses from "@/components/buttons/HomeScreenCourses.vue";
+import HomeScreenCourses from "@/components/cards/home/HomeScreenCourses.vue";
 import HomeScreenDeadlines from "@/components/buttons/HomeScreenDeadlines.vue";
 import {ref} from "vue";
 

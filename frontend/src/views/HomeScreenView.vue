@@ -3,22 +3,34 @@
         <h1 v-if="isLoading">Loading...</h1>
         <h1 v-else>{{ $t("home.welcome", { name: user!.given_name }) }}</h1>
         <v-container v-if="smAndDown">
-            <div v-for="card in cards" class="mobileCards" :key="card.title">
-                <HomeScreenCard :title="card.title" :data="card.data" :type="card.type"/>
+            <div class="mobileCard">
+                <HomeScreenCard :title="'homescreen.deadlines'" :data="[]" type="deadlines" />
+            </div>
+            <div class="mobileCard">
+                <HomeScreenCard :title="'homescreen.subjects'" :data="[]" type="subjects" />
+            </div>
+            <div class="mobileCard">
+                <HomeScreenCard :title="'homescreen.announcements'" :data="[]" type="announcements" />
             </div>
         </v-container>
         <v-container v-else>
             <v-row>
-                <v-col v-for="card in cards" :key="card.title">
-                    <HomeScreenCard :title="card.title" :data="card.data" :type="card.type"/>
-                </v-col>
+                <div>
+                    <HomeScreenCard :title="'homescreen.deadlines'" :data="deadlines" type="deadlines" />
+                </div>
+                <div>
+                    <HomeScreenCard :title="'homescreen.subjects'" :data="courses" type="subjects" />
+                </div>
+                <div>
+                    <HomeScreenCard :title="'homescreen.announcements'" :data="[]" type="announcements" />
+                </div>
             </v-row>
         </v-container>
     </BackgroundContainer>
 </template>
 
 <script setup lang="ts">
-import HomeScreenCard from "@/components/cards/HomeScreenCard.vue";
+import HomeScreenCard from "@/components/cards/home/HomeScreenCard.vue";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import { useUserQuery } from "@/queries/User";
 import { useDisplay } from "vuetify";
@@ -33,18 +45,10 @@ const courses = [
 ];
 
 const deadlines = [
-    { id: 1, name: 'project A', course: 'course A', deadline: new Date(2024, 4, 28, 23, 59) ,status: 'none'},
-    { id: 2, name: 'project B', course: 'course B', deadline: new Date(2024, 6, 2, 17, 0),status: 'accepted'},
-    { id: 3, name: 'project C', course: 'course C',deadline: new Date(2024, 5, 5, 22, 0), status: 'rejected'},
+    { id: 1, name: 'project A', course: 'course A', deadline: new Date(2024, 4, 28, 23, 59), status: 'none' },
+    { id: 2, name: 'project B', course: 'course B', deadline: new Date(2024, 6, 2, 17, 0), status: 'accepted' },
+    { id: 3, name: 'project C', course: 'course C', deadline: new Date(2024, 5, 5, 22, 0), status: 'rejected' },
 ];
-
-const cards = [
-    { title: "homescreen.deadlines", data: deadlines , type:"deadlines" },
-    { title: "homescreen.courses", data: courses, type: "courses" },
-    { title: "homescreen.announcements", data: [], type: "announcements" },
-];
-
-
 
 </script>
 
@@ -53,7 +57,7 @@ const cards = [
     margin-bottom: 30px;
 }
 
-.mobileCards {
+.mobileCard {
     margin: 15px;
 }
 </style>
