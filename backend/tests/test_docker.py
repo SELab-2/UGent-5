@@ -104,6 +104,8 @@ async def test_no_docker_tests(client: AsyncClient, group_id: int, project_id: i
     artifact_response = await client.get(f"/api/submissions/{submission_id}/artifacts")
 
     assert artifact_response.json() == []  # no artifacts generated because no tests were run
+    # cleanup files
+    shutil.rmtree(docker_utils.submissions_path(response.json()["files_uuid"]))
 
 
 @pytest.mark.asyncio

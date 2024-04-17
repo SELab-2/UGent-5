@@ -7,16 +7,20 @@ from starlette.responses import FileResponse
 from src import config
 
 
+def submissions_path(*paths: str) -> str:
+    return str(os.path.join(config.CONFIG.file_path, "submissions", *paths))
+
+
 def submission_path(uuid: str, *paths: str) -> str:
-    return str(os.path.join(config.CONFIG.file_path, "submissions", uuid, "submission", *paths))
+    return submissions_path(uuid, "submission", *paths)
 
 
 def artifacts_path(uuid: str, *paths) -> str:
-    return str(os.path.join(config.CONFIG.file_path, "submissions", uuid, "artifacts", *paths))
+    return submissions_path(uuid, "artifacts", *paths)
 
 
 def feedback_path(uuid: str, *paths) -> str:
-    return str(os.path.join(config.CONFIG.file_path, "submissions", uuid, "feedback", *paths))
+    return submissions_path(uuid, "feedback", *paths)
 
 
 def tests_path(uuid: str, *paths) -> str:
