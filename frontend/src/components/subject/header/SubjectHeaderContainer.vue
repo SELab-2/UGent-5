@@ -1,7 +1,8 @@
 <template>
     <v-row>
         <v-col cols="4">
-            <SubjectHeaderImage :imagePath="imagePath" :is-loading="isLoading"> </SubjectHeaderImage>
+            <SubjectHeaderImage :imagePath="imagePath" :is-loading="isLoading">
+            </SubjectHeaderImage>
         </v-col>
         <v-col cols="8">
             <SubjectHeaderCard

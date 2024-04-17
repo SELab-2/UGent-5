@@ -7,7 +7,7 @@ import {
     getSubjects,
     getSubjectStudents,
     getSubjectByUuid,
-    registerToSubject
+    registerToSubject,
 } from "@/services/subject";
 import { type Ref, computed } from "vue";
 import type User from "@/models/User";
@@ -109,7 +109,7 @@ export function useSubjectDetailsQuery(
             } as SubjectDetails;
         },
         enabled: () => subjectId.value !== undefined,
-    })
+    });
 }
 
 export function useSubjectUuidQuery(subjectUuid: Ref<string>): UseQueryReturnType<Subject, Error> {

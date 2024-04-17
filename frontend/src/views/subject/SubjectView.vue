@@ -36,7 +36,7 @@ import SubjectHeaderContainer from "@/components/subject/header/SubjectHeaderCon
 import SubjectBody from "@/components/subject/body/SubjectBody.vue";
 
 const props = defineProps<{
-    subjectId: number
+    subjectId: number;
 }>();
 
 const { subjectId } = toRefs(props);
