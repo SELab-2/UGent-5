@@ -2,24 +2,26 @@
     <v-divider></v-divider>
     <div class="coursebtn" @click="navigateToCourse">
         <div>
-            <h3>{{ name }}</h3>
-            <p class="teacher">{{ teacher }}</p>
+            <h3>{{ subject.name }}</h3>
+            <p class="teacher">*teacher name here*</p>
         </div>
         <v-icon class="chevron" icon="mdi-chevron-right" />
     </div>
 </template>
 
 <script setup lang="ts">
+import type Subject from "@/models/Subject";
 import router from "@/router";
+import { toRefs } from "vue";
 
 const props = defineProps<{
-    id: number;
-    name: string;
-    teacher: string;
+    subject: Subject;
 }>();
 
+const { subject } = toRefs(props);
+
 const navigateToCourse = () => {
-    router.push(`/subjects/${props.id}`);
+    router.push(`/subjects/${subject.value.id}`);
 };
 </script>
 

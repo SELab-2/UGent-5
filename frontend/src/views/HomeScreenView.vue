@@ -4,7 +4,7 @@
         <h1 v-else>{{ $t("home.welcome", { name: user!.given_name }) }}</h1>
         <v-container v-if="smAndDown">
             <div class="mobileCard">
-                <HomeScreenCard :title="'homescreen.deadlines'" type="deadlines">
+                <HomeScreenCard :title="'homescreen.deadlines'">
                     <HomeScreenDeadlines
                         v-for="deadline in deadlines"
                         :deadline="deadline"
@@ -13,20 +13,22 @@
                 </HomeScreenCard>
             </div>
             <div class="mobileCard">
-                <HomeScreenCard :title="'homescreen.subjects'" :data="[]" type="subjects" />
+                <HomeScreenCard :title="'homescreen.subjects'">
+                    <HomeScreenCourses
+                        v-for="subject in subjects"
+                        :subject="subject"
+                        :key="subject.id"
+                    />
+                </HomeScreenCard>
             </div>
             <div class="mobileCard">
-                <HomeScreenCard
-                    :title="'homescreen.announcements'"
-                    :data="[]"
-                    type="announcements"
-                />
+                <HomeScreenCard :title="'homescreen.announcements'" />
             </div>
         </v-container>
         <v-container v-else>
             <v-row>
                 <div>
-                    <HomeScreenCard :title="'homescreen.deadlines'" type="deadlines">
+                    <HomeScreenCard :title="'homescreen.deadlines'">
                         <HomeScreenDeadlines
                             v-for="deadline in deadlines"
                             :deadline="deadline"
@@ -37,7 +39,7 @@
                 <div>
                     <HomeScreenCard
                         :title="'homescreen.subjects'"
-                        :data="courses"
+                        :data="subjects"
                         type="subjects"
                     />
                 </div>
@@ -55,20 +57,22 @@
 
 <script setup lang="ts">
 import HomeScreenCard from "@/components/cards/home/HomeScreenCard.vue";
+import HomeScreenDeadlines from "@/components/buttons/HomeScreenDeadlines.vue";
+import HomeScreenCourses from "@/components/cards/home/HomeScreenCourses.vue";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import { useUserQuery } from "@/queries/User";
 import { useDisplay } from "vuetify";
-import HomeScreenDeadlines from "@/components/buttons/HomeScreenDeadlines.vue";
 import { type Deadline } from "@/models/Project";
+import type Subject from "@/models/Subject";
 import { ref } from "vue";
 
 const { data: user, isLoading } = useUserQuery(null);
 const { smAndDown } = useDisplay();
 
-const courses = [
-    { id: 1, name: "course A", teacher: "peter" },
-    { id: 2, name: "course B", teacher: "eric" },
-    { id: 3, name: "course C", teacher: "chris" },
+const subjects: Subject[] = [
+    { id: 1, name: "course A" },
+    { id: 2, name: "course B" },
+    { id: 3, name: "course C" },
 ];
 
 const deadlines = ref<Deadline[]>([
