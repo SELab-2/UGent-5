@@ -26,7 +26,7 @@ class Project(Base):
     requirements: Mapped[List["Requirement"]] = relationship(
         back_populates="project", lazy="joined")
 
-    test_files_uuid: Mapped[str] = mapped_column(nullable=True)
+    test_files_uuid: Mapped[str | None] = mapped_column(nullable=True)
 
     __table_args__ = (
         CheckConstraint("deadline >= CURRENT_DATE", name="deadline_check"),

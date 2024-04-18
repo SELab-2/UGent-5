@@ -68,6 +68,7 @@ async def project_with_default_tests_id(client: AsyncClient, db: AsyncSession, s
         f"/api/projects/{id}/test_files"
     )
     assert response.status_code == 200
+    assert response.json()["test_files_uuid"] is None
 
 
 @pytest_asyncio.fixture

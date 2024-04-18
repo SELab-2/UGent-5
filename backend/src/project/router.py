@@ -112,6 +112,4 @@ async def delete_test_files(
     db: AsyncSession = Depends(get_async_db)
 ):
     remove_test_files(uuid)
-
-    await service.update_test_files(db, project.id, None)
-    return {"message": "Test files deleted successfully"}
+    return await service.update_test_files(db, project.id, None)

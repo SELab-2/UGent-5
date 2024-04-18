@@ -79,10 +79,10 @@ async def update_project(
     return project
 
 
-async def update_test_files(db: AsyncSession, project_id: int, uuid: str | None):
+async def update_test_files(db: AsyncSession, project_id: int, uuid: str | None) -> Project:
     project = await get_project(db, project_id)
 
-    project.test_files_uuid = uuid if uuid is not None else null()
+    project.test_files_uuid = uuid
     await db.commit()
     await db.refresh(project)
     return project

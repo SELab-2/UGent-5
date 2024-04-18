@@ -53,8 +53,7 @@ async def delete_submission(db: AsyncSession, submission_id: int):
 async def update_submission_status(
     db: AsyncSession, submission_id: int, status: Status, test_results: List[schemas.TestResult], stdout: str | None, stderr: str | None
 ) -> models.Submission:
-    result = await db.execute(select(models.Submission).filter_by(id=submission_id))
-    submission = result.scalars().first()
+    submission = await get_submission(db, submission_id)
 
     submission.status = status
     if stdout is not None:
