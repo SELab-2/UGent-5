@@ -14,6 +14,12 @@ class FileNotFound(HTTPException):
         super().__init__(status_code=404, detail="File not found")
 
 
+class FilesNotFound(HTTPException):
+    def __init__(self):
+        """Raised when files are not found in database"""
+        super().__init__(status_code=404, detail="Files not found")
+
+
 class UnMetRequirements(RequestValidationError):
     def __init__(self, detail):
         """Raised when a project requirement is not met for a submission"""

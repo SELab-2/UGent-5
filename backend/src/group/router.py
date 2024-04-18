@@ -5,10 +5,10 @@ from src.auth.dependencies import authentication_validation
 from src.dependencies import get_async_db
 from src.group.dependencies import (
     create_group_validation,
-    join_group,
     retrieve_group,
     retrieve_groups_by_project,
 )
+from src.group.dependencies import join_group as join_group_dependency
 from src.group.exceptions import GroupNotFound
 from src.group.schemas import Group, GroupCreate
 from src.submission.dependencies import group_permission_validation
@@ -48,14 +48,14 @@ async def leave_group(
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db),
 ):
-    if not user in group.members:
+    if user not in group.members:
         raise GroupNotFound()
 
     await service.leave_group(db, group.id, user.uid)
 
 
 @router.post("/{group_id}", status_code=201,)
-async def join_group(group: Group = Depends(join_group)) -> Group:
+async def join_group(group: Group = Depends(join_group_dependency)) -> Group:
     return group
 
 
@@ -64,3 +64,8 @@ async def list_submissions(group_id: int,
                            db: AsyncSession = Depends(get_async_db)
                            ) -> Sequence[Submission]:
     return await get_submissions_by_group(db, group_id)
+
+
+@router.post("/{group_id}/{uid}", status_code=201,)
+async def join_group_by_uid(group: Group = Depends(join_group_dependency)) -> Group:
+    return group

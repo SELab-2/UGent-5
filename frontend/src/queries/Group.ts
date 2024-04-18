@@ -1,9 +1,10 @@
 import type Group from "@/models/Group";
+import type { GroupForm } from "@/models/Group";
 import type { Ref } from "vue";
-import type { UseQueryReturnType } from "@tanstack/vue-query";
-import { useQuery } from "@tanstack/vue-query";
+import type { UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { computed } from "vue";
-import { getGroupWithProjectId, getUserGroups } from "@/services/group";
+import { createGroups, getGroupWithProjectId, getUserGroups, joinGroup } from "@/services/group";
 
 function USER_GROUPS_QUERY_KEY(): string[] {
     return ["groups"];
@@ -37,5 +38,45 @@ export function useUserGroupQuery(
         queryKey: computed(() => PROJECT_USER_GROUP_QUERY_KEY(projectId.value!)),
         queryFn: () => getGroupWithProjectId(groups.value!, projectId.value!),
         enabled: () => groups.value !== undefined,
+    });
+}
+
+export function useCreateGroupsMutation(): UseMutationReturnType<
+    Group[],
+    Error,
+    { projectId: number; groups: GroupForm[] },
+    void
+> {
+    const queryClient = useQueryClient();
+    return useMutation<Group[], Error, { projectId: number; groups: GroupForm[] }, void>({
+        mutationFn: ({ projectId, groups }) => createGroups(projectId, groups),
+        onSuccess: () => {
+            queryClient.invalidateQueries(/* specify the relevant query key for projects or groups */);
+            console.log("Groups created successfully");
+        },
+        onError: (error) => {
+            console.error("Error creating groups:", error);
+            alert("Could not create groups. Please try again.");
+        },
+    });
+}
+
+export function useJoinGroupMutation(): UseMutationReturnType<
+    void,
+    Error,
+    { groupId: number; uid: string },
+    void
+> {
+    const queryClient = useQueryClient();
+    return useMutation<void, Error, { groupId: number; uid: string }, void>({
+        mutationFn: ({ groupId, uid }) => joinGroup(groupId, uid), // Call the joinGroup service function
+        onSuccess: () => {
+            queryClient.invalidateQueries(/* specify the relevant query key */);
+            console.log("Successfully joined group");
+        },
+        onError: (error) => {
+            console.error("Error joining group:", error);
+            alert("Could not join group. Please try again.");
+        },
     });
 }

@@ -1,8 +1,9 @@
+from sqlalchemy import null
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from src.subject.models import StudentSubject, Subject
 
-from .exceptions import ProjectNotFoundException
+from src.subject.models import StudentSubject, Subject
+from .exceptions import ProjectNotFound
 from .models import Project, Requirement
 from .schemas import ProjectCreate, ProjectList, ProjectUpdate
 
@@ -59,7 +60,7 @@ async def update_project(
     result = await db.execute(select(Project).filter_by(id=project_id))
     project = result.scalars().first()
     if not project:
-        raise ProjectNotFoundException()
+        raise ProjectNotFound
 
     if project_update.name is not None:
         project.name = project_update.name
@@ -73,6 +74,15 @@ async def update_project(
         project.requirements = [Requirement(**r.model_dump())
                                 for r in project_update.requirements]
 
+    await db.commit()
+    await db.refresh(project)
+    return project
+
+
+async def update_test_files(db: AsyncSession, project_id: int, uuid: str | None) -> Project:
+    project = await get_project(db, project_id)
+
+    project.test_files_uuid = uuid
     await db.commit()
     await db.refresh(project)
     return project

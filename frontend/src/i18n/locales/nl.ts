@@ -3,6 +3,9 @@ export default {
         error: {
             "not-found": "Pagina niet gevonden",
         },
+        loading: {
+            loading_page: "Aan het laden...",
+        },
     },
     login: {
         about: "De officiële indienapplicatie van de Universiteit Gent",
@@ -20,17 +23,23 @@ export default {
         add_files_button: "Bestanden toevoegen",
         no_files_added: "Je hebt nog geen bestanden toegevoegd.",
         no_files_warning: "Voeg ten minste een bestand toe om een indiening te maken.",
+        submissions: "Indiening zone",
+        latest_submission: "Laatste indiening:",
+        new_submission: "Nieuwe indiening",
+        status_submission: "Indiening was: {status}",
     },
     project: {
         deadline: "Deadline",
         details_button: "Naar project",
-    },
-    subject: {
-        register: "Registreer bij vak:",
+        group_button: "Vind Groep",
+        needhelp_button: "Hulp nodig",
+        group: "Groep {number}",
+        assignment: "Opdracht:",
+        myProject: "Mijn projecten:",
     },
     navigation: {
         home: "Hoofdscherm",
-        courses: "Vakken",
+        subjects: "Vakken",
         projects: "Projecten",
         settings: "Instellingen",
         help: "Help",
@@ -40,10 +49,31 @@ export default {
     },
     homescreen: {
         deadlines: "Project deadlines",
-        courses: "Mijn vakken",
+        subjects: "Mijn vakken",
         announcements: "Meldingen",
     },
     admin: {
         users: "Gebruikers",
+    },
+    subject: {
+        register: "Registreer bij vak:",
+        academy_year: "Academiejaar",
+        projects: "Projecten",
+        announcements: "Meldingen",
+        groups: "Groepen",
+        projectsPage: {
+            all: "Alle",
+            active: "Actief",
+            completed: "Voltooid",
+        },
+        project: {
+            assignment: "Opdracht",
+            group: "Groep",
+            submissions: "Indieningen",
+        },
+    },
+
+    subjects: {
+        title: "Mijn vakken",
     },
 };
