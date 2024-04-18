@@ -6,8 +6,8 @@
                 <v-checkbox
                     class="d-flex align-center"
                     :model-value="item.checked"
-                    @change="handleCheckboxChange(item)"
                     :label="item.label"
+                    @change="handleCheckboxChange(item)"
                 ></v-checkbox>
             </v-list-item>
         </v-list>
@@ -15,38 +15,35 @@
     </v-card>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, nextTick } from "vue";
+<script setup lang="ts">
+import {toRefs} from "vue";
 
-interface CheckBoxItem {
-    id: number;
+export interface CheckBoxItem {
+    id: string;
     label: string;
     checked: boolean;
 }
 
-export default defineComponent({
-    name: "CheckBox",
-    props: {
-        title: {
-            type: String,
-            required: true,
-        },
-        items: {
-            type: Array as PropType<CheckBoxItem[]>,
-            required: true,
-        },
-        description: {
-            type: String,
-            default: "",
-        },
-    },
-    methods: {
-        handleCheckboxChange(item: CheckBoxItem) {
-            item.checked = !item.checked;
-            this.$nextTick().then(() => {
-                this.$emit("update:items", this.items);
-            });
-        },
-    },
+const selectedItems = defineModel<CheckBoxItem[]>({
+    required: true,
 });
+
+const props = defineProps<{
+    items: CheckBoxItem[];
+    title: string;
+    description: string;
+}>()
+
+const {items} = toRefs(props);
+
+function handleCheckboxChange(item: CheckBoxItem) {
+    item.checked = !item.checked;
+    const index = selectedItems.value.findIndex((i) => i.id === item.id);
+    if (item.checked && index === -1) {
+        selectedItems.value.push(item);
+    } else if (!item.checked && index !== -1){
+        selectedItems.value.splice(index, 1);
+    }
+}
+
 </script>

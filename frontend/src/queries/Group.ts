@@ -1,4 +1,5 @@
 import type Group from "@/models/Group";
+import type { GroupForm } from "@/models/Group";
 import type { Ref } from "vue";
 import type { UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-query";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
@@ -40,14 +41,9 @@ export function useUserGroupQuery(
     });
 }
 
-export function useCreateGroupsMutation(): UseMutationReturnType<
-    void,
-    Error,
-    { projectId: string; groups: Group[] }
-> {
+export function useCreateGroupsMutation(): UseMutationReturnType<Group[], Error, { projectId: number; groups: GroupForm[] }, void> {
     const queryClient = useQueryClient();
-
-    return useMutation<void, Error, { projectId: string; groups: Group[] }>({
+    return useMutation<Group[], Error, { projectId: number; groups: GroupForm[] }, void>({
         mutationFn: ({ projectId, groups }) => createGroups(projectId, groups),
         onSuccess: () => {
             queryClient.invalidateQueries(/* specify the relevant query key for projects or groups */);
@@ -60,13 +56,9 @@ export function useCreateGroupsMutation(): UseMutationReturnType<
     });
 }
 
-export function useJoinGroupMutation(): UseMutationReturnType<
-    void,
-    Error,
-    { groupId: number; uid: string }
-> {
+export function useJoinGroupMutation(): UseMutationReturnType<void, Error, { groupId: number; uid: string }, void> {
     const queryClient = useQueryClient();
-    return useMutation<void, Error, { groupId: number; uid: string }>({
+    return useMutation<void, Error, { groupId: number; uid: string }, void>({
         mutationFn: ({ groupId, uid }) => joinGroup(groupId, uid), // Call the joinGroup service function
         onSuccess: () => {
             queryClient.invalidateQueries(/* specify the relevant query key */);

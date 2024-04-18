@@ -1,10 +1,11 @@
 import type Project from "@/models/Project";
+import type {ProjectForm} from "@/models/Project";
 import type Submission from "@/models/Submission";
 import { authorized_fetch } from "@/services";
 
-export async function createProject(projectData: Project): Promise<string> {
+export async function createProject(projectData: ProjectForm): Promise<number> {
     try {
-        const response = await authorized_fetch(`/api/projects/`, {
+        const response = await authorized_fetch<Project>(`/api/projects/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

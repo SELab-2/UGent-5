@@ -1,5 +1,5 @@
 <template>
-    <background-container>
+    <BackgroundContainer>
         <v-container>
             <v-row>
                 <v-col cols="12" md="6">
@@ -11,32 +11,35 @@
                     />
                 </v-col>
                 <v-col cols="12" md="6">
-                    <CheckBox
+                    <CheckBoxList
+                        v-model="selectedTeachers"
                         :title="'Teacher(s)'"
                         :items="teachers"
-                        placeholder="Assign Teachers"
+                        description="Assign Teachers"
                     />
                 </v-col>
             </v-row>
             <v-row>
                 <v-col cols="12" md="6">
-                    <span v-if="isLoading">Loading subjects...</span>
-                    <span v-else-if="isError">Error loading subjects: {{ error.message }}</span>
+                    <span v-if="isSubjectsLoading">Loading subjects...</span>
+                    <span v-else-if="isSubjectsError">Error loading subjects: {{ subjectsError!.message }}</span>
                     <v-select
-                        v-model="selectedCourse"
-                        :items="courses"
+                        v-else
+                        v-model="selectedSubject"
+                        :items="subjects"
                         item-value="value"
                         item-title="text"
-                        label="Course"
+                        label="Subject"
                         required
-                        placeholder="Select Course"
+                        placeholder="Select Subject"
                     />
                 </v-col>
                 <v-col cols="12" md="6">
-                    <CheckBox
+                    <CheckBoxList
+                        v-model="selectedAssitants"
                         :title="'Assistants'"
                         :items="assistants"
-                        placeholder="Assign Assistants"
+                        description="Assign Assistants"
                     />
                 </v-col>
             </v-row>
@@ -75,35 +78,43 @@
                 </v-col>
             </v-row>
         </v-container>
-    </background-container>
+    </BackgroundContainer>
 </template>
 
 <script setup lang="ts">
-import CheckBox from "@/components/project/CheckboxList.vue";
-import DatePicker from "@/components/project/DatePicker.vue";
+import CheckBoxList from "@/components/project/CheckboxList.vue";
+import type { CheckBoxItem } from "@/components/project/CheckboxList.vue";
+import DatePicker from "@/components/project/DatePicker.vue"
 import RadioButtonList from "@/components/project/RadiobuttonList.vue";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
-import { useRoute } from "vue-router";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
+import { useRoute } from "vue-router";
 import { useSubjectInstructorsQuery, useSubjectStudentsQuery } from "@/queries/Subject";
 import { useMySubjectsQuery } from "@/queries/User";
 import { useCreateProjectMutation } from "@/queries/Project";
 import { useCreateGroupsMutation, useJoinGroupMutation } from "@/queries/Group";
-import { computed, ref } from "vue";
+import {ref, computed, reactive} from "vue";
+import type User from "@/models/User";
+import type {ProjectForm} from "@/models/Project";
+import type {GroupForm} from "@/models/Group";
 
 const route = useRoute();
+
+// Form data
 const project_title = ref("");
+const selectedSubject = ref(Number(route.params.subjectId));
+const selectedTeachers = reactive<CheckBoxItem[]>([]);
+const selectedAssitants = reactive<CheckBoxItem[]>([]);
 const deadline = ref(new Date());
-const capacity = ref(1);
-const selectedCourse = ref(Number(route.params.subjectId));
 const publishDate = ref(new Date());
 const selectedGroupProject = ref("student");
-const quillEditor = ref(null);
+const capacity = ref(1);
+const quillEditor = ref<typeof QuillEditor | null>(null);
 
-const { data: instructorsData, isLoading, isError } = useSubjectInstructorsQuery(selectedCourse);
-const { data: studentsData } = useSubjectStudentsQuery(selectedCourse);
-const { data: mySubjectsData } = useMySubjectsQuery();
+const { data: mySubjectsData, isLoading: isSubjectsLoading, isError: isSubjectsError, error: subjectsError } = useMySubjectsQuery();
+const { data: instructorsData, isLoading, isError } = useSubjectInstructorsQuery(selectedSubject);
+const { data: studentsData } = useSubjectStudentsQuery(selectedSubject);
 
 const teachers = computed(
     () => instructorsData.value?.filter((t) => t.is_teacher).map(formatInstructor) || []
@@ -111,9 +122,8 @@ const teachers = computed(
 const assistants = computed(
     () => instructorsData.value?.filter((a) => !a.is_teacher).map(formatInstructor) || []
 );
-const courses = computed(
-    () =>
-        mySubjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []
+const subjects = computed(() =>
+    mySubjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []
 );
 
 const groupProjectOptions = [
@@ -126,28 +136,28 @@ const createGroupsMutation = useCreateGroupsMutation();
 const joinGroupMutation = useJoinGroupMutation();
 
 async function submitForm() {
-    const projectData = {
+    const projectData: ProjectForm = {
         name: project_title.value,
-        deadline: deadline.value.toISOString(),
+        deadline: deadline.value,
         description: quillEditor.value?.getQuill().root.innerHTML || "",
-        subject_id: selectedCourse.value,
+        subject_id: selectedSubject.value,
+        is_visible: true,
         capacity: capacity.value,
+        requirements: []
     };
 
     try {
         const createdProjectId = await createProjectMutation.mutateAsync(projectData);
-        console.log("Project created successfully with ID:", createdProjectId);
 
         if (selectedGroupProject.value === "student") {
-            const emptyGroup = { project_id: createdProjectId, score: 0, team_name: "Group 1" };
+            const emptyGroup: GroupForm = { project_id: createdProjectId, score: 0, team_name: "Group 1" };
             await createGroupsMutation.mutateAsync({
                 projectId: createdProjectId,
                 groups: [emptyGroup],
             });
-            console.log("One empty group created");
         } else if (selectedGroupProject.value === "random") {
-            const groups = divideStudentsIntoGroups(studentsData.value, capacity.value);
-            const groupsToCreate = groups.map((group, i) => ({
+            const groups = divideStudentsIntoGroups(studentsData.value || [], capacity.value);
+            const groupsToCreate = groups.map((_, i) => ({
                 project_id: createdProjectId,
                 score: 0,
                 team_name: "Group " + (i + 1),
@@ -156,24 +166,22 @@ async function submitForm() {
                 projectId: createdProjectId,
                 groups: groupsToCreate,
             });
-            console.log("Random groups created");
 
-            createdGroups.forEach((groupId, index) => {
+            createdGroups.forEach((group, index) => {
                 groups[index].forEach((student) => {
                     joinGroupMutation.mutateAsync({
-                        groupId: groupId,
+                        groupId: group.id,
                         uid: student.uid,
                     });
                 });
             });
-            console.log("Students have been added to the groups successfully");
         }
     } catch (error) {
         console.error("Error during project or group creation:", error);
     }
 }
 
-function shuffle(array) {
+function shuffle(array: any[]) {
     let shuffledArray = [...array];
     let currentIndex = shuffledArray.length,
         randomIndex;
@@ -191,7 +199,7 @@ function shuffle(array) {
     return shuffledArray;
 }
 
-function divideStudentsIntoGroups(students, capacity) {
+function divideStudentsIntoGroups(students: User[], capacity: number) {
     students = shuffle(students);
     let groups = [];
     const numberOfGroups = Math.ceil(students.length / capacity);
@@ -202,11 +210,12 @@ function divideStudentsIntoGroups(students, capacity) {
     return groups;
 }
 
-function formatInstructor({ uid, given_name, checked = false }) {
-    return { id: uid, label: given_name, checked };
+function formatInstructor(user: User): CheckBoxItem {
+    const checked = false;
+    return { id: user.uid, label: user.given_name, checked };
 }
 
-const handleCapacityChange = (newCapacity) => {
+const handleCapacityChange = (newCapacity: number) => {
     capacity.value = newCapacity;
 };
 </script>

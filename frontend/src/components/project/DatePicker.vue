@@ -6,39 +6,36 @@
         offset-y
         full-width
     >
-        <template v-slot:activator="{ attrs }">
+        <template v-slot:activator>
             <v-text-field
                 v-model="displayDate"
                 :label="label"
                 readonly
-                v-bind="attrs"
+                v-bind="$attrs"
                 @click="toggleDatePicker"
             ></v-text-field>
         </template>
-        <v-date-picker v-model="date" no-title @update:modelValue="updateDate"></v-date-picker>
+        <v-date-picker v-model="date" no-title></v-date-picker>
     </v-menu>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue";
-import { useVModel } from "@vueuse/core";
 
-const props = defineProps({
-    modelValue: Date, // Expecting a Date object
-    label: String,
-});
+const date = defineModel<Date>({});
 
-const emit = defineEmits(["update:modelValue"]);
+defineProps<{
+    label: string,
+}>();
 
 const menuVisible = ref(false);
-const date = useVModel(props, "modelValue", emit);
 
 // Computed to format the date as ISO string (just the date part)
 const displayDate = computed(() => {
     if (date.value) {
         const selectedDate = new Date(date.value.getTime());
         selectedDate.setMinutes(selectedDate.getMinutes() - selectedDate.getTimezoneOffset());
-        return selectedDate.toISOString().substr(0, 10);
+        return selectedDate.toISOString().substring(0, 10);
     }
     return "";
 });
@@ -47,11 +44,6 @@ function toggleDatePicker() {
     menuVisible.value = !menuVisible.value;
 }
 
-function updateDate(newValue) {
-    console.log(newValue);
-    date.value = new Date(newValue); // Ensure newValue is a Date object
-    menuVisible.value = false;
-}
 </script>
 
 <!--<style scoped>-->

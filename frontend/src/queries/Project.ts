@@ -6,6 +6,7 @@ import {
     useQueryClient,
 } from "@tanstack/vue-query";
 import type Project from "@/models/Project";
+import type {ProjectForm} from "@/models/Project";
 import type Submission from "@/models/Submission";
 import { getProject, createSubmission, createProject } from "@/services/project";
 import { type Ref, computed } from "vue";
@@ -30,7 +31,7 @@ export function useProjectQuery(
 export function useCreateSubmissionMutation(
     groupId: Ref<number | undefined>
 ): UseMutationReturnType<Submission, Error, FormData, void> {
-    return useMutation<Submission, Error, FormData>({
+    return useMutation<Submission, Error, FormData, void>({
         mutationFn: (formData) => createSubmission(groupId.value!, formData),
         onError: (error) => {
             console.error("Submission creation failed", error);
@@ -38,9 +39,9 @@ export function useCreateSubmissionMutation(
         },
     });
 }
-export function useCreateProjectMutation(): UseMutationReturnType<Project, Error, Project, string> {
+export function useCreateProjectMutation(): UseMutationReturnType<number, Error, ProjectForm, void> {
     const queryClient = useQueryClient();
-    return useMutation<Project, Error, Project, string>({
+    return useMutation<number, Error, ProjectForm, void>({
         mutationFn: createProject,
         onSuccess: (createdProjectId) => {
             queryClient.invalidateQueries({ queryKey: ["create-project"] });

@@ -27,8 +27,8 @@
     </v-card>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, watch, PropType } from "vue";
+<script setup lang="ts">
+import { ref, watch } from "vue";
 import DatePicker from "./DatePicker.vue"; // Import your custom DatePicker component
 
 interface RadioButtonOption {
@@ -36,50 +36,33 @@ interface RadioButtonOption {
     value: string;
 }
 
-export default defineComponent({
-    name: "RadioButtonList",
-    components: {
-        DatePicker, // Register your custom DatePicker component
-    },
-    props: {
-        title: {
-            type: String,
-            required: true,
-        },
-        options: {
-            type: Array as PropType<RadioButtonOption[]>,
-            required: true,
-        },
-        modelValue: {
-            type: String,
-            default: "",
-        },
-    },
-    emits: ["update:modelValue", "update:radio_date", "update:capacity"],
-    setup(props, { emit }) {
-        const isToggled = ref(true);
-        const selectedOption = ref(props.modelValue);
-        const radio_date = ref(new Date());
-        const capacity = ref(1); // Default capacity
+const model = defineModel<string>({});
 
-        watch(capacity, (newCapacity) => {
-            emit("update:capacity", newCapacity);
-        });
+defineProps<{
+    title: string;
+    options: RadioButtonOption[];
+}>();
 
-        watch(selectedOption, (newValue) => {
-            emit("update:modelValue", newValue);
-            if (newValue === "course") {
-                capacity.value = 1; // Reset capacity when 'student' is not selected
-                emit("update:capacity", capacity.value);
-            }
-        });
+const isToggled = ref(true);
+const selectedOption = ref(model);
+const radio_date = ref(new Date());
+const capacity = ref(1); // Default capacity
 
-        return {
-            isToggled,
-            selectedOption,
-            radio_date,
-            capacity,
-        };
-    },
+const emit = defineEmits<{
+    (e: "update:radio_date", value: Date): void;
+    (e: "update:capacity", value: number): void;
+}>();
+
+
+watch(capacity, (newCapacity) => {
+    emit("update:capacity", newCapacity);
 });
+
+watch(selectedOption, (newValue) => {
+    if (newValue === "course") {
+        capacity.value = 1; // Reset capacity when 'student' is not selected
+        emit("update:capacity", capacity.value);
+    }
+});
+
 </script>
