@@ -23,6 +23,10 @@ export default {
         add_files_button: "Add files",
         no_files_added: "No files have been added yet.",
         no_files_warning: "Please add at least one file to submit a solution.",
+        submissions: "Submission zone",
+        latest_submission: "Latest submission:",
+        new_submission: "Submit new",
+        status_submission: "Submission was: {status}",
     },
     project: {
         deadline: "Deadline",
@@ -31,6 +35,7 @@ export default {
         needhelp_button: "Need help",
         group: "Group {number}",
         assignment: "Assignment:",
+        myProject: "My projects:",
     },
     navigation: {
         home: "Home",

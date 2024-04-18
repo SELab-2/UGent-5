@@ -23,6 +23,10 @@ export default {
         add_files_button: "Bestanden toevoegen",
         no_files_added: "Je hebt nog geen bestanden toegevoegd.",
         no_files_warning: "Voeg ten minste een bestand toe om een indiening te maken.",
+        submissions: "Indiening zone",
+        latest_submission: "Laatste indiening:",
+        new_submission: "Nieuwe indiening",
+        status_submission: "Indiening was: {status}",
     },
     project: {
         deadline: "Deadline",
@@ -31,6 +35,7 @@ export default {
         needhelp_button: "Hulp nodig",
         group: "Groep {number}",
         assignment: "Opdracht:",
+        myProject: "Mijn projecten:",
     },
     navigation: {
         home: "Hoofdscherm",

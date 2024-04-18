@@ -1,17 +1,20 @@
 <template>
     <v-card color="white">
         <v-card-title>
-            Submission Zone
+            {{ $t("submit.submissions") }}
         </v-card-title>
-        <v-card-subtitle v-if="latestSubmission">
-            Latest submission: {{ latestSubmission.status }}
+        <v-card-subtitle v-if="latestSubmission" class="subtitle">
+            {{ $t("submit.latest_submission") }} {{ $d(latestSubmission.date, "long") }}
         </v-card-subtitle>
-        <v-card-subtitle v-else>
+        <v-card-subtitle v-else class="subtitle">
             No submissions found.
         </v-card-subtitle>
+        <div v-if="latestSubmission" class="subtitle">
+            <v-card-text>{{ $t("submit.status_submission", {status: latestSubmission.status}) }}</v-card-text>
+        </div>
         <router-link :to="`/project/${project?.id}/submit`">
             <v-btn>
-                Submit new solution
+                {{ $t("submit.new_submission") }}
             </v-btn>
         </router-link>
     </v-card>
@@ -41,5 +44,9 @@ const latestSubmission = computed(() => submissions.value?.filter((submission: S
 </script>
 
 <style scoped>
+
+.subtitle {
+    margin-bottom: 10px; /* Adjust as needed */
+}
 
 </style>
