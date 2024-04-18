@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import {toRefs} from "vue";
+import { toRefs } from "vue";
 
 export interface CheckBoxItem {
     id: string;
@@ -32,18 +32,17 @@ const props = defineProps<{
     items: CheckBoxItem[];
     title: string;
     description: string;
-}>()
+}>();
 
-const {items} = toRefs(props);
+const { items } = toRefs(props);
 
 function handleCheckboxChange(item: CheckBoxItem) {
     item.checked = !item.checked;
     const index = selectedItems.value.findIndex((i) => i.id === item.id);
     if (item.checked && index === -1) {
         selectedItems.value.push(item);
-    } else if (!item.checked && index !== -1){
+    } else if (!item.checked && index !== -1) {
         selectedItems.value.splice(index, 1);
     }
 }
-
 </script>

@@ -1,5 +1,5 @@
 import type Project from "@/models/Project";
-import type {ProjectForm} from "@/models/Project";
+import type { ProjectForm } from "@/models/Project";
 import type Submission from "@/models/Submission";
 import { authorized_fetch } from "@/services";
 

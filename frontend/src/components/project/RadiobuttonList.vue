@@ -53,7 +53,6 @@ const emit = defineEmits<{
     (e: "update:capacity", value: number): void;
 }>();
 
-
 watch(capacity, (newCapacity) => {
     emit("update:capacity", newCapacity);
 });
@@ -64,5 +63,4 @@ watch(selectedOption, (newValue) => {
         emit("update:capacity", capacity.value);
     }
 });
-
 </script>

@@ -1,5 +1,5 @@
 import type Group from "@/models/Group";
-import type {GroupForm} from "@/models/Group";
+import type { GroupForm } from "@/models/Group";
 import { authorized_fetch } from "@/services/index";
 import type Submission from "@/models/Submission";
 

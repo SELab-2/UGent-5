@@ -22,7 +22,9 @@
             <v-row>
                 <v-col cols="12" md="6">
                     <span v-if="isSubjectsLoading">Loading subjects...</span>
-                    <span v-else-if="isSubjectsError">Error loading subjects: {{ subjectsError!.message }}</span>
+                    <span v-else-if="isSubjectsError"
+                        >Error loading subjects: {{ subjectsError!.message }}</span
+                    >
                     <v-select
                         v-else
                         v-model="selectedSubject"
@@ -84,7 +86,7 @@
 <script setup lang="ts">
 import CheckBoxList from "@/components/project/CheckboxList.vue";
 import type { CheckBoxItem } from "@/components/project/CheckboxList.vue";
-import DatePicker from "@/components/project/DatePicker.vue"
+import DatePicker from "@/components/project/DatePicker.vue";
 import RadioButtonList from "@/components/project/RadiobuttonList.vue";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
@@ -94,10 +96,10 @@ import { useSubjectInstructorsQuery, useSubjectStudentsQuery } from "@/queries/S
 import { useMySubjectsQuery } from "@/queries/User";
 import { useCreateProjectMutation } from "@/queries/Project";
 import { useCreateGroupsMutation, useJoinGroupMutation } from "@/queries/Group";
-import {ref, computed, reactive} from "vue";
+import { ref, computed, reactive } from "vue";
 import type User from "@/models/User";
-import type {ProjectForm} from "@/models/Project";
-import type {GroupForm} from "@/models/Group";
+import type { ProjectForm } from "@/models/Project";
+import type { GroupForm } from "@/models/Group";
 
 const route = useRoute();
 
@@ -112,7 +114,12 @@ const selectedGroupProject = ref("student");
 const capacity = ref(1);
 const quillEditor = ref<typeof QuillEditor | null>(null);
 
-const { data: mySubjectsData, isLoading: isSubjectsLoading, isError: isSubjectsError, error: subjectsError } = useMySubjectsQuery();
+const {
+    data: mySubjectsData,
+    isLoading: isSubjectsLoading,
+    isError: isSubjectsError,
+    error: subjectsError,
+} = useMySubjectsQuery();
 const { data: instructorsData, isLoading, isError } = useSubjectInstructorsQuery(selectedSubject);
 const { data: studentsData } = useSubjectStudentsQuery(selectedSubject);
 
@@ -122,8 +129,9 @@ const teachers = computed(
 const assistants = computed(
     () => instructorsData.value?.filter((a) => !a.is_teacher).map(formatInstructor) || []
 );
-const subjects = computed(() =>
-    mySubjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []
+const subjects = computed(
+    () =>
+        mySubjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []
 );
 
 const groupProjectOptions = [
@@ -143,14 +151,18 @@ async function submitForm() {
         subject_id: selectedSubject.value,
         is_visible: true,
         capacity: capacity.value,
-        requirements: []
+        requirements: [],
     };
 
     try {
         const createdProjectId = await createProjectMutation.mutateAsync(projectData);
 
         if (selectedGroupProject.value === "student") {
-            const emptyGroup: GroupForm = { project_id: createdProjectId, score: 0, team_name: "Group 1" };
+            const emptyGroup: GroupForm = {
+                project_id: createdProjectId,
+                score: 0,
+                team_name: "Group 1",
+            };
             await createGroupsMutation.mutateAsync({
                 projectId: createdProjectId,
                 groups: [emptyGroup],

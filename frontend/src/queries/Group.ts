@@ -41,7 +41,12 @@ export function useUserGroupQuery(
     });
 }
 
-export function useCreateGroupsMutation(): UseMutationReturnType<Group[], Error, { projectId: number; groups: GroupForm[] }, void> {
+export function useCreateGroupsMutation(): UseMutationReturnType<
+    Group[],
+    Error,
+    { projectId: number; groups: GroupForm[] },
+    void
+> {
     const queryClient = useQueryClient();
     return useMutation<Group[], Error, { projectId: number; groups: GroupForm[] }, void>({
         mutationFn: ({ projectId, groups }) => createGroups(projectId, groups),
@@ -56,7 +61,12 @@ export function useCreateGroupsMutation(): UseMutationReturnType<Group[], Error,
     });
 }
 
-export function useJoinGroupMutation(): UseMutationReturnType<void, Error, { groupId: number; uid: string }, void> {
+export function useJoinGroupMutation(): UseMutationReturnType<
+    void,
+    Error,
+    { groupId: number; uid: string },
+    void
+> {
     const queryClient = useQueryClient();
     return useMutation<void, Error, { groupId: number; uid: string }, void>({
         mutationFn: ({ groupId, uid }) => joinGroup(groupId, uid), // Call the joinGroup service function

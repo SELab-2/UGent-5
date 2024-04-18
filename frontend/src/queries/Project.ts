@@ -6,7 +6,7 @@ import {
     useQueryClient,
 } from "@tanstack/vue-query";
 import type Project from "@/models/Project";
-import type {ProjectForm} from "@/models/Project";
+import type { ProjectForm } from "@/models/Project";
 import type Submission from "@/models/Submission";
 import { getProject, createSubmission, createProject } from "@/services/project";
 import { type Ref, computed } from "vue";
@@ -39,7 +39,12 @@ export function useCreateSubmissionMutation(
         },
     });
 }
-export function useCreateProjectMutation(): UseMutationReturnType<number, Error, ProjectForm, void> {
+export function useCreateProjectMutation(): UseMutationReturnType<
+    number,
+    Error,
+    ProjectForm,
+    void
+> {
     const queryClient = useQueryClient();
     return useMutation<number, Error, ProjectForm, void>({
         mutationFn: createProject,

@@ -25,7 +25,7 @@ import { ref, computed } from "vue";
 const date = defineModel<Date>({});
 
 defineProps<{
-    label: string,
+    label: string;
 }>();
 
 const menuVisible = ref(false);
@@ -43,7 +43,6 @@ const displayDate = computed(() => {
 function toggleDatePicker() {
     menuVisible.value = !menuVisible.value;
 }
-
 </script>
 
 <!--<style scoped>-->
