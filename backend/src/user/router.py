@@ -14,7 +14,7 @@ from .dependencies import (
     admin_user_validation,
 )
 from .schemas import User, UserSimple, UserSubjectList
-from .service import set_admin, set_teacher
+from .service import set_admin, set_teacher, get_all_users
 
 router = APIRouter(
     prefix="/api/users",
@@ -22,6 +22,17 @@ router = APIRouter(
     responses={404: {"description": "Not Found"}},
     dependencies=[Depends(authentication_validation)],
 )
+
+
+@router.get("/", dependencies=[Depends(admin_user_validation)])
+async def get_users(
+    db: AsyncSession = Depends(get_async_db),
+) -> list[User]:
+    """
+    Get information about the current user
+    """
+    users = await get_all_users(db)
+    return list(users)
 
 
 @router.get("/me")
