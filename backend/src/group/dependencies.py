@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Sequence, Optional
 
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -45,19 +45,26 @@ async def create_group_validation(
     if not await has_subject_privileges(project.subject_id, user, db):
         raise NotAuthorized()
 
-# TODO: take enroll_date into consideration
-
 
 async def join_group(
-    group: Group = Depends(retrieve_group),
-    user: User = Depends(get_authenticated_user),
-    db: AsyncSession = Depends(get_async_db)
+    group_id: int,
+    uid: Optional[str] = None,
+    db: AsyncSession = Depends(get_async_db),
+    user: User = Depends(get_authenticated_user)
 ) -> Group:
+    if not uid:
+        uid = user.uid
+
+    group = await service.get_group_by_id(db, group_id)
+    if not group:
+        raise GroupNotFound()
+
     project = await retrieve_project(group.project_id, user, db)
-    if user in group.members:
+    if uid in [member.uid for member in group.members]:
         raise AlreadyInGroup()
+
     if len(group.members) >= project.capacity:
         raise MaxCapacity()
 
-    await service.join_group(db, group.id, user.uid)
+    await service.join_group(db, group_id, uid)
     return group

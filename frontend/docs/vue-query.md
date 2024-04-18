@@ -74,7 +74,7 @@ die de data ophaalt. Voor het voorbeeld met de gebruiker ziet dit er zo uit:
 function useUserQuery(uid: Ref<string>): UseQueryReturnType<User, Error> {
     return useQuery<User, Error>({
         queryKey: USER_QUERY_KEY(uid.value),
-        queryFn: () => getUser(uid.value)
+        queryFn: () => getUser(uid.value),
     });
 }
 ```
@@ -91,7 +91,7 @@ key heeft. Een key kan verschillende vormen aannemen, maar het makkelijkste is
 een lijst van strings. De key uit het voorbeeld ziet er als volgt uit:
 
 ```ts
-const USER_QUERY_KEY = (uid: string) => ["user", uid]
+const USER_QUERY_KEY = (uid: string) => ["user", uid];
 ```
 
 Op deze manier wordt voor elke gebruiker die opgevraagd zou kunnen worden een
@@ -117,13 +117,13 @@ gebruikt zou er als volgt uit kunnen zien:
     <span v-else-if="data">{{ data.given_name }}</span>
 </template>
 <script setup lang="ts">
-import { useUserQuery } from "@/src/queries/user";
-import { toRefs } from "vue";
-const props = defineProps<{
-    userId: string;
-}>();
-const { userId } = toRefs(props);
-const { data, error, isLoading, isError } = useUserQuery(userId)
+    import { useUserQuery } from "@/src/queries/user";
+    import { toRefs } from "vue";
+    const props = defineProps<{
+        userId: string;
+    }>();
+    const { userId } = toRefs(props);
+    const { data, error, isLoading, isError } = useUserQuery(userId);
 </script>
 ```
 
@@ -142,12 +142,10 @@ Een mutation om het e-mail adres te veranderen ziet er zo uit:
 ```ts
 // services/user.ts
 async function updateEmail(uid: string, new_mail: string) {
-    authorized_fetch(`/api/users/{uid}`,
-        {
-            method: "PATCH",
-            body: { mail: new_mail },
-        },
-    );
+    authorized_fetch(`/api/users/{uid}`, {
+        method: "PATCH",
+        body: { mail: new_mail },
+    });
 }
 
 // queries/user.ts
@@ -185,24 +183,24 @@ Een voorbeeldcomponent die dit gebruikt kan er zo uit zien:
 <template>
     <span>Current email: {{ user.mail }}</span>
     <form @submit.prevent="handleSubmit">
-        <input type="email" v-model="new_email"/>
+        <input type="email" v-model="new_email" />
         <button type="submit">Submit</button>
     </form>
 </template>
 
 <script setup lang="ts">
-import { useEmailMutation } from "@/src/queries/user";
+    import { useEmailMutation } from "@/src/queries/user";
 
-defineProps<{
-    user: User;
-}>();
-const new_email = ref("");
+    defineProps<{
+        user: User;
+    }>();
+    const new_email = ref("");
 
-const { mutateAsync } = useEmailMutation();
+    const { mutateAsync } = useEmailMutation();
 
-function onSubmit() {
-    mutateAsync(user, new_email.value)
-}
+    function onSubmit() {
+        mutateAsync(user, new_email.value);
+    }
 </script>
 ```
 
@@ -229,10 +227,7 @@ function useEmailMutation(): UseMutationReturnType<void, Error, User, void> {
         onMutate: (user: User, new_email: string) => {
             await queryClient.cancelQueries({ queryKey: USER_QUERY_KEY(user.uid) });
             const new_user = { ...user, mail: new_email };
-            queryClient.setQueryData<User>(
-                USER_QUERY_KEY(user.uid),
-                () => new_user,
-            );
+            queryClient.setQueryData<User>(USER_QUERY_KEY(user.uid), () => new_user);
         },
         onSettled: (data, { user: User }) => {
             queryClient.invalidateQueries({ queryKey: USER_QUERY_KEY(user.uid) });
@@ -272,12 +267,12 @@ Neem bijvoobeeld een component die data van een vak weergeeft:
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
-    projectId: string;
-}>();
-const { projectId } = toRefs(props);
-const { data: project } = useProjectQuery(projectId);
-const { data: subject } = useSubjectQuery(/* Get subjectId somehow */);
+    const props = defineProps<{
+        projectId: string;
+    }>();
+    const { projectId } = toRefs(props);
+    const { data: project } = useProjectQuery(projectId);
+    const { data: subject } = useSubjectQuery(/* Get subjectId somehow */);
 </script>
 ```
 
