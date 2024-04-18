@@ -1,6 +1,7 @@
 #!/bin/sh
-cp -R /tests/. /home/runner
-cp -R /submission /home/runner
-chown -R runner:runner /home/runner/submission
-chmod a+wx /artifacts
-su runner -c 'sh /home/runner/run'
+cp -R "$TESTS_DIR"/* "$PWD"
+cp -R "$SUBMISSION_DIR" "$PWD"
+chmod a+wx "$ARTIFACT_DIR"
+chmod a+wx "$CORRECT"
+chmod a+wx "$FAILED"
+su runner -c 'sh run'

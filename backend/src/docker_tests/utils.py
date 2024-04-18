@@ -8,7 +8,7 @@ from src import config
 
 
 def submissions_path(*paths: str) -> str:
-    return str(os.path.join(config.CONFIG.file_path, "submissions", *paths))
+    return str(os.path.abspath(os.path.join(config.CONFIG.file_path, "submissions", *paths)))
 
 
 def submission_path(uuid: str, *paths: str) -> str:
@@ -24,7 +24,7 @@ def feedback_path(uuid: str, *paths) -> str:
 
 
 def tests_path(uuid: str, *paths) -> str:
-    return str(os.path.join(config.CONFIG.file_path, "projects", uuid, *paths))
+    return str(os.path.abspath(os.path.join(config.CONFIG.file_path, "projects", uuid, *paths)))
 
 
 def write_and_unpack_files(files: list[UploadFile], uuid: str):
