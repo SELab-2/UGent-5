@@ -1,5 +1,15 @@
-import { useAuthStore } from "@/stores/auth-store";
 import { createRouter, createWebHistory } from "vue-router";
+import { type Middleware, type MiddlewareContext, nextFactory } from "./middleware/index";
+import isAuthenticated from "./middleware/isAuthenticated";
+import loginMiddleware from "./middleware/login";
+
+declare module "vue-router" {
+    interface RouteMeta {
+        requiresAuth?: boolean;
+        hideHeader?: boolean;
+        middleware?: Middleware | Middleware[];
+    }
+}
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,34 +22,75 @@ const router = createRouter({
             path: "/about",
             name: "about",
             component: () => import("../views/AboutView.vue"),
+            meta: {
+                requiresAuth: false,
+            },
         },
         {
             path: "/login",
             name: "login",
             component: () => import("../views/LoginView.vue"),
-            beforeEnter: async (to, from, next) => {
-                const { isLoggedIn, login, setNext } = useAuthStore();
-                if (isLoggedIn) {
-                    router.replace("/home");
-                    next();
-                }
-                const ticket = to.query.ticket?.toString();
-                setNext(from.path);
-                const redirect = await login(ticket);
-                if (redirect) {
-                    router.replace(redirect);
-                }
-                next();
-            },
             meta: {
                 requiresAuth: false,
                 hideHeader: true,
+                middleware: loginMiddleware,
             },
         },
         {
             path: "/home",
             name: "home",
-            component: () => import("../views/UserView.vue"),
+            component: () => import("../views/HomeScreenView.vue"),
+        },
+        {
+            path: "/projects",
+            name: "projects",
+            component: () => import("../views/ProjectsView.vue"),
+        },
+        {
+            path: "/project/:projectId(\\d+)",
+            name: "project",
+            component: () => import("../views/ProjectView.vue"),
+            props: (route) => ({ projectId: Number(route.params.projectId) }),
+        },
+        {
+            path: "/project/:projectId(\\d+)/submit",
+            name: "onSubmit",
+            component: () => import("../views/SubmitView.vue"),
+            props: (route) => ({ projectId: Number(route.params.projectId) }),
+        },
+        {
+            path: "/subjects",
+            name: "subjects",
+            component: () => import("../views/subject/SubjectsView.vue"),
+            children: [],
+        },
+        {
+            path: "/subjects/:subjectId(\\d+)",
+            name: "subject",
+            component: () => import("../views/subject/SubjectView.vue"),
+            props: (route) => ({ subjectId: Number(route.params.subjectId) }),
+        },
+        {
+            path: "/subjects/:subjectId(\\d+)/create-project",
+            name: "create-project",
+            component: () => import("../views/CreateProjectView.vue"),
+            props: (route) => ({ subjectId: Number(route.params.subjectId) }),
+        },
+        {
+            path: "/subjects/register/:uuid",
+            name: "registerSubject",
+            component: () => import("../views/SubjectRegisterView.vue"),
+            props: (route) => ({ uuid: String(route.params.uuid) }),
+        },
+        {
+            path: "/settings",
+            name: "settings",
+            component: () => import("../views/SettingsView.vue"),
+        },
+        {
+            path: "/admin",
+            name: "admin",
+            component: () => import("../views/AdminView.vue"),
         },
         {
             path: "/:pathMatch(.*)",
@@ -52,13 +103,23 @@ const router = createRouter({
     ],
 });
 
-router.beforeEach(async (to, _, next) => {
-    const requiresAuth = to.meta.requiresAuth !== undefined ? to.meta.requiresAuth : true;
-    const { isLoggedIn } = useAuthStore();
-    if (requiresAuth && !isLoggedIn) {
-        router.replace({ name: "login" });
+router.beforeEach(async (to, from, next) => {
+    const middleware: Middleware[] = [];
+
+    // Always check for authentication
+    middleware.push(isAuthenticated);
+
+    // Add additional middleware if specified
+    if (to.meta.middleware) {
+        const meta_middleware = Array.isArray(to.meta.middleware)
+            ? to.meta.middleware
+            : [to.meta.middleware];
+        middleware.push(...meta_middleware.filter((m) => m !== isAuthenticated));
     }
-    next();
+
+    const context: MiddlewareContext = { to, from, next, router };
+    const nextMiddleware = nextFactory(context, middleware, 0);
+    return nextMiddleware();
 });
 
 export default router;

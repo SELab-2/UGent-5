@@ -21,7 +21,14 @@ CAS_SERVER_URL="https://login.ugent.be"
 DATABASE_URI="database connection string: postgresql://..., see discord..."
 SECRET_KEY="<secret key to sign JWT tokens>" # e.g. generate with `openssl rand -hex 32`
 ALGORITHM="HS256" # algorithm used to sign JWT tokens
+FILE_PATH="files" # Location where uploaded files are stored
 ```
+
+### Install docker
+
+To be able to run the automated tests or run a local development database,
+follow the installation instructions for either
+[docker engine](https://docs.docker.com/engine/install/) (CLI) or [docker desktop](https://www.docker.com/get-started/) (GUI, includes docker engine).
 
 ### Usage
 
@@ -38,6 +45,43 @@ source venv/bin/activate
 ```
 
 This will start a local development server on port `5173`
+
+## Recommended: run a local instance of the database in a docker container
+
+```sh
+# Pull the latest postgres image
+docker pull postgres
+# Run the postgres deamon in a docker container
+docker run --name my_postgres_container \
+  -p 5432:5432 \
+  -e POSTGRES_USER=username \
+  -e POSTGRES_PASSWORD=password \
+  -e POSTGRES_DB=dbname \
+  -d \
+  postgres
+```
+
+#### Change this line in `.env` to reflect database connection info
+```yml
+DATABASE_URI="postgresql://username:password@localhost:5432/dbname"
+```
+
+#### Run alembic to initialize the database
+```sh
+alembic upgrade head
+```
+
+#### Managing the database
+```sh
+# Stop the database container
+docker stop my_postgres_container
+# Start the database container again
+docker start my_postgres_container
+
+# Remove a stopped container
+docker rm my_postgres_container
+```
+If you installed Docker Desktop, you can use the GUI to manage your containers and images.
 
 ## The API
 

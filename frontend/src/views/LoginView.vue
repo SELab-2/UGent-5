@@ -4,35 +4,42 @@
             <img
                 alt="white logo"
                 class="logo"
-                src="@/assets/logo_white_ transparant.png"
+                src="@/assets/logo_white_transparant.png"
                 height="100"
             />
-            <h3>De officiële indienapplicatie van de Universiteit Gent</h3>
-            <p>Aanmelden</p>
-            <a class="login-button" :href="useCASUrl().CASUrl">Apollo login </a>
+            <h3>{{ $t("login.about") }}</h3>
+            <a class="login-button" :href="useCASUrl().CASUrl">{{ $t("login.login") }}</a>
             <img
                 alt="ugent logo"
                 class="ugent-logo"
                 src="@/assets/universiteit-gent-logo-white.png"
             />
+            <LocaleSwitcher class="login-switcher" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { useCASUrl } from "@/stores/cas-url";
+import LocaleSwitcher from "@/components/LocaleSwitcher.vue";
 </script>
 
 <style scoped>
-.login {
-    width: 100%;
-    height: 100vh;
-    background-color: var(--color-primary);
-    /* transform: translateY(-50%); */
+.page-container {
+    display: flex;
     justify-content: center;
     align-items: center;
+    height: 100vh;
+}
+
+.login {
+    width: 100%;
+    display: flex;
     flex-direction: column;
-    text-align: center;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-primary);
+    height: 100%;
 }
 
 .logo {
@@ -76,5 +83,13 @@ import { useCASUrl } from "@/stores/cas-url";
     left: 5px;
     height: 150px;
     width: auto;
+}
+
+.login-switcher {
+    margin-top: auto;
+}
+
+.login-switcher {
+    margin-bottom: 20px;
 }
 </style>

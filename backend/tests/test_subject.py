@@ -3,7 +3,7 @@ import pytest_asyncio
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.user.schemas import UserCreate
-from src.user.service import create_user, set_admin
+from src.user.service import create_user, set_admin, set_teacher
 
 subject = {"name": "test_subject"}
 
@@ -13,6 +13,7 @@ async def subject_id(client: AsyncClient, db: AsyncSession) -> int:
     """Create new subject"""
     await set_admin(db, "test", True)
     response = await client.post("/api/subjects/", json=subject)
+    await set_admin(db, "test", False)
     return response.json()["id"]
 
 
@@ -36,31 +37,50 @@ async def test_get_subject(client: AsyncClient, subject_id: int):
 
 
 @pytest.mark.asyncio
-async def test_create_teacher(client: AsyncClient, db: AsyncSession, subject_id: int):
+async def test_create_instructor(client: AsyncClient, db: AsyncSession, subject_id: int):
     await set_admin(db, "test", False)
-    response2 = await client.post(
-        f"/api/subjects/{subject_id}/teachers", params={"user_id": "test"}
+    response = await client.post(
+        f"/api/subjects/{subject_id}/instructors", params={"user_id": "test"}
     )
-    assert response2.status_code == 403  # Forbidden
+    assert response.status_code == 403  # Forbidden
 
     await set_admin(db, "test", True)
-    response2 = await client.post(
-        f"/api/subjects/{subject_id}/teachers", params={"user_id": "test"}
+    response = await client.post(
+        f"/api/subjects/{subject_id}/instructors", params={"user_id": "test"}
     )
-    assert response2.status_code == 201
+    assert response.status_code == 201
 
-    await set_admin(db, "test", False)
     await create_user(
         db, UserCreate(uid="test2", given_name="tester", mail="test@test.test")
     )
-    response2 = await client.post(
-        f"/api/subjects/{subject_id}/teachers", params={"user_id": "test2"}
+
+    await set_admin(db, "test", False)
+    response = await client.post(
+        f"/api/subjects/{subject_id}/instructors", params={"user_id": "test2"}
     )
-    assert response2.status_code == 201  # Success because we are teacher now
+    assert response.status_code == 403  # Forbidden
+
+    await set_teacher(db, "test", True)
+    response = await client.post(
+        f"/api/subjects/{subject_id}/instructors", params={"user_id": "test2"}
+    )
+    assert response.status_code == 201
+
+    # Non existing user
+    response = await client.post(
+        f"/api/subjects/{subject_id}/instructors", params={"user_id": "non_existing"}
+    )
+    assert response.status_code == 404
+
+
+async def make_instructor(subject_id: int, uid: str, db: AsyncSession, client: AsyncClient):
+    await set_admin(db, "test", True)
+    await client.post(f"/api/subjects/{subject_id}/instructors", params={"user_id": uid})
+    await set_admin(db, "test", False)
 
 
 @pytest.mark.asyncio
-async def test_get_teachers(client: AsyncClient, subject_id: int, db: AsyncSession):
+async def test_get_instructors(client: AsyncClient, subject_id: int, db: AsyncSession):
     await set_admin(db, "test", True)
     # create teacher
     await create_user(
@@ -68,9 +88,9 @@ async def test_get_teachers(client: AsyncClient, subject_id: int, db: AsyncSessi
                        mail="blabla@gmail.com")
     )
     await client.post(
-        f"/api/subjects/{subject_id}/teachers", params={"user_id": "get_test"}
+        f"/api/subjects/{subject_id}/instructors", params={"user_id": "get_test"}
     )
-    response = await client.get(f"/api/subjects/{subject_id}/teachers")
+    response = await client.get(f"/api/subjects/{subject_id}/instructors")
     assert response.status_code == 200
     assert len(response.json()) == 1
     assert response.json()[0]["uid"] == "get_test"
@@ -78,7 +98,6 @@ async def test_get_teachers(client: AsyncClient, subject_id: int, db: AsyncSessi
 
 @pytest.mark.asyncio
 async def test_get_subjects(client: AsyncClient, subject_id: int):
-    # await client.post(f"/api/subjects/{subject_id}/teachers", params={'user_id': 'test'})
     response2 = await client.get("/api/subjects/")
     assert response2.status_code == 200
     assert len(response2.json()) == 1
@@ -118,13 +137,33 @@ async def test_enroll_student_into_course(client: AsyncClient, db: AsyncSession,
     response = await client.post(
         f"/api/subjects/{subject_id}/students", params={"user_id": "test"}
     )
+    assert response.status_code == 403
+
+    await make_instructor(subject_id, "test", db, client)
+
+    # Non existing user
+    response = await client.post(
+        f"/api/subjects/{subject_id}/students", params={"user_id": "test2"}
+    )
+    assert response.status_code == 404
+
+    # create user
+    await create_user(
+        db, UserCreate(uid="test2", given_name="tester",
+                       mail="blabla@gmail.com")
+    )
+
+    # success
+    response = await client.post(
+        f"/api/subjects/{subject_id}/students", params={"user_id": "test2"}
+    )
     assert response.status_code == 201
 
     # check if actually enrolled now:
     response = await client.get(f"/api/subjects/{subject_id}/students")
     assert response.status_code == 200
     assert len(response.json()) == 1
-    assert response.json()[0]["uid"] == "test"
+    assert response.json()[0]["uid"] == "test2"
 
 
 @pytest.mark.asyncio
@@ -134,12 +173,14 @@ async def test_get_students(client: AsyncClient, db: AsyncSession, subject_id: i
         db, UserCreate(uid="get_test", given_name="tester",
                        mail="blabla@gmail.com")
     )
-    await client.post(
+    await set_admin(db, "test", True)
+    response = await client.post(
         f"/api/subjects/{subject_id}/students", params={"user_id": "get_test"}
     )
+    assert response.status_code == 201
+    await set_admin(db, "test", False)
     response = await client.get(f"/api/subjects/{subject_id}/students")
     assert response.status_code == 200
-    print(response.json())
     assert len(response.json()) == 1
     assert response.json()[0]["uid"] == "get_test"
 
@@ -176,3 +217,26 @@ async def test_delete_student(client: AsyncClient, db: AsyncSession, subject_id:
     assert not any(
         student['uid'] == user_uid for student in students), "The student should have been deleted."
     assert len(students) == 0, "There should be no students in the course."
+
+
+@pytest.mark.asyncio
+async def test_invite_link(client: AsyncClient, db: AsyncSession, subject_id: int):
+
+    # Not Authorized to get uuid
+    response = await client.get(f"/api/subjects/{subject_id}/uuid")
+    assert response.status_code == 403
+
+    await set_teacher(db, "test", True)
+
+    response = await client.get(f"/api/subjects/{subject_id}/uuid")
+    assert response.status_code == 200
+    assert response.json().get("subject_uuid") != None
+
+    # Register to subject
+    response = await client.post(f"/api/subjects/register",
+                                 params={"subject_uuid": response.json().get("subject_uuid")})
+    assert response.status_code == 201
+
+    response = await client.get(f"/api/subjects/{subject_id}/students")
+    assert len(response.json()) == 1
+    assert response.json()[0]["uid"] == "test"

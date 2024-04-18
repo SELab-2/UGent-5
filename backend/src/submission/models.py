@@ -1,14 +1,17 @@
+from typing import List
+
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
-from datetime import datetime, timezone
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from datetime import datetime
 import enum
 from src.database import Base
 
 
-class Status(enum.Enum):
-    InProgress = 1,
-    Accepted = 2,
-    Denied = 3
+class Status(enum.IntEnum):
+    InProgress = 1
+    Accepted = 2
+    Rejected = 3
+    Crashed = 4
 
 
 class Submission(Base):
@@ -18,6 +21,8 @@ class Submission(Base):
     date: Mapped[datetime] = mapped_column(default=datetime.now(),
                                            nullable=False)
     status: Mapped[Status] = mapped_column(default=Status.InProgress, nullable=False)
+    remarks: Mapped[str] = mapped_column(nullable=True)
+    files_uuid: Mapped[str] = mapped_column(nullable=False)
 
     group_id: Mapped[int] = mapped_column(
         ForeignKey("team.id", ondelete="CASCADE"),
@@ -28,3 +33,24 @@ class Submission(Base):
         ForeignKey("project.id", ondelete="CASCADE"),
         nullable=False
     )
+
+    stdout: Mapped[str] = mapped_column(nullable=True)
+    stderr: Mapped[str] = mapped_column(nullable=True)
+
+    testresults: Mapped[List["TestResult"]] = relationship(
+        back_populates="submission", lazy="joined"
+    )
+
+
+class TestResult(Base):
+    __tablename__ = "testresult"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    submission_id: Mapped[int] = mapped_column(
+        ForeignKey("submission.id", ondelete="CASCADE"),
+        nullable=False
+    )
+    submission: Mapped["Submission"] = relationship(back_populates="testresults")
+
+    succeeded: Mapped[bool] = mapped_column(nullable=False)
+    value: Mapped[str] = mapped_column(nullable=False)

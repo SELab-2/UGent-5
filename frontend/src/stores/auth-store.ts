@@ -14,25 +14,19 @@ export const useAuthStore = defineStore("auth", () => {
     const storedToken = localStorage.getItem("token");
     const token = ref<Token | null>(storedToken ? JSON.parse(storedToken) : null);
     const isLoggedIn = computed(() => token.value !== null && token.value !== undefined);
-    const { redirectUrl } = useCASUrl();
+    const { redirectUrl, setNext } = useCASUrl();
     const router = useRouter();
-    // FIXME: after redirect to CAS server, value is reset -> use query parameter instead?
-    const next = ref<string>("/home");
 
-    function setNext(url: string) {
-        next.value = url;
-    }
-
-    async function login(ticket?: string): Promise<string | null> {
+    async function login(redirectTo: string, ticket?: string): Promise<string | null> {
         if (isLoggedIn.value) {
-            return next.value;
+            return redirectTo;
         }
         if (ticket) {
             try {
                 const response = await fetch(`${apiUrl}/api/auth/token`, {
                     method: "POST",
                     body: JSON.stringify({
-                        returnUrl: redirectUrl,
+                        returnUrl: `${redirectUrl}?redirect=${redirectTo}`,
                         ticket: ticket,
                     }),
                     headers: { "content-type": "application/json" },
@@ -40,14 +34,12 @@ export const useAuthStore = defineStore("auth", () => {
                 if (!response.ok) {
                     throw new Error("Failed to verify ticket");
                 }
-                const new_token = await response.json();
-                token.value = new_token;
+                token.value = await response.json();
                 localStorage.setItem("token", JSON.stringify(token.value));
-                return next.value;
+                return redirectTo;
             } catch (e) {
-                router.replace({ query: { ticket: null } });
+                await router.replace({ query: { ticket: null } });
                 alert("Failed to login");
-                return null;
             }
         }
         return null;
@@ -58,5 +50,7 @@ export const useAuthStore = defineStore("auth", () => {
         localStorage.removeItem("token");
         await router.replace({ name: "login" });
     }
-    return { token, isLoggedIn, login, logout, setNext };
+
+    // TODO: Implement token refresh, now just logs out
+    return { token, isLoggedIn, login, logout, refresh: logout, setRedirect: setNext };
 });

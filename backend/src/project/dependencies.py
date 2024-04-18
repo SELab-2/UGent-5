@@ -1,20 +1,30 @@
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.dependencies import get_async_db
-from src.subject.dependencies import user_permission_validation
+from src.subject.dependencies import retrieve_subject, user_permission_validation
 from src.user.dependencies import get_authenticated_user
 from src.user.schemas import User
+from src.subject.utils import has_subject_privileges
 
 from .schemas import Project, ProjectCreate
 from .service import get_project
-from .exceptions import ProjectNotFoundException
+from .exceptions import ProjectNotFound, TestsNotFound
 
 
-async def retrieve_project(project_id: int, db: AsyncSession = Depends(get_async_db)):
+async def retrieve_project(project_id: int,
+                           user: User = Depends(get_authenticated_user),
+                           db: AsyncSession = Depends(get_async_db)):
     project = await get_project(db, project_id)
-    if not project:
-        raise ProjectNotFoundException()
+    if not project or \
+            (not project.is_visible and not await has_subject_privileges(project.subject_id, user, db)):
+        raise ProjectNotFound
     return project
+
+
+async def retrieve_test_files_uuid(project: Project = Depends(retrieve_project)):
+    if project.test_files_uuid is None:
+        raise TestsNotFound
+    return project.test_files_uuid
 
 
 async def create_permission_validation(
@@ -23,6 +33,7 @@ async def create_permission_validation(
     db: AsyncSession = Depends(get_async_db),
 ):
     await user_permission_validation(project_in.subject_id, user, db)
+    await retrieve_subject(project_in.subject_id, db)
 
 
 async def patch_permission_validation(

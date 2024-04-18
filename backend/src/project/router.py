@@ -1,25 +1,28 @@
-from typing import Sequence
-from fastapi import APIRouter, Depends
+from typing import Sequence, List
+
+from fastapi import APIRouter, Depends, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.auth.dependencies import authentication_validation
 from src.dependencies import get_async_db
 from src.group.dependencies import retrieve_groups_by_project
 from src.group.schemas import GroupList
 from src.submission.schemas import Submission
 from src.submission.service import get_submissions_by_project
-
 from . import service
 from .dependencies import (
     create_permission_validation,
     delete_permission_validation,
     patch_permission_validation,
-    retrieve_project,
+    retrieve_project, retrieve_test_files_uuid,
 )
 from .schemas import Project, ProjectCreate, ProjectUpdate
 from .service import (
     delete_project,
-    update_project,
+    update_project, update_test_files,
 )
+from ..docker_tests.docker_tests import using_default_docker_image, build_docker_image
+from ..docker_tests.utils import get_files_from_dir, tests_path, write_and_unpack_files, remove_test_files
 
 router = APIRouter(
     prefix="/api/projects",
@@ -38,8 +41,7 @@ router = APIRouter(
 async def create_project(
     project_in: ProjectCreate, db: AsyncSession = Depends(get_async_db)
 ):
-    project = await service.create_project(db, project_in)
-    return project
+    return await service.create_project(db, project_in)
 
 
 @router.get("/{project_id}", response_model=Project)
@@ -52,7 +54,6 @@ async def delete_project_for_subject(
     project_id: int, db: AsyncSession = Depends(get_async_db)
 ):
     await delete_project(db, project_id)
-    return {"message": "Project deleted successfully"}
 
 
 @router.patch(
@@ -78,3 +79,37 @@ async def list_submissions(group_id: int,
                            db: AsyncSession = Depends(get_async_db)
                            ) -> Sequence[Submission]:
     return await get_submissions_by_project(db, group_id)
+
+
+@router.get("/{project_id}/test_files")
+async def get_test_files(test_files_uuid: str = Depends(retrieve_test_files_uuid)):
+    return get_files_from_dir(tests_path(test_files_uuid))
+
+
+@router.put(
+    "/{project_id}/test_files",
+    response_model=Project,
+    dependencies=[Depends(patch_permission_validation)],
+)
+async def put_test_files(
+    files: List[UploadFile],
+    project: Project = Depends(retrieve_project),
+    db: AsyncSession = Depends(get_async_db)
+):
+    uuid = write_and_unpack_files(files, project.test_files_uuid)
+
+    if not using_default_docker_image(uuid):
+        # build custom docker image if dockerfile is present
+        build_docker_image(tests_path(uuid), uuid)
+
+    return await update_test_files(db, project.id, uuid)
+
+
+@router.delete("/{project_id}/test_files", dependencies=[Depends(delete_permission_validation)])
+async def delete_test_files(
+    project: Project = Depends(retrieve_project),
+    uuid: str = Depends(retrieve_test_files_uuid),
+    db: AsyncSession = Depends(get_async_db)
+):
+    remove_test_files(uuid)
+    return await service.update_test_files(db, project.id, None)
