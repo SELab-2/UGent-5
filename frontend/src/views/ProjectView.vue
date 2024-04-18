@@ -15,7 +15,7 @@
                     </router-link>
                     <router-link v-else :to="`/projects/${projectId}/groups`">
                         <v-btn class="group-button" prepend-icon="mdi-account-group">
-                            {{ $t("group_button") }}
+                            {{ $t("project.group_button") }}
                         </v-btn>
                     </router-link>
                     <NeedHelpButton class="group-button" :email="'test@test.be'"></NeedHelpButton>
