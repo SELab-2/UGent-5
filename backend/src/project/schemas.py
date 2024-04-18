@@ -16,9 +16,9 @@ class ProjectBase(BaseModel):
     deadline: datetime
     description: str
     subject_id: int
-    requirements: List[Requirement]
     is_visible: bool = Field(default=False)
     capacity: int = Field(gt=0)
+    requirements: List[Requirement] = []
 
     # Check if deadline is not in the past
     @field_validator("deadline")
