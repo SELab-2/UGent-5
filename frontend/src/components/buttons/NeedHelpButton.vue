@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-btn @click="sendEmail" prepend-icon="mdi-email">
+        <v-btn :href="`mailto:${email}`" prepend-icon="mdi-email">
             {{ $t("project.needhelp_button") }}
         </v-btn>
     </div>
@@ -8,17 +8,9 @@
 
 <script setup lang="ts">
 
-import {toRefs} from "vue";
-
-const props = defineProps<{
+defineProps<{
     email: string;
 }>();
-
-const { email } = toRefs(props);
-
-function sendEmail(): void {
-    window.location.href = `mailto:${email.value}`;
-}
 
 </script>
 
