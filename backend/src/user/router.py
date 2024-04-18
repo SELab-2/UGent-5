@@ -11,9 +11,10 @@ from .dependencies import (
     retrieve_projects,
     retrieve_subjects,
     retrieve_user,
+    admin_user_validation,
 )
 from .schemas import User, UserSimple, UserSubjectList
-from .service import set_admin
+from .service import set_admin, set_teacher, get_all_users
 
 router = APIRouter(
     prefix="/api/users",
@@ -21,6 +22,17 @@ router = APIRouter(
     responses={404: {"description": "Not Found"}},
     dependencies=[Depends(authentication_validation)],
 )
+
+
+@router.get("/", dependencies=[Depends(admin_user_validation)])
+async def get_users(
+    db: AsyncSession = Depends(get_async_db),
+) -> list[User]:
+    """
+    Get information about the current user
+    """
+    users = await get_all_users(db)
+    return list(users)
 
 
 @router.get("/me")
@@ -67,24 +79,23 @@ async def list_groups(groups: GroupList = Depends(retrieve_groups)) -> GroupList
     return groups
 
 
-# FIXME: This is for showing how mutations work in the frontend, it should be removed
-@router.post("/me")
+@router.post("/{user_id}/admin", dependencies=[Depends(admin_user_validation)])
 async def toggle_admin(
-    user: User = Depends(get_authenticated_user),
+    user: User = Depends(retrieve_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     """
-    Toggle the admin status of the current user
+    Toggle the admin status of a user
     """
     await set_admin(db, user.uid, not user.is_admin)
 
 
-@router.post("/{user_id}/teacher")
-async def set_teacher(
-    user: UserSimple = Depends(retrieve_user),
+@router.post("/{user_id}/teacher", dependencies=[Depends(admin_user_validation)])
+async def toggle_teacher(
+    user: User = Depends(retrieve_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     """
-    Set the teacher status of a user
+    Toggle the teacher status of a user
     """
-    await set_admin(db, user.uid, True)
+    await set_teacher(db, user.uid, not user.is_teacher)
