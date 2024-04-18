@@ -4,8 +4,8 @@ export default {
             "not-found": "Page not found",
         },
         loading: {
-            "loading_page": "Loading..."
-        }
+            loading_page: "Loading...",
+        },
     },
     login: {
         about: "The official submission application of Ghent University",
@@ -31,7 +31,7 @@ export default {
     project: {
         deadline: "Deadline",
         details_button: "Project details",
-        group_button:  "Join Group",
+        group_button: "Join Group",
         needhelp_button: "Need help",
         group: "Group {number}",
         assignment: "Assignment:",

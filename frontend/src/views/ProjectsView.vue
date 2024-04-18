@@ -13,16 +13,10 @@
 </template>
 
 <script setup lang="ts">
-
-
-import {useProjectsQuery} from "@/queries/Project";
+import { useProjectsQuery } from "@/queries/Project";
 import ProjectMiniCard from "@/components/project/ProjectMiniCard.vue";
 
-
-const { data: projects, isLoading, isError} = useProjectsQuery();
-
-
-
+const { data: projects, isLoading, isError } = useProjectsQuery();
 </script>
 
 <style scoped>

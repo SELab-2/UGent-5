@@ -29,9 +29,9 @@
 import ProjectInfo from "@/components/project/ProjectInfo.vue";
 
 import { useProjectQuery } from "@/queries/Project";
-import {computed, toRefs} from "vue";
+import { computed, toRefs } from "vue";
 import NeedHelpButton from "@/components/buttons/NeedHelpButton.vue";
-import {useUserGroupQuery} from "@/queries/Group";
+import { useUserGroupQuery } from "@/queries/Group";
 
 const props = defineProps<{
     projectId: number;
@@ -39,22 +39,23 @@ const props = defineProps<{
 
 const { projectId } = toRefs(props);
 
-const { data: project, isLoading: isProjectLoading, isError: isProjectError } = useProjectQuery(projectId);
+const {
+    data: project,
+    isLoading: isProjectLoading,
+    isError: isProjectError,
+} = useProjectQuery(projectId);
 
-const { data : group } = useUserGroupQuery(projectId);
+const { data: group } = useUserGroupQuery(projectId);
 
-const isDataLoading = computed(() => isProjectLoading.value || (group.value === undefined));
-
-
+const isDataLoading = computed(() => isProjectLoading.value || group.value === undefined);
 </script>
 
 <style scoped>
-
 .button-container {
     margin-top: 20px;
 }
 
-.group-button{
+.group-button {
     margin-bottom: 5px;
     min-width: auto;
 }

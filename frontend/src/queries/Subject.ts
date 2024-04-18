@@ -38,7 +38,6 @@ function SUBJECTS_QUERY_KEY(): (string | number)[] {
     return ["subjects"];
 }
 
-
 export function useSubjectQuery(
     subjectId: Ref<number | undefined>
 ): UseQueryReturnType<Subject, Error> {
@@ -58,7 +57,6 @@ export function useSubjectInstructorsQuery(
         enabled: () => subjectId.value !== undefined,
     });
 }
-
 
 export function useSubjectStudentsQuery(
     subjectId: Ref<number | undefined>

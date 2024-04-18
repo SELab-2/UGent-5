@@ -19,8 +19,8 @@ import type Project from "@/models/Project";
 import type Group from "@/models/Group";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import ProjectInfoCard from "@/components/project/ProjectInfoCard.vue";
-import SubmitInfo from "@/components/project/submit/SubmitInfo.vue"
-import {toRefs} from "vue";
+import SubmitInfo from "@/components/project/submit/SubmitInfo.vue";
+import { toRefs } from "vue";
 
 const props = defineProps<{
     project: Project;
@@ -28,12 +28,9 @@ const props = defineProps<{
 }>();
 
 const { project, group } = toRefs(props);
-
-
 </script>
 
 <style scoped>
-
 .scrollable-container {
     max-height: 100%;
     overflow-y: auto;
@@ -42,7 +39,7 @@ const { project, group } = toRefs(props);
 .download-section {
     margin-top: 20px; /* Adjust the margin-top value as needed */
     display: flex;
-    width: 100%
+    width: 100%;
 }
 
 .half-width {

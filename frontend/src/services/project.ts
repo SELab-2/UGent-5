@@ -6,8 +6,10 @@ export async function getProject(projectId: number): Promise<Project> {
     return authorized_fetch(`/api/projects/${projectId}`, { method: "GET" });
 }
 
-export async function getProjects() : Promise<Project[]> {
-    const result = await authorized_fetch<{ projects: Project[] }>( `/api/users/me/projects`,  { method: "GET"});
+export async function getProjects(): Promise<Project[]> {
+    const result = await authorized_fetch<{ projects: Project[] }>(`/api/users/me/projects`, {
+        method: "GET",
+    });
     return result.projects;
 }
 

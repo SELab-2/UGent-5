@@ -5,7 +5,7 @@ import {
     type UseQueryReturnType,
 } from "@tanstack/vue-query";
 import type Project from "@/models/Project";
-import {getProject, createSubmission, getSubmissions, getProjects} from "@/services/project";
+import { getProject, createSubmission, getSubmissions, getProjects } from "@/services/project";
 import { type Ref, computed } from "vue";
 import type Submission from "@/models/Submission";
 
@@ -34,7 +34,7 @@ export function useProjectQuery(
 export function useProjectsQuery(): UseQueryReturnType<Project[], Error> {
     return useQuery<Project[], Error>({
         queryKey: PROJECTS_QUERY_KEY(),
-        queryFn: () => getProjects()
+        queryFn: () => getProjects(),
     });
 }
 
@@ -53,6 +53,6 @@ export function useCreateSubmissionMutation(
 export function useSubmissionQuery(): UseQueryReturnType<Submission[], Error> {
     return useQuery<Submission[], Error>({
         queryKey: SUBMISSIONS_QUERY_KEY(),
-        queryFn: () => getSubmissions()
+        queryFn: () => getSubmissions(),
     });
 }

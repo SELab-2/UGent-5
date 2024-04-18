@@ -7,13 +7,9 @@
 </template>
 
 <script setup lang="ts">
-
 defineProps<{
     email: string;
 }>();
-
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

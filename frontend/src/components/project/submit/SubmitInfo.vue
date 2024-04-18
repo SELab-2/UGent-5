@@ -6,11 +6,11 @@
         <v-card-subtitle v-if="latestSubmission" class="subtitle">
             {{ $t("submit.latest_submission") }} {{ $d(latestSubmission.date, "long") }}
         </v-card-subtitle>
-        <v-card-subtitle v-else class="subtitle">
-            No submissions found.
-        </v-card-subtitle>
+        <v-card-subtitle v-else class="subtitle"> No submissions found. </v-card-subtitle>
         <div v-if="latestSubmission" class="subtitle">
-            <v-card-text>{{ $t("submit.status_submission", {status: latestSubmission.status}) }}</v-card-text>
+            <v-card-text>{{
+                $t("submit.status_submission", { status: latestSubmission.status })
+            }}</v-card-text>
         </div>
         <router-link :to="`/project/${project?.id}/submit`">
             <v-btn>
@@ -21,8 +21,8 @@
 </template>
 
 <script setup lang="ts">
-import {useSubmissionQuery} from "@/queries/Project";
-import {toRefs, computed} from "vue";
+import { useSubmissionQuery } from "@/queries/Project";
+import { toRefs, computed } from "vue";
 import type Project from "@/models/Project";
 import type Group from "@/models/Group";
 import type Submission from "@/models/Submission";
@@ -35,18 +35,20 @@ const props = defineProps<{
 const { group } = toRefs(props);
 const { project } = toRefs(props);
 
-const { data: submissions, isLoading, isError } = useSubmissionQuery();
+const { data: submissions } = useSubmissionQuery();
 
-const latestSubmission = computed(() => submissions.value?.filter((submission: Submission) => {
-    return submission.group_id === group.value.id && submission.project_id === project.value.id;
-})[0]);
-
+const latestSubmission = computed(
+    () =>
+        submissions.value?.filter((submission: Submission) => {
+            return (
+                submission.group_id === group.value.id && submission.project_id === project.value.id
+            );
+        })[0]
+);
 </script>
 
 <style scoped>
-
 .subtitle {
     margin-bottom: 10px; /* Adjust as needed */
 }
-
 </style>

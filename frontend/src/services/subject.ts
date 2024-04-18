@@ -3,7 +3,6 @@ import type Subject from "@/models/Subject";
 import type User from "@/models/User";
 import type Project from "@/models/Project";
 
-
 export async function getSubject(subjectId: number): Promise<Subject> {
     return authorized_fetch(`/api/subjects/${subjectId}`, { method: "GET" });
 }
