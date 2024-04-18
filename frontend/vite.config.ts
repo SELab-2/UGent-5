@@ -1,10 +1,10 @@
-import { fileURLToPath, URL } from 'node:url'
-import { resolve, dirname } from 'path'
+import { fileURLToPath, URL } from "node:url";
+import { resolve, dirname } from "path";
 
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
 import fs from "fs";
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
+import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
 
 const isTesting = process.env.NODE_ENV === 'test'
 
@@ -13,13 +13,13 @@ export default defineConfig({
         vue(),
         VueI18nPlugin({
             // runtimeOnly: false, // fixes possible problems with pluralization
-            include: resolve(dirname(fileURLToPath(import.meta.url)), './src/i18n/locales/**')
+            include: resolve(dirname(fileURLToPath(import.meta.url)), "./src/i18n/locales/**"),
         }),
     ],
     resolve: {
         alias: {
-            '@': fileURLToPath(new URL('./src', import.meta.url))
-        }
+            "@": fileURLToPath(new URL("./src", import.meta.url)),
+        },
     },
     server: {
         https: isTesting ? undefined : {
@@ -30,12 +30,12 @@ export default defineConfig({
     },
     test: {
         globals: true,
-        environment: 'jsdom',
-        setupFiles: 'vitest.setup.ts',
+        environment: "jsdom",
+        setupFiles: "vitest.setup.ts",
         server: {
             deps: {
-                inline: ['vuetify']
-            }
-        }
-    }
-})
+                inline: ["vuetify"],
+            },
+        },
+    },
+});

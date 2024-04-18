@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import CheckConstraint, DateTime, ForeignKey
+from sqlalchemy import CheckConstraint, DateTime, ForeignKey, Table, Column
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.database import Base
 from typing import List
@@ -12,6 +12,9 @@ class Project(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     deadline: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False)
+    publish_date: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=True, default=datetime.now()
+    )
     name: Mapped[str] = mapped_column(nullable=False)
     subject_id: Mapped[int] = mapped_column(
         ForeignKey("subject.id", ondelete="CASCADE"), nullable=False
@@ -29,6 +32,14 @@ class Project(Base):
     __table_args__ = (
         CheckConstraint("deadline >= CURRENT_DATE", name="deadline_check"),
     )
+
+
+InstructorProject = Table(
+    "instructor_project",
+    Base.metadata,
+    Column("uid", ForeignKey("website_user.uid",  ondelete="CASCADE")),
+    Column("project_id", ForeignKey("project.id", ondelete="CASCADE")),
+)
 
 
 class Requirement(Base):

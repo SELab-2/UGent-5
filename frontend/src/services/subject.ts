@@ -1,5 +1,6 @@
-import { authorized_fetch } from "@/services";
+import type User from "@/models/User";
 import type Subject from "@/models/Subject";
+import { authorized_fetch } from "@/services";
 import type User from "@/models/User";
 import type Project from "@/models/Project";
 

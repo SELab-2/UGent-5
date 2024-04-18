@@ -4,3 +4,9 @@ export default interface Group {
     score: number;
     team_name: string;
 }
+
+export interface GroupForm {
+    project_id: number;
+    score: number;
+    team_name: string;
+}
