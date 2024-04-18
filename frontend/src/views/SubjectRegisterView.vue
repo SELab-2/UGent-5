@@ -30,7 +30,7 @@ const { data: subject, error, isLoading, isError } = useSubjectUuidQuery(ref(pro
 
 const register = () => {
     refetch();
-    router.push({ name: "subject", params: { subjectId: subject.id } });
+    router.push({ name: "subject", params: { subjectId: subject.value?.id } });
 };
 
 const cancel = () => router.push({ name: "home" });
