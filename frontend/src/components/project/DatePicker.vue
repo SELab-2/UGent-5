@@ -44,29 +44,3 @@ function toggleDatePicker() {
     menuVisible.value = !menuVisible.value;
 }
 </script>
-
-<!--<style scoped>-->
-<!--.date-picker-container {-->
-<!--    position: relative;-->
-<!--}-->
-
-<!--.date-input {-->
-<!--    padding: 8px;-->
-<!--    border: 1px solid var(&#45;&#45;v-border-color, #ccc);-->
-<!--    border-radius: 4px;-->
-<!--    cursor: pointer;-->
-<!--    background-color: var(&#45;&#45;v-background-color, #fff);-->
-<!--}-->
-
-<!--/* Update hover and selected styles to use Vuetify's color system */-->
-<!--.date-picker-day:hover, .date-picker-day.selected {-->
-<!--    background-color: var(&#45;&#45;v-primary-base, #408000);-->
-<!--}-->
-
-<!--/* Ensure responsiveness and alignment with Vuetify's grid system */-->
-<!--.date-picker-grid {-->
-<!--    display: grid;-->
-<!--    grid-template-columns: repeat(7, 1fr);-->
-<!--    gap: var(&#45;&#45;v-grid-gutter, 5px);-->
-<!--}-->
-<!--</style>-->
