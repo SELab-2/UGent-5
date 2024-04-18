@@ -45,7 +45,11 @@ const {
     isError: isProjectError,
 } = useProjectQuery(projectId);
 
-const { data: group, isLoading: isGroupLoading, isError: isGroupError } = useUserGroupQuery(projectId);
+const {
+    data: group,
+    isLoading: isGroupLoading,
+    isError: isGroupError,
+} = useUserGroupQuery(projectId);
 
 const isDataLoading = computed(() => isProjectLoading.value || isGroupLoading.value);
 const isDataError = computed(() => isProjectError.value || isGroupError.value);

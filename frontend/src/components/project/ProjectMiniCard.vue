@@ -33,7 +33,9 @@ const props = defineProps<{
 
 const { project } = toRefs(props);
 
-const { data: subject, isLoading: isSubjectLoading } = useSubjectQuery(computed(() => project.value.subject_id));
+const { data: subject, isLoading: isSubjectLoading } = useSubjectQuery(
+    computed(() => project.value.subject_id)
+);
 </script>
 
 <style scoped></style>
