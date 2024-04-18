@@ -63,7 +63,11 @@ async def project_with_default_tests_id(client: AsyncClient, db: AsyncSession, s
     yield id
 
     # cleanup project files
-    shutil.rmtree(docker_utils.tests_path(response.json()["test_files_uuid"]))
+    await set_admin(db, "test", True)
+    response = await client.delete(
+        f"/api/projects/{id}/test_files"
+    )
+    assert response.status_code == 200
 
 
 @pytest_asyncio.fixture

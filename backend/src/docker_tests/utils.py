@@ -1,5 +1,6 @@
 import os
 import shutil
+from uuid import uuid4
 
 from fastapi import UploadFile
 from starlette.responses import FileResponse
@@ -27,7 +28,10 @@ def tests_path(uuid: str, *paths) -> str:
     return str(os.path.abspath(os.path.join(config.CONFIG.file_path, "projects", uuid, *paths)))
 
 
-def write_and_unpack_files(files: list[UploadFile], uuid: str):
+def write_and_unpack_files(files: list[UploadFile], uuid: str | None) -> str:
+    if uuid is None:
+        uuid = str(uuid4())
+
     files_path = tests_path(uuid)
     if os.path.exists(files_path):
         shutil.rmtree(files_path)  # remove possible present files
@@ -41,6 +45,8 @@ def write_and_unpack_files(files: list[UploadFile], uuid: str):
 
             if upload_file.content_type == "application/zip":
                 shutil.unpack_archive(path, files_path)
+
+    return uuid
 
 
 def remove_test_files(uuid: str):

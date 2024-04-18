@@ -21,7 +21,8 @@ from .service import (
     delete_project,
     update_project, update_test_files,
 )
-from ..docker_tests.utils import get_files_from_dir, tests_path
+from ..docker_tests.docker_tests import using_default_docker_image, build_docker_image
+from ..docker_tests.utils import get_files_from_dir, tests_path, write_and_unpack_files, remove_test_files
 
 router = APIRouter(
     prefix="/api/projects",
@@ -91,16 +92,26 @@ async def get_test_files(test_files_uuid: str = Depends(retrieve_test_files_uuid
     dependencies=[Depends(patch_permission_validation)],
 )
 async def put_test_files(
-    project_id: int,
     files: List[UploadFile],
+    project: Project = Depends(retrieve_project),
     db: AsyncSession = Depends(get_async_db)
 ):
-    return await update_test_files(db, project_id, files)
+    uuid = write_and_unpack_files(files, project.test_files_uuid)
+
+    if not using_default_docker_image(uuid):
+        # build custom docker image if dockerfile is present
+        build_docker_image(tests_path(uuid), uuid)
+
+    return await update_test_files(db, project.id, uuid)
 
 
 @router.delete("/{project_id}/test_files", dependencies=[Depends(delete_permission_validation)])
 async def delete_test_files(
-    project_id: int, db: AsyncSession = Depends(get_async_db)
+    project: Project = Depends(retrieve_project),
+    uuid: str = Depends(retrieve_test_files_uuid),
+    db: AsyncSession = Depends(get_async_db)
 ):
-    await service.delete_test_files(db, project_id)
+    remove_test_files(uuid)
+
+    await service.update_test_files(db, project.id, None)
     return {"message": "Test files deleted successfully"}

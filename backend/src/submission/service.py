@@ -3,7 +3,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from . import models, schemas
-from .exceptions import SubmissionNotFound
 from .models import Status
 
 
@@ -56,8 +55,6 @@ async def update_submission_status(
 ) -> models.Submission:
     result = await db.execute(select(models.Submission).filter_by(id=submission_id))
     submission = result.scalars().first()
-    if not submission:
-        raise SubmissionNotFound()
 
     submission.status = status
     if stdout is not None:
