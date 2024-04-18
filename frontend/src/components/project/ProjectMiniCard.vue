@@ -1,6 +1,6 @@
 <template>
     <v-card>
-        <v-skeleton-loader :loading="isProjectLoading || isSubjectLoading" type="article">
+        <v-skeleton-loader :loading="isSubjectLoading" type="article">
             <v-card-item>
                 <v-card-title>
                     {{ project?.name }}
@@ -15,7 +15,7 @@
             </v-card-text>
         </v-skeleton-loader>
         <v-card-actions>
-            <v-btn :to="`/project/${projectId}`">
+            <v-btn :to="`/project/${project.id}`">
                 {{ $t("project.details_button") }}
             </v-btn>
         </v-card-actions>
@@ -23,19 +23,18 @@
 </template>
 
 <script setup lang="ts">
-import { useProjectQuery } from "@/queries/Project";
 import { useSubjectQuery } from "@/queries/Subject";
 import { computed, toRefs } from "vue";
+import type Project from "@/models/Project";
 
 const props = defineProps<{
-    projectId: number;
+    project: Project;
 }>();
 
-const { projectId } = toRefs(props);
+const { project } = toRefs(props);
 
-const { data: project, isLoading: isProjectLoading } = useProjectQuery(projectId);
 const { data: subject, isLoading: isSubjectLoading } = useSubjectQuery(
-    computed(() => project.value?.subject_id)
+    computed(() => project.value.subject_id)
 );
 </script>
 

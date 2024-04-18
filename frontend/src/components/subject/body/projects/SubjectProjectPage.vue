@@ -9,7 +9,7 @@
                         <span>{{ project.name }}</span>
                     </v-col>
                     <v-col class="text-right">
-                        <router-link :to="`/projects/${project.id}`" class="text-right chevron">
+                        <router-link :to="`/project/${project.id}`" class="text-right chevron">
                             <v-icon size="small">mdi-arrow-right</v-icon>
                         </router-link>
                     </v-col>

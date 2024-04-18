@@ -9,6 +9,7 @@ import {
     registerToSubject,
 } from "@/services/subject";
 import { type Ref, computed } from "vue";
+import type Subject from "@/models/Subject";
 import type User from "@/models/User";
 import type Subject from "@/models/Subject";
 import type Project from "@/models/Project";

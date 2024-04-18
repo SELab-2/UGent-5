@@ -3,6 +3,9 @@ export default {
         error: {
             "not-found": "Page not found",
         },
+        loading: {
+            loading_page: "Loading...",
+        },
     },
     login: {
         about: "The official submission application of Ghent University",
@@ -20,10 +23,19 @@ export default {
         add_files_button: "Add files",
         no_files_added: "No files have been added yet.",
         no_files_warning: "Please add at least one file to submit a solution.",
+        submissions: "Submission zone",
+        latest_submission: "Latest submission:",
+        new_submission: "Submit new",
+        status_submission: "Submission was: {status}",
     },
     project: {
         deadline: "Deadline",
         details_button: "Project details",
+        group_button: "Join Group",
+        needhelp_button: "Need help",
+        group: "Group {number}",
+        assignment: "Assignment:",
+        myProject: "My projects:",
     },
     navigation: {
         home: "Home",

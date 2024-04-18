@@ -47,6 +47,12 @@ const router = createRouter({
             component: () => import("../views/ProjectsView.vue"),
         },
         {
+            path: "/project/:projectId(\\d+)",
+            name: "project",
+            component: () => import("../views/ProjectView.vue"),
+            props: (route) => ({ projectId: Number(route.params.projectId) }),
+        },
+        {
             path: "/project/:projectId(\\d+)/submit",
             name: "onSubmit",
             component: () => import("../views/SubmitView.vue"),

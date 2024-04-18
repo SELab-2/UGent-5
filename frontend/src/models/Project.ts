@@ -15,6 +15,7 @@ export interface ProjectForm {
     deadline: Date;
     description: string;
     subject_id: number;
+    test_files_uuid: string;
     is_visible: boolean;
     capacity: number;
     requirements: [];

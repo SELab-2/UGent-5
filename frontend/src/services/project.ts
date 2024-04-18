@@ -26,6 +26,13 @@ export async function getProject(projectId: number): Promise<Project> {
     return authorized_fetch(`/api/projects/${projectId}`, { method: "GET" });
 }
 
+export async function getProjects(): Promise<Project[]> {
+    const result = await authorized_fetch<{ projects: Project[] }>(`/api/users/me/projects`, {
+        method: "GET",
+    });
+    return result.projects;
+}
+
 // Function to create a new submission for a specific group
 export async function createSubmission(groupId: number, formData: FormData): Promise<Submission> {
     return authorized_fetch(
@@ -36,4 +43,8 @@ export async function createSubmission(groupId: number, formData: FormData): Pro
         },
         true
     );
+}
+
+export async function getSubmissions(): Promise<Submission[]> {
+    return authorized_fetch(`/api/submissions/`, { method: "GET" });
 }
