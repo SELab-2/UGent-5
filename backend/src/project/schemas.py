@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Optional, Sequence, List
+from html import escape
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -26,6 +27,10 @@ class ProjectBase(BaseModel):
         if value < datetime.now(value.tzinfo):
             raise ValueError("The deadline cannot be in the past")
         return value
+
+    @field_validator("description")
+    def validate_description(cls, value: str) -> str:
+        return escape(value, quote=False)
 
 
 class ProjectCreate(ProjectBase):
@@ -56,3 +61,7 @@ class ProjectUpdate(BaseModel):
         if value is not None and value < datetime.now(value.tzinfo):
             raise ValueError("The deadline cannot be in the past")
         return value
+
+    @field_validator("description")
+    def validate_description(cls, value: str) -> str:
+        return escape(value, quote=False)
