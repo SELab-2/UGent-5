@@ -36,12 +36,7 @@ class Project(ProjectBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
-    name: str
-    deadline: datetime
-    description: str
-    subject_id: int
-    requirements: list[Requirement] = []
-    capacity: int
+    test_files_uuid: str | None
 
 
 class ProjectList(BaseModel):
