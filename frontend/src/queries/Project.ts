@@ -8,7 +8,13 @@ import {
 import type Project from "@/models/Project";
 import type { ProjectForm } from "@/models/Project";
 import type Submission from "@/models/Submission";
-import { getProject, createSubmission, getSubmissions, createProject, getProjects } from "@/services/project";
+import {
+    getProject,
+    createSubmission,
+    getSubmissions,
+    createProject,
+    getProjects,
+} from "@/services/project";
 import { type Ref, computed } from "vue";
 
 // Key generator for project queries
