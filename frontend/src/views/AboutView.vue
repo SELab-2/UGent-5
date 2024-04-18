@@ -4,7 +4,8 @@
         <p>
             Dit project is gemaakt in het kader van het vak
             <a href="https://studiekiezer.ugent.be/2023/studiefiche/nl/C003784">
-                Software Engineering Lab 2 </a>. De broncode is publiek beschikbaar op
+                Software Engineering Lab 2 </a
+            >. De broncode is publiek beschikbaar op
             <a href="https://github.com/SELab-2/UGent-5"> GitHub </a>.
         </p>
         <h2>Onze Developers:</h2>
@@ -63,5 +64,5 @@ const developers: Developer[] = [
         name: "Michaël Boelaert",
         githubUrl: "https://github.com/miboelae",
     },
-]
+];
 </script>
