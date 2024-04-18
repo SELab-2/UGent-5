@@ -1,6 +1,7 @@
 <template>
     <v-card class="checkbox-list">
         <v-card-title>{{ title }}</v-card-title>
+        <v-card-text class="description">{{ description }}</v-card-text>
         <v-list>
             <v-list-item v-for="item in items" :key="item.id">
                 <v-checkbox
@@ -11,7 +12,6 @@
                 ></v-checkbox>
             </v-list-item>
         </v-list>
-        <v-card-text class="description">{{ description }}</v-card-text>
     </v-card>
 </template>
 
