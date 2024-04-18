@@ -6,7 +6,7 @@
         <ProjectMiniCard
             v-for="project in projects"
             :key="project.id"
-            :projectId="project.id"
+            :project="project"
             class="project-card"
         />
     </div>

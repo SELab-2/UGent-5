@@ -1,13 +1,13 @@
 <template>
     <BackgroundContainer>
         <v-col class="scrollable-container">
-            <ProjectInfoCard :project="project!"></ProjectInfoCard>
+            <ProjectInfoCard :project="project"></ProjectInfoCard>
             <div class="download-section">
                 <div class="half-width">
                     <h2>Downloadable files</h2>
                 </div>
                 <div class="half-width">
-                    <SubmitInfo :project="project" :group="group" />
+                    <SubmitInfo v-if="group" :project="project" :group="group" />
                 </div>
             </div>
         </v-col>
@@ -24,7 +24,7 @@ import { toRefs } from "vue";
 
 const props = defineProps<{
     project: Project;
-    group: Group;
+    group: Group | null;
 }>();
 
 const { project, group } = toRefs(props);

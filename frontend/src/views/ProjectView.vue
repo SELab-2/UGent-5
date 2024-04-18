@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <h1 v-if="isDataLoading" class="welcome">{{ $t("default.loading.loading_page") }}</h1>
-        <h1 v-else-if="isProjectError" class="welcome">{{ $t("default.error") }}</h1>
+        <h1 v-else-if="isDataError" class="welcome">{{ $t("default.error") }}</h1>
         <div v-else class="projectInfo">
             <v-row>
                 <v-col cols="10">
@@ -45,9 +45,10 @@ const {
     isError: isProjectError,
 } = useProjectQuery(projectId);
 
-const { data: group } = useUserGroupQuery(projectId);
+const { data: group, isLoading: isGroupLoading, isError: isGroupError } = useUserGroupQuery(projectId);
 
-const isDataLoading = computed(() => isProjectLoading.value || group.value === undefined);
+const isDataLoading = computed(() => isProjectLoading.value || isGroupLoading.value);
+const isDataError = computed(() => isProjectError.value || isGroupError.value);
 </script>
 
 <style scoped>

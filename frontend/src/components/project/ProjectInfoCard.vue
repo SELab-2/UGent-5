@@ -1,10 +1,10 @@
 <template>
     <v-card color="white" class="infostyling">
-        <v-card-title>{{ project?.name }}</v-card-title>
+        <v-card-title>{{ project.name }}</v-card-title>
         <v-container>
             <v-row>
                 <v-chip label color="primary" class="ma-2">
-                    {{ $d(project?.deadline, "long") }}
+                    {{ $d(project.deadline, "long") }}
                 </v-chip>
                 <v-chip label color="primary" class="ma-2">
                     {{ subject?.name }}
@@ -25,7 +25,7 @@
                 {{ $t("project.assignment") }}
             </v-card-title>
             <v-card-text>
-                {{ project?.description }}
+                {{ project.description }}
             </v-card-text>
         </v-card-item>
     </v-card>
@@ -43,9 +43,9 @@ const props = defineProps<{
 
 const { project } = toRefs(props);
 
-const { data: subject } = useSubjectQuery(computed(() => project.value?.subject_id));
+const { data: subject } = useSubjectQuery(computed(() => project.value.subject_id));
 
-const { data: instructors } = useSubjectInstructorsQuery(computed(() => project.value?.subject_id));
+const { data: instructors } = useSubjectInstructorsQuery(computed(() => project.value.subject_id));
 </script>
 
 <style scoped></style>
