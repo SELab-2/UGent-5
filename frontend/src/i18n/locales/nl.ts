@@ -32,12 +32,9 @@ export default {
         group: "Groep {number}",
         assignment: "Opdracht:",
     },
-    subject: {
-        register: "Registreer bij vak:",
-    },
     navigation: {
         home: "Hoofdscherm",
-        courses: "Vakken",
+        subjects: "Vakken",
         projects: "Projecten",
         settings: "Instellingen",
         help: "Help",
@@ -47,7 +44,29 @@ export default {
     },
     homescreen: {
         deadlines: "Project deadlines",
-        courses: "Mijn vakken",
+        subjects: "Mijn vakken",
         announcements: "Meldingen",
+    },
+
+    subject: {
+        register: "Registreer bij vak:",
+        academy_year: "Academiejaar",
+        projects: "Projecten",
+        announcements: "Meldingen",
+        groups: "Groepen",
+        projectsPage: {
+            all: "Alle",
+            active: "Actief",
+            completed: "Voltooid",
+        },
+        project: {
+            assignment: "Opdracht",
+            group: "Groep",
+            submissions: "Indieningen",
+        },
+    },
+
+    subjects: {
+        title: "Mijn vakken",
     },
 };

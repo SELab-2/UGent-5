@@ -6,3 +6,9 @@ export default interface Project {
     subject_id: number;
     test_files_uuid: string;
 }
+
+export enum FilterOptions {
+    All = "All",
+    Completed = "Completed",
+    Active = "Active",
+}
