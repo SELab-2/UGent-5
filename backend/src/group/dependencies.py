@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Sequence, Optional
 
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -65,7 +65,7 @@ async def create_group_validation(
 
 async def join_group(
     group_id: int,
-    uid: str = None,
+    uid: Optional[str] = None,
     db: AsyncSession = Depends(get_async_db),
     user: User = Depends(get_authenticated_user)
 ) -> Group:
