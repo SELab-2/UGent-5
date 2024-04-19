@@ -8,7 +8,9 @@
         <v-container v-else class="card-container">
             <v-row>
                 <v-col>
-                    <ProjectMiniCard :project="project!" />
+                    <v-skeleton-loader :loading="isLoading" type="article">
+                        <ProjectMiniCard :project="project!" />
+                    </v-skeleton-loader>
                 </v-col>
                 <v-spacer />
                 <v-spacer />
