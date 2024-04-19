@@ -10,8 +10,8 @@ export async function getUsers(): Promise<User[]> {
     return authorized_fetch("/api/users", { method: "GET" });
 }
 
-export async function toggleAdmin() {
-    return authorized_fetch<void>("/api/users/me", { method: "POST" });
+export async function toggleAdmin(uid: string): Promise<User> {
+    return authorized_fetch<User>(`/api/users/${uid}/admin`, { method: "POST" });
 }
 
 // Fetches all subjects for logged in user

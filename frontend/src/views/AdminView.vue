@@ -12,11 +12,11 @@
             </v-card-title>
             <v-data-table-virtual
                 :headers="headers"
-                :items="data"
+                :items="users"
                 :search="search"
                 v-model:sortBy="sortBy"
                 item-value="uid"
-                :loading="isLoading"
+                :loading="isUserLoading || isUsersLoading"
                 density="compact"
                 class="table"
             >
@@ -25,14 +25,16 @@
                 </template>
                 <template v-slot:[`item.is_teacher`]="{ item }">
                     <v-checkbox-btn
-                        v-model="item.is_teacher"
+                        :model-value="item.is_teacher"
                         :disabled="item.uid === currentUser?.uid"
+                        @update:model-value="onToggleTeacher"
                     ></v-checkbox-btn>
                 </template>
                 <template v-slot:[`item.is_admin`]="{ item }">
                     <v-checkbox-btn
-                        v-model="item.is_admin"
+                        :model-value="item.is_admin"
                         :disabled="item.uid === currentUser?.uid"
+                        @update:model-value="() => onToggleAdmin(item)"
                     ></v-checkbox-btn>
                 </template>
             </v-data-table-virtual>
@@ -42,15 +44,23 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { useUserQuery, useUsersQuery } from "@/queries/User";
+import { useUserQuery, useUsersQuery, useToggleAdminMutation } from "@/queries/User";
+import type User from "@/models/User";
 
 const { t } = useI18n();
 
-const { data: currentUser, isLoading } = useUserQuery(null);
-const {data} = useUsersQuery();
+const { data: currentUser, isLoading: isUserLoading } = useUserQuery(null);
+const { data: users, isLoading: isUsersLoading } = useUsersQuery();
+const { mutateAsync: toggleAdmin } = useToggleAdminMutation();
 
 const search = ref("");
-const sortBy = ref([{ key: "name", order: "asc" }]);
+const sortBy = ref([{ key: "given_name", order: "asc" }]);
+
+async function onToggleAdmin(user: User) {
+    await toggleAdmin(user.uid);
+}
+
+async function onToggleTeacher() {}
 
 const headers = ref([
     {
@@ -86,8 +96,6 @@ const headers = ref([
         filter: () => true, // disable filter
     },
 ]);
-
-
 </script>
 <style scoped>
 .adminpanel {

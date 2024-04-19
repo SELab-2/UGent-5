@@ -33,23 +33,27 @@ export function useUsersQuery(): UseQueryReturnType<User[], Error> {
     });
 }
 
-// TODO: Now only toggles current user
-export function useToggleAdminMutation(): UseMutationReturnType<void, Error, User, void> {
+// TODO: Use USER_QUERY_KEY(uid) instead of USERS_QUERY_KEY() for invalidation
+export function useToggleAdminMutation(): UseMutationReturnType<User, Error, string, { previousUsers: User[] }> {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: toggleAdmin,
-        onMutate: async (user: User) => {
-            await queryClient.cancelQueries({ queryKey: USER_QUERY_KEY(null) });
-            queryClient.setQueryData<User>(USER_QUERY_KEY(null), () => {
-                return { ...user, is_admin: !user.is_admin };
+        mutationFn: async (uid) => await toggleAdmin(uid),
+        onMutate: async (uid: string) => {
+            const users = queryClient.getQueryData<User[]>(USERS_QUERY_KEY());
+            await queryClient.cancelQueries({ queryKey: USERS_QUERY_KEY() });
+            queryClient.setQueryData<User[]>(USERS_QUERY_KEY(), () => {
+                return users?.map((user: User) => {
+                    return { ...user, is_admin: user.uid === uid ? !user.is_admin : user.is_admin };
+                });
             });
+            return { previousUsers: users! };
         },
-        onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: USER_QUERY_KEY(null) });
+        onSettled: (_, __, uid, ctx) => {
+            queryClient.invalidateQueries({ queryKey: USERS_QUERY_KEY() });
         },
-        onError: (_, user) => {
+        onError: (_, uid, ctx) => {
             alert("Could not update user");
-            queryClient.setQueryData<User>(USER_QUERY_KEY(null), () => user!);
+            queryClient.setQueryData<User[]>(USERS_QUERY_KEY(), () => ctx!.previousUsers!);
         },
     });
 }
