@@ -52,6 +52,16 @@ export default {
         subjects: "My subjects",
         announcements: "Announcements",
     },
+    admin: {
+        users: "Users",
+        userTable: {
+            name: "Name",
+            uid: "UGent ID",
+            email: "Email",
+            isTeacher: "Is Teacher",
+            isAdmin: "Is Admin",
+        },
+    },
     subject: {
         register: "Register to subject:",
         academy_year: "Academic year",

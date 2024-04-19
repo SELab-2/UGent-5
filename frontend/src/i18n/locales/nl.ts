@@ -52,7 +52,16 @@ export default {
         subjects: "Mijn vakken",
         announcements: "Meldingen",
     },
-
+    admin: {
+        users: "Gebruikers",
+        userTable: {
+            name: "Naam",
+            uid: "UGent ID",
+            email: "Email",
+            isTeacher: "Is Lesgever",
+            isAdmin: "Is Beheerder",
+        },
+    },
     subject: {
         register: "Registreer bij vak:",
         academy_year: "Academiejaar",
