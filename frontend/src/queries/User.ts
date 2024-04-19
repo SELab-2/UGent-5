@@ -6,7 +6,7 @@ import {
     type UseMutationReturnType,
 } from "@tanstack/vue-query";
 import type User from "@/models/User";
-import { getMySubjects, getUser, toggleAdmin } from "@/services/user";
+import { getMySubjects, getUser, getUsers, toggleAdmin } from "@/services/user";
 import { type Ref, computed } from "vue";
 import type { UserSubjectList } from "@/models/Subject";
 
@@ -14,11 +14,22 @@ function USER_QUERY_KEY(uid: string | null): string[] {
     return uid ? ["user", uid] : ["user"];
 }
 
+function USERS_QUERY_KEY(): string[] {
+    return ["users"];
+}
+
 export function useUserQuery(uid: Ref<string | undefined> | null): UseQueryReturnType<User, Error> {
     return useQuery<User, Error>({
         queryKey: computed(() => USER_QUERY_KEY(uid?.value!)),
         queryFn: () => getUser(uid?.value!),
         enabled: uid === null || uid?.value !== undefined,
+    });
+}
+
+export function useUsersQuery(): UseQueryReturnType<User[], Error> {
+    return useQuery<User[], Error>({
+        queryKey: USERS_QUERY_KEY(),
+        queryFn: () => getUsers(),
     });
 }
 
