@@ -3,10 +3,12 @@
         <v-card-item>
             <v-card-title>{{ $t("submit.submit_title") }}</v-card-title>
         </v-card-item>
-        <v-container class="card-container">
+        <h1 v-if="isLoading">Loading...</h1>
+        <h1 v-else-if="isError">Error</h1>
+        <v-container v-else class="card-container">
             <v-row>
                 <v-col>
-                    <ProjectMiniCard :projectId="projectId" />
+                    <ProjectMiniCard :project="project!" />
                 </v-col>
                 <v-spacer />
                 <v-spacer />
@@ -30,10 +32,17 @@
 <script setup lang="ts">
 import ProjectMiniCard from "@/components/project/ProjectMiniCard.vue";
 import SubmitForm from "@/components/project/submit/SubmitForm.vue";
+import { useProjectQuery } from "@/queries/Project";
+import { toRefs } from "vue";
 
-defineProps<{
+const props = defineProps<{
     projectId: number;
 }>();
+
+const { projectId } = toRefs(props);
+
+const { data: project, isLoading, isError } = useProjectQuery(projectId);
+
 </script>
 
 <style scoped>
