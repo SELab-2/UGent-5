@@ -59,6 +59,13 @@ const { data: users, isLoading: isUsersLoading } = useUsersQuery();
 const { mutateAsync: toggleAdmin } = useToggleAdminMutation();
 const { mutateAsync: toggleTeacher } = useToggleTeacherMutation();
 
+/**
+ * Sorts boolean values in descending order.
+ */
+function sortBool(a: boolean, b: boolean): number {
+    return a === b ? 0 : a ? -1 : 1;
+}
+
 const search = ref("");
 const sortBy = ref([{ key: "given_name", order: "asc" }]);
 
@@ -95,6 +102,7 @@ const headers = ref([
         sortable: true,
         filterable: false,
         filter: () => true, // disable filter
+        sort: sortBool,
     },
     {
         title: computed(() => t("admin.userTable.isAdmin")),
@@ -102,6 +110,7 @@ const headers = ref([
         sortable: true,
         filterable: false,
         filter: () => true, // disable filter
+        sort: sortBool,
     },
 ]);
 </script>
