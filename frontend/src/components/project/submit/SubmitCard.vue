@@ -3,8 +3,7 @@
         <v-card-item>
             <v-card-title>{{ $t("submit.submit_title") }}</v-card-title>
         </v-card-item>
-        <h1 v-if="isLoading">Loading...</h1>
-        <h1 v-else-if="isError">Error</h1>
+        <h1 v-if="isError">Error</h1>
         <v-container v-else class="card-container">
             <v-row>
                 <v-col>
