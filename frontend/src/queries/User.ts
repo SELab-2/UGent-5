@@ -6,7 +6,7 @@ import {
     type UseMutationReturnType,
 } from "@tanstack/vue-query";
 import type User from "@/models/User";
-import { getMySubjects, getUser, getUsers, toggleAdmin } from "@/services/user";
+import { getMySubjects, getUser, getUsers, toggleAdmin, toggleTeacher } from "@/services/user";
 import { type Ref, computed } from "vue";
 import type { UserSubjectList } from "@/models/Subject";
 
@@ -34,16 +34,22 @@ export function useUsersQuery(): UseQueryReturnType<User[], Error> {
 }
 
 // TODO: Use USER_QUERY_KEY(uid) instead of USERS_QUERY_KEY() for invalidation
-export function useToggleAdminMutation(): UseMutationReturnType<User, Error, string, { previousUsers: User[] }> {
+function useToggleMutation(
+    toggleFn: (uid: string) => Promise<User>,
+    getField: (_: User) => boolean,
+    setField: (_: User, value: boolean) => void
+): UseMutationReturnType<User, Error, string, { previousUsers: User[] }> {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async (uid) => await toggleAdmin(uid),
+        mutationFn: async (uid) => await toggleFn(uid),
         onMutate: async (uid: string) => {
             const users = queryClient.getQueryData<User[]>(USERS_QUERY_KEY());
             await queryClient.cancelQueries({ queryKey: USERS_QUERY_KEY() });
             queryClient.setQueryData<User[]>(USERS_QUERY_KEY(), () => {
                 return users?.map((user: User) => {
-                    return { ...user, is_admin: user.uid === uid ? !user.is_admin : user.is_admin };
+                    const mappedUser = { ...user };
+                    setField(mappedUser, user.uid === uid ? !getField(user) : getField(user));
+                    return mappedUser;
                 });
             });
             return { previousUsers: users! };
@@ -52,10 +58,36 @@ export function useToggleAdminMutation(): UseMutationReturnType<User, Error, str
             queryClient.invalidateQueries({ queryKey: USERS_QUERY_KEY() });
         },
         onError: (_, uid, ctx) => {
-            alert("Could not update user");
             queryClient.setQueryData<User[]>(USERS_QUERY_KEY(), () => ctx!.previousUsers!);
+            alert("Could not update user");
         },
     });
+}
+
+export function useToggleAdminMutation(): UseMutationReturnType<
+    User,
+    Error,
+    string,
+    { previousUsers: User[] }
+> {
+    return useToggleMutation(
+        toggleAdmin,
+        (user) => user.is_admin,
+        (user, value) => (user.is_admin = value)
+    );
+}
+
+export function useToggleTeacherMutation(): UseMutationReturnType<
+    User,
+    Error,
+    string,
+    { previousUsers: User[] }
+> {
+    return useToggleMutation(
+        toggleTeacher,
+        (user) => user.is_teacher,
+        (user, value) => (user.is_teacher = value)
+    );
 }
 
 // Hook for fetching subjects for a user

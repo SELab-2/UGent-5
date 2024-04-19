@@ -27,7 +27,7 @@
                     <v-checkbox-btn
                         :model-value="item.is_teacher"
                         :disabled="item.uid === currentUser?.uid"
-                        @update:model-value="onToggleTeacher"
+                        @update:model-value="() => onToggleTeacher(item)"
                     ></v-checkbox-btn>
                 </template>
                 <template v-slot:[`item.is_admin`]="{ item }">
@@ -44,7 +44,12 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { useUserQuery, useUsersQuery, useToggleAdminMutation } from "@/queries/User";
+import {
+    useUserQuery,
+    useUsersQuery,
+    useToggleAdminMutation,
+    useToggleTeacherMutation,
+} from "@/queries/User";
 import type User from "@/models/User";
 
 const { t } = useI18n();
@@ -52,6 +57,7 @@ const { t } = useI18n();
 const { data: currentUser, isLoading: isUserLoading } = useUserQuery(null);
 const { data: users, isLoading: isUsersLoading } = useUsersQuery();
 const { mutateAsync: toggleAdmin } = useToggleAdminMutation();
+const { mutateAsync: toggleTeacher } = useToggleTeacherMutation();
 
 const search = ref("");
 const sortBy = ref([{ key: "given_name", order: "asc" }]);
@@ -60,7 +66,9 @@ async function onToggleAdmin(user: User) {
     await toggleAdmin(user.uid);
 }
 
-async function onToggleTeacher() {}
+async function onToggleTeacher(user: User) {
+    await toggleTeacher(user.uid);
+}
 
 const headers = ref([
     {
