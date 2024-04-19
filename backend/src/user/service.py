@@ -12,6 +12,11 @@ async def get_by_id(db: AsyncSession, user_id: str) -> User:
     return await db.get(User, user_id)
 
 
+async def get_all_users(db: AsyncSession) -> Sequence[User]:
+    result = await db.execute(select(User))
+    return result.scalars().all()
+
+
 async def create_user(db: AsyncSession, user: UserCreate) -> User:
     db_user = User(**user.model_dump())
     db.add(db_user)

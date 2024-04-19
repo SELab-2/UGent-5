@@ -21,13 +21,6 @@ class ProjectBase(BaseModel):
     capacity: int = Field(gt=0)
     requirements: List[Requirement] = []
 
-    # Check if deadline is not in the past
-    @field_validator("deadline")
-    def validate_deadline(cls, value: datetime) -> datetime:
-        if value < datetime.now(value.tzinfo):
-            raise ValueError("The deadline cannot be in the past")
-        return value
-
     @field_validator("description")
     def validate_description(cls, value: str) -> str:
         return escape(value, quote=False)
@@ -35,6 +28,13 @@ class ProjectBase(BaseModel):
 
 class ProjectCreate(ProjectBase):
     pass
+
+    # Check if deadline is not in the past
+    @field_validator("deadline")
+    def validate_deadline(cls, value: datetime) -> datetime:
+        if value < datetime.now(value.tzinfo):
+            raise ValueError("The deadline cannot be in the past")
+        return value
 
 
 class Project(ProjectBase):
