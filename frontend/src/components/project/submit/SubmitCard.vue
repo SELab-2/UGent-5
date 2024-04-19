@@ -42,7 +42,6 @@ const props = defineProps<{
 const { projectId } = toRefs(props);
 
 const { data: project, isLoading, isError } = useProjectQuery(projectId);
-
 </script>
 
 <style scoped>
