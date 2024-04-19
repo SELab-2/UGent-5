@@ -26,13 +26,13 @@
                 <template v-slot:[`item.isTeacher`]="{ item }">
                     <v-checkbox-btn
                         v-model="item.isTeacher"
-                        :readonly="item.uid === currentUser?.uid"
+                        :disabled="item.uid === currentUser?.uid"
                     ></v-checkbox-btn>
                 </template>
                 <template v-slot:[`item.isAdmin`]="{ item }">
                     <v-checkbox-btn
                         v-model="item.isAdmin"
-                        :readonly="item.uid === currentUser?.uid"
+                        :disabled="item.uid === currentUser?.uid"
                     ></v-checkbox-btn>
                 </template>
             </v-data-table-virtual>
@@ -40,37 +40,55 @@
     </div>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useI18n } from "vue-i18n";
 import { useUserQuery } from "@/queries/User";
+
+const { t } = useI18n();
 
 const { data: currentUser, isLoading } = useUserQuery(null);
 
 const search = ref("");
-const sortBy = ref([{key: "name", order: "asc"}]);
+const sortBy = ref([{ key: "name", order: "asc" }]);
 
-const headers = [
-    { title: "Name", key: "name", align: "start", sortable: true },
-    { title: "UGent ID", key: "uid", align: "start", sortable: false },
-    { title: "Email", key: "email", align: "start", sortable: false },
+const headers = ref([
     {
-        title: "Is Teacher",
+        title: computed(() => t("admin.userTable.name")),
+        key: "name",
+        align: "start",
+        sortable: true,
+    },
+    {
+        title: computed(() => t("admin.userTable.uid")),
+        key: "uid",
+        align: "start",
+        sortable: false,
+    },
+    {
+        title: computed(() => t("admin.userTable.email")),
+        key: "email",
+        align: "start",
+        sortable: false,
+    },
+    {
+        title: computed(() => t("admin.userTable.isTeacher")),
         key: "isTeacher",
         sortable: true,
         filterable: false,
         filter: () => true, // disable filter
     },
     {
-        title: "Is Admin",
+        title: computed(() => t("admin.userTable.isAdmin")),
         key: "isAdmin",
         sortable: true,
         filterable: false,
         filter: () => true, // disable filter
     },
-];
+]);
 
 const data = ref([
     { uid: "brreynie", name: "Bert", email: "bert@ugent.be", isTeacher: false, isAdmin: true },
-    { uid: "albe", name: "Albert", email: "albert@Ugent.be", isTeacher: false, isAdmin: false },
+    { uid: "albe", name: "Albert", email: "albert@Ugent.be", isTeacher: true, isAdmin: false },
     { uid: "cedr", name: "Cedric", email: "cedrik@ugent.be", isTeacher: false, isAdmin: true },
 ]);
 </script>
