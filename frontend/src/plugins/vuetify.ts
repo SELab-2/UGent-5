@@ -25,8 +25,10 @@ const vuetify = createVuetify({
             lightTheme: {
                 dark: false,
                 colors: {
-                    background: "#ffffff",
-                    surface: "#1d357e",
+                    background: "#ECEFF8",
+                    surface: "#ffffff",
+                    text: "#000000",
+                    primary: "#1d357e",
                     // TODO: Add rest of colors
                 },
             },
@@ -34,7 +36,9 @@ const vuetify = createVuetify({
                 dark: true,
                 colors: {
                     background: "#222222",
-                    surface: "#1d357e",
+                    surface: "#222222",
+                    text: "#ffffff",
+                    primary: "#1d357e"
                     // TODO: Add rest of colors
                 },
             },

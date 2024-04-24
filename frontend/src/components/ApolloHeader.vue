@@ -1,5 +1,5 @@
 <template>
-    <v-app-bar>
+    <v-app-bar class="bg-primary elevation-1">
         <v-app-bar-nav-icon variant="text" @click="emit('toggleNav')"></v-app-bar-nav-icon>
         <RouterLink to="/">
             <img alt="Logo" class="logo" src="@/assets/logo_white_transparant.png" />

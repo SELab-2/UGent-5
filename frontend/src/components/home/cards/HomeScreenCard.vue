@@ -1,5 +1,5 @@
 <template>
-    <v-card variant="text" :title="$t(title)" class="card">
+    <v-card :title="$t(title)" class="card" variant="flat">
         <slot></slot>
     </v-card>
 </template>
@@ -14,6 +14,6 @@ defineProps<{
 .card {
     background-color: white;
     color: black;
-    border-radius: 20px;
+    border-radius: 5px;
 }
 </style>

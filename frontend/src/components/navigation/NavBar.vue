@@ -1,5 +1,5 @@
 <template>
-    <v-navigation-drawer v-model="isOpen" app>
+    <v-navigation-drawer v-model="isOpen" app class="text-background">
         <div class="navbuttons">
             <NavButton
                 v-for="nav in navigations"

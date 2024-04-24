@@ -1,5 +1,5 @@
 <template>
-    <v-list class="items">
+    <v-list class="items bg-primary">
         <v-list-item data-test="logoutButton" v-if="loggedInValue.value">
             <LogoutButton />
         </v-list-item>

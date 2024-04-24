@@ -31,3 +31,9 @@ onBeforeMount(() => {
     locale.value = selectedLocale;
 });
 </script>
+
+<style>
+.v-main{
+    background-color: rgb(var(--v-theme-background));
+}
+</style>

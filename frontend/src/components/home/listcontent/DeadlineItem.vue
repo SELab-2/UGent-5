@@ -1,5 +1,8 @@
 <template>
-    <div :class="getBackgroundClass()" @click="navigateToProject">
+    <div class="projectbtn" @click="navigateToProject">
+        <div :class="getBackgroundClass()">
+
+        </div>
         <div class="leftcontent">
             <h3>{{ deadline.project.name }}</h3>
             <p class="p">{{ deadline.project.subject_id }}</p>
@@ -23,7 +26,7 @@ const { deadline } = toRefs(props);
 
 const getBackgroundClass = () => {
     return {
-        projectbtn: true,
+        block: true,
         accepted: deadline.value.status === "accepted",
         rejected: deadline.value.status === "rejected",
         none: deadline.value.status === "none",
@@ -47,39 +50,40 @@ const navigateToProject = () => {
 
 <style scoped>
 .projectbtn {
-    margin: 10px;
-    width: calc(100% - 20px);
-    background-color: white;
-    padding: 10px;
+    margin: 5px;
+    background-color: #F0F0F0;
     display: flex;
-    align-items: center;
     transition: background-color 0.3s;
-    border-radius: 10px;
+    align-items: center;
     cursor: pointer;
+    border-radius: 5px;
+    height: 65px;
 }
 
+.projectbtn:hover {
+    background-color: lightgray;
+}
+
+.block{
+    margin-left: 10px;
+    width: 5px;
+    height: 100%;
+}
+
+
 .none {
-    background-color: #eeeeee;
+    background-color: gray;
 }
 
 .accepted {
-    background-color: #e3f7e4;
+    background-color: green;
 }
 
 .rejected {
-    background-color: #ffcaca;
+    background-color: darkred;
 }
-
-.accepted:hover {
-    background-color: #c3f2c6;
-}
-
-.rejected:hover {
-    background-color: #ff9898;
-}
-
-.none:hover {
-    background-color: lightgray;
+.leftcontent{
+    margin-left: 20px;
 }
 
 .rightcontent {
