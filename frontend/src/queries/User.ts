@@ -1,10 +1,7 @@
-import {
-    useQuery,
-    useMutation,
-    useQueryClient,
-    type UseQueryReturnType,
-    type UseMutationReturnType,
-} from "@tanstack/vue-query";
+import { computed, toValue } from "vue";
+import type { MaybeRefOrGetter } from "vue";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/vue-query";
+import type { UseQueryReturnType, UseMutationReturnType } from "@tanstack/vue-query";
 import type User from "@/models/User";
 import {
     getCurrentUser,
@@ -14,7 +11,6 @@ import {
     toggleAdmin,
     toggleTeacher,
 } from "@/services/user";
-import { computed, type MaybeRefOrGetter, toValue } from "vue";
 import type { UserSubjectList } from "@/models/Subject";
 
 function CURRENT_USER_QUERY_KEY(): string[] {
@@ -43,7 +39,9 @@ export function useCurrentUserQuery(): UseQueryReturnType<User, Error> {
  * Query composable for fetching a user by uid
  * @param uid Ref to the uid of the user to fetch
  */
-export function useUserQuery(uid: MaybeRefOrGetter<string | undefined>): UseQueryReturnType<User, Error> {
+export function useUserQuery(
+    uid: MaybeRefOrGetter<string | undefined>
+): UseQueryReturnType<User, Error> {
     return useQuery<User, Error>({
         queryKey: computed(() => USER_QUERY_KEY(toValue(uid)!)),
         queryFn: () => getUser(toValue(uid)!),
@@ -51,6 +49,9 @@ export function useUserQuery(uid: MaybeRefOrGetter<string | undefined>): UseQuer
     });
 }
 
+/**
+ * Query composable for fetching all users
+ */
 export function useUsersQuery(): UseQueryReturnType<User[], Error> {
     return useQuery<User[], Error>({
         queryKey: USERS_QUERY_KEY(),
@@ -58,13 +59,13 @@ export function useUsersQuery(): UseQueryReturnType<User[], Error> {
     });
 }
 
-// TODO: Use USER_QUERY_KEY(uid) instead of USERS_QUERY_KEY() for invalidation
 /**
-  * Generic mutation composable for toggling a boolean field in a user object
-  * @param toggleFn Function that toggles the field in the backend
-  * @param getField Function that gets the field to toggle
-  * @param setField Function that sets the field to toggle
-  */
+ * Generic mutation composable for toggling a boolean field in a user object
+ * @param toggleFn Function that toggles the field in the backend
+ * @param getField Function that gets the field to toggle
+ * @param setField Function that sets the field to toggle
+ */
+// TODO: Use USER_QUERY_KEY(uid) instead of USERS_QUERY_KEY() for invalidation
 function useToggleMutation(
     toggleFn: (uid: string) => Promise<User>,
     getField: (_: User) => boolean,
@@ -95,6 +96,9 @@ function useToggleMutation(
     });
 }
 
+/**
+ * Mutation composable for toggling the admin status of a user
+ */
 export function useToggleAdminMutation(): UseMutationReturnType<
     User,
     Error,
@@ -108,6 +112,9 @@ export function useToggleAdminMutation(): UseMutationReturnType<
     );
 }
 
+/**
+ * Mutation composable for toggling the teacher status of a user
+ */
 export function useToggleTeacherMutation(): UseMutationReturnType<
     User,
     Error,
