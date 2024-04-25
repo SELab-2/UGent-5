@@ -29,6 +29,9 @@ function USERS_QUERY_KEY(): string[] {
     return ["users"];
 }
 
+/**
+ * Query composable for fetching the current user
+ */
 export function useCurrentUserQuery(): UseQueryReturnType<User, Error> {
     return useQuery<User, Error>({
         queryKey: CURRENT_USER_QUERY_KEY(),
@@ -37,6 +40,10 @@ export function useCurrentUserQuery(): UseQueryReturnType<User, Error> {
 }
 
 export function useUserQuery(uid: Ref<string | undefined>): UseQueryReturnType<User, Error> {
+/**
+ * Query composable for fetching a user by uid
+ * @param uid Ref to the uid of the user to fetch
+ */
     return useQuery<User, Error>({
         queryKey: computed(() => USER_QUERY_KEY(uid.value!)),
         queryFn: () => getUser(uid.value!),
@@ -52,6 +59,12 @@ export function useUsersQuery(): UseQueryReturnType<User[], Error> {
 }
 
 // TODO: Use USER_QUERY_KEY(uid) instead of USERS_QUERY_KEY() for invalidation
+/**
+  * Generic mutation composable for toggling a boolean field in a user object
+  * @param toggleFn Function that toggles the field in the backend
+  * @param getField Function that gets the field to toggle
+  * @param setField Function that sets the field to toggle
+  */
 function useToggleMutation(
     toggleFn: (uid: string) => Promise<User>,
     getField: (_: User) => boolean,
