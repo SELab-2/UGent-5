@@ -1,7 +1,6 @@
 import type User from "@/models/User";
 import type Subject from "@/models/Subject";
 import { authorized_fetch } from "@/services";
-import type User from "@/models/User";
 import type Project from "@/models/Project";
 
 export async function getSubject(subjectId: number): Promise<Subject> {
@@ -25,10 +24,13 @@ export async function getSubjectProjects(subjectId: number): Promise<Project[]> 
 }
 
 export async function getSubjects(): Promise<Subject[]> {
-    const result = await authorized_fetch<{ subjects: Subject[] }>("/api/subjects", {
+    const result = await authorized_fetch<
+        { as_instructor: Subject[]; as_student: Subject[] } | undefined
+    >("/api/users/me/subjects", {
         method: "GET",
     });
-    return result.subjects;
+    if (!result) return [];
+    return [...result.as_instructor, ...result.as_student];
 }
 
 export async function getSubjectByUuid(subjectUuid: string): Promise<Subject> {

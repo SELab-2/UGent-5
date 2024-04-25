@@ -1,4 +1,7 @@
-import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
+import { computed, toValue } from "vue";
+import type { Ref, MaybeRefOrGetter } from "vue";
+import { useQuery } from "@tanstack/vue-query";
+import type { UseQueryReturnType, QueryStatus } from "@tanstack/vue-query";
 import {
     getSubject,
     getSubjectInstructors,
@@ -8,8 +11,6 @@ import {
     getSubjectByUuid,
     registerToSubject,
 } from "@/services/subject";
-import { type Ref, computed } from "vue";
-import type Subject from "@/models/Subject";
 import type User from "@/models/User";
 import type Subject from "@/models/Subject";
 import type Project from "@/models/Project";
@@ -23,87 +24,155 @@ function createSubjectQueryKey(
     return ["subject", subjectId, detail].filter(Boolean);
 }
 
+function SUBJECT_QUERY_KEY(subjectId: number | string): (string | number)[] {
+    return ["subject", subjectId];
+}
+
+function SUBJECTS_QUERY_KEY(): (string | number)[] {
+    return ["subjects"];
+}
+
+function SUBJECT_INSTRUCTORS_QUERY_KEY(subjectId: number): (string | number)[] {
+    return ["subject", "instructors", subjectId];
+}
+
+function SUBJECT_STUDENTS_QUERY_KEY(subjectId: number): (string | number)[] {
+    return ["subject", "students", subjectId];
+}
+
+function SUBJECT_PROJECTS_QUERY_KEY(subjectId: number): (string | number)[] {
+    return ["subject", "projects", subjectId];
+}
+
 export function useSubjectQuery(
-    subjectId: Ref<number | undefined>
+    subjectId: MaybeRefOrGetter<number | undefined>
 ): UseQueryReturnType<Subject, Error> {
     return useQuery<Subject, Error>({
-        queryKey: computed(() => createSubjectQueryKey(subjectId.value!)),
-        queryFn: () => getSubject(subjectId.value!),
-        enabled: computed(() => subjectId.value !== undefined),
+        queryKey: computed(() => SUBJECT_QUERY_KEY(toValue(subjectId)!)),
+        queryFn: () => getSubject(toValue(subjectId)!),
+        enabled: () => !!toValue(subjectId),
     });
 }
 
-export function useSubjectInstructorsQuery(
-    subjectId: Ref<number | undefined>
-): UseQueryReturnType<User[], Error> {
-    return useQuery<User[], Error>({
-        queryKey: computed(() => createSubjectQueryKey(subjectId.value!, "instructors")),
-        queryFn: () => getSubjectInstructors(subjectId.value!),
-        enabled: () => subjectId.value !== undefined,
-    });
-}
-
-export function useSubjectStudentsQuery(
-    subjectId: Ref<number | undefined>
-): UseQueryReturnType<User[], Error> {
-    return useQuery<User[], Error>({
-        queryKey: computed(() => createSubjectQueryKey(subjectId.value!, "students")),
-        queryFn: () => getSubjectStudents(subjectId.value!),
-        enabled: () => subjectId.value !== undefined,
-    });
-}
-
-export function useSubjectProjectsQuery(
-    subjectId: Ref<number | undefined>
-): UseQueryReturnType<Project[], Error> {
-    return useQuery<Project[], Error>({
-        queryKey: computed(() => createSubjectQueryKey(subjectId.value!, "projects")),
-        queryFn: () => getSubjectProjects(subjectId.value!),
-        enabled: () => subjectId.value !== undefined,
+export function useSubjectUuidQuery(
+    subjectUuid: MaybeRefOrGetter<string | undefined>
+): UseQueryReturnType<Subject, Error> {
+    return useQuery<Subject, Error>({
+        queryKey: computed(() => SUBJECT_QUERY_KEY(toValue(subjectUuid)!)),
+        queryFn: () => getSubjectByUuid(toValue(subjectUuid)!),
+        enabled: () => !!toValue(subjectUuid),
     });
 }
 
 export function useSubjectsQuery(): UseQueryReturnType<Subject[], Error> {
     return useQuery<Subject[], Error>({
-        queryKey: createSubjectQueryKey("all"),
+        queryKey: SUBJECTS_QUERY_KEY(),
         queryFn: getSubjects,
     });
 }
 
-export function useSubjectDetailsQuery(
-    subjectId: Ref<number | undefined>
-): UseQueryReturnType<SubjectDetails, Error> {
-    return useQuery<SubjectDetails, Error>({
-        queryKey: computed(() => createSubjectQueryKey(subjectId.value!, "details")),
-        queryFn: async () => {
-            const [subject, instructors, students, projects] = (await Promise.all([
-                getSubject(subjectId.value!),
-                getSubjectInstructors(subjectId.value!),
-                getSubjectStudents(subjectId.value!),
-                getSubjectProjects(subjectId.value!),
-            ])) as [Subject, User[], User[], Project[]];
-
-            return {
-                id: subject.id,
-                name: subject.name,
-                instructors,
-                students,
-                projects,
-            };
-        },
-        enabled: () => subjectId.value !== undefined,
+export function useSubjectInstructorsQuery(
+    subjectId: MaybeRefOrGetter<number | undefined>
+): UseQueryReturnType<User[], Error> {
+    return useQuery<User[], Error>({
+        queryKey: computed(() => SUBJECT_INSTRUCTORS_QUERY_KEY(toValue(subjectId)!)),
+        queryFn: () => getSubjectInstructors(toValue(subjectId)!),
+        enabled: () => !!toValue(subjectId),
     });
 }
 
-export function useSubjectUuidQuery(subjectUuid: Ref<string>): UseQueryReturnType<Subject, Error> {
-    return useQuery<Subject, Error>({
-        queryKey: computed(() => createSubjectQueryKey(subjectUuid.value)),
-        queryFn: () => getSubjectByUuid(subjectUuid.value),
-        enabled: () => subjectUuid !== undefined,
-        retry: false,
+export function useSubjectStudentsQuery(
+    subjectId: MaybeRefOrGetter<number | undefined>
+): UseQueryReturnType<User[], Error> {
+    return useQuery<User[], Error>({
+        queryKey: computed(() => SUBJECT_STUDENTS_QUERY_KEY(toValue(subjectId)!)),
+        queryFn: () => getSubjectStudents(toValue(subjectId)!),
+        enabled: () => !!toValue(subjectId),
     });
 }
 
+export function useSubjectProjectsQuery(
+    subjectId: MaybeRefOrGetter<number | undefined>
+): UseQueryReturnType<Project[], Error> {
+    return useQuery<Project[], Error>({
+        queryKey: computed(() => SUBJECT_PROJECTS_QUERY_KEY(toValue(subjectId)!)),
+        queryFn: () => getSubjectProjects(toValue(subjectId)!),
+        enabled: () => !!toValue(subjectId),
+    });
+}
+
+export function useSubjectDetailsQuery(subjectId: MaybeRefOrGetter<number | undefined>): {
+    data: Ref<SubjectDetails | undefined>;
+    status: Ref<QueryStatus>;
+    isSuccess: Ref<boolean>;
+    isError: Ref<boolean>;
+    isLoading: Ref<boolean>;
+    error: Ref<(Error | null)[]>;
+} {
+    const {
+        data: subjectData,
+        status: subjectStatus,
+        isSuccess: subjectSuccess,
+        isLoading: subjectLoading,
+        error: subjectError,
+    } = useSubjectQuery(subjectId);
+    const {
+        data: instructorsData,
+        status: instructorsStatus,
+        isSuccess: instructorsSuccess,
+        isLoading: instructorsLoading,
+        error: instructorsError,
+    } = useSubjectInstructorsQuery(subjectId);
+    const {
+        data: studentsData,
+        status: studentsStatus,
+        isSuccess: studentsSuccess,
+        isLoading: studentsLoading,
+        error: studentsError,
+    } = useSubjectStudentsQuery(subjectId);
+    const {
+        data: projectsData,
+        status: projectsStatus,
+        isSuccess: projectsSuccess,
+        isLoading: projectsLoading,
+        error: projectsError,
+    } = useSubjectProjectsQuery(subjectId);
+    const data = computed<SubjectDetails | undefined>(() => {
+        if (
+            !subjectSuccess.value ||
+            !instructorsSuccess.value ||
+            !studentsSuccess.value ||
+            !projectsSuccess.value
+        )
+            return undefined;
+        return {
+            id: subjectData.value!.id,
+            name: subjectData.value!.name,
+            instructors: instructorsData.value!,
+            students: studentsData.value!,
+            projects: projectsData.value!,
+        };
+    });
+    const status = computed<QueryStatus>(() => {
+        const statuses = [subjectStatus, instructorsStatus, studentsStatus, projectsStatus];
+        if (statuses.every((status) => status.value === "success")) return "success";
+        if (statuses.some((status) => status.value === "error")) return "error";
+        return "pending";
+    });
+    const isSuccess = computed(() => status.value === "success");
+    const isError = computed(() => status.value === "error");
+    const isLoading = computed(() =>
+        [subjectLoading, instructorsLoading, studentsLoading, projectsLoading].some(
+            (loading) => loading.value
+        )
+    );
+    const error = computed<(Error | null)[]>(() =>
+        [subjectError, instructorsError, studentsError, projectsError].map((error) => error.value)
+    );
+    return { status, isSuccess, isError, isLoading, data, error };
+}
+
+// TODO: This should be a mutation
 export function registerSubjectQuery(uuid: Ref<string>): UseQueryReturnType<Subject, Error> {
     return useQuery<Subject, Error>({
         queryKey: computed(() => createSubjectQueryKey(uuid.value)),
