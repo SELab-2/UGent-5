@@ -45,7 +45,7 @@
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import {
-    useUserQuery,
+    useCurrentUserQuery,
     useUsersQuery,
     useToggleAdminMutation,
     useToggleTeacherMutation,
@@ -54,7 +54,7 @@ import type User from "@/models/User";
 
 const { t } = useI18n();
 
-const { data: currentUser, isLoading: isUserLoading } = useUserQuery(null);
+const { data: currentUser, isLoading: isUserLoading } = useCurrentUserQuery();
 const { data: users, isLoading: isUsersLoading } = useUsersQuery();
 const { mutateAsync: toggleAdmin } = useToggleAdminMutation();
 const { mutateAsync: toggleTeacher } = useToggleTeacherMutation();

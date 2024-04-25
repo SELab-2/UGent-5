@@ -6,30 +6,48 @@ import {
     type UseMutationReturnType,
 } from "@tanstack/vue-query";
 import type User from "@/models/User";
-import { getMySubjects, getUser, getUsers, toggleAdmin, toggleTeacher } from "@/services/user";
+import {
+    getCurrentUser,
+    getMySubjects,
+    getUser,
+    getUsers,
+    toggleAdmin,
+    toggleTeacher,
+} from "@/services/user";
 import { type Ref, computed } from "vue";
 import type { UserSubjectList } from "@/models/Subject";
 
-function USER_QUERY_KEY(uid: string | null): string[] {
-    return uid ? ["user", uid] : ["user"];
+function CURRENT_USER_QUERY_KEY(): string[] {
+    return ["user"];
+}
+
+function USER_QUERY_KEY(uid: string): string[] {
+    return ["user", uid];
 }
 
 function USERS_QUERY_KEY(): string[] {
     return ["users"];
 }
 
-export function useUserQuery(uid: Ref<string | undefined> | null): UseQueryReturnType<User, Error> {
+export function useCurrentUserQuery(): UseQueryReturnType<User, Error> {
     return useQuery<User, Error>({
-        queryKey: computed(() => USER_QUERY_KEY(uid?.value!)),
-        queryFn: () => getUser(uid?.value!),
-        enabled: uid === null || uid?.value !== undefined,
+        queryKey: CURRENT_USER_QUERY_KEY(),
+        queryFn: () => getCurrentUser(),
+    });
+}
+
+export function useUserQuery(uid: Ref<string | undefined>): UseQueryReturnType<User, Error> {
+    return useQuery<User, Error>({
+        queryKey: computed(() => USER_QUERY_KEY(uid.value!)),
+        queryFn: () => getUser(uid.value!),
+        enabled: !!uid.value,
     });
 }
 
 export function useUsersQuery(): UseQueryReturnType<User[], Error> {
     return useQuery<User[], Error>({
         queryKey: USERS_QUERY_KEY(),
-        queryFn: () => getUsers(),
+        queryFn: getUsers,
     });
 }
 
