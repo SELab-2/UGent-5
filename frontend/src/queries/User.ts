@@ -45,7 +45,7 @@ export function useUserQuery(
     return useQuery<User, Error>({
         queryKey: computed(() => USER_QUERY_KEY(toValue(uid)!)),
         queryFn: () => getUser(toValue(uid)!),
-        enabled: computed(() => !!toValue(uid)),
+        enabled: () => !!toValue(uid),
     });
 }
 
