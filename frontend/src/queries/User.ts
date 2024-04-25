@@ -14,7 +14,7 @@ import {
     toggleAdmin,
     toggleTeacher,
 } from "@/services/user";
-import { type Ref, computed } from "vue";
+import { computed, type MaybeRefOrGetter, toValue } from "vue";
 import type { UserSubjectList } from "@/models/Subject";
 
 function CURRENT_USER_QUERY_KEY(): string[] {
@@ -39,15 +39,15 @@ export function useCurrentUserQuery(): UseQueryReturnType<User, Error> {
     });
 }
 
-export function useUserQuery(uid: Ref<string | undefined>): UseQueryReturnType<User, Error> {
 /**
  * Query composable for fetching a user by uid
  * @param uid Ref to the uid of the user to fetch
  */
+export function useUserQuery(uid: MaybeRefOrGetter<string | undefined>): UseQueryReturnType<User, Error> {
     return useQuery<User, Error>({
-        queryKey: computed(() => USER_QUERY_KEY(uid.value!)),
-        queryFn: () => getUser(uid.value!),
-        enabled: !!uid.value,
+        queryKey: computed(() => USER_QUERY_KEY(toValue(uid)!)),
+        queryFn: () => getUser(toValue(uid)!),
+        enabled: computed(() => !!toValue(uid)),
     });
 }
 
