@@ -38,7 +38,7 @@ import LocaleSwitcher from "@/components/LocaleSwitcher.vue";
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: var(--color-primary);
+    background: linear-gradient(rgb(var(--v-theme-primary)), #0E2057);
     height: 100%;
 }
 
@@ -60,12 +60,13 @@ import LocaleSwitcher from "@/components/LocaleSwitcher.vue";
 }
 
 .login-button {
-    background-color: var(--gray-4);
+    background-color: rgba(225,225,225,0.1);
     color: var(--white);
-    border: 2px solid var(--color-border);
+    text-decoration: none;
+    border: 1px solid var(--color-border);
     padding: 10px 20px;
     font-size: 16px;
-    border-radius: 50px;
+    border-radius: 15px;
     cursor: pointer;
     transition:
         background-color 0.3s,
@@ -73,7 +74,7 @@ import LocaleSwitcher from "@/components/LocaleSwitcher.vue";
 }
 
 .login-button:hover {
-    background-color: var(--gray-3);
+    background-color: rgba(225,225,225,0.2);
     color: var(--white);
 }
 

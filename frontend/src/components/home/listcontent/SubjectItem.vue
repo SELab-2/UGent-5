@@ -41,12 +41,12 @@ const navigateToCourse = () => {
     align-items: center;
     transition: background-color 0.3s;
     cursor: pointer;
-    background-color: #F0F0F0;
-    border-radius: 5px;
+    background-color: #ffffff;
+    border-radius: 2px;
 }
 
 .coursebtn:hover {
-    background-color: lightgray;
+    background-color: #E9EDFA;
 }
 
 .chevron {

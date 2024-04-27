@@ -41,6 +41,11 @@ const { isLoggedIn } = storeToRefs(useAuthStore());
 .v-app-bar {
     padding: 5px 0px;
 }
+
+.v-app-bar-nav-icon{
+    color: rgb(var(--v-theme-secondary));
+}
+
 .leftContent {
     margin-left: auto;
     display: flex;
@@ -49,5 +54,6 @@ const { isLoggedIn } = storeToRefs(useAuthStore());
 
 .logout {
     margin-right: 15px;
+    color: rgb(var(--v-theme-secondary));
 }
 </style>

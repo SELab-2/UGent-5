@@ -29,7 +29,7 @@ function handleLocaleChange(selectedLocale: string) {
 
 <style lang="scss" scoped>
 .switcher {
-    color: var(--color-text-on-primary);
+    color: rgb(var(--v-theme-secondary));
     display: flex;
     align-items: center;
 }
@@ -39,7 +39,7 @@ function handleLocaleChange(selectedLocale: string) {
 }
 
 .selected-option {
-    color: var(--color-text-on-primary);
+    color: rgb(var(--v-theme-secondary));
     font-style: bold;
 }
 </style>

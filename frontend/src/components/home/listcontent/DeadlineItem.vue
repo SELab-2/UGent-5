@@ -51,17 +51,17 @@ const navigateToProject = () => {
 <style scoped>
 .projectbtn {
     margin: 5px;
-    background-color: #F0F0F0;
+    background-color: #ffffff;
     display: flex;
     transition: background-color 0.3s;
     align-items: center;
     cursor: pointer;
-    border-radius: 5px;
     height: 65px;
+    border-radius: 2px;
 }
 
 .projectbtn:hover {
-    background-color: lightgray;
+    background-color: #E9EDFA;
 }
 
 .block{

@@ -42,7 +42,7 @@ defineExpose({
 
 <style scoped lang="scss">
 .v-navigation-drawer {
-    background: linear-gradient(var(--color-primary), #0e2057);
+    background: rgb(var(--v-theme-primary));
     padding: 10px;
 }
 

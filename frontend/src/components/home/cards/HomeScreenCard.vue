@@ -12,8 +12,9 @@ defineProps<{
 
 <style scoped>
 .card {
-    background-color: white;
-    color: black;
-    border-radius: 5px;
+    background-color: rgb(var(--v-theme-secondary));
+    color: rgb(var(--v-theme-text));
+    border-radius: 2px;
+    text-transform: capitalize;
 }
 </style>

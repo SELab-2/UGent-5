@@ -1,7 +1,7 @@
 <template>
-    <h1 v-if="isLoading">Loading...</h1>
-    <h1 v-else class="title">{{ $t("home.welcome", { name: user!.given_name }) }}</h1>
     <v-container v-if="smAndDown">
+        <h1 v-if="isLoading">Loading...</h1>
+        <h1 v-else class="title">{{ $t("home.welcome", { name: user!.given_name }) }}</h1>
         <div class="mobileCard">
             <DeadlinesCard />
         </div>
@@ -13,6 +13,8 @@
         </div>
     </v-container>
     <v-container v-else>
+        <h1 v-if="isLoading">Loading...</h1>
+        <h1 v-else class="title">{{ $t("home.welcome", { name: user!.given_name }) }}</h1>
         <v-row>
             <v-col>
                 <DeadlinesCard />
@@ -41,7 +43,12 @@ const { smAndDown } = useDisplay();
 
 <style scoped lang="scss">
 .title {
-    margin: 30px;
+    background-color: rgb(var(--v-theme-secondary));
+    color: rgb(var(--v-theme-text));
+    margin-bottom: 15px;
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 2px;
 }
 
 .mobileCard {
