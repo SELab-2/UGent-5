@@ -28,6 +28,14 @@ export default {
         new_submission: "Nieuwe indiening",
         status_submission: "Indiening was: {status}",
     },
+    submission: {
+        status: "Indiening status: {status}",
+        datetime: "Indiening tijdstip:",
+        remarks: "Opmerkingen",
+        remarks_empty: "Geen opmerkingen voor deze indiening",
+        files: "Bestanden",
+        download_info: "Klik op bestandsnaam om te downloaden",
+    },
     project: {
         deadline: "Deadline",
         details_button: "Naar project",
@@ -36,6 +44,7 @@ export default {
         group: "Groep {number}",
         assignment: "Opdracht:",
         myProject: "Mijn projecten:",
+        submissions_list: "Alle indieningen",
     },
     navigation: {
         home: "Hoofdscherm",

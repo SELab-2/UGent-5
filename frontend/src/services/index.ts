@@ -13,7 +13,8 @@ const BASE_URL = import.meta.env.VITE_API_URL;
 export async function authorized_fetch<T>(
     endpoint: string,
     requestOptions: RequestInit,
-    omitContentType: boolean = false
+    omitContentType: boolean = false,
+    json: boolean = true
 ): Promise<T> {
     const { token, isLoggedIn } = storeToRefs(useAuthStore());
     const { refresh } = useAuthStore();
@@ -40,5 +41,5 @@ export async function authorized_fetch<T>(
     } else if (!response.ok) {
         throw new Error(response.statusText);
     }
-    return response.json();
+    return json ? response.json() : response;
 }

@@ -4,7 +4,14 @@ import type { Ref } from "vue";
 import type { UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-query";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { computed } from "vue";
-import { createGroups, getGroupWithProjectId, getUserGroups, joinGroup } from "@/services/group";
+import {
+    createGroups,
+    getGroupWithProjectId,
+    getSubmissions,
+    getUserGroups,
+    joinGroup,
+} from "@/services/group";
+import type Submission from "@/models/Submission";
 
 function USER_GROUPS_QUERY_KEY(): string[] {
     return ["groups"];
@@ -12,6 +19,10 @@ function USER_GROUPS_QUERY_KEY(): string[] {
 
 function PROJECT_USER_GROUP_QUERY_KEY(projectId: number): (string | number)[] {
     return ["group", "project", projectId];
+}
+
+function submissionsQueryKey(groupId: number): (string | number)[] {
+    return ["submissions", groupId];
 }
 
 /**
@@ -78,5 +89,16 @@ export function useJoinGroupMutation(): UseMutationReturnType<
             console.error("Error joining group:", error);
             alert("Could not join group. Please try again.");
         },
+    });
+}
+
+// Hook for fetching all submissions belonging to a group
+export function useSubmissionsQuery(
+    groupId: Ref<number | undefined>
+): UseQueryReturnType<Submission[], Error> {
+    return useQuery<Submission[], Error>({
+        queryKey: computed(() => submissionsQueryKey(groupId.value!)),
+        queryFn: () => getSubmissions(groupId.value!),
+        enabled: computed(() => groupId.value !== undefined),
     });
 }

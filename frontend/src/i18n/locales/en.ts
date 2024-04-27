@@ -28,6 +28,14 @@ export default {
         new_submission: "Submit new",
         status_submission: "Submission was: {status}",
     },
+    submission: {
+        status: "Submission status:",
+        datetime: "Submission time:",
+        remarks: "Remarks",
+        remarks_empty: "No remarks for this submission",
+        files: "Files",
+        download_info: "Click on filename to download",
+    },
     project: {
         deadline: "Deadline",
         details_button: "Project details",
@@ -36,6 +44,7 @@ export default {
         group: "Group {number}",
         assignment: "Assignment:",
         myProject: "My projects:",
+        submissions_list: "All submissions",
     },
     navigation: {
         home: "Home",
