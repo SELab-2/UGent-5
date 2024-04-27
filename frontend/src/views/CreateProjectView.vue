@@ -23,7 +23,7 @@
                 <v-col cols="12" md="6">
                     <span v-if="isSubjectsLoading">Loading subjects...</span>
                     <span v-else-if="isSubjectsError"
-                        >Error loading subjects: {{ subjectsError!.message }}</span
+                    >Error loading subjects: {{ subjectsError!.message }}</span
                     >
                     <v-select
                         v-else
@@ -60,19 +60,13 @@
                     />
                 </v-col>
             </v-row>
-        </v-container>
-        <v-container class="flex-container">
             <v-row>
-                <v-col cols="16">
-                    <v-card class="mb-0">
-                        <v-card-title class="headline">Assignment</v-card-title>
-                    </v-card>
-                </v-col>
-            </v-row>
-            <v-row class="mt-0">
                 <v-col cols="12">
                     <QuillEditor ref="quillEditor" theme="snow" class="quill-editor" />
                 </v-col>
+            </v-row>
+            <v-row>
+                <FilesInput v-model="files" />
             </v-row>
             <v-row>
                 <v-col cols="12" class="text-right">
@@ -88,13 +82,14 @@ import CheckBoxList from "@/components/project/CheckboxList.vue";
 import type { CheckBoxItem } from "@/components/project/CheckboxList.vue";
 import DatePicker from "@/components/project/DatePicker.vue";
 import RadioButtonList from "@/components/project/RadiobuttonList.vue";
+import FilesInput from '@/components/form_elements/FilesInput.vue';
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import { useRoute } from "vue-router";
 import { useSubjectInstructorsQuery, useSubjectStudentsQuery } from "@/queries/Subject";
 import { useMySubjectsQuery } from "@/queries/User";
-import { useCreateProjectMutation } from "@/queries/Project";
+import {useCreateProjectMutation, useUploadProjectFilesMutation} from "@/queries/Project";
 import { useCreateGroupsMutation, useJoinGroupMutation } from "@/queries/Group";
 import { ref, computed, reactive } from "vue";
 import type User from "@/models/User";
@@ -112,6 +107,7 @@ const deadline = ref(new Date());
 const publishDate = ref(new Date());
 const selectedGroupProject = ref("student");
 const capacity = ref(1);
+const files = ref<File[]>([]);
 const quillEditor = ref<typeof QuillEditor | null>(null);
 
 const {
@@ -138,6 +134,7 @@ const groupProjectOptions = [
     { label: "Random Groups", value: "random" },
     { label: "Student Picked Groups", value: "student" },
 ];
+
 
 const createProjectMutation = useCreateProjectMutation();
 const createGroupsMutation = useCreateGroupsMutation();
@@ -188,8 +185,15 @@ async function submitForm() {
                 });
             });
         }
+        const formData = new FormData();
+        files.value.forEach(file => {
+            formData.append('files[]', file);
+        });
+
+        await useUploadProjectFilesMutation(createdProjectId).mutateAsync(formData);
+        console.log("Files uploaded successfully");
     } catch (error) {
-        console.error("Error during project or group creation:", error);
+        console.error("Error during project or group creation or file upload:", error);
     }
 }
 

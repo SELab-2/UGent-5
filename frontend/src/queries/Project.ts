@@ -13,7 +13,7 @@ import {
     createSubmission,
     getSubmissions,
     createProject,
-    getProjects,
+    getProjects, uploadProjectFiles,
 } from "@/services/project";
 import { type Ref, computed } from "vue";
 
@@ -79,6 +79,23 @@ export function useCreateProjectMutation(): UseMutationReturnType<
         },
     });
 }
+
+// Hook for uploading files to a project
+export function useUploadProjectFilesMutation(projectId: Ref<number | undefined>): UseMutationReturnType<void, Error, FormData, void> {
+    const queryClient = useQueryClient();
+    return useMutation<void, Error, FormData, void>({
+        mutationFn: (formData) => uploadProjectFiles(projectId.value!, formData),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: projectQueryKey(projectId.value!) });
+            console.log("Files uploaded successfully");
+        },
+        onError: (error) => {
+            console.error("File upload failed", error);
+            alert("Could not upload files. Please try again.");
+        },
+    });
+}
+
 
 export function useSubmissionQuery(): UseQueryReturnType<Submission[], Error> {
     return useQuery<Submission[], Error>({

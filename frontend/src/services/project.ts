@@ -33,6 +33,18 @@ export async function getProjects(): Promise<Project[]> {
     return result.projects;
 }
 
+// Function to upload test files to a specific project
+export async function uploadProjectFiles(projectId: number, formData: FormData): Promise<void> {
+        return authorized_fetch(`/api/projects/${projectId}/test_files`, {
+            method: "POST",
+            body: formData,
+        },
+            true
+        );
+}
+
+
+
 // Function to create a new submission for a specific group
 export async function createSubmission(groupId: number, formData: FormData): Promise<Submission> {
     return authorized_fetch(
