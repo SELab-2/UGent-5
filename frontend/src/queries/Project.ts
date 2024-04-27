@@ -81,12 +81,18 @@ export function useCreateProjectMutation(): UseMutationReturnType<
 }
 
 // Hook for uploading files to a project
-export function useUploadProjectFilesMutation(projectId: Ref<number | undefined>): UseMutationReturnType<void, Error, FormData, void> {
+export function useUploadProjectFilesMutation(): UseMutationReturnType<
+    void, // Type of data returned on success
+    Error, // Type of error
+    { projectId: number; formData: FormData }, // Arguments the mutation function accepts
+    void  // Context or rollback information on error
+> {
     const queryClient = useQueryClient();
-    return useMutation<void, Error, FormData, void>({
-        mutationFn: (formData) => uploadProjectFiles(projectId.value!, formData),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: projectQueryKey(projectId.value!) });
+    return useMutation<void, Error, { projectId: number; formData: FormData }, void>({
+        mutationFn: ({ projectId, formData }) =>
+            uploadProjectFiles(projectId, formData),
+        onSuccess: (_, { projectId }) => {
+            queryClient.invalidateQueries({ queryKey: projectQueryKey(projectId) });
             console.log("Files uploaded successfully");
         },
         onError: (error) => {

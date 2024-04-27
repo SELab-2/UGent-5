@@ -139,6 +139,7 @@ const groupProjectOptions = [
 const createProjectMutation = useCreateProjectMutation();
 const createGroupsMutation = useCreateGroupsMutation();
 const joinGroupMutation = useJoinGroupMutation();
+const uploadProjectFilesMutation = useUploadProjectFilesMutation();
 
 async function submitForm() {
     const projectData: ProjectForm = {
@@ -153,6 +154,7 @@ async function submitForm() {
 
     try {
         const createdProjectId = await createProjectMutation.mutateAsync(projectData);
+        console.log("project created with ID:",createdProjectId);
 
         if (selectedGroupProject.value === "student") {
             const emptyGroup: GroupForm = {
@@ -189,8 +191,7 @@ async function submitForm() {
         files.value.forEach(file => {
             formData.append('files[]', file);
         });
-
-        await useUploadProjectFilesMutation(createdProjectId).mutateAsync(formData);
+        await uploadProjectFilesMutation.mutateAsync({ createdProjectId, formData });
         console.log("Files uploaded successfully");
     } catch (error) {
         console.error("Error during project or group creation or file upload:", error);
