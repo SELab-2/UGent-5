@@ -122,7 +122,8 @@ async def test_no_docker_tests(client: AsyncClient, group_id: int, project_id: i
     # cleanup files
     await cleanup_files(submission_id)
 
-    assert not os.path.exists(docker_utils.submissions_path(response.json()["files_uuid"]))
+    assert not os.path.exists(
+        docker_utils.submissions_path(response.json()["files_uuid"]))
     response = await client.get(f"/api/submissions/{submission_id}")
     assert response.status_code == 404
 
