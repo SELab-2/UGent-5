@@ -6,6 +6,7 @@ export default {
         loading: {
             loading_page: "Aan het laden...",
         },
+        no: "geen",
     },
     login: {
         about: "De officiële indienapplicatie van de Universiteit Gent",
@@ -35,6 +36,10 @@ export default {
         remarks_empty: "Geen opmerkingen voor deze indiening",
         files: "Bestanden",
         download_info: "Klik op bestandsnaam om te downloaden",
+        after_deadline: "Na deadline",
+        submissions_title: "Indieningen voor project {project}",
+        no_submissions: "Nog geen indieningen",
+        docker_test: "Testen Output",
     },
     project: {
         deadline: "Deadline",

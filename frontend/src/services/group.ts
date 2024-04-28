@@ -3,6 +3,10 @@ import type { GroupForm } from "@/models/Group";
 import type Submission from "@/models/Submission";
 import { authorized_fetch } from "@/services/index";
 
+export async function getGroup(groupId: number): Promise<Group> {
+    return authorized_fetch(`/api/groups/${groupId}`, { method: "GET" });
+}
+
 export async function getUserGroups(): Promise<Group[]> {
     return authorized_fetch<{ groups: Group[] }>(`/api/users/me/groups`, { method: "GET" }).then(
         (data) => data.groups

@@ -39,7 +39,8 @@ export async function authorized_fetch<T>(
         await refresh();
         throw new Error("Not authenticated");
     } else if (!response.ok) {
-        throw new Error(response.statusText);
+        const error = await response.json();
+        throw new Error(error.detail);
     }
     return json ? response.json() : response;
 }

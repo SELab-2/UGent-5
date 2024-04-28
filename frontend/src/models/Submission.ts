@@ -5,6 +5,11 @@ export enum Status {
     Crashed = 4,
 }
 
+export interface TestResult {
+    succeeded: boolean;
+    value: string;
+}
+
 export default interface Submission {
     id: number;
     group_id: number;
@@ -15,4 +20,5 @@ export default interface Submission {
     remarks: string;
     stdout: string | undefined;
     stderr: string | undefined;
+    testresults: TestResult[];
 }

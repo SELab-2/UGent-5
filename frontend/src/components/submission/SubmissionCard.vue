@@ -2,7 +2,10 @@
     <v-card color="white">
         <v-card-title>
             {{ $t("submission.status") }}
-            <p :class="Status[submission.status]">{{ Status[submission.status] }}</p>
+            <p v-if="submission.date <= project.deadline" :class="Status[submission.status]">
+                {{ Status[submission.status] }}
+            </p>
+            <p v-else class="Deadline">{{ $t("submission.after_deadline") }}</p>
         </v-card-title>
         <v-card-subtitle>
             {{ $t("submission.datetime") }} {{ $d(submission.date, "long") }}
@@ -17,6 +20,21 @@
             <v-card-subtitle v-else>
                 {{ $t("submission.remarks_empty") }}
             </v-card-subtitle>
+        </v-card-item>
+        <v-card-item v-if="submission.stderr || submission.stdout || submission.testresults.length">
+            <v-card-title>{{ $t("submission.docker_test") }}</v-card-title>
+            <v-card-text>
+                <p v-if="submission.stdout">Stdout: {{ submission.stdout }}</p>
+                <p v-else>{{ $t("default.no") }} stdout</p>
+                <p v-if="submission.stderr">Sterr: {{ submission.stderr }}</p>
+                <p v-else>{{ $t("default.no") }} stderr</p>
+                <ul>
+                    <li v-for="result in submission.testresults" :key="result">
+                        <p v-if="result.succeeded" class="text-green">{{ result.value }}</p>
+                        <p v-else class="text-red">{{ result.value }}</p>
+                    </li>
+                </ul>
+            </v-card-text>
         </v-card-item>
         <v-card-item>
             <v-card-title>
@@ -43,9 +61,6 @@
                 </v-skeleton-loader>
             </v-container>
         </v-card-item>
-        <v-card-item>
-            <v-card-title> </v-card-title>
-        </v-card-item>
     </v-card>
 </template>
 
@@ -57,6 +72,7 @@ import { download_file } from "@/utils.ts";
 
 const props = defineProps<{
     submission: Submission;
+    project: Project;
 }>();
 
 const { submission } = toRefs(props);
@@ -84,5 +100,9 @@ const downloadFile = (index: number) => {
 
 .Crashed {
     color: purple;
+}
+
+.Deadline {
+    color: red;
 }
 </style>
