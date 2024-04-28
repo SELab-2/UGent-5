@@ -1,4 +1,3 @@
-import os
 import shutil
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -82,15 +81,6 @@ async def group_id_with_default_tests(client: AsyncClient, db: AsyncSession, pro
     return await join_group(client, db, project_with_default_tests_id)
 
 
-@pytest_asyncio.fixture
-async def cleanup_files(client: AsyncClient, db: AsyncSession):
-    async def cleaner(submission_id):
-        await set_admin(db, "test", True)
-        await client.delete(f"/api/submissions/{submission_id}")
-        await set_admin(db, "test", False)
-    return cleaner
-
-
 async def join_group(client: AsyncClient, db: AsyncSession, project_id: int):
     group_data["project_id"] = project_id
     await set_admin(db, "test", True)
@@ -102,7 +92,7 @@ async def join_group(client: AsyncClient, db: AsyncSession, project_id: int):
 
 
 @pytest.mark.asyncio
-async def test_no_docker_tests(client: AsyncClient, group_id: int, project_id: int, cleanup_files):
+async def test_no_docker_tests(client: AsyncClient, group_id: int, project_id: int):
     with open(test_files_path / "submission_files/correct.py", "rb") as f:
         response = await client.post("/api/submissions/",
                                      files={"files": ("correct.py", f)},
@@ -120,15 +110,11 @@ async def test_no_docker_tests(client: AsyncClient, group_id: int, project_id: i
 
     assert artifact_response.json() == []  # no artifacts generated because no tests were run
     # cleanup files
-    await cleanup_files(submission_id)
-
-    assert not os.path.exists(docker_utils.submissions_path(response.json()["files_uuid"]))
-    response = await client.get(f"/api/submissions/{submission_id}")
-    assert response.status_code == 404
+    shutil.rmtree(docker_utils.submissions_path(response.json()["files_uuid"]))
 
 
 @pytest.mark.asyncio
-async def test_default_tests_success(client: AsyncClient, group_id_with_default_tests: int, cleanup_files):
+async def test_default_tests_success(client: AsyncClient, group_id_with_default_tests: int):
     # make submission
     files = [
         ('files', ('submission.py', open(test_files_path / 'submission_files/correct.py', 'rb'))),
@@ -163,7 +149,7 @@ async def test_default_tests_success(client: AsyncClient, group_id_with_default_
 
 
 @pytest.mark.asyncio
-async def test_default_tests_failure(client: AsyncClient, group_id_with_default_tests: int, cleanup_files):
+async def test_default_tests_failure(client: AsyncClient, group_id_with_default_tests: int):
     # make submission
     files = [
         ('files', ('submission.py', open(test_files_path / 'submission_files/incorrect.py', 'rb'))),
@@ -193,11 +179,11 @@ async def test_default_tests_failure(client: AsyncClient, group_id_with_default_
     assert artifact_response.json() == []  # no generated artifacts
 
     # cleanup files
-    await cleanup_files(submission_id)
+    shutil.rmtree(docker_utils.submissions_path(response.json()["files_uuid"]))
 
 
 @pytest.mark.asyncio
-async def test_default_tests_crash(client: AsyncClient, group_id_with_default_tests: int, cleanup_files):
+async def test_default_tests_crash(client: AsyncClient, group_id_with_default_tests: int):
     # make submission
     files = [
         ('files', ('submission.py', open(test_files_path / 'submission_files/crashed.py', 'rb'))),
@@ -228,4 +214,4 @@ async def test_default_tests_crash(client: AsyncClient, group_id_with_default_te
     assert artifact_response.json() == []  # no generated artifacts
 
     # cleanup files
-    await cleanup_files(submission_id)
+    shutil.rmtree(docker_utils.submissions_path(response.json()["files_uuid"]))

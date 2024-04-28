@@ -15,7 +15,7 @@ from src.submission.dependencies import (
 )
 from src.submission.exceptions import FileNotFound
 from src.submission.exceptions import FilesNotFound
-from src.submission.utils import upload_files, remove_files
+from src.submission.utils import upload_files
 from src.user.dependencies import admin_user_validation, get_authenticated_user
 from src.user.schemas import User
 from . import service
@@ -71,9 +71,8 @@ async def create_submission(background_tasks: BackgroundTasks,
 @router.delete("/{submission_id}",
                dependencies=[Depends(admin_user_validation)],
                status_code=200)
-async def delete_submision(submission: Submission = Depends(retrieve_submission), db: AsyncSession = Depends(get_async_db)):
-    remove_files(submission.files_uuid)
-    await service.delete_submission(db, submission.id)
+async def delete_submision(submission_id: int, db: AsyncSession = Depends(get_async_db)):
+    await service.delete_submission(db, submission_id)
 
 
 @router.get("/{submission_id}/files", response_model=list[File])
@@ -83,7 +82,7 @@ async def get_files(submission: Submission = Depends(retrieve_submission)):
 
 
 @router.get("/{submission_id}/files/{path:path}", response_class=FileResponse)
-async def get_file(path: str, submission: Submission = Depends(retrieve_submission)):
+async def get_file(path: str, submission: Submission = Depends(get_submission)):
     path = submission_path(submission.files_uuid, path)
 
     if not os.path.isfile(path):
@@ -101,7 +100,7 @@ async def get_artifacts(submission: Submission = Depends(retrieve_submission)):
 
 
 @router.get("/{submission_id}/artifacts/{path:path}", response_class=FileResponse)
-async def get_artifact(path: str, submission: Submission = Depends(retrieve_submission)):
+async def get_artifact(path: str, submission: Submission = Depends(get_submission)):
     if submission.status == Status.InProgress:
         raise FileNotFound
 
