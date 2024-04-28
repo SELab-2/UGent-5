@@ -7,6 +7,8 @@ export default {
             loading_page: "Aan het laden...",
         },
     },
+    logo: "universiteit-gent-logo-white.png",
+    logout: "uitloggen",
     login: {
         about: "De officiële indienapplicatie van de Universiteit Gent",
         login: "Inloggen",

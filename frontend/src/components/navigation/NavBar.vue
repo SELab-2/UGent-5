@@ -14,7 +14,7 @@
                 <img
                     alt="Logo"
                     class="logo"
-                    src="@/assets/universiteit-gent-logo-white.png"
+                    :src="`src/assets/${$t('logo')}`"
                     height="150"
                 />
             </div>

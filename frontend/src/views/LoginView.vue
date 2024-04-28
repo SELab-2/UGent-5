@@ -12,7 +12,7 @@
             <img
                 alt="ugent logo"
                 class="ugent-logo"
-                src="@/assets/universiteit-gent-logo-white.png"
+                :src="`src/assets/${$t('logo')}`"
             />
             <LocaleSwitcher class="login-switcher" />
         </div>
@@ -22,6 +22,8 @@
 <script setup lang="ts">
 import { useCASUrl } from "@/stores/cas-url";
 import LocaleSwitcher from "@/components/LocaleSwitcher.vue";
+import { useI18n} from "vue-i18n";
+
 </script>
 
 <style scoped>
