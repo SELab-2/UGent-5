@@ -1,5 +1,4 @@
 import os
-import shutil
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -160,7 +159,7 @@ async def test_default_tests_success(client: AsyncClient, group_id_with_default_
         {'filename': 'artifact.txt', 'media_type': 'text/plain'}]  # generated artifacts
 
     # cleanup files
-    shutil.rmtree(docker_utils.submissions_path(response.json()["files_uuid"]))
+    await cleanup_files(submission_id)
 
 
 @pytest.mark.asyncio
