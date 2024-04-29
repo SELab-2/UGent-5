@@ -36,7 +36,7 @@ export async function getProjects(): Promise<Project[]> {
 // Function to upload test files to a specific project
 export async function uploadProjectFiles(projectId: number, formData: FormData): Promise<void> {
         return authorized_fetch(`/api/projects/${projectId}/test_files`, {
-            method: "POST",
+            method: "PUT",
             body: formData,
         },
             true

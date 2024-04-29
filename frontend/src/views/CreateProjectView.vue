@@ -189,9 +189,9 @@ async function submitForm() {
         }
         const formData = new FormData();
         files.value.forEach(file => {
-            formData.append('files[]', file);
+            formData.append("files", file);
         });
-        await uploadProjectFilesMutation.mutateAsync({ createdProjectId, formData });
+        await uploadProjectFilesMutation.mutateAsync({ projectId: createdProjectId, formData });
         console.log("Files uploaded successfully");
     } catch (error) {
         console.error("Error during project or group creation or file upload:", error);
