@@ -1,6 +1,6 @@
 <template>
     <v-card variant="text" class="title-card" height="165">
-        <v-skeleton-loader :loading="isLoading" type="card" color="white">
+        <v-skeleton-loader type="card" color="white">
             <v-row>
                 <v-col>
                     <v-card-title class="title">

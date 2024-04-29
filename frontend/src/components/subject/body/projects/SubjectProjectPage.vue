@@ -1,24 +1,24 @@
 <template>
     <div class="project-container">
         <v-card class="project-card" variant="text" rounded="xl">
-            <div class="colored-zone"></div>
-
-            <v-card-title class="title">
-                <v-row>
-                    <v-col>
-                        <span>{{ project.name }}</span>
-                    </v-col>
-                    <v-col class="text-right">
-                        <router-link :to="`/project/${project.id}`" class="text-right chevron">
+            <router-link :to="`/project/${project.id}`" class="router">
+                <div class="colored-zone"></div>
+                <v-card-title class="title">
+                    <v-row>
+                        <v-col>
+                            <span>{{ project.name }}</span>
+                        </v-col>
+                        <v-col class="text-right">
                             <v-icon size="small">mdi-arrow-right</v-icon>
-                        </router-link>
-                    </v-col>
-                </v-row>
-            </v-card-title>
-            <v-card-subtitle class="d-block py-3">
+                        </v-col>
+                    </v-row>
+                </v-card-title>
+            </router-link>
+
+            <v-card-text  class="d-block py-3 deadline">
                 <v-icon>mdi-alarm</v-icon>
                 {{ $d(project.deadline, "long") }}
-            </v-card-subtitle>
+            </v-card-text>
 
             <v-card-text>
                 <h2>{{ $t("subject.project.assignment") }}</h2>
@@ -50,11 +50,11 @@
             </div>
         </v-card>
         <v-card class="project-card" rounded="xl" variant="text">
-            <v-card-title class="title">{{ $t("subject.project.group") }}</v-card-title>
+            <v-card-title class="card_title">{{ $t("subject.project.group") }}</v-card-title>
         </v-card>
 
         <v-card class="project-card" rounded="xl" variant="text" height="410px">
-            <v-card-title class="title">{{ $t("subject.project.submissions") }}</v-card-title>
+            <v-card-title class="card_title">{{ $t("subject.project.submissions") }}</v-card-title>
         </v-card>
     </div>
 </template>
@@ -92,28 +92,47 @@ const assignmentLength = 100;
     margin-bottom: 10px;
 }
 
+.router {
+    text-decoration: none;
+    color: inherit;
+}
+.deadline {
+    color: #181818;
+}
+
 .colored-zone {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 80px; /* Adjust the height as needed */
-    background-color: #eafbff; /* Desired background color */
+    background-color: var(--color-primary); /* Desired background color */
     border-radius: 20px 20px 0 0; /* Rounded corners for top half */
     z-index: -1; /* Ensure the colored zone is behind the card content */
 }
 
 .title {
-    font-size: 28px;
+    font-size: 30px;
+    letter-spacing: -0.5px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    font-family: "Poppins", sans-serif;
+    color: white;
+    text-transform: capitalize;
+}
+
+.card_title {
+    font-size: 24px;
     text-transform: capitalize;
     display: block;
     line-height: 1.2;
     font-weight: 500;
+    color: black;
 }
 
 .chevron {
     margin-right: 10px;
-    color: black;
+    color: white;
     display: block;
 }
 

@@ -1,6 +1,6 @@
 <template>
     <v-skeleton-loader type="image" class="header-img">
-        <v-img aspect-ratio="16/9" cover rounded="xl" :src="imagePath"></v-img>
+        <v-img aspect-ratio="16/9" cover rounded="xl" :src="imagePath" class="header-img"></v-img>
     </v-skeleton-loader>
 </template>
 
