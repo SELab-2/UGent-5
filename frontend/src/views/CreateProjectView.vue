@@ -23,7 +23,7 @@
                 <v-col cols="12" md="6">
                     <span v-if="isSubjectsLoading">Loading subjects...</span>
                     <span v-else-if="isSubjectsError"
-                    >Error loading subjects: {{ subjectsError!.message }}</span
+                        >Error loading subjects: {{ subjectsError!.message }}</span
                     >
                     <v-select
                         v-else
@@ -82,14 +82,14 @@ import CheckBoxList from "@/components/project/CheckboxList.vue";
 import type { CheckBoxItem } from "@/components/project/CheckboxList.vue";
 import DatePicker from "@/components/project/DatePicker.vue";
 import RadioButtonList from "@/components/project/RadiobuttonList.vue";
-import FilesInput from '@/components/form_elements/FilesInput.vue';
+import FilesInput from "@/components/form_elements/FilesInput.vue";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import { useRoute } from "vue-router";
 import { useSubjectInstructorsQuery, useSubjectStudentsQuery } from "@/queries/Subject";
 import { useMySubjectsQuery } from "@/queries/User";
-import {useCreateProjectMutation, useUploadProjectFilesMutation} from "@/queries/Project";
+import { useCreateProjectMutation, useUploadProjectFilesMutation } from "@/queries/Project";
 import { useCreateGroupsMutation, useJoinGroupMutation } from "@/queries/Group";
 import { ref, computed, reactive } from "vue";
 import type User from "@/models/User";
@@ -135,7 +135,6 @@ const groupProjectOptions = [
     { label: "Student Picked Groups", value: "student" },
 ];
 
-
 const createProjectMutation = useCreateProjectMutation();
 const createGroupsMutation = useCreateGroupsMutation();
 const joinGroupMutation = useJoinGroupMutation();
@@ -154,7 +153,7 @@ async function submitForm() {
 
     try {
         const createdProjectId = await createProjectMutation.mutateAsync(projectData);
-        console.log("project created with ID:",createdProjectId);
+        console.log("project created with ID:", createdProjectId);
 
         if (selectedGroupProject.value === "student") {
             const emptyGroup: GroupForm = {
@@ -188,7 +187,7 @@ async function submitForm() {
             });
         }
         const formData = new FormData();
-        files.value.forEach(file => {
+        files.value.forEach((file) => {
             formData.append("files", file);
         });
         await uploadProjectFilesMutation.mutateAsync({ projectId: createdProjectId, formData });

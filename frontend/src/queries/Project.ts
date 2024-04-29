@@ -13,7 +13,8 @@ import {
     createSubmission,
     getSubmissions,
     createProject,
-    getProjects, uploadProjectFiles,
+    getProjects,
+    uploadProjectFiles,
 } from "@/services/project";
 import { type Ref, computed } from "vue";
 
@@ -85,12 +86,11 @@ export function useUploadProjectFilesMutation(): UseMutationReturnType<
     void, // Type of data returned on success
     Error, // Type of error
     { projectId: number; formData: FormData }, // Arguments the mutation function accepts
-    void  // Context or rollback information on error
+    void // Context or rollback information on error
 > {
     const queryClient = useQueryClient();
     return useMutation<void, Error, { projectId: number; formData: FormData }, void>({
-        mutationFn: ({ projectId, formData }) =>
-            uploadProjectFiles(projectId, formData),
+        mutationFn: ({ projectId, formData }) => uploadProjectFiles(projectId, formData),
         onSuccess: (_, { projectId }) => {
             queryClient.invalidateQueries({ queryKey: projectQueryKey(projectId) });
             console.log("Files uploaded successfully");
@@ -101,7 +101,6 @@ export function useUploadProjectFilesMutation(): UseMutationReturnType<
         },
     });
 }
-
 
 export function useSubmissionQuery(): UseQueryReturnType<Submission[], Error> {
     return useQuery<Submission[], Error>({
