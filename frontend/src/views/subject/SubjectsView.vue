@@ -14,7 +14,6 @@
                 <SubjectCard
                     :subject="subject"
                     :is-loading="isLoading"
-
                     class="subject-card"
                 >
                 </SubjectCard>
@@ -24,20 +23,19 @@
 </template>
 
 <script setup lang="ts">
-import { useSubjectsQuery } from "@/queries/Subject";
+import {useSubjectsQuery} from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectsHeaderContainer from "@/components/subjects/SubjectsHeaderContainer.vue";
 import SubjectCard from "@/components/subjects/SubjectCard.vue";
 
-const { data, error, isLoading, isError } = useSubjectsQuery();
+const {data, error, isLoading, isError} = useSubjectsQuery();
 </script>
-
 
 
 <style scoped>
 
 .subject-card {
-    margin-top: 10px;  /* Adjust as needed */
+    margin-top: 10px; /* Adjust as needed */
 }
 
 </style>

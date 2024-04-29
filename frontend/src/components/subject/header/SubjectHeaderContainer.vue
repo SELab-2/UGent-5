@@ -1,7 +1,7 @@
 <template>
     <v-row>
         <v-col cols="4">
-            <SubjectHeaderImage :imagePath="imagePath" :is-loading="isLoading">
+            <SubjectHeaderImage :imagePath="imagePath">
             </SubjectHeaderImage>
         </v-col>
         <v-col cols="8">

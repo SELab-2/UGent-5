@@ -78,12 +78,4 @@ const activeAcademicYear = ref(0);
 
 }
 
-.v-select__selections {
-
-}
-
-.v-chip {
-    overflow: initial;
-}
-
 </style>

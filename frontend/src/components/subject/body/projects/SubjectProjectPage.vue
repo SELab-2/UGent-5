@@ -119,7 +119,7 @@ const assignmentLength = 100;
 
 .project-container {
     overflow: auto;
-    max-height: 400px;
+    max-height: 55vh;
     scrollbar-width: none; /* For Firefox */
 }
 

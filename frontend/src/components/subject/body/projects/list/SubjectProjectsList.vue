@@ -1,5 +1,5 @@
 <template>
-    <v-card variant="text" class="projects-card" height="400px">
+    <v-card variant="text" class="projects-card">
         <v-card-title>
             <span class="title">{{ $t("subject.projects") }}</span>
         </v-card-title>
@@ -25,13 +25,16 @@
                 ></HeaderSubtitleButton>
             </div>
         </v-card-subtitle>
-        <v-skeleton-loader type="card" :loading="isLoading" color="white">
-            <v-card-text class="projects-tab">
+        <v-skeleton-loader type="card" color="white">
+            <v-card-text>
                 <v-tabs
                     v-if="projects!.length > 0"
                     direction="vertical"
                     v-model="selectedTab"
                     class="projects-tab"
+                    show-arrows
+                    prev-icon="mdi-chevron-up"
+                    next-icon="mdi-chevron-down"
                 >
                     <v-tab v-for="project in projects" :key="project.id">
                         <SubjectTab :projectName="project.name"></SubjectTab>
@@ -97,9 +100,9 @@ watch(activeButton, (newVal: string) => {
 }
 
 .projects-tab {
-    flex-grow: 1;
     overflow-y: auto;
     scrollbar-width: none; /* For Firefox */
+    max-height: 35vh;
 }
 
 .projects-tab::-webkit-scrollbar {
