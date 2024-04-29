@@ -1,7 +1,11 @@
 <template>
-    <router-link :to="{ name: 'subject', params: { subjectId: subject.id } }" class="router-link">
-        <v-card rounded="xl" class="subject-card" width="50%">
-            <v-skeleton-loader :loading="isLoading">
+    <v-skeleton-loader type="card" class="card-loader">
+        <router-link
+            :to="{ name: 'subject', params: { subjectId: subject.id } }"
+            class="router-link"
+        >
+            <v-card rounded="xl" class="subject-card">
+
                 <v-img
                     src="https://cdn.vuetifyjs.com/images/cards/desert.jpg"
                     class="align-end"
@@ -15,9 +19,11 @@
                         <v-icon class="">mdi-chevron-right</v-icon>
                     </v-card-title>
                 </v-img>
-            </v-skeleton-loader>
-        </v-card>
-    </router-link>
+            </v-card>
+        </router-link>
+    </v-skeleton-loader>
+
+
 </template>
 
 <script setup lang="ts">
@@ -30,8 +36,14 @@ defineProps<{
 </script>
 
 <style scoped>
+
+.card-loader {
+    border-radius: 25px;
+}
+
 .router-link {
     text-decoration: none;
+    width: 100%;
 }
 
 .subject-card {
@@ -39,6 +51,6 @@ defineProps<{
     flex-direction: column;
     justify-content: space-between;
     position: relative;
-    margin-top: 10px;
+    width: 100%;
 }
 </style>

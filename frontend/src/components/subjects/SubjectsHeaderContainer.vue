@@ -1,5 +1,9 @@
 <template>
-    <SubjectsHeaderCard :is-loading="isLoading"> </SubjectsHeaderCard>
+    <v-row>
+        <v-col cols="6">
+            <SubjectsHeaderCard :is-loading="isLoading"></SubjectsHeaderCard>
+        </v-col>
+    </v-row>
 </template>
 
 <script setup lang="ts">

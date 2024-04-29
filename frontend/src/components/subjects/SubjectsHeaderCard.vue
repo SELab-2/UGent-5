@@ -1,42 +1,57 @@
 <template>
-    <v-card variant="text" class="title-card" height="165" width="50%" rounded="xl">
-        <v-skeleton-loader :loading="isLoading" type="card" color="white">
+    <v-skeleton-loader
+        type="card"
+        class="card-loader"
+    >
+        <v-card
+            variant="text"
+            class="title-card"
+            rounded="xl"
+            width="100%"
+        >
             <v-row>
                 <v-col>
                     <v-card-title class="title">
                         {{ $t("subjects.title") }}
                     </v-card-title>
                     <v-card-text>
-                        <HeaderSubtitleButton
-                            :title="$t('subject.academy_year') + ' ' + academicYears[0]"
-                            :clickable="true"
-                            :active="true"
-                        ></HeaderSubtitleButton>
-                        <v-chip-group>
-                            <v-chip
-                                v-for="(academicYear, index) in academicYears"
-                                :key="index"
-                                color="primary"
-                                class="ma-1"
+                        <div class="chip_container">
+                            <v-chip-group
+                                mandatory
+                                v-model="activeAcademicYear"
+                                column
                             >
-                                {{ academicYear }}
-                            </v-chip>
-                        </v-chip-group>
+                                <v-chip
+                                    v-for="(academicYear, index) in academicYears"
+                                    :key="index"
+                                    :value="index"
+                                    color="primary"
+                                    class="ma-1"
+                                    variant="tonal"
+                                >
+                                    {{ academicYear }}
+                                </v-chip>
+                            </v-chip-group>
+                        </div>
+
                     </v-card-text>
                 </v-col>
             </v-row>
-        </v-skeleton-loader>
-    </v-card>
+        </v-card>
+    </v-skeleton-loader>
+
 </template>
 
 <script setup lang="ts">
-import HeaderSubtitleButton from "@/components/buttons/HeaderSubtitleButton.vue";
+
+import {ref} from "vue";
 
 defineProps<{
     isLoading: boolean;
 }>();
 
 const academicYears = ["2023-2024", "2022-2023", "2021-2022"];
+const activeAcademicYear = ref(0);
 </script>
 
 <style scoped>
@@ -53,4 +68,22 @@ const academicYears = ["2023-2024", "2022-2023", "2021-2022"];
     margin-bottom: 12px;
     font-family: "Poppins", sans-serif;
 }
+
+.chip_container {
+    overflow-x: auto;
+}
+
+.card-loader {
+    border-radius: 25px;
+
+}
+
+.v-select__selections {
+
+}
+
+.v-chip {
+    overflow: initial;
+}
+
 </style>

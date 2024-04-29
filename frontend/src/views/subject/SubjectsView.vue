@@ -10,12 +10,12 @@
             </v-col>
         </v-row>
         <v-row>
-            <v-col>
+            <v-col v-for="(subject, index) in data" :key="index" cols="6">
                 <SubjectCard
-                    v-for="(subject, index) in data"
                     :subject="subject"
                     :is-loading="isLoading"
-                    :key="index"
+
+                    class="subject-card"
                 >
                 </SubjectCard>
             </v-col>
@@ -32,4 +32,12 @@ import SubjectCard from "@/components/subjects/SubjectCard.vue";
 const { data, error, isLoading, isError } = useSubjectsQuery();
 </script>
 
-<style scoped></style>
+
+
+<style scoped>
+
+.subject-card {
+    margin-top: 10px;  /* Adjust as needed */
+}
+
+</style>
