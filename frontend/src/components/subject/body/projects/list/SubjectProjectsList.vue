@@ -52,7 +52,7 @@
                         prev-icon="mdi-chevron-up"
                         next-icon="mdi-chevron-down"
                     >
-                        <v-tab v-for="project in projects" :key="project.id">
+                        <v-tab v-for="project in projects" :key="project.id" :value="project.id">
                             <SubjectTab :projectName="project.name"></SubjectTab>
                         </v-tab>
                     </v-tabs>
@@ -94,6 +94,7 @@ watch(selectedTab, (newVal: number | undefined) => {
     }
     console.log("Selected tab changed to", newVal);
 });
+
 
 watch(activeButton, (newVal: string) => {
     emit("filter-changed", FilterOptions[newVal as keyof typeof FilterOptions]);

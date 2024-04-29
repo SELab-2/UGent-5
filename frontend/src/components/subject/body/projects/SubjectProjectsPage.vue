@@ -13,8 +13,8 @@
             <v-window v-model="selectedTab" direction="vertical">
                 <v-window-item
                     v-for="(project, index) in filteredProjects"
-                    :key="index"
-                    :value="index"
+                    :key="project.id"
+                    :value="project.id"
                 >
                     <SubjectProjectPage
                         :selected-tab="selectedTab"
@@ -70,7 +70,8 @@ const updateSelectedTab = (tabIndex: number) => {
 
 const updateFilterOption = (option: FilterOptions) => {
     filterOption.value = option;
-    updateSelectedTab(0);
+
+    updateSelectedTab(filteredProjects.value[0].id);
 };
 </script>
 
