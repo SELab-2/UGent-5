@@ -4,7 +4,23 @@
             <span class="title">{{ $t("subject.projects") }}</span>
         </v-card-title>
         <v-card-subtitle>
-            <div class="d-flex justify-start filter-btn-container">
+            <v-chip-group
+                v-model="activeButton"
+                column
+                mandatory
+            >
+                <v-chip
+                    v-for="(filter, index) in filterOptions"
+                    :key="index"
+                    :value="FilterOptions[filter]"
+                    color="primary"
+                    variant="tonal"
+                >
+                    {{ $t(`subject.projectsPage.${filter.toLowerCase()}`) }}
+                </v-chip>
+
+            </v-chip-group>
+            <!--div class="d-flex justify-start filter-btn-container">
                 <HeaderSubtitleButton
                     :title="$t('subject.projectsPage.all')"
                     clickable
@@ -23,25 +39,26 @@
                     :active="activeButton === FilterOptions.Completed"
                     @click="activeButton = FilterOptions.Completed"
                 ></HeaderSubtitleButton>
-            </div>
+            </div-->
         </v-card-subtitle>
         <v-skeleton-loader type="card" color="white">
             <v-card-text>
-                <v-tabs
-                    v-if="projects!.length > 0"
-                    direction="vertical"
-                    v-model="selectedTab"
-                    class="projects-tab"
-                    show-arrows
-                    prev-icon="mdi-chevron-up"
-                    next-icon="mdi-chevron-down"
-                >
-                    <v-tab v-for="project in projects" :key="project.id">
-                        <SubjectTab :projectName="project.name"></SubjectTab>
-                    </v-tab>
-                </v-tabs>
-                <div v-else class="placeholder">
-                    <p>No projects available.</p>
+                <div class="scrollable-tabs">
+                    <v-tabs
+                        v-if="projects!.length > 0"
+                        direction="vertical"
+                        v-model="selectedTab"
+                        show-arrows
+                        prev-icon="mdi-chevron-up"
+                        next-icon="mdi-chevron-down"
+                    >
+                        <v-tab v-for="project in projects" :key="project.id">
+                            <SubjectTab :projectName="project.name"></SubjectTab>
+                        </v-tab>
+                    </v-tabs>
+                    <div v-else class="placeholder">
+                        <p>No projects available.</p>
+                    </div>
                 </div>
             </v-card-text>
         </v-skeleton-loader>
@@ -63,6 +80,7 @@ const props = defineProps<{
 
 const selectedTab = ref(props.selectedTab);
 
+const filterOptions = Object.keys(FilterOptions);
 const activeButton = ref(FilterOptions.All);
 
 const emit = defineEmits<{
@@ -74,6 +92,7 @@ watch(selectedTab, (newVal: number | undefined) => {
     if (newVal !== undefined) {
         emit("tab-changed", newVal);
     }
+    console.log("Selected tab changed to", newVal);
 });
 
 watch(activeButton, (newVal: string) => {
@@ -89,6 +108,7 @@ watch(activeButton, (newVal: string) => {
     border-radius: 20px;
     display: flex;
     flex-direction: column;
+    max-height: 60vh;
 }
 
 .title {
@@ -117,6 +137,17 @@ watch(activeButton, (newVal: string) => {
 .filter-btn-container::-webkit-scrollbar {
     width: 0; /* For Chrome, Safari, and Opera */
 }
+
+.scrollable-tabs {
+    overflow-y: auto;
+    scrollbar-width: none; /* For Firefox */
+    max-height: 55vh;
+}
+
+.scrollable-tabs::-webkit-scrollbar {
+    width: 0; /* For Chrome, Safari, and Opera */
+}
+
 
 .placeholder {
     display: flex;
