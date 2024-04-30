@@ -15,8 +15,8 @@
                         <div class="d-flex justify-start instr-container">
                             <HeaderSubtitleButton
                                 v-for="instructor in instructors"
-                                :key="instructor?.uid"
-                                :title="instructor?.given_name"
+                                :key="instructor.uid"
+                                :title="instructor.given_name"
                                 :clickable="false"
                                 :active="false"
                             ></HeaderSubtitleButton>
@@ -24,7 +24,7 @@
                     </v-card-text>
                 </v-col>
                     <router-link to="" class="link">
-                        <v-icon>mdi-pencil</v-icon>
+                        <v-icon size="large">mdi-square-edit-outline</v-icon>
                     </router-link>
                 <v-col>
 
