@@ -23,6 +23,9 @@
                         </div>
                     </v-card-text>
                 </v-col>
+                    <router-link to="" class="link">
+                        <v-icon>mdi-pencil</v-icon>
+                    </router-link>
                 <v-col>
 
                 </v-col>
@@ -34,6 +37,7 @@
 <script setup lang="ts">
 import type User from "@/models/User";
 import HeaderSubtitleButton from "@/components/buttons/HeaderSubtitleButton.vue";
+import useIsTeacher from "@/composables/useIsTeacher";
 
 defineProps<{
     title: string;
@@ -41,6 +45,9 @@ defineProps<{
     instructors: User[];
     isLoading: boolean;
 }>();
+
+const { isTeacher } = useIsTeacher();
+
 </script>
 
 <style scoped>
@@ -62,5 +69,13 @@ defineProps<{
 .instr-container {
     margin-top: 10px;
     margin-bottom: 5px;
+}
+
+.link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
 }
 </style>
