@@ -2,7 +2,7 @@
     <v-card variant="text" class="title-card" height="165">
         <v-skeleton-loader type="card" color="white">
             <v-row>
-                <v-col>
+                <v-col cols="11">
                     <v-card-title class="title">
                         {{ title }}
                     </v-card-title>
@@ -22,6 +22,9 @@
                             ></HeaderSubtitleButton>
                         </div>
                     </v-card-text>
+                </v-col>
+                <v-col>
+
                 </v-col>
             </v-row>
         </v-skeleton-loader>

@@ -5,7 +5,7 @@
 
     <v-row v-else>
         <v-col cols="1">
-            <router-link to="/subjects">
+            <router-link :to="{ name: 'subjects'}">
                 <v-btn variant="elevated" class="back-button" rounded="xl" size="large">
                     <v-icon>mdi-arrow-left</v-icon>
                 </v-btn>

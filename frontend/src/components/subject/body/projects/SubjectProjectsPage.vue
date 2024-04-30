@@ -12,7 +12,7 @@
         <v-col cols="7">
             <v-window v-model="selectedTab" direction="vertical">
                 <v-window-item
-                    v-for="(project, index) in filteredProjects"
+                    v-for="project in filteredProjects"
                     :key="project.id"
                     :value="project.id"
                 >

@@ -1,7 +1,7 @@
 <template>
     <div class="project-container">
         <v-card class="project-card" variant="text" rounded="xl">
-            <router-link :to="`/project/${project.id}`" class="router">
+            <router-link :to="{ name: 'project', params: { projectId: project.id } }" class="router">
                 <div class="colored-zone"></div>
                 <v-card-title class="title">
                     <v-row>
@@ -15,7 +15,7 @@
                 </v-card-title>
             </router-link>
 
-            <v-card-text  class="d-block py-3 deadline">
+            <v-card-text class="d-block py-3 deadline">
                 <v-icon>mdi-alarm</v-icon>
                 {{ $d(project.deadline, "long") }}
             </v-card-text>
@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 import type Project from "@/models/Project";
-import { ref } from "vue";
+import {ref} from "vue";
 
 defineProps<{
     selectedTab: number;
@@ -96,6 +96,7 @@ const assignmentLength = 100;
     text-decoration: none;
     color: inherit;
 }
+
 .deadline {
     color: #181818;
 }
