@@ -20,26 +20,6 @@
                 </v-chip>
 
             </v-chip-group>
-            <!--div class="d-flex justify-start filter-btn-container">
-                <HeaderSubtitleButton
-                    :title="$t('subject.projectsPage.all')"
-                    clickable
-                    :active="activeButton === FilterOptions.All"
-                    @click="activeButton = FilterOptions.All"
-                ></HeaderSubtitleButton>
-                <HeaderSubtitleButton
-                    :title="$t('subject.projectsPage.active')"
-                    clickable
-                    :active="activeButton === FilterOptions.Active"
-                    @click="activeButton = FilterOptions.Active"
-                ></HeaderSubtitleButton>
-                <HeaderSubtitleButton
-                    :title="$t('subject.projectsPage.completed')"
-                    clickable
-                    :active="activeButton === FilterOptions.Completed"
-                    @click="activeButton = FilterOptions.Completed"
-                ></HeaderSubtitleButton>
-            </div-->
         </v-card-subtitle>
         <v-skeleton-loader type="card" color="white">
             <v-card-text>
@@ -109,7 +89,7 @@ watch(activeButton, (newVal: string) => {
     border-radius: 20px;
     display: flex;
     flex-direction: column;
-    max-height: 60vh;
+    max-height: 55vh;
 }
 
 .title {
@@ -142,7 +122,7 @@ watch(activeButton, (newVal: string) => {
 .scrollable-tabs {
     overflow-y: auto;
     scrollbar-width: none; /* For Firefox */
-    max-height: 55vh;
+    max-height: 30vh;
 }
 
 .scrollable-tabs::-webkit-scrollbar {
