@@ -36,6 +36,9 @@ export default {
         group: "Group {number}",
         assignment: "Assignment:",
         myProject: "My projects:",
+        not_found: "No projects found.",
+        archived: "Archived",
+        not_finished: "Not Finished"
     },
     navigation: {
         home: "Home",
