@@ -98,25 +98,6 @@ watch(activeButton, (newVal: string) => {
     font-family: "Poppins", sans-serif;
 }
 
-.projects-tab {
-    overflow-y: auto;
-    scrollbar-width: none; /* For Firefox */
-    max-height: 35vh;
-}
-
-.projects-tab::-webkit-scrollbar {
-    width: 0; /* For Chrome, Safari, and Opera */
-}
-
-.filter-btn-container {
-    overflow-x: auto;
-    scrollbar-width: none; /* For Firefox */
-}
-
-.filter-btn-container::-webkit-scrollbar {
-    width: 0; /* For Chrome, Safari, and Opera */
-}
-
 .scrollable-tabs {
     overflow-y: auto;
     scrollbar-width: none; /* For Firefox */

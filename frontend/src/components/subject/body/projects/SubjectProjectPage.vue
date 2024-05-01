@@ -131,12 +131,6 @@ const assignmentLength = 100;
     color: black;
 }
 
-.chevron {
-    margin-right: 10px;
-    color: white;
-    display: block;
-}
-
 .project-container {
     overflow: auto;
     max-height: 55vh;

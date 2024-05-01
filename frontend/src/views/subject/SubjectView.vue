@@ -81,7 +81,7 @@
 
 <script setup lang="ts">
 import {computed, ref, toRefs} from "vue";
-import {useSubjectDetailsQuery, useSubjectUuidQuery} from "@/queries/Subject";
+import {useSubjectDetailsQuery} from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectHeaderContainer from "@/components/subject/header/SubjectHeaderContainer.vue";
 import SubjectBody from "@/components/subject/body/SubjectBody.vue";
