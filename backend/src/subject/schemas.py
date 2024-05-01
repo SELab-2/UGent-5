@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field
 class SubjectBase(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     name: str = Field(min_length=1)
+    email: Optional[str] = None
     academic_year: Optional[int] = None
 
 

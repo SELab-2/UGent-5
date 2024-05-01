@@ -36,6 +36,9 @@ export default {
         group: "Groep {number}",
         assignment: "Opdracht:",
         myProject: "Mijn projecten:",
+        not_found: "Geen projecten teruggevonden.",
+        archived: "Gearchiveerd",
+        not_finished: "Onafgewerkt",
     },
     navigation: {
         home: "Hoofdscherm",
