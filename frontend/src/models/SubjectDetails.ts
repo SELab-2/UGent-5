@@ -8,4 +8,5 @@ export default interface SubjectDetails {
     students: User[];
     projects: Project[];
     uuid: string;
+    academic_year: number;
 }

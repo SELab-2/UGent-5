@@ -8,7 +8,7 @@
                     </v-card-title>
                     <v-card-text>
                         <HeaderSubtitleButton
-                            :title="$t('subject.academy_year') + ' ' + academicYear"
+                            :title="`${$t('subject.academy_year')} ${academicYear}-${academicYear + 1}`"
                             :clickable="false"
                             :active="false"
                         ></HeaderSubtitleButton>
@@ -37,16 +37,14 @@
 <script setup lang="ts">
 import type User from "@/models/User";
 import HeaderSubtitleButton from "@/components/buttons/HeaderSubtitleButton.vue";
-import useIsTeacher from "@/composables/useIsTeacher";
 
 defineProps<{
     title: string;
-    academicYear: string;
+    academicYear: number;
     instructors: User[];
     isLoading: boolean;
 }>();
 
-const { isTeacher } = useIsTeacher();
 
 </script>
 

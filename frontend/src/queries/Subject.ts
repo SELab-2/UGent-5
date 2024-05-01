@@ -90,7 +90,8 @@ export function useSubjectDetailsQuery(
                 instructors,
                 students,
                 projects,
-                uuid
+                uuid,
+                academic_year: subject.academic_year,
             };
         },
         enabled: () => subjectId.value !== undefined,

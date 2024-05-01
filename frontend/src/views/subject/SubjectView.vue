@@ -35,7 +35,7 @@
                             v-if="subject"
                             :title="subject!.name"
                             :instructors="subject!.instructors"
-                            academic-year="2023-2024"
+                            :academic-year="subject!.academic_year"
                             :is-loading="isLoading"
                             image-path="https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png"
                         ></SubjectHeaderContainer>

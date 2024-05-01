@@ -23,7 +23,7 @@ import SubjectHeaderImage from "@/components/subject/header/SubjectHeaderImage.v
 
 defineProps<{
     title: string;
-    academicYear: string;
+    academicYear: number;
     instructors: User[];
     isLoading: boolean;
     imagePath: string;
