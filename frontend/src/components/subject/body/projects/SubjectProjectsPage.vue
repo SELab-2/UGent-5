@@ -56,9 +56,9 @@ const filteredProjects = computed(() => {
     if (filterOption.value === FilterOptions.All) {
         return sortedProjects;
     } else if (filterOption.value === FilterOptions.Active) {
-        return sortedProjects.filter((project) => new Date(project.deadline) > currentDate);
+        return sortedProjects.filter((project) => new Date(project.deadline) > currentDate) || []
     } else if (filterOption.value === FilterOptions.Completed) {
-        return sortedProjects.filter((project) => new Date(project.deadline) <= currentDate);
+        return sortedProjects.filter((project) => new Date(project.deadline) <= currentDate) || [];
     }
     console.error("Invalid filter option");
     return sortedProjects;
@@ -70,8 +70,9 @@ const updateSelectedTab = (tabIndex: number) => {
 
 const updateFilterOption = (option: FilterOptions) => {
     filterOption.value = option;
-
-    updateSelectedTab(filteredProjects.value[0].id);
+    if (filteredProjects.value.length > 0) {
+        updateSelectedTab(filteredProjects.value[0].id);
+    }
 };
 </script>
 
