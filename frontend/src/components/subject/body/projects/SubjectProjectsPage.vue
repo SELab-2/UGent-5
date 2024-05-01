@@ -25,7 +25,7 @@
 
                 <v-window-item v-if="filteredProjects.length === 0" :key="'placeholder'">
                     <div class="placeholder">
-                        <p>No projects available.</p>
+                        <p>{{$t("subject.projectsPage.no_projects")}}</p>
                     </div>
                 </v-window-item>
             </v-window>

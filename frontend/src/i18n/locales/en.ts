@@ -72,14 +72,24 @@ export default {
             all: "All",
             active: "Active",
             completed: "Completed",
+            no_projects: "No projects found.",
+            show_assignment: "Show full assignment",
+            hide_assignment: "Hide assignment",
         },
         project: {
             assignment: "Assignment",
             group: "Group",
             submissions: "Submissions",
         },
+        create_project: "Create project",
+        register_link_button: {
+            title: "Register link",
+            snackbar: "Register link copied to clipboard.",
+            tooltip: "Copy register link for this subject, this can be shared with students to register for the subject."
+        }
     },
     subjects: {
         title: "My Subjects",
+        create_subject: "Create subject",
     },
 };

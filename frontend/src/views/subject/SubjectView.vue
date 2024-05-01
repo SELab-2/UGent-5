@@ -10,7 +10,7 @@
             timeout="3000"
             color="primary"
         >
-            Register link copied to clipboard.
+            {{ $t("subject.register_link_button.snackbar")}}
             <template v-slot:actions>
                 <v-btn
                     @click="snackbar = false"
@@ -56,21 +56,20 @@
             <div class="action-btn-container">
                 <router-link :to="{name: 'create-project', params: { subjectId : subjectId}}">
                     <v-btn prepend-icon="mdi-plus-circle">
-                        Create project
+                        {{ $t("subject.create_project") }}
                     </v-btn>
                 </router-link>
                 <v-btn
                     prepend-icon="mdi-content-copy"
                     @click="copyRegisterLink"
                 >
-                    Register link
+                    {{ $t("subject.register_link_button.title") }}
                     <v-tooltip
                         activator="parent"
                         location="start"
                         max-width="200vw"
                     >
-                        Copy register link for this subject, this can be shared with students to register for the
-                        subject.
+                        {{ $t("subject.register_link_button.tooltip")}}
                     </v-tooltip>
                 </v-btn>
             </div>

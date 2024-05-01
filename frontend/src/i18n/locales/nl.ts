@@ -72,15 +72,25 @@ export default {
             all: "Alle",
             active: "Actief",
             completed: "Voltooid",
+            no_projects: "Geen projecten gevonden.",
+            show_assignment: "Toon volledige opdracht",
+            hide_assignment: "Verberg opdracht",
         },
         project: {
             assignment: "Opdracht",
             group: "Groep",
             submissions: "Indieningen",
         },
+        create_project: "Nieuw project",
+        register_link_button: {
+            title: "Registreer link",
+            snackbar: "Registreer link gekopieerd naar klembord.",
+            tooltip: "Kopieer de registreer link voor dit vak, deze kan gedeeld worden met studenten om zich te registreren voor het vak.",
+        },
     },
 
     subjects: {
         title: "Mijn vakken",
+        create_subject: "Nieuw vak",
     },
 };

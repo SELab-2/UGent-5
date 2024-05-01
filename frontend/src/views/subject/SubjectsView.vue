@@ -30,7 +30,7 @@
             <div class="action-btn-container">
                 <router-link to="">
                     <v-btn prepend-icon="mdi-plus-circle">
-                        Create subject
+                        {{ $t("subjects.create_subject") }}
                     </v-btn>
                 </router-link>
             </div>

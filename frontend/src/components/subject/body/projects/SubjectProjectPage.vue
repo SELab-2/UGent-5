@@ -44,7 +44,7 @@
                 <v-divider></v-divider>
                 <v-card-actions>
                     <v-btn @click="expanded = !expanded">
-                        {{ !expanded ? "Show Full Assignment" : "Hide Assignment" }}
+                        {{ !expanded ? $t("subject.projectsPage.show_assignment") : $t("subject.projectsPage.hide_assignment") }}
                     </v-btn>
                 </v-card-actions>
             </div>

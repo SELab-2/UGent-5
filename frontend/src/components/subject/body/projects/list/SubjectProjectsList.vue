@@ -37,7 +37,7 @@
                         </v-tab>
                     </v-tabs>
                     <div v-else class="placeholder">
-                        <p>No projects available.</p>
+                        <p>{{$t("subject.projectsPage.no_projects")}}</p>
                     </div>
                 </div>
             </v-card-text>
