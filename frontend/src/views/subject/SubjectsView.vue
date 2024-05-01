@@ -7,7 +7,10 @@
             <BackgroundContainer>
                 <v-row>
                     <v-col>
-                        <SubjectsHeaderContainer :is-loading="isLoading"></SubjectsHeaderContainer>
+                        <SubjectsHeaderContainer
+                            :academic-years="academicYears"
+                            :is-loading="isLoading"
+                        ></SubjectsHeaderContainer>
                     </v-col>
                 </v-row>
                 <v-row>
@@ -46,9 +49,8 @@ const {data: subjects, error, isLoading, isError} = useSubjectsQuery();
 
 const academicYears = computed(() => {
     return Array.from(
-        new Set(subjects.value.map(subject => subject.academic_year))
+        new Set([...(subjects.value || [])].map(subject => subject.academic_year))
     ).sort((a, b) => b - a);
-
 });
 
 </script>

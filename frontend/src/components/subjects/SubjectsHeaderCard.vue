@@ -14,26 +14,28 @@
                     <v-card-title class="title">
                         {{ $t("subjects.title") }}
                     </v-card-title>
-                    <v-card-text>
-                        <div class="chip_container">
-                            <v-chip-group
-                                mandatory
-                                v-model="activeAcademicYear"
-                                column
-                            >
-                                <v-chip
-                                    v-for="(academicYear, index) in academicYears"
-                                    :key="index"
-                                    :value="index"
-                                    color="primary"
-                                    class="ma-1"
-                                    variant="tonal"
-                                >
-                                    {{ academicYear }}
-                                </v-chip>
-                            </v-chip-group>
-                        </div>
 
+                    <v-card-text>
+                        <v-skeleton-loader type="button" color="white">
+                            <div class="chip_container">
+                                <v-chip-group
+                                    mandatory
+                                    v-model="activeAcademicYear"
+                                    column
+                                >
+                                    <v-chip
+                                        v-for="(academicYear, index) in academicYears"
+                                        :key="index"
+                                        :value="academicYear"
+                                        color="primary"
+                                        class="ma-1"
+                                        variant="tonal"
+                                    >
+                                        {{ academicYear + "-" + (academicYear + 1)}}
+                                    </v-chip>
+                                </v-chip-group>
+                            </div>
+                        </v-skeleton-loader>
                     </v-card-text>
                 </v-col>
             </v-row>
@@ -44,14 +46,23 @@
 
 <script setup lang="ts">
 
-import {ref} from "vue";
+import {ref, toRefs, watch} from "vue";
 
-defineProps<{
+const props = defineProps<{
+    academicYears: number[];
     isLoading: boolean;
 }>();
+const { academicYears } = toRefs(props)
+const activeAcademicYear = ref(null);
 
-const academicYears = ["2023-2024", "2022-2023", "2021-2022"];
-const activeAcademicYear = ref(0);
+watch(academicYears, (newVal) => {
+    if (newVal.length > 0) {
+        activeAcademicYear.value = newVal[0];
+    }
+});
+
+
+
 </script>
 
 <style scoped>

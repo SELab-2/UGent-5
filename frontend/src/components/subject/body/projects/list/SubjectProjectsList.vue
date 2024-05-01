@@ -47,7 +47,6 @@
 
 <script setup lang="ts">
 import SubjectTab from "@/components/subject/body/projects/list/SubjectTab.vue";
-import HeaderSubtitleButton from "@/components/buttons/HeaderSubtitleButton.vue";
 import type Project from "@/models/Project";
 import { FilterOptions } from "@/models/Project";
 import { ref, watch } from "vue";
