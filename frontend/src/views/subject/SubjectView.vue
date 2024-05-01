@@ -38,7 +38,7 @@
         </v-col>
         <v-col cols="2">
             <div class="action-btn-container">
-                <router-link to="">
+                <router-link :to="{name: 'create-project', params: { subjectId : subject.id}}">
                     <v-btn prepend-icon="mdi-plus-circle">
                         Create project
                     </v-btn>
@@ -64,12 +64,10 @@
 
 <script setup lang="ts">
 import {toRefs} from "vue";
-import {useSubjectDetailsQuery} from "@/queries/Subject";
+import {useSubjectDetailsQuery, useSubjectUuidQuery} from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectHeaderContainer from "@/components/subject/header/SubjectHeaderContainer.vue";
 import SubjectBody from "@/components/subject/body/SubjectBody.vue";
-import ActionButton from "@/components/buttons/ActionButton.vue";
-import NavButton from "@/components/navigation/NavButton.vue";
 
 const props = defineProps<{
     subjectId: number;
@@ -78,6 +76,7 @@ const props = defineProps<{
 const {subjectId} = toRefs(props);
 
 const {data: subject, error, isLoading, isError} = useSubjectDetailsQuery(subjectId);
+const {data: uuid, uuidError, uuidIsLoading, uuidIsError} = useSubjectUuidQuery(subjectId);
 </script>
 ;
 <style scoped>
