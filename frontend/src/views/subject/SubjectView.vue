@@ -100,17 +100,15 @@ const {data: subject, error, isLoading, isError} = useSubjectDetailsQuery(subjec
 const router = useRouter();
 
 const registerLink = computed(() => {
-    if (!isLoading) {
-        return router.resolve({
-            name: "registerSubject",
-            params: {uuid: subject!.uuid}
-        }).path;
-    }
-    return "";
+    return router.resolve({
+        name: "registerSubject",
+        params: {uuid: subject.value.uuid}
+    }).path;
 });
 
 const copyRegisterLink = () => {
-    //navigator.clipboard.writeText(registerLink.value);
+    const baseAddress = window.location.origin;
+    navigator.clipboard.writeText(`${baseAddress}${registerLink.value}`);
     snackbar.value = true;
 };
 </script>
