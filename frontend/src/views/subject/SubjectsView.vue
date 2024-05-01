@@ -15,7 +15,7 @@
                     </v-col>
                 </v-row>
                 <v-row>
-                    <v-col v-for="(subject, index) in subjects" :key="index" cols="6">
+                    <v-col v-for="(subject, index) in subjectsByAcademicYear" :key="index" cols="6">
                         <SubjectCard
                             :subject="subject"
                             :is-loading="isLoading"
@@ -45,6 +45,7 @@ import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectsHeaderContainer from "@/components/subjects/SubjectsHeaderContainer.vue";
 import SubjectCard from "@/components/subjects/SubjectCard.vue";
 import {computed, ref} from "vue";
+import getCurrentAcademicYear from "@/composables/useAcademicYear";
 
 const {data: subjects, error, isLoading, isError} = useSubjectsQuery();
 
@@ -54,11 +55,16 @@ const academicYears = computed(() => {
     ).sort((a, b) => b - a);
 });
 
-const activeAcademicYear = ref(academicYears.value[0]);
+
+const selectedAcademicYear = ref<number>(getCurrentAcademicYear());
+
+const subjectsByAcademicYear = computed(() => {
+    return [...(subjects.value || [])].filter(subject => subject.academic_year === selectedAcademicYear.value);
+});
 
 
 const onAcademicYearChanged = (academicYear: number) => {
-    activeAcademicYear.value = academicYear;
+    selectedAcademicYear.value = academicYear;
 }
 
 </script>

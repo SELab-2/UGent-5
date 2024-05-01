@@ -47,19 +47,15 @@
 <script setup lang="ts">
 
 import {ref, toRefs, watch} from "vue";
+import getCurrentAcademicYear from "@/composables/useAcademicYear";
 
 const props = defineProps<{
     academicYears: number[];
     isLoading: boolean;
 }>();
 const { academicYears } = toRefs(props)
-const activeAcademicYear = ref(undefined);
+const activeAcademicYear = ref(getCurrentAcademicYear());
 
-watch(academicYears, (newVal) => {
-    if (newVal.length > 0) {
-        activeAcademicYear.value = newVal[0];
-    }
-});
 
 const emit = defineEmits<{
     (e: "academic-year-changed", academicYear: number): void;
