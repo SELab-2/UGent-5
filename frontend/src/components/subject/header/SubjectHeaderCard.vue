@@ -23,12 +23,10 @@
                         </div>
                     </v-card-text>
                 </v-col>
-                    <router-link to="" class="link">
-                        <v-icon size="large">mdi-square-edit-outline</v-icon>
-                    </router-link>
-                <v-col>
-
-                </v-col>
+                <router-link to="" class="link">
+                    <v-icon size="large">mdi-square-edit-outline</v-icon>
+                </router-link>
+                <v-col> </v-col>
             </v-row>
         </v-skeleton-loader>
     </v-card>
@@ -44,8 +42,6 @@ defineProps<{
     instructors: User[];
     isLoading: boolean;
 }>();
-
-
 </script>
 
 <style scoped>

@@ -25,7 +25,7 @@
 
                 <v-window-item v-if="filteredProjects.length === 0" :key="'placeholder'">
                     <div class="placeholder">
-                        <p>{{$t("subject.projectsPage.no_projects")}}</p>
+                        <p>{{ $t("subject.projectsPage.no_projects") }}</p>
                     </div>
                 </v-window-item>
             </v-window>
@@ -56,7 +56,7 @@ const filteredProjects = computed(() => {
     if (filterOption.value === FilterOptions.All) {
         return sortedProjects;
     } else if (filterOption.value === FilterOptions.Active) {
-        return sortedProjects.filter((project) => new Date(project.deadline) > currentDate) || []
+        return sortedProjects.filter((project) => new Date(project.deadline) > currentDate) || [];
     } else if (filterOption.value === FilterOptions.Completed) {
         return sortedProjects.filter((project) => new Date(project.deadline) <= currentDate) || [];
     }

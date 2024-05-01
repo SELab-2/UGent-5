@@ -1,7 +1,10 @@
 <template>
     <div class="project-container">
         <v-card class="project-card" variant="text" rounded="xl">
-            <router-link :to="{ name: 'project', params: { projectId: project.id } }" class="router">
+            <router-link
+                :to="{ name: 'project', params: { projectId: project.id } }"
+                class="router"
+            >
                 <div class="colored-zone"></div>
                 <v-card-title class="title">
                     <v-row>
@@ -44,7 +47,11 @@
                 <v-divider></v-divider>
                 <v-card-actions>
                     <v-btn @click="expanded = !expanded">
-                        {{ !expanded ? $t("subject.projectsPage.show_assignment") : $t("subject.projectsPage.hide_assignment") }}
+                        {{
+                            !expanded
+                                ? $t("subject.projectsPage.show_assignment")
+                                : $t("subject.projectsPage.hide_assignment")
+                        }}
                     </v-btn>
                 </v-card-actions>
             </div>
@@ -61,7 +68,7 @@
 
 <script setup lang="ts">
 import type Project from "@/models/Project";
-import {ref} from "vue";
+import { ref } from "vue";
 
 defineProps<{
     selectedTab: number;

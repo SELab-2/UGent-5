@@ -9,7 +9,8 @@
         </v-col>
         <v-col>
             <SubjectHeaderImage
-                image-path="https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png"></SubjectHeaderImage>
+                image-path="https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png"
+            ></SubjectHeaderImage>
         </v-col>
     </v-row>
 </template>
@@ -29,11 +30,7 @@ const emit = defineEmits<{
 
 const onAcademicYearChanged = (academicYear: number) => {
     emit("academic-year-changed", academicYear);
-}
-
+};
 </script>
 
-<style scoped>
-
-
-</style>
+<style scoped></style>

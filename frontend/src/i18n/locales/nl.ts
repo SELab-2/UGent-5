@@ -88,7 +88,8 @@ export default {
         register_link_button: {
             title: "Registreer link",
             snackbar: "Registreer link gekopieerd naar klembord.",
-            tooltip: "Kopieer de registreer link voor dit vak, deze kan gedeeld worden met studenten om zich te registreren voor het vak.",
+            tooltip:
+                "Kopieer de registreer link voor dit vak, deze kan gedeeld worden met studenten om zich te registreren voor het vak.",
         },
     },
 

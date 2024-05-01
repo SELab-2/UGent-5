@@ -36,42 +36,38 @@
             </div>
         </v-col>
     </v-row>
-
 </template>
 
 <script setup lang="ts">
-import {useSubjectsQuery} from "@/queries/Subject";
+import { useSubjectsQuery } from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectsHeaderContainer from "@/components/subjects/SubjectsHeaderContainer.vue";
 import SubjectCard from "@/components/subjects/SubjectCard.vue";
-import {computed, ref} from "vue";
+import { computed, ref } from "vue";
 import getCurrentAcademicYear from "@/composables/useAcademicYear";
 
-const {data: subjects, error, isLoading, isError} = useSubjectsQuery();
+const { data: subjects, error, isLoading, isError } = useSubjectsQuery();
 
 const academicYears = computed(() => {
     return Array.from(
-        new Set([...(subjects.value || [])].map(subject => subject.academic_year))
+        new Set([...(subjects.value || [])].map((subject) => subject.academic_year))
     ).sort((a, b) => b - a);
 });
-
 
 const selectedAcademicYear = ref<number>(getCurrentAcademicYear());
 
 const subjectsByAcademicYear = computed(() => {
-    return [...(subjects.value || [])].filter(subject => subject.academic_year === selectedAcademicYear.value);
+    return [...(subjects.value || [])].filter(
+        (subject) => subject.academic_year === selectedAcademicYear.value
+    );
 });
-
 
 const onAcademicYearChanged = (academicYear: number) => {
     selectedAcademicYear.value = academicYear;
-}
-
+};
 </script>
 
-
 <style scoped>
-
 .subject-card {
     margin-top: 10px; /* Adjust as needed */
 }
@@ -79,5 +75,4 @@ const onAcademicYearChanged = (academicYear: number) => {
 .action-btn-container {
     margin-top: 30px;
 }
-
 </style>

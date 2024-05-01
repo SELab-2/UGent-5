@@ -1,8 +1,7 @@
 <template>
     <v-row>
         <v-col cols="4">
-            <SubjectHeaderImage :imagePath="imagePath">
-            </SubjectHeaderImage>
+            <SubjectHeaderImage :imagePath="imagePath"> </SubjectHeaderImage>
         </v-col>
         <v-col cols="8">
             <SubjectHeaderCard

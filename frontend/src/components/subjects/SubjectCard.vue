@@ -5,7 +5,6 @@
             class="router-link"
         >
             <v-card rounded="xl" class="subject-card">
-
                 <v-img
                     src="https://cdn.vuetifyjs.com/images/cards/desert.jpg"
                     class="align-end"
@@ -22,8 +21,6 @@
             </v-card>
         </router-link>
     </v-skeleton-loader>
-
-
 </template>
 
 <script setup lang="ts">
@@ -36,7 +33,6 @@ defineProps<{
 </script>
 
 <style scoped>
-
 .card-loader {
     border-radius: 25px;
 }

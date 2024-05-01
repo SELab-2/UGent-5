@@ -4,11 +4,7 @@
             <span class="title">{{ $t("subject.projects") }}</span>
         </v-card-title>
         <v-card-subtitle>
-            <v-chip-group
-                v-model="activeButton"
-                column
-                mandatory
-            >
+            <v-chip-group v-model="activeButton" column mandatory>
                 <v-chip
                     v-for="(filter, index) in filterOptions"
                     :key="index"
@@ -18,7 +14,6 @@
                 >
                     {{ $t(`subject.projectsPage.${filter.toLowerCase()}`) }}
                 </v-chip>
-
             </v-chip-group>
         </v-card-subtitle>
         <v-skeleton-loader type="card" color="white">
@@ -37,7 +32,7 @@
                         </v-tab>
                     </v-tabs>
                     <div v-else class="placeholder">
-                        <p>{{$t("subject.projectsPage.no_projects")}}</p>
+                        <p>{{ $t("subject.projectsPage.no_projects") }}</p>
                     </div>
                 </div>
             </v-card-text>
@@ -73,7 +68,6 @@ watch(selectedTab, (newVal: number | undefined) => {
     }
 });
 
-
 watch(activeButton, (newVal: string) => {
     emit("filter-changed", FilterOptions[newVal as keyof typeof FilterOptions]);
     selectedTab.value = 0;
@@ -107,7 +101,6 @@ watch(activeButton, (newVal: string) => {
 .scrollable-tabs::-webkit-scrollbar {
     width: 0; /* For Chrome, Safari, and Opera */
 }
-
 
 .placeholder {
     display: flex;

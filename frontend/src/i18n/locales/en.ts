@@ -88,8 +88,9 @@ export default {
         register_link_button: {
             title: "Register link",
             snackbar: "Register link copied to clipboard.",
-            tooltip: "Copy register link for this subject, this can be shared with students to register for the subject."
-        }
+            tooltip:
+                "Copy register link for this subject, this can be shared with students to register for the subject.",
+        },
     },
     subjects: {
         title: "My Subjects",

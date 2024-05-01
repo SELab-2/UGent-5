@@ -1,4 +1,4 @@
-import {useQuery, type UseQueryReturnType} from "@tanstack/vue-query";
+import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
 import {
     getSubject,
     getSubjectInstructors,
@@ -6,9 +6,10 @@ import {
     getSubjects,
     getSubjectStudents,
     getSubjectByUuid,
-    registerToSubject, getSubjectUuid,
+    registerToSubject,
+    getSubjectUuid,
 } from "@/services/subject";
-import {type Ref, computed} from "vue";
+import { type Ref, computed } from "vue";
 import type Subject from "@/models/Subject";
 import type User from "@/models/User";
 import type Project from "@/models/Project";
@@ -80,7 +81,7 @@ export function useSubjectDetailsQuery(
                 getSubjectInstructors(subjectId.value!),
                 getSubjectStudents(subjectId.value!),
                 getSubjectProjects(subjectId.value!),
-                getSubjectUuid(subjectId.value!)
+                getSubjectUuid(subjectId.value!),
             ])) as [Subject, User[], User[], Project[], string];
 
             return {
@@ -113,4 +114,3 @@ export function registerSubjectQuery(uuid: Ref<string>): UseQueryReturnType<Subj
         enabled: () => false,
     });
 }
-

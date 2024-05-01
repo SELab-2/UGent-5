@@ -4,24 +4,17 @@
     </div>
 
     <v-row v-else>
-
-        <v-snackbar
-            v-model="snackbar"
-            timeout="3000"
-            color="primary"
-        >
-            {{ $t("subject.register_link_button.snackbar")}}
+        <v-snackbar v-model="snackbar" timeout="3000" color="primary">
+            {{ $t("subject.register_link_button.snackbar") }}
             <template v-slot:actions>
-                <v-btn
-                    @click="snackbar = false"
-                >
+                <v-btn @click="snackbar = false">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
             </template>
         </v-snackbar>
 
         <v-col cols="1">
-            <router-link :to="{ name: 'subjects'}">
+            <router-link :to="{ name: 'subjects' }">
                 <v-btn variant="elevated" class="back-button" rounded="xl" size="large">
                     <v-icon>mdi-arrow-left</v-icon>
                 </v-btn>
@@ -54,54 +47,45 @@
         </v-col>
         <v-col cols="2">
             <div class="action-btn-container">
-                <router-link :to="{name: 'create-project', params: { subjectId : subjectId}}">
+                <router-link :to="{ name: 'create-project', params: { subjectId: subjectId } }">
                     <v-btn prepend-icon="mdi-plus-circle">
                         {{ $t("subject.create_project") }}
                     </v-btn>
                 </router-link>
-                <v-btn
-                    prepend-icon="mdi-content-copy"
-                    @click="copyRegisterLink"
-                >
+                <v-btn prepend-icon="mdi-content-copy" @click="copyRegisterLink">
                     {{ $t("subject.register_link_button.title") }}
-                    <v-tooltip
-                        activator="parent"
-                        location="start"
-                        max-width="200vw"
-                    >
-                        {{ $t("subject.register_link_button.tooltip")}}
+                    <v-tooltip activator="parent" location="start" max-width="200vw">
+                        {{ $t("subject.register_link_button.tooltip") }}
                     </v-tooltip>
                 </v-btn>
             </div>
         </v-col>
     </v-row>
-
-
 </template>
 
 <script setup lang="ts">
-import {computed, ref, toRefs} from "vue";
-import {useSubjectDetailsQuery} from "@/queries/Subject";
+import { computed, ref, toRefs } from "vue";
+import { useSubjectDetailsQuery } from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectHeaderContainer from "@/components/subject/header/SubjectHeaderContainer.vue";
 import SubjectBody from "@/components/subject/body/SubjectBody.vue";
-import {useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 
 const props = defineProps<{
     subjectId: number;
 }>();
 
-const {subjectId} = toRefs(props);
+const { subjectId } = toRefs(props);
 const snackbar = ref(false);
 
-const {data: subject, error, isLoading, isError} = useSubjectDetailsQuery(subjectId);
+const { data: subject, error, isLoading, isError } = useSubjectDetailsQuery(subjectId);
 
 const router = useRouter();
 
 const registerLink = computed(() => {
     return router.resolve({
         name: "registerSubject",
-        params: {uuid: subject.value.uuid}
+        params: { uuid: subject.value.uuid },
     }).path;
 });
 
@@ -113,7 +97,6 @@ const copyRegisterLink = () => {
 </script>
 ;
 <style scoped>
-
 .back-button {
     margin: 30px;
 }
