@@ -72,7 +72,6 @@ watch(selectedTab, (newVal: number | undefined) => {
     if (newVal !== undefined) {
         emit("tab-changed", newVal);
     }
-    console.log("Selected tab changed to", newVal);
 });
 
 

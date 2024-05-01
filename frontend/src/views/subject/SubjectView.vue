@@ -4,6 +4,22 @@
     </div>
 
     <v-row v-else>
+
+        <v-snackbar
+            v-model="snackbar"
+            timeout="3000"
+            color="primary"
+        >
+            Register link copied to clipboard.
+            <template v-slot:actions>
+                <v-btn
+                    @click="snackbar = false"
+                >
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </template>
+        </v-snackbar>
+
         <v-col cols="1">
             <router-link :to="{ name: 'subjects'}">
                 <v-btn variant="elevated" class="back-button" rounded="xl" size="large">
@@ -43,18 +59,20 @@
                         Create project
                     </v-btn>
                 </router-link>
-                <router-link to="">
-                    <v-btn prepend-icon="mdi-content-copy">
-                        Register link
-                        <v-tooltip
-                            activator="parent"
-                            location="start"
-                            max-width="200vw"
-                        >
-                            Copy register link for this subject, this can be shared with students to register for the subject.
-                        </v-tooltip>
-                    </v-btn>
-                </router-link>
+                <v-btn
+                    prepend-icon="mdi-content-copy"
+                    @click="copyRegisterLink"
+                >
+                    Register link
+                    <v-tooltip
+                        activator="parent"
+                        location="start"
+                        max-width="200vw"
+                    >
+                        Copy register link for this subject, this can be shared with students to register for the
+                        subject.
+                    </v-tooltip>
+                </v-btn>
             </div>
         </v-col>
     </v-row>
@@ -63,19 +81,38 @@
 </template>
 
 <script setup lang="ts">
-import {toRefs} from "vue";
+import {computed, ref, toRefs} from "vue";
 import {useSubjectDetailsQuery, useSubjectUuidQuery} from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectHeaderContainer from "@/components/subject/header/SubjectHeaderContainer.vue";
 import SubjectBody from "@/components/subject/body/SubjectBody.vue";
+import {useRouter} from "vue-router";
 
 const props = defineProps<{
     subjectId: number;
 }>();
 
 const {subjectId} = toRefs(props);
+const snackbar = ref(false);
 
 const {data: subject, error, isLoading, isError} = useSubjectDetailsQuery(subjectId);
+
+const router = useRouter();
+
+const registerLink = computed(() => {
+    if (!isLoading) {
+        return router.resolve({
+            name: "registerSubject",
+            params: {uuid: subject!.uuid}
+        }).path;
+    }
+    return "";
+});
+
+const copyRegisterLink = () => {
+    //navigator.clipboard.writeText(registerLink.value);
+    snackbar.value = true;
+};
 </script>
 ;
 <style scoped>

@@ -1,4 +1,4 @@
-import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
+import {useQuery, type UseQueryReturnType} from "@tanstack/vue-query";
 import {
     getSubject,
     getSubjectInstructors,
@@ -8,7 +8,7 @@ import {
     getSubjectByUuid,
     registerToSubject, getSubjectUuid,
 } from "@/services/subject";
-import { type Ref, computed } from "vue";
+import {type Ref, computed} from "vue";
 import type Subject from "@/models/Subject";
 import type User from "@/models/User";
 import type Subject from "@/models/Subject";
