@@ -3,6 +3,12 @@ export default interface Submission {
     group_id: number;
     date: Date;
     project_id: number;
-    status: string;
+    status: number;
     files_uuid: string;
+}
+
+export enum SubmissionStatus {
+    Denied = 0,
+    InProgress = 1,
+    Accepted = 2,
 }
