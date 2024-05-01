@@ -8,12 +8,17 @@
                     <ProjectInfo :project="project!" :group="group!" />
                 </v-col>
                 <v-col cols="2" class="button-container">
-                    <router-link v-if="group" :to="`/api/groups/${group!.id}`">
+                    <router-link :to="`/subjects/${project!.subject_id}`">
+                        <v-btn class="group-button" prepend-icon="mdi-arrow-left">
+                            {{ $t("project.return_course") }}
+                        </v-btn>
+                    </router-link>
+                    <router-link v-if="group && !isSoloProject" :to="`/groups/${group!.id}`">
                         <v-btn class="group-button" prepend-icon="mdi-account-group">
                             {{ $t("project.group", { number: group!.id }) }}
                         </v-btn>
                     </router-link>
-                    <router-link v-else :to="`/projects/${projectId}/groups`">
+                    <router-link v-else-if="!isSoloProject" :to="`/projects/${projectId}/groups`">
                         <v-btn class="group-button" prepend-icon="mdi-account-group">
                             {{ $t("project.group_button") }}
                         </v-btn>
@@ -53,6 +58,8 @@ const {
 
 const isDataLoading = computed(() => isProjectLoading.value || isGroupLoading.value);
 const isDataError = computed(() => isProjectError.value || isGroupError.value);
+
+const isSoloProject = computed(() => project.value.capacity === 1);
 </script>
 
 <style scoped>
