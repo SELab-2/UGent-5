@@ -38,7 +38,7 @@
         </v-col>
         <v-col cols="2">
             <div class="action-btn-container">
-                <router-link :to="{name: 'create-project', params: { subjectId : subject.id}}">
+                <router-link :to="{name: 'create-project', params: { subjectId : subjectId}}">
                     <v-btn prepend-icon="mdi-plus-circle">
                         Create project
                     </v-btn>
@@ -76,7 +76,6 @@ const props = defineProps<{
 const {subjectId} = toRefs(props);
 
 const {data: subject, error, isLoading, isError} = useSubjectDetailsQuery(subjectId);
-const {data: uuid, uuidError, uuidIsLoading, uuidIsError} = useSubjectUuidQuery(subjectId);
 </script>
 ;
 <style scoped>

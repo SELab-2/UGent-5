@@ -6,7 +6,7 @@ import {
     getSubjects,
     getSubjectStudents,
     getSubjectByUuid,
-    registerToSubject,
+    registerToSubject, getSubjectUuid,
 } from "@/services/subject";
 import { type Ref, computed } from "vue";
 import type Subject from "@/models/Subject";
@@ -76,12 +76,13 @@ export function useSubjectDetailsQuery(
     return useQuery<SubjectDetails, Error>({
         queryKey: computed(() => createSubjectQueryKey(subjectId.value!, "details")),
         queryFn: async () => {
-            const [subject, instructors, students, projects] = (await Promise.all([
+            const [subject, instructors, students, projects, uuid] = (await Promise.all([
                 getSubject(subjectId.value!),
                 getSubjectInstructors(subjectId.value!),
                 getSubjectStudents(subjectId.value!),
                 getSubjectProjects(subjectId.value!),
-            ])) as [Subject, User[], User[], Project[]];
+                getSubjectUuid(subjectId.value!)
+            ])) as [Subject, User[], User[], Project[], string];
 
             return {
                 id: subject.id,
@@ -89,6 +90,7 @@ export function useSubjectDetailsQuery(
                 instructors,
                 students,
                 projects,
+                uuid
             };
         },
         enabled: () => subjectId.value !== undefined,
@@ -111,3 +113,4 @@ export function registerSubjectQuery(uuid: Ref<string>): UseQueryReturnType<Subj
         enabled: () => false,
     });
 }
+

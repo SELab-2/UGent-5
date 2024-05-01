@@ -7,4 +7,5 @@ export default interface SubjectDetails {
     instructors: User[];
     students: User[];
     projects: Project[];
+    uuid: string;
 }
