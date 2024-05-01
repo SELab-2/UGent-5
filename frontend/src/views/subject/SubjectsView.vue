@@ -10,6 +10,7 @@
                         <SubjectsHeaderContainer
                             :academic-years="academicYears"
                             :is-loading="isLoading"
+                            @academic-year-changed="onAcademicYearChanged"
                         ></SubjectsHeaderContainer>
                     </v-col>
                 </v-row>
@@ -43,7 +44,7 @@ import {useSubjectsQuery} from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectsHeaderContainer from "@/components/subjects/SubjectsHeaderContainer.vue";
 import SubjectCard from "@/components/subjects/SubjectCard.vue";
-import {computed} from "vue";
+import {computed, ref} from "vue";
 
 const {data: subjects, error, isLoading, isError} = useSubjectsQuery();
 
@@ -52,6 +53,13 @@ const academicYears = computed(() => {
         new Set([...(subjects.value || [])].map(subject => subject.academic_year))
     ).sort((a, b) => b - a);
 });
+
+const activeAcademicYear = ref(academicYears.value[0]);
+
+
+const onAcademicYearChanged = (academicYear: number) => {
+    activeAcademicYear.value = academicYear;
+}
 
 </script>
 

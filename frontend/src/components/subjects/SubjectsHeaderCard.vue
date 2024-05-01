@@ -31,7 +31,7 @@
                                         class="ma-1"
                                         variant="tonal"
                                     >
-                                        {{ academicYear + "-" + (academicYear + 1)}}
+                                        {{ (academicYear - 1) + "-" + academicYear}}
                                     </v-chip>
                                 </v-chip-group>
                             </div>
@@ -53,7 +53,7 @@ const props = defineProps<{
     isLoading: boolean;
 }>();
 const { academicYears } = toRefs(props)
-const activeAcademicYear = ref(null);
+const activeAcademicYear = ref(undefined);
 
 watch(academicYears, (newVal) => {
     if (newVal.length > 0) {
@@ -61,7 +61,15 @@ watch(academicYears, (newVal) => {
     }
 });
 
+const emit = defineEmits<{
+    (e: "academic-year-changed", academicYear: number): void;
+}>();
 
+watch(activeAcademicYear, (newVal: number | undefined) => {
+    if (newVal !== undefined) {
+        emit("academic-year-changed", newVal);
+    }
+});
 
 </script>
 
