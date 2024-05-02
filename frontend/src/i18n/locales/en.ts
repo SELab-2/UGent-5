@@ -38,7 +38,7 @@ export default {
         myProject: "My projects:",
         not_found: "No projects found.",
         archived: "Archived",
-        not_finished: "Not Finished"
+        not_finished: "Not Finished",
     },
     navigation: {
         home: "Home",

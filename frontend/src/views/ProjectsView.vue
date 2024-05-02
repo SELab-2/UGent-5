@@ -2,13 +2,19 @@
     <div>
         <v-container>
             <h1 v-if="isLoading" class="welcome">{{ $t("default.loading.loading_page") }}</h1>
-            <h1 v-else-if="isError || noProjectsFound" class="welcome"> {{ $t("project.not_found")}}</h1>
+            <h1 v-else-if="isError || noProjectsFound" class="welcome">
+                {{ $t("project.not_found") }}
+            </h1>
             <div v-else class="projectInfo">
                 <v-row class="rowheader">
                     <h1>{{ $t("project.myProject") }}</h1>
                     <v-btn-toggle v-model="activeButton">
-                        <v-btn value="archived" class="leftbuttonspace">{{ $t("project.archived") }}</v-btn>
-                        <v-btn value="notFinished" class="leftbuttonspace">{{ $t("project.not_finished") }}</v-btn>
+                        <v-btn value="archived" class="leftbuttonspace">{{
+                            $t("project.archived")
+                        }}</v-btn>
+                        <v-btn value="notFinished" class="leftbuttonspace">{{
+                            $t("project.not_finished")
+                        }}</v-btn>
                     </v-btn-toggle>
                 </v-row>
                 <ProjectMiniCard
@@ -25,7 +31,7 @@
 <script setup lang="ts">
 import { useProjectsQuery } from "@/queries/Project";
 import ProjectMiniCard from "@/components/project/ProjectMiniCard.vue";
-import {computed, ref, watch} from "vue";
+import { computed, ref } from "vue";
 import Project from "@/models/Project";
 
 const { data: projects, isLoading, isError } = useProjectsQuery();
@@ -50,7 +56,6 @@ const filteredProjects = computed(() => {
             return projects.value;
     }
 });
-
 </script>
 
 <style scoped>
@@ -59,8 +64,8 @@ const filteredProjects = computed(() => {
 }
 
 .projectInfo {
-     padding: 10px;
- }
+    padding: 10px;
+}
 
 .rowheader {
     padding: 10px;
@@ -69,5 +74,4 @@ const filteredProjects = computed(() => {
 .leftbuttonspace {
     margin-left: 10px;
 }
-
 </style>
