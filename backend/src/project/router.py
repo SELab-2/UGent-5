@@ -1,6 +1,7 @@
 from typing import Sequence, List
 
-from fastapi import APIRouter, Depends, UploadFile
+from docker import DockerClient
+from fastapi import APIRouter, Depends, UploadFile, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.dependencies import authentication_validation
@@ -21,6 +22,7 @@ from .service import (
     delete_project,
     update_project, update_test_files,
 )
+from ..docker_tests.dependencies import get_docker_client
 from ..docker_tests.docker_tests import using_default_docker_image, build_docker_image
 from ..docker_tests.utils import get_files_from_dir, tests_path, write_and_unpack_files, remove_test_files
 
@@ -92,15 +94,17 @@ async def get_test_files(test_files_uuid: str = Depends(retrieve_test_files_uuid
     dependencies=[Depends(patch_permission_validation)],
 )
 async def put_test_files(
+    background_tasks: BackgroundTasks,
     files: List[UploadFile],
     project: Project = Depends(retrieve_project),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
+    client: DockerClient = Depends(get_docker_client)
 ):
     uuid = write_and_unpack_files(files, project.test_files_uuid)
 
     if not using_default_docker_image(uuid):
         # build custom docker image if dockerfile is present
-        build_docker_image(tests_path(uuid), uuid)
+        background_tasks.add_task(build_docker_image, tests_path(uuid), uuid, client)
 
     return await update_test_files(db, project.id, uuid)
 

@@ -1,11 +1,20 @@
+import asyncio
 import os
 import shutil
+from typing import Callable, Awaitable
 from uuid import uuid4
 
 from fastapi import UploadFile
 from starlette.responses import FileResponse
 
 from src import config
+
+
+def to_async[**P, R](func: Callable[P, R]) -> Callable[P, Awaitable[R]]:
+    """Decorator to make a blocking sync function an awaitable async function."""
+    async def run_async(*args: P.args, **kwargs: P.kwargs) -> R:
+        return await asyncio.to_thread(func, *args, **kwargs)
+    return run_async
 
 
 def submissions_path(*paths: str) -> str:
@@ -26,6 +35,11 @@ def feedback_path(uuid: str, *paths) -> str:
 
 def tests_path(uuid: str, *paths) -> str:
     return str(os.path.abspath(os.path.join(config.CONFIG.file_path, "projects", uuid, *paths)))
+
+
+def touch(*paths: str):
+    for path in paths:
+        open(path, 'a').close()
 
 
 def write_and_unpack_files(files: list[UploadFile], uuid: str | None) -> str:
