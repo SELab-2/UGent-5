@@ -40,20 +40,15 @@ export async function createSubmission(groupId: number, formData: FormData): Pro
             method: "POST",
             body: formData,
         },
-        true
+        { omitContentType: true }
     );
 }
 
 export async function joinGroup(groupId: number, uid: string): Promise<void> {
-    try {
-        await authorized_fetch(`/api/groups/${groupId}/${uid}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-    } catch (error) {
-        console.error("Error joining group:", error);
-        throw error;
-    }
+    await authorized_fetch(`/api/groups/${groupId}/${uid}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
 }

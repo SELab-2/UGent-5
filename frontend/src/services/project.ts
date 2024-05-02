@@ -41,7 +41,9 @@ export async function createSubmission(groupId: number, formData: FormData): Pro
             method: "POST",
             body: formData,
         },
-        true
+        {
+            omitContentType: true,
+        }
     );
 }
 
