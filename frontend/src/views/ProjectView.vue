@@ -23,10 +23,10 @@
                             {{ $t("project.group_button") }}
                         </v-btn>
                     </router-link>
-                    <NeedHelpButton v-if="isTeacher" class="group-button" :email="subject!.email"></NeedHelpButton>
-                    <router-link v-if="isTeacher" :to="`/groups/${group!.id}`">
-                        <v-btn class="group-button" prepend-icon="mdi-account-group">
-                            {{ $t("project.group", { number: group!.id }) }}
+                    <NeedHelpButton v-if="!isTeacher" class="group-button" :email="subject!.email"></NeedHelpButton>
+                    <router-link v-if="isTeacher" :to="`/projects/${projectId}/edit`">
+                        <v-btn class="group-button" prepend-icon="mdi-pencil">
+                            {{ $t("project.edit") }}
                         </v-btn>
                     </router-link>
                 </v-col>
@@ -97,10 +97,7 @@ const isDataError = computed(() =>
     || isSubjectError.value
 );
 
-const isSoloProject = computed(() => {
-    project.value.capacity === 1;
-    console.log(subject.value);
-});
+const isSoloProject = computed(() => project.value.capacity === 1);
 </script>
 
 <style scoped>

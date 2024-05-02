@@ -42,6 +42,7 @@ export default {
         myProject: "Mijn projecten:",
         return_course: "Terug naar vak",
         capacity_group: "Maximaal aantal leden per groep: ",
+        edit: "Bewerk project",
     },
     navigation: {
         home: "Hoofdscherm",

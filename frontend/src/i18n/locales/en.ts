@@ -42,6 +42,7 @@ export default {
         myProject: "My projects:",
         return_course: "Back to subject",
         capacity_group: "Maximum amount of group members: ",
+        edit: "Edit project",
     },
     navigation: {
         home: "Home",
