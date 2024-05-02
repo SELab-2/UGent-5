@@ -6,7 +6,7 @@ from uuid import uuid4
 
 from fastapi import UploadFile
 
-from src.docker_tests.utils import submission_path
+from src.docker_tests.utils import submission_path, submissions_path
 from src.project.schemas import Project
 from src.submission.exceptions import UnMetRequirements
 
@@ -43,3 +43,7 @@ def upload_files(files: list[UploadFile], project: Project) -> str:
         raise UnMetRequirements(errors)
 
     return uuid
+
+
+def remove_files(uuid: str):
+    shutil.rmtree(submissions_path(uuid))
