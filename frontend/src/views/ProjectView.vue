@@ -5,7 +5,12 @@
         <div v-else class="projectInfo">
             <v-row>
                 <v-col cols="10">
-                    <ProjectInfo :project="project!" :group="group!" :instructors="instructors!" :subject="subject!" />
+                    <ProjectInfo
+                        :project="project!"
+                        :group="group!"
+                        :instructors="instructors!"
+                        :subject="subject!"
+                    />
                 </v-col>
                 <v-col cols="2" class="button-container">
                     <router-link :to="`/subjects/${project!.subject_id}`">
@@ -13,17 +18,27 @@
                             {{ $t("project.return_course") }}
                         </v-btn>
                     </router-link>
-                    <router-link v-if="group && !isSoloProject && !isTeacher" :to="`/groups/${group!.id}`">
+                    <router-link
+                        v-if="group && !isSoloProject && !isTeacher"
+                        :to="`/groups/${group!.id}`"
+                    >
                         <v-btn class="group-button" prepend-icon="mdi-account-group">
                             {{ $t("project.group", { number: group!.id }) }}
                         </v-btn>
                     </router-link>
-                    <router-link v-else-if="!isSoloProject && !isTeacher" :to="`/projects/${projectId}/groups`">
+                    <router-link
+                        v-else-if="!isSoloProject && !isTeacher"
+                        :to="`/projects/${projectId}/groups`"
+                    >
                         <v-btn class="group-button" prepend-icon="mdi-account-group">
                             {{ $t("project.group_button") }}
                         </v-btn>
                     </router-link>
-                    <NeedHelpButton v-if="!isTeacher" class="group-button" :email="subject!.email"></NeedHelpButton>
+                    <NeedHelpButton
+                        v-if="!isTeacher"
+                        class="group-button"
+                        :email="subject!.email"
+                    ></NeedHelpButton>
                     <router-link v-if="isTeacher" :to="`/projects/${projectId}/edit`">
                         <v-btn class="group-button" prepend-icon="mdi-pencil">
                             {{ $t("project.edit") }}
@@ -38,11 +53,11 @@
 <script setup lang="ts">
 import ProjectInfo from "@/components/project/ProjectInfo.vue";
 import { useProjectQuery } from "@/queries/Project";
-import {computed, ref, toRefs, watch} from "vue";
+import { computed, ref, toRefs, watch } from "vue";
 import NeedHelpButton from "@/components/buttons/NeedHelpButton.vue";
 import { useUserGroupQuery } from "@/queries/Group";
-import {useSubjectInstructorsQuery, useSubjectQuery} from "@/queries/Subject";
-import {useUserQuery} from "@/queries/User";
+import { useSubjectInstructorsQuery, useSubjectQuery } from "@/queries/Subject";
+import { useUserQuery } from "@/queries/User";
 
 const props = defineProps<{
     projectId: number;
@@ -65,13 +80,13 @@ const {
 const {
     data: subject,
     isLoading: isSubjectLoading,
-    isError: isSubjectError
+    isError: isSubjectError,
 } = useSubjectQuery(computed(() => project.value?.subject_id));
 
 const {
     data: instructors,
     isLoading: isInstructorsLoading,
-    isError: isInstructorsError
+    isError: isInstructorsError,
 } = useSubjectInstructorsQuery(computed(() => project.value?.subject_id));
 
 const { data: user } = useUserQuery(null);
@@ -80,21 +95,23 @@ const isTeacher = computed(() => {
     if (!user.value || !instructors.value) {
         return false;
     }
-    return instructors.value.some(instructor => instructor.uid === user.value.uid);
+    return instructors.value.some((instructor) => instructor.uid === user.value.uid);
 });
 
-const isDataLoading = computed(() =>
-    isProjectLoading.value
-    || isGroupLoading.value
-    || isInstructorsLoading.value
-    || isSubjectLoading.value
+const isDataLoading = computed(
+    () =>
+        isProjectLoading.value ||
+        isGroupLoading.value ||
+        isInstructorsLoading.value ||
+        isSubjectLoading.value
 );
 
-const isDataError = computed(() =>
-    isProjectError.value
-    || isGroupError.value
-    || isInstructorsError.value
-    || isSubjectError.value
+const isDataError = computed(
+    () =>
+        isProjectError.value ||
+        isGroupError.value ||
+        isInstructorsError.value ||
+        isSubjectError.value
 );
 
 const isSoloProject = computed(() => project.value.capacity === 1);

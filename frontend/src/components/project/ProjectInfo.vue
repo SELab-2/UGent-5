@@ -46,8 +46,8 @@
 import type Project from "@/models/Project";
 import type Group from "@/models/Group";
 import SubmitInfo from "@/components/project/submit/SubmitInfo.vue";
-import {toRefs} from "vue";
-import {Quill} from "@vueup/vue-quill";
+import { toRefs } from "vue";
+import { Quill } from "@vueup/vue-quill";
 import User from "@/models/User";
 import Subject from "@/models/Subject";
 
@@ -60,18 +60,15 @@ const props = defineProps<{
 
 const { project, group, instructors, subject } = toRefs(props);
 
-
 const renderQuillContent = (content: string) => {
     const quill = new Quill(document.createElement("div"));
     quill.root.innerHTML = content;
     return quill.root.innerHTML;
 };
-
 </script>
 
 <style scoped>
-
-.submitInfo{
+.submitInfo {
     padding: 10px;
     margin-top: 20px;
 }

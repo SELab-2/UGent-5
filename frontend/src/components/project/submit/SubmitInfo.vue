@@ -29,7 +29,7 @@ import type Project from "@/models/Project";
 import type Group from "@/models/Group";
 import type Submission from "@/models/Submission";
 import { SubmissionStatus } from "@/models/Submission";
-import {useI18n} from "vue-i18n";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps<{
     group: Group;
@@ -43,7 +43,6 @@ const { group, project } = toRefs(props);
 const { data: submissions } = useSubmissionQuery();
 
 const latestSubmission = computed(() => {
-
     // Filter submissions for the specific group and project
     const filteredSubmissions = submissions.value?.filter(
         (submission: Submission) =>
@@ -67,7 +66,6 @@ const getSubmissionStatus = computed(() => {
         return "";
     }
 });
-
 </script>
 
 <style scoped></style>
