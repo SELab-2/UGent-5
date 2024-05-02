@@ -37,8 +37,11 @@ class Submission(Base):
     stdout: Mapped[str] = mapped_column(nullable=True)
     stderr: Mapped[str] = mapped_column(nullable=True)
 
+    # Without passive_deletes="all", sqlalchemy will for some reason try to set submission_id of TestResult to NULL,
+    # causing a violation error of not_null-constraint.
+    # see https://docs.sqlalchemy.org/en/20/orm/relationship_api.html#sqlalchemy.orm.relationship.params.passive_deletes
     testresults: Mapped[List["TestResult"]] = relationship(
-        back_populates="submission", lazy="joined"
+        back_populates="submission", lazy="joined", passive_deletes="all"
     )
 
 
