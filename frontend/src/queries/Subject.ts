@@ -1,7 +1,7 @@
 import { computed, toValue } from "vue";
-import type { Ref, MaybeRefOrGetter } from "vue";
-import { useQuery } from "@tanstack/vue-query";
-import type { UseQueryReturnType, QueryStatus } from "@tanstack/vue-query";
+import type { Ref, MaybeRefOrGetter, MaybeRef } from "vue";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
+import type { UseQueryReturnType, QueryStatus, UseMutationReturnType } from "@tanstack/vue-query";
 import {
     getSubject,
     getSubjectInstructors,
@@ -15,14 +15,6 @@ import type User from "@/models/User";
 import type Subject from "@/models/Subject";
 import type Project from "@/models/Project";
 import type SubjectDetails from "@/models/SubjectDetails";
-
-// Generalized function to create query keys based on subject details
-function createSubjectQueryKey(
-    subjectId: number | string,
-    detail: string = ""
-): (string | number)[] {
-    return ["subject", subjectId, detail].filter(Boolean);
-}
 
 function SUBJECT_QUERY_KEY(subjectId: number | string): (string | number)[] {
     return ["subject", subjectId];
@@ -172,11 +164,18 @@ export function useSubjectDetailsQuery(subjectId: MaybeRefOrGetter<number | unde
     return { status, isSuccess, isError, isLoading, data, error };
 }
 
-// TODO: This should be a mutation
-export function registerSubjectQuery(uuid: Ref<string>): UseQueryReturnType<Subject, Error> {
-    return useQuery<Subject, Error>({
-        queryKey: computed(() => createSubjectQueryKey(uuid.value)),
-        queryFn: () => registerToSubject(uuid.value),
-        enabled: () => false,
+export function useRegisterToSubjectMutation(): UseMutationReturnType<
+    Subject,
+    Error,
+    MaybeRef<string>,
+    {}
+> {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (uuid) => await registerToSubject(toValue(uuid)),
+        // TODO: Add optimistic update
+        onSettled: () => {
+            queryClient.invalidateQueries({ queryKey: SUBJECTS_QUERY_KEY() });
+        },
     });
 }
