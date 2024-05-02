@@ -91,7 +91,7 @@ import { useSubjectInstructorsQuery, useSubjectStudentsQuery } from "@/queries/S
 import { useMySubjectsQuery } from "@/queries/User";
 import { useCreateProjectMutation, useUploadProjectFilesMutation } from "@/queries/Project";
 import { useCreateGroupsMutation, useJoinGroupMutation } from "@/queries/Group";
-import {ref, computed, reactive, watch} from "vue";
+import { ref, computed, reactive, watch } from "vue";
 import type User from "@/models/User";
 import type { ProjectForm } from "@/models/Project";
 import type { GroupForm } from "@/models/Group";
@@ -152,7 +152,9 @@ function handleRadioDateChange(newDate) {
 async function submitForm() {
     const formattedDeadline = deadline.value.toISOString();
     const formattedPublishDate = publishDate.value.toISOString();
-    const formattedEnrollDeadline = !enrollDeadline.value ? null : enrollDeadline.value.toISOString();
+    const formattedEnrollDeadline = !enrollDeadline.value
+        ? null
+        : enrollDeadline.value.toISOString();
 
     const projectData: ProjectForm = {
         name: project_title.value,
@@ -163,7 +165,7 @@ async function submitForm() {
         capacity: capacity.value,
         requirements: [],
         publish_date: formattedPublishDate,
-        enroll_deadline: formattedEnrollDeadline
+        enroll_deadline: formattedEnrollDeadline,
     };
 
     try {
@@ -206,7 +208,7 @@ async function submitForm() {
             files.value.forEach((file) => {
                 formData.append("files", file);
             });
-            await uploadProjectFilesMutation.mutateAsync({projectId: createdProjectId, formData});
+            await uploadProjectFilesMutation.mutateAsync({ projectId: createdProjectId, formData });
             console.log("Files uploaded successfully");
         }
     } catch (error) {

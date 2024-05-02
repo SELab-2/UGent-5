@@ -40,13 +40,17 @@ function formatTime(date: Date): string {
     return `${date.getHours()}:${date.getMinutes()}`;
 }
 
-watch([date, time], () => {
-    const [hours, minutes] = time.value.split(":").map(Number);
-    const localDate = new Date(date.value);
-    localDate.setHours(hours);
-    localDate.setMinutes(minutes);
-    emit('update:modelValue', new Date(localDate));
-}, { deep: true });
+watch(
+    [date, time],
+    () => {
+        const [hours, minutes] = time.value.split(":").map(Number);
+        const localDate = new Date(date.value);
+        localDate.setHours(hours);
+        localDate.setMinutes(minutes);
+        emit("update:modelValue", new Date(localDate));
+    },
+    { deep: true }
+);
 
 // Computed to format the display value in the text field
 const displayDate = computed(() => {
@@ -55,7 +59,7 @@ const displayDate = computed(() => {
         const [hours, minutes] = time.value.split(":").map(Number);
         selectedDate.setHours(hours, minutes);
         // Format manually to avoid timezone conversion issues
-        return `${selectedDate.getFullYear()}-${(selectedDate.getMonth()+1).toString().padStart(2, '0')}-${selectedDate.getDate().toString().padStart(2, '0')} ${selectedDate.getHours().toString().padStart(2, '0')}:${selectedDate.getMinutes().toString().padStart(2, '0')}`;
+        return `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, "0")}-${selectedDate.getDate().toString().padStart(2, "0")} ${selectedDate.getHours().toString().padStart(2, "0")}:${selectedDate.getMinutes().toString().padStart(2, "0")}`;
     }
     return "";
 });
