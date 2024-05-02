@@ -52,9 +52,9 @@
                 </v-col>
                 <v-col cols="12" md="6">
                     <RadioButtonList
-                        v-model="selectedGroupProject"
                         :title="'Group Project Options'"
                         :options="groupProjectOptions"
+                        @update:radio_date="handleRadioDateChange"
                         @update:capacity="handleCapacityChange"
                         required
                     />
@@ -91,7 +91,7 @@ import { useSubjectInstructorsQuery, useSubjectStudentsQuery } from "@/queries/S
 import { useMySubjectsQuery } from "@/queries/User";
 import { useCreateProjectMutation, useUploadProjectFilesMutation } from "@/queries/Project";
 import { useCreateGroupsMutation, useJoinGroupMutation } from "@/queries/Group";
-import { ref, computed, reactive } from "vue";
+import {ref, computed, reactive, watch} from "vue";
 import type User from "@/models/User";
 import type { ProjectForm } from "@/models/Project";
 import type { GroupForm } from "@/models/Group";
@@ -105,10 +105,15 @@ const selectedTeachers = reactive<CheckBoxItem[]>([]);
 const selectedAssitants = reactive<CheckBoxItem[]>([]);
 const deadline = ref(new Date());
 const publishDate = ref(new Date());
+const enrollDeadline = ref(null);
 const selectedGroupProject = ref("student");
 const capacity = ref(1);
 const files = ref<File[]>([]);
 const quillEditor = ref<typeof QuillEditor | null>(null);
+
+watch(deadline, (newValue, oldValue) => {
+    console.log(`Deadline changed from ${oldValue.toISOString()} to ${newValue.toISOString()}`);
+});
 
 const {
     data: mySubjectsData,
@@ -140,15 +145,25 @@ const createGroupsMutation = useCreateGroupsMutation();
 const joinGroupMutation = useJoinGroupMutation();
 const uploadProjectFilesMutation = useUploadProjectFilesMutation();
 
+function handleRadioDateChange(newDate) {
+    enrollDeadline.value = newDate;
+}
+
 async function submitForm() {
+    const formattedDeadline = deadline.value.toISOString();
+    const formattedPublishDate = publishDate.value.toISOString();
+    const formattedEnrollDeadline = !enrollDeadline.value ? null : enrollDeadline.value.toISOString();
+
     const projectData: ProjectForm = {
         name: project_title.value,
-        deadline: deadline.value,
+        deadline: formattedDeadline,
         description: quillEditor.value?.getQuill().root.innerHTML || "",
         subject_id: selectedSubject.value,
         is_visible: true,
         capacity: capacity.value,
         requirements: [],
+        publish_date: formattedPublishDate,
+        enroll_deadline: formattedEnrollDeadline
     };
 
     try {
@@ -186,12 +201,14 @@ async function submitForm() {
                 });
             });
         }
-        const formData = new FormData();
-        files.value.forEach((file) => {
-            formData.append("files", file);
-        });
-        await uploadProjectFilesMutation.mutateAsync({ projectId: createdProjectId, formData });
-        console.log("Files uploaded successfully");
+        if (files.value.length > 0) {
+            const formData = new FormData();
+            files.value.forEach((file) => {
+                formData.append("files", file);
+            });
+            await uploadProjectFilesMutation.mutateAsync({projectId: createdProjectId, formData});
+            console.log("Files uploaded successfully");
+        }
     } catch (error) {
         console.error("Error during project or group creation or file upload:", error);
     }

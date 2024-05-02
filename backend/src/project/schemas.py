@@ -20,6 +20,8 @@ class ProjectBase(BaseModel):
     is_visible: bool = Field(default=False)
     capacity: int = Field(gt=0)
     requirements: List[Requirement] = []
+    enroll_deadline: Optional[datetime]
+    publish_date: datetime
 
     @field_validator("description")
     def validate_description(cls, value: str) -> str:

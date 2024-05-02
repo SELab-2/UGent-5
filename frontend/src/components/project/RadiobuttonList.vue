@@ -45,22 +45,28 @@ defineProps<{
 
 const isToggled = ref(true);
 const selectedOption = ref(model);
-const radio_date = ref(new Date());
+const radio_date = ref<Date | null>(null);
 const capacity = ref(1); // Default capacity
 
 const emit = defineEmits<{
-    (e: "update:radio_date", value: Date): void;
+    (e: "update:radio_date", value: Date | null): void;
     (e: "update:capacity", value: number): void;
 }>();
 
-watch(capacity, (newCapacity) => {
-    emit("update:capacity", newCapacity);
-});
-
 watch(selectedOption, (newValue) => {
-    if (newValue === "course") {
-        capacity.value = 1; // Reset capacity when 'student' is not selected
-        emit("update:capacity", capacity.value);
+    if (newValue === "student") {
+        // Ensure radio_date can be set
+        radio_date.value = new Date(); // or keep the existing date
+    } else {
+        // Reset radio_date when 'student' is not selected
+        radio_date.value = null;
     }
+    emit("update:radio_date", radio_date.value);
+
+    // Adjust capacity based on the selected option
+    if (newValue !== "student" && newValue !== "random") {
+        capacity.value = 1; // Reset capacity
+    }
+    emit("update:capacity", capacity.value);
 });
 </script>

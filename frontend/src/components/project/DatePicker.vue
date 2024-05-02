@@ -16,7 +16,7 @@
             ></v-text-field>
         </template>
         <v-date-picker v-model="date" no-title></v-date-picker>
-        <v-time-picker v-model="time"></v-time-picker>
+        <v-time-picker v-model="time" format="24hr"></v-time-picker>
     </v-menu>
 </template>
 
@@ -34,19 +34,19 @@ const emit = defineEmits(["update:modelValue"]);
 // Local reactive state for date and time
 const menuVisible = ref(false);
 const date = ref(props.modelValue || new Date()); // defaulting to a new Date if modelValue isn't provided
-const time = ref("12:00"); // default to noon, or could be null if you prefer
+const time = ref(formatTime(props.modelValue || new Date()));
 
-// Whenever the date or time changes, emit the new combined value
-watch(
-    () => props.modelValue,
-    (newVal) => {
-        if (newVal) {
-            date.value = new Date(newVal);
-            time.value = `${newVal.getHours()}:${newVal.getMinutes()}`;
-        }
-    },
-    { immediate: true }
-);
+function formatTime(date: Date): string {
+    return `${date.getHours()}:${date.getMinutes()}`;
+}
+
+watch([date, time], () => {
+    const [hours, minutes] = time.value.split(":").map(Number);
+    const localDate = new Date(date.value);
+    localDate.setHours(hours);
+    localDate.setMinutes(minutes);
+    emit('update:modelValue', new Date(localDate));
+}, { deep: true });
 
 // Computed to format the display value in the text field
 const displayDate = computed(() => {
@@ -54,7 +54,8 @@ const displayDate = computed(() => {
         const selectedDate = new Date(date.value);
         const [hours, minutes] = time.value.split(":").map(Number);
         selectedDate.setHours(hours, minutes);
-        return selectedDate.toISOString().substring(0, 16).replace("T", " ");
+        // Format manually to avoid timezone conversion issues
+        return `${selectedDate.getFullYear()}-${(selectedDate.getMonth()+1).toString().padStart(2, '0')}-${selectedDate.getDate().toString().padStart(2, '0')} ${selectedDate.getHours().toString().padStart(2, '0')}:${selectedDate.getMinutes().toString().padStart(2, '0')}`;
     }
     return "";
 });

@@ -8,6 +8,8 @@ export default interface Project {
     requirements: [];
     description: String;
     capacity: number;
+    enroll_deadline: Date;
+    publish_date: Date;
 }
 
 export interface ProjectForm {
