@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import { type Middleware, type MiddlewareContext, nextFactory } from "./middleware/index";
 import isAuthenticated from "./middleware/isAuthenticated";
 import loginMiddleware from "./middleware/login";
+import useCanVisit from "./middleware/canVisit";
+import useIsTeacher from "@/composables/useIsTeacher";
 
 declare module "vue-router" {
     interface RouteMeta {
@@ -75,6 +77,12 @@ const router = createRouter({
             name: "create-project",
             component: () => import("../views/CreateProjectView.vue"),
             props: (route) => ({ subjectId: Number(route.params.subjectId) }),
+            meta: {
+                middleware: useCanVisit((queryClient) => {
+                    const { isTeacher, isLoading } = useIsTeacher(queryClient);
+                    return { condition: isTeacher, isLoading };
+                }),
+            },
         },
         {
             path: "/subjects/register/:uuid",
