@@ -30,7 +30,11 @@ export async function getProjects(): Promise<Project[]> {
     const result = await authorized_fetch<{ projects: Project[] }>(`/api/users/me/projects`, {
         method: "GET",
     });
-    return result.projects;
+    const projects = result.projects.map((project) => ({
+        ...project,
+        deadline: new Date(project.deadline),
+    }));
+    return projects;
 }
 
 // Function to create a new submission for a specific group
