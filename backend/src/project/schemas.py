@@ -57,4 +57,3 @@ class ProjectUpdate(BaseModel):
         if value is not None and value < datetime.now(value.tzinfo):
             raise ValueError("The deadline cannot be in the past")
         return value
-
