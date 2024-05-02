@@ -10,7 +10,7 @@
             {{ $t("submit.no_submission") }}
         </v-card-subtitle>
         <v-card-text v-if="latestSubmission" class="subtitle">
-            {{ $t("submit.status_submission", { status: SubmissionStatus[latestSubmission.status] }) }}
+            {{ $t("submit.status_submission", { status: getSubmissionStatus }) }}
         </v-card-text>
         <v-card-actions>
             <router-link :to="`/project/${project?.id}/submit`">
@@ -29,19 +29,20 @@ import type Project from "@/models/Project";
 import type Group from "@/models/Group";
 import type Submission from "@/models/Submission";
 import { SubmissionStatus } from "@/models/Submission";
+import {useI18n} from "vue-i18n";
 
 const props = defineProps<{
     group: Group;
     project: Project;
 }>();
 
+const { t } = useI18n();
+
 const { group, project } = toRefs(props);
 
 const { data: submissions } = useSubmissionQuery();
 
 const latestSubmission = computed(() => {
-    // Log all submissions before filtering
-    console.log("All submissions:", submissions.value);
 
     // Filter submissions for the specific group and project
     const filteredSubmissions = submissions.value?.filter(
@@ -58,9 +59,13 @@ const latestSubmission = computed(() => {
     return sortedSubmissions?.[0];
 });
 
-const submissionStatus = computed(() =>{
-   SubmissionStatus[latestSubmission?.value.status]
-   return $t()
+const getSubmissionStatus = computed(() => {
+    if (latestSubmission.value) {
+        const statusKey = SubmissionStatus[latestSubmission.value.status];
+        return t("submit." + statusKey);
+    } else {
+        return "";
+    }
 });
 
 </script>

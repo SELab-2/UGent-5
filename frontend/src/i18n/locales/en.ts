@@ -26,8 +26,11 @@ export default {
         submissions: "Submission zone",
         latest_submission: "Latest submission:",
         new_submission: "Submit new",
-        status_submission: "Submission was: {status}",
+        status_submission: "Submission is: {status}",
         no_submission: "No submission found",
+        Denied: "denied",
+        InProgress: "in progress",
+        Accepted: "accepted",
     },
     project: {
         deadline: "Deadline",

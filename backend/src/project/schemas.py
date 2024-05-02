@@ -21,10 +21,6 @@ class ProjectBase(BaseModel):
     capacity: int = Field(gt=0)
     requirements: List[Requirement] = []
 
-    @field_validator("description")
-    def validate_description(cls, value: str) -> str:
-        return escape(value, quote=False)
-
 
 class ProjectCreate(ProjectBase):
     pass
@@ -62,6 +58,3 @@ class ProjectUpdate(BaseModel):
             raise ValueError("The deadline cannot be in the past")
         return value
 
-    @field_validator("description")
-    def validate_description(cls, value: str) -> str:
-        return escape(value, quote=False)

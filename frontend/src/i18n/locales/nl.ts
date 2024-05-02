@@ -28,6 +28,9 @@ export default {
         new_submission: "Nieuwe indiening",
         status_submission: "Indiening is: {status}",
         no_submission: "Geen indiening teruggevonden",
+        Denied: "afgewezen",
+        InProgress: "in behandeling",
+        Accepted: "geaccepteerd",
     },
     project: {
         deadline: "Deadline",
