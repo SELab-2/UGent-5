@@ -40,4 +40,4 @@ alembic downgrade -1
 alembic downgrade base
 ```
 
-For more examples, see the [official alembic tutorial](https://alembic.sqlalchemy.org/en/latest/tutorial.html).
+For more examples, see the [official Alembic tutorial](https://alembic.sqlalchemy.org/en/latest/tutorial.html).
