@@ -54,24 +54,24 @@ const router = createRouter({
             name: "project",
             component: () => import("../views/ProjectView.vue"),
             props: (route) => ({ projectId: Number(route.params.projectId) }),
-            meta : {
+            meta: {
                 middleware: useCanVisit((queryClient) => {
                     // TODO: implement -> check if user is enlroled in subject
                     return { condition: ref(true), isLoading: ref(false) };
                 }),
-            }
+            },
         },
         {
             path: "/project/:projectId(\\d+)/submit",
             name: "onSubmit",
             component: () => import("../views/SubmitView.vue"),
             props: (route) => ({ projectId: Number(route.params.projectId) }),
-            meta : {
+            meta: {
                 middleware: useCanVisit((queryClient) => {
                     // TODO: implement -> check if user is enlroled in subject and in a group for project
                     return { condition: ref(true), isLoading: ref(false) };
                 }),
-            }
+            },
         },
         {
             path: "/subjects",
@@ -84,12 +84,12 @@ const router = createRouter({
             name: "subject",
             component: () => import("../views/subject/SubjectView.vue"),
             props: (route) => ({ subjectId: Number(route.params.subjectId) }),
-            meta : {
+            meta: {
                 middleware: useCanVisit((queryClient) => {
                     // TODO: implement -> check if user is enlroled in subject
                     return { condition: ref(true), isLoading: ref(false) };
                 }),
-            }
+            },
         },
         {
             path: "/subjects/:subjectId(\\d+)/create-project",
@@ -119,9 +119,9 @@ const router = createRouter({
             path: "/admin",
             name: "admin",
             component: () => import("../views/AdminView.vue"),
-            meta : {
+            meta: {
                 middleware: useCanVisit(useIsAdminCondition),
-            }
+            },
         },
         {
             path: "/:pathMatch(.*)",
