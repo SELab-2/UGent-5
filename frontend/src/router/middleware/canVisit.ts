@@ -6,7 +6,10 @@ import useIsTeacher from "@/composables/useIsTeacher";
 import { useSubjectsQuery } from "@/queries/Subject";
 
 export interface CanVisitCondition {
-    (queryClient: QueryClient, context: MiddlewareContext): { condition: Ref<boolean>; isLoading: Ref<boolean> };
+    (
+        queryClient: QueryClient,
+        context: MiddlewareContext
+    ): { condition: Ref<boolean>; isLoading: Ref<boolean> };
 }
 
 function useCanVisit(useCondition: CanVisitCondition): Middleware {
@@ -72,10 +75,10 @@ export const useIsTeacherCondition: CanVisitCondition = (qc) => {
 };
 
 export const useIsPartOfSubjectCondition: CanVisitCondition = (qc, ctx) => {
-        const subjectId = Number(ctx.to.params.subjectId);
-        const {data: subjects, isLoading} = useSubjectsQuery(qc);
-        const condition = computed(() => {
-            return subjects.value?.findIndex((subject) => subject.id === subjectId) !== -1;
-        })
-        return { condition, isLoading };
+    const subjectId = Number(ctx.to.params.subjectId);
+    const { data: subjects, isLoading } = useSubjectsQuery(qc);
+    const condition = computed(() => {
+        return subjects.value?.findIndex((subject) => subject.id === subjectId) !== -1;
+    });
+    return { condition, isLoading };
 };

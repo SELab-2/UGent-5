@@ -2,7 +2,12 @@ import { createRouter, createWebHistory } from "vue-router";
 import { type Middleware, type MiddlewareContext, nextFactory } from "./middleware/index";
 import isAuthenticated from "./middleware/isAuthenticated";
 import loginMiddleware from "./middleware/login";
-import useCanVisit, { useIsAdminCondition, useIsTeacherCondition, useIsPartOfSubjectCondition, useAndCondition } from "./middleware/canVisit";
+import useCanVisit, {
+    useIsAdminCondition,
+    useIsTeacherCondition,
+    useIsPartOfSubjectCondition,
+    useAndCondition,
+} from "./middleware/canVisit";
 import { ref } from "vue";
 
 declare module "vue-router" {
@@ -93,7 +98,9 @@ const router = createRouter({
             component: () => import("../views/CreateProjectView.vue"),
             props: (route) => ({ subjectId: Number(route.params.subjectId) }),
             meta: {
-                middleware: useCanVisit(useAndCondition(useIsPartOfSubjectCondition, useIsTeacherCondition)),
+                middleware: useCanVisit(
+                    useAndCondition(useIsPartOfSubjectCondition, useIsTeacherCondition)
+                ),
             },
         },
         {
