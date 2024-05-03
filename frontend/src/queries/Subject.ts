@@ -1,4 +1,4 @@
-import { useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
+import { QueryClient, useQuery, type UseQueryReturnType } from "@tanstack/vue-query";
 import {
     getSubject,
     getSubjectInstructors,
@@ -63,7 +63,7 @@ export function useSubjectProjectsQuery(
     });
 }
 
-export function useSubjectsQuery(): UseQueryReturnType<Subject[], Error> {
+export function useSubjectsQuery(queryClient?: QueryClient): UseQueryReturnType<Subject[], Error> {
     return useQuery<Subject[], Error>({
         queryKey: createSubjectQueryKey("all"),
         queryFn: getSubjects,
