@@ -77,7 +77,12 @@ const props = defineProps<{
 
 const { submission } = toRefs(props);
 
-const { data: files, isLoading, isError, error } = useFilesQuery(ref(submission.value?.id));
+const {
+    data: files,
+    isLoading,
+    isError,
+    error,
+} = useFilesQuery(computed(() => submission.value?.id));
 
 const downloadFile = (index: number) => {
     const file = files.value![index];
