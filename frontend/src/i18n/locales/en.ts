@@ -50,6 +50,9 @@ export default {
         assignment: "Assignment:",
         myProject: "My projects:",
         submissions_list: "All submissions",
+        not_found: "No projects found.",
+        archived: "Archived",
+        not_finished: "Not Finished",
     },
     navigation: {
         home: "Home",

@@ -50,6 +50,9 @@ export default {
         assignment: "Opdracht:",
         myProject: "Mijn projecten:",
         submissions_list: "Alle indieningen",
+        not_found: "Geen projecten teruggevonden.",
+        archived: "Gearchiveerd",
+        not_finished: "Onafgewerkt",
     },
     navigation: {
         home: "Hoofdscherm",
