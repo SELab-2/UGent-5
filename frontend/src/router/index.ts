@@ -2,8 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import { type Middleware, type MiddlewareContext, nextFactory } from "./middleware/index";
 import isAuthenticated from "./middleware/isAuthenticated";
 import loginMiddleware from "./middleware/login";
-import useCanVisit, { useIsAdminCondition, useIsPartOfSubjectCondition } from "./middleware/canVisit";
-import useIsTeacher from "@/composables/useIsTeacher";
+import useCanVisit, { useIsAdminCondition, useIsTeacherCondition, useIsPartOfSubjectCondition, useAndCondition } from "./middleware/canVisit";
 import { ref } from "vue";
 
 declare module "vue-router" {
@@ -94,11 +93,7 @@ const router = createRouter({
             component: () => import("../views/CreateProjectView.vue"),
             props: (route) => ({ subjectId: Number(route.params.subjectId) }),
             meta: {
-                middleware: useCanVisit((queryClient) => {
-                    // TODO: check if user is teacher or instructor of subject
-                    const { isTeacher, isLoading } = useIsTeacher(queryClient);
-                    return { condition: isTeacher, isLoading };
-                }),
+                middleware: useCanVisit(useAndCondition(useIsPartOfSubjectCondition, useIsTeacherCondition)),
             },
         },
         {
