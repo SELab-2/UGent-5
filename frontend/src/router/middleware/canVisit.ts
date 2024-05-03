@@ -71,6 +71,11 @@ export const useIsTeacherCondition: CanVisitCondition = (qc) => {
     return { condition: isTeacher, isLoading };
 };
 
-export const useIsPartOfSubjectCondition: CanVisitCondition = (qc) => {
-    return { condition: false, isLoading: false };
+export const useIsPartOfSubjectCondition: CanVisitCondition = (qc, ctx) => {
+        const subjectId = Number(ctx.to.params.subjectId);
+        const {data: subjects, isLoading} = useSubjectsQuery(qc);
+        const condition = computed(() => {
+            return subjects.value?.findIndex((subject) => subject.id === subjectId) !== -1;
+        })
+        return { condition, isLoading };
 };

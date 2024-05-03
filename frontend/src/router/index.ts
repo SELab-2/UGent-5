@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import { type Middleware, type MiddlewareContext, nextFactory } from "./middleware/index";
 import isAuthenticated from "./middleware/isAuthenticated";
 import loginMiddleware from "./middleware/login";
-import useCanVisit, { useIsAdminCondition } from "./middleware/canVisit";
+import useCanVisit, { useIsAdminCondition, useIsPartOfSubjectCondition } from "./middleware/canVisit";
 import useIsTeacher from "@/composables/useIsTeacher";
 import { ref } from "vue";
 
@@ -85,10 +85,7 @@ const router = createRouter({
             component: () => import("../views/subject/SubjectView.vue"),
             props: (route) => ({ subjectId: Number(route.params.subjectId) }),
             meta: {
-                middleware: useCanVisit((queryClient) => {
-                    // TODO: implement -> check if user is enlroled in subject
-                    return { condition: ref(true), isLoading: ref(false) };
-                }),
+                middleware: useCanVisit(useIsPartOfSubjectCondition),
             },
         },
         {
