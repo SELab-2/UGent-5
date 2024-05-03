@@ -4,6 +4,7 @@ import isAuthenticated from "./middleware/isAuthenticated";
 import loginMiddleware from "./middleware/login";
 import useCanVisit from "./middleware/canVisit";
 import useIsTeacher from "@/composables/useIsTeacher";
+import { ref } from "vue";
 
 declare module "vue-router" {
     interface RouteMeta {
@@ -53,12 +54,24 @@ const router = createRouter({
             name: "project",
             component: () => import("../views/ProjectView.vue"),
             props: (route) => ({ projectId: Number(route.params.projectId) }),
+            meta : {
+                middlweware: useCanVisit((queryClient) => {
+                    // TODO: implement -> check if user is enlroled in subject
+                    return { condition: ref(true), isLoading: ref(false) };
+                }),
+            }
         },
         {
             path: "/project/:projectId(\\d+)/submit",
             name: "onSubmit",
             component: () => import("../views/SubmitView.vue"),
             props: (route) => ({ projectId: Number(route.params.projectId) }),
+            meta : {
+                middlweware: useCanVisit((queryClient) => {
+                    // TODO: implement -> check if user is enlroled in subject and in a group for project
+                    return { condition: ref(true), isLoading: ref(false) };
+                }),
+            }
         },
         {
             path: "/subjects",
@@ -71,6 +84,12 @@ const router = createRouter({
             name: "subject",
             component: () => import("../views/subject/SubjectView.vue"),
             props: (route) => ({ subjectId: Number(route.params.subjectId) }),
+            meta : {
+                middlweware: useCanVisit((queryClient) => {
+                    // TODO: implement -> check if user is enlroled in subject
+                    return { condition: ref(true), isLoading: ref(false) };
+                }),
+            }
         },
         {
             path: "/subjects/:subjectId(\\d+)/create-project",
@@ -79,6 +98,7 @@ const router = createRouter({
             props: (route) => ({ subjectId: Number(route.params.subjectId) }),
             meta: {
                 middleware: useCanVisit((queryClient) => {
+                    // TODO: check if user is teacher or instructor of subject
                     const { isTeacher, isLoading } = useIsTeacher(queryClient);
                     return { condition: isTeacher, isLoading };
                 }),
@@ -99,6 +119,12 @@ const router = createRouter({
             path: "/admin",
             name: "admin",
             component: () => import("../views/AdminView.vue"),
+            meta : {
+                middlweware: useCanVisit((queryClient) => {
+                    // TODO: implement check if user is admin
+                    return { condition: ref(true), isLoading: ref(false) };
+                }),
+            }
         },
         {
             path: "/:pathMatch(.*)",

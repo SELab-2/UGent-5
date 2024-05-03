@@ -2,7 +2,7 @@ import { inject, type Ref } from "vue";
 import { type Middleware } from "./index";
 import { QueryClient } from "@tanstack/vue-query";
 
-interface CanVisitCondition {
+export interface CanVisitCondition {
     (queryClient: QueryClient): { condition: Ref<boolean>; isLoading: Ref<boolean> };
 }
 
