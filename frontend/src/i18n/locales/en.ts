@@ -6,6 +6,7 @@ export default {
         loading: {
             loading_page: "Loading...",
         },
+        no: "no",
     },
     login: {
         about: "The official submission application of Ghent University",
@@ -28,6 +29,18 @@ export default {
         new_submission: "Submit new",
         status_submission: "Submission was: {status}",
     },
+    submission: {
+        status: "Submission status:",
+        datetime: "Submission time:",
+        remarks: "Remarks",
+        remarks_empty: "No remarks for this submission",
+        files: "Files",
+        download_info: "Click on filename to download",
+        after_deadline: "After deadline",
+        submissions_title: "Submissions for project {project}",
+        no_submissions: "No submissions yet",
+        docker_test: "Tests Output",
+    },
     project: {
         deadline: "Deadline",
         details_button: "Project details",
@@ -36,6 +49,10 @@ export default {
         group: "Group {number}",
         assignment: "Assignment:",
         myProject: "My projects:",
+        submissions_list: "All submissions",
+        not_found: "No projects found.",
+        archived: "Archived",
+        not_finished: "Not Finished",
     },
     navigation: {
         home: "Home",
