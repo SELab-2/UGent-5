@@ -67,8 +67,9 @@
 <script setup lang="ts">
 import { Status, type Submission } from "@/models/Submission";
 import { useFilesQuery } from "@/queries/Submission";
-import { toRefs, ref } from "vue";
+import { toRefs } from "vue";
 import { download_file } from "@/utils.ts";
+import Project from "@/models/Project";
 
 const props = defineProps<{
     submission: Submission;
