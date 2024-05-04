@@ -28,7 +28,7 @@
 import { computed, ref, toRefs } from "vue";
 import FilesInput from "@/components/form_elements/FilesInput.vue";
 import { useRouter } from "vue-router";
-import { useCreateSubmissionMutation } from "@/queries/Project";
+import { useCreateSubmissionMutation } from "@/queries/Submission";
 import { useUserGroupQuery } from "@/queries/Group";
 import { useI18n } from "vue-i18n";
 
@@ -55,10 +55,9 @@ async function formOnSubmit(event: SubmitEvent) {
     for (const inputFile of inputFiles.value) {
         formData.append("files", inputFile);
     }
-    const data = await mutateAsync(formData);
+    await mutateAsync(formData);
 
-    const submission_id = data.id;
-    await router.push(`/submission/${submission_id}`);
+    await router.push(`/groups/${group.value?.id}/submissions`);
 }
 </script>
 

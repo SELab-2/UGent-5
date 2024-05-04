@@ -6,6 +6,7 @@ export default {
         loading: {
             loading_page: "Aan het laden...",
         },
+        no: "geen",
     },
     login: {
         about: "De officiële indienapplicatie van de Universiteit Gent",
@@ -27,10 +28,18 @@ export default {
         latest_submission: "Laatste indiening:",
         new_submission: "Nieuwe indiening",
         status_submission: "Indiening is: {status}",
-        no_submission: "Geen indiening teruggevonden",
-        Denied: "afgewezen",
-        InProgress: "in behandeling",
-        Accepted: "geaccepteerd",
+    },
+    submission: {
+        status: "Indiening status: {status}",
+        datetime: "Indiening tijdstip:",
+        remarks: "Opmerkingen",
+        remarks_empty: "Geen opmerkingen voor deze indiening",
+        files: "Bestanden",
+        download_info: "Klik op bestandsnaam om te downloaden",
+        after_deadline: "Na deadline",
+        submissions_title: "Indieningen voor project {project}",
+        no_submissions: "Nog geen indieningen",
+        docker_test: "Testen Output",
     },
     project: {
         deadline: "Deadline",
@@ -43,6 +52,7 @@ export default {
         return_course: "Terug naar vak",
         capacity_group: "Maximaal aantal leden per groep: ",
         edit: "Bewerk project",
+        submissions_list: "Alle indieningen",
         not_found: "Geen projecten teruggevonden.",
         archived: "Gearchiveerd",
         not_finished: "Onafgewerkt",

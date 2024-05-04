@@ -14,8 +14,7 @@
                         }}</v-btn>
                         <v-btn value="notFinished" class="leftbuttonspace">{{
                             $t("project.not_finished")
-                        }}</v-btn>
-                    </v-btn-toggle>
+                        }}</v-btn></v-btn-toggle>
                 </v-row>
                 <ProjectMiniCard
                     v-for="project in filteredProjects"
