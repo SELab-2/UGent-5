@@ -1,5 +1,4 @@
 <template>
-    <v-divider></v-divider>
     <div class="coursebtn" @click="navigateToCourse">
         <div>
             <h3>{{ subject.name }}</h3>
@@ -35,17 +34,19 @@ const navigateToCourse = () => {
 
 <style scoped>
 .coursebtn {
-    width: 100%;
-    background-color: white;
+    width: calc(100% - 10px);
+    margin: 5px;
     padding: 10px;
     display: flex;
     align-items: center;
     transition: background-color 0.3s;
     cursor: pointer;
+    background-color: rgb(var(--v-theme-background));
+    border-radius: 2px;
 }
 
 .coursebtn:hover {
-    background-color: lightgray;
+    background-color: rgb(var(--v-theme-tertiary));
 }
 
 .chevron {
@@ -55,6 +56,6 @@ const navigateToCourse = () => {
 }
 
 .teacher {
-    color: lightslategrey;
+    color: rgb(var(--v-theme-textsecondary));
 }
 </style>

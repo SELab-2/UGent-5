@@ -8,6 +8,8 @@ export default {
         },
         no: "no",
     },
+    logo: "ghent-university-logo-white.png",
+    logout: "logout",
     login: {
         about: "The official submission application of Ghent University",
         login: "Login",
