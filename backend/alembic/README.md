@@ -19,8 +19,8 @@ Here are some of the most commonly used commands you might need.
 alembic revision --autogenerate -m "my_revision_name"
 ```
 
-Make sure to manually review the generated script in `alembic/versions`
-and apply adjustments if needed.
+Make sure to review the generated script in `alembic/versions`
+and make adjustments if needed.
 
 #### Run a migration: this will upgrade the database schema to the most recent revision.
 
