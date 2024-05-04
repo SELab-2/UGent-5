@@ -19,6 +19,8 @@ import NavBar from "@/components/navigation/NavBar.vue";
 import { computed, onBeforeMount, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useLocale } from "@/stores/locale-store";
+import { useThemeStore } from "@/stores/theme-store";
+import { useTheme } from 'vuetify';
 
 const navBar = ref<InstanceType<typeof NavBar> | null>(null);
 
@@ -28,7 +30,10 @@ const hideHeader = computed(() => currentRoute.meta.hideHeader);
 onBeforeMount(() => {
     const { locale } = useI18n();
     const { selectedLocale } = useLocale();
+    const { storedTheme } = useThemeStore();
+    const theme = useTheme();
     locale.value = selectedLocale;
+    theme.global.name.value = storedTheme
 });
 </script>
 

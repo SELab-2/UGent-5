@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import LocaleSwitcher from "@/components/LocaleSwitcher.vue";
+import LocaleSwitcher from "@/components/switcher/LocaleSwitcher.vue";
 import LogoutButton from "@/components/buttons/LogoutButton.vue";
 
 import { useAuthStore } from "@/stores/auth-store";

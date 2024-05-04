@@ -1,6 +1,5 @@
 <template>
     <div class="switcher">
-        <v-icon icon="mdi-earth" />
         <template v-for="(availableLocale, index) in availableLocales" :key="availableLocale">
             <v-btn
                 variant="text"

@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { useCASUrl } from "@/stores/cas-url";
-import LocaleSwitcher from "@/components/LocaleSwitcher.vue";
+import LocaleSwitcher from "@/components/switcher/LocaleSwitcher.vue";
 import { useI18n} from "vue-i18n";
 
 </script>

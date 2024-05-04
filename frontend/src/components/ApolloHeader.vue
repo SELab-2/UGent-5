@@ -10,6 +10,7 @@
         <div class="leftContent" v-else>
             <LogoutButton class="logout" v-if="isLoggedIn" />
             <LocaleSwitcher />
+            <ThemeSwitcher class="switcher"/>
         </div>
     </v-app-bar>
 </template>
@@ -17,8 +18,9 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
 import { useDisplay } from "vuetify";
-import LocaleSwitcher from "./LocaleSwitcher.vue";
+import LocaleSwitcher from "./switcher/LocaleSwitcher.vue";
 import DropDownMobile from "@/components/navigation/DropDownMobile.vue";
+import ThemeSwitcher from "@/components/switcher/ThemeSwitcher.vue"
 import LogoutButton from "@/components/buttons/LogoutButton.vue";
 import { useAuthStore } from "@/stores/auth-store";
 import { storeToRefs } from "pinia";
@@ -39,7 +41,7 @@ const { isLoggedIn } = storeToRefs(useAuthStore());
 }
 
 .v-app-bar {
-    padding: 5px 0px;
+    padding: 5px 0;
 }
 
 .v-app-bar-nav-icon{
@@ -53,7 +55,10 @@ const { isLoggedIn } = storeToRefs(useAuthStore());
 }
 
 .logout {
-    margin-right: 15px;
     color: rgb(var(--v-theme-secondary));
+}
+
+.switcher{
+    margin-left: 20px;
 }
 </style>

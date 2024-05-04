@@ -26,6 +26,7 @@
 import NavButton from "@/components/navigation/NavButton.vue";
 import { ref } from "vue";
 import useNavigations from "@/composables/useNavigations";
+import ThemeSwitcher from "@/components/switcher/ThemeSwitcher.vue"
 
 const { navigations } = useNavigations();
 
@@ -48,7 +49,6 @@ defineExpose({
 
 .ugent-logo {
     bottom: 0;
-    margin-bottom: 30px;
 }
 
 .navbuttons {
