@@ -20,7 +20,7 @@ import { computed, onBeforeMount, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useLocale } from "@/stores/locale-store";
 import { useThemeStore } from "@/stores/theme-store";
-import { useTheme } from 'vuetify';
+import { useTheme } from "vuetify";
 
 const navBar = ref<InstanceType<typeof NavBar> | null>(null);
 
@@ -33,12 +33,12 @@ onBeforeMount(() => {
     const { storedTheme } = useThemeStore();
     const theme = useTheme();
     locale.value = selectedLocale;
-    theme.global.name.value = storedTheme
+    theme.global.name.value = storedTheme;
 });
 </script>
 
 <style>
-.v-main{
+.v-main {
     background-color: rgb(var(--v-theme-background));
 }
 </style>

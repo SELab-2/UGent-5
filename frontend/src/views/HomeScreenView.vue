@@ -33,7 +33,6 @@
 import SubjectsCard from "@/components/home/cards/SubjectsCard.vue";
 import DeadlinesCard from "@/components/home/cards/DeadlinesCard.vue";
 import AnnouncementsCard from "@/components/home/cards/AnnouncementsCard.vue";
-import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import { useUserQuery } from "@/queries/User";
 import { useDisplay } from "vuetify";
 

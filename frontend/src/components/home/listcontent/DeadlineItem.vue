@@ -1,8 +1,6 @@
 <template>
     <div class="projectbtn" @click="navigateToProject">
-        <div :class="getBackgroundClass()">
-
-        </div>
+        <div :class="getBackgroundClass()"></div>
         <div class="leftcontent">
             <h3>{{ deadline.project.name }}</h3>
             <p class="p">{{ deadline.project.subject_id }}</p>
@@ -61,15 +59,14 @@ const navigateToProject = () => {
 }
 
 .projectbtn:hover {
-    background-color: rgb(var(--v-theme-tertiary))
+    background-color: rgb(var(--v-theme-tertiary));
 }
 
-.block{
+.block {
     margin-left: 10px;
     width: 5px;
     height: 100%;
 }
-
 
 .none {
     background-color: gray;
@@ -82,7 +79,7 @@ const navigateToProject = () => {
 .rejected {
     background-color: darkred;
 }
-.leftcontent{
+.leftcontent {
     margin-left: 20px;
 }
 

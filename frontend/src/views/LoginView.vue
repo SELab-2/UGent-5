@@ -9,11 +9,7 @@
             />
             <h3>{{ $t("login.about") }}</h3>
             <a class="login-button" :href="useCASUrl().CASUrl">{{ $t("login.login") }}</a>
-            <img
-                alt="ugent logo"
-                class="ugent-logo"
-                :src="`src/assets/${$t('logo')}`"
-            />
+            <img alt="ugent logo" class="ugent-logo" :src="`src/assets/${$t('logo')}`" />
             <LocaleSwitcher class="login-switcher" />
         </div>
     </div>
@@ -22,8 +18,6 @@
 <script setup lang="ts">
 import { useCASUrl } from "@/stores/cas-url";
 import LocaleSwitcher from "@/components/switcher/LocaleSwitcher.vue";
-import { useI18n} from "vue-i18n";
-
 </script>
 
 <style scoped>
@@ -40,7 +34,7 @@ import { useI18n} from "vue-i18n";
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(rgb(var(--v-theme-primary)), #0E2057);
+    background: linear-gradient(rgb(var(--v-theme-primary)), #0e2057);
     height: 100%;
 }
 
@@ -62,7 +56,7 @@ import { useI18n} from "vue-i18n";
 }
 
 .login-button {
-    background-color: rgba(225,225,225,0.1);
+    background-color: rgba(225, 225, 225, 0.1);
     color: var(--white);
     text-decoration: none;
     border: 1px solid var(--color-border);
@@ -76,7 +70,7 @@ import { useI18n} from "vue-i18n";
 }
 
 .login-button:hover {
-    background-color: rgba(225,225,225,0.2);
+    background-color: rgba(225, 225, 225, 0.2);
     color: var(--white);
 }
 

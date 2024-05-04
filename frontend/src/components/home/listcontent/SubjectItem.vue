@@ -56,6 +56,6 @@ const navigateToCourse = () => {
 }
 
 .teacher {
-    color: rgb(var(--v-theme-textsecondary))
+    color: rgb(var(--v-theme-textsecondary));
 }
 </style>
