@@ -9,12 +9,13 @@
                 <v-row class="rowheader">
                     <h1>{{ $t("project.myProject") }}</h1>
                     <v-btn-toggle v-model="activeButton">
+                        <v-btn value="notFinished" class="leftbuttonspace">{{
+                                $t("project.not_finished")
+                            }}</v-btn>
                         <v-btn value="archived" class="leftbuttonspace">{{
                             $t("project.archived")
                         }}</v-btn>
-                        <v-btn value="notFinished" class="leftbuttonspace">{{
-                            $t("project.not_finished")
-                        }}</v-btn></v-btn-toggle
+                    </v-btn-toggle
                     >
                 </v-row>
                 <ProjectMiniCard
@@ -43,17 +44,15 @@ const filteredProjects = computed(() => {
     if (!projects.value) return [];
 
     const now = new Date();
+    const sortedProjects = projects.value.slice().sort((a: Project, b: Project) => new Date(a.deadline) - new Date(b.deadline));
+
     switch (activeButton.value) {
         case "archived":
-            return projects.value.slice().filter((project: Project) => {
-                return new Date(project.deadline) < now;
-            });
+            return sortedProjects.filter((project: Project) => new Date(project.deadline) < now);
         case "notFinished":
-            return projects.value.slice().filter((project: Project) => {
-                return new Date(project.deadline) > now;
-            });
+            return sortedProjects.filter((project: Project) => new Date(project.deadline) > now);
         default:
-            return projects.value;
+            return sortedProjects;
     }
 });
 </script>
