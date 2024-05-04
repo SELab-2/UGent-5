@@ -43,6 +43,9 @@ export default {
         return_course: "Back to subject",
         capacity_group: "Maximum amount of group members: ",
         edit: "Edit project",
+        not_found: "No projects found.",
+        archived: "Archived",
+        not_finished: "Not Finished",
     },
     navigation: {
         home: "Home",

@@ -43,6 +43,9 @@ export default {
         return_course: "Terug naar vak",
         capacity_group: "Maximaal aantal leden per groep: ",
         edit: "Bewerk project",
+        not_found: "Geen projecten teruggevonden.",
+        archived: "Gearchiveerd",
+        not_finished: "Onafgewerkt",
     },
     navigation: {
         home: "Hoofdscherm",
