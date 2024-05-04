@@ -54,7 +54,7 @@ function useToggleMutation(
             });
             return { previousUsers: users! };
         },
-        onSettled: () => {
+        onSettled: (_, __, uid, ctx) => {
             queryClient.invalidateQueries({ queryKey: USERS_QUERY_KEY() });
         },
         onError: (_, uid, ctx) => {
