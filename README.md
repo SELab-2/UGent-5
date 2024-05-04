@@ -19,7 +19,7 @@ Documentation, including a user manual for teachers, can be found in the
 Instructions for setting up the frontend development environment can be found
 [here](frontend/README.md).
 
-Instructions for the backend are located [here](backend/REAMDE.md).
+Instructions for the backend are located [here](backend/README.md).
 
 ## API
 
