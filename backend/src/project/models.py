@@ -27,7 +27,8 @@ class Project(Base):
     )
 
     requirements: Mapped[List["Requirement"]] = relationship(
-        back_populates="project", lazy="joined", passive_deletes="all")  # see submission/models/Submission
+        # see submission/models/Submission -> testresults
+        back_populates="project", lazy="joined", passive_deletes="all")
 
     test_files_uuid: Mapped[str | None] = mapped_column(nullable=True)
 
