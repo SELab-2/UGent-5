@@ -28,7 +28,7 @@ function handleLocaleChange(selectedLocale: string) {
 
 <style lang="scss" scoped>
 .switcher {
-    color: rgb(var(--v-theme-secondary));
+    color: rgb(var(--v-theme-navtext));
     display: flex;
     align-items: center;
 }
@@ -38,7 +38,7 @@ function handleLocaleChange(selectedLocale: string) {
 }
 
 .selected-option {
-    color: rgb(var(--v-theme-secondary));
+    color: rgb(var(--v-theme-navtext));
     font-style: bold;
 }
 </style>

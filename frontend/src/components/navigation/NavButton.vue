@@ -22,10 +22,8 @@ defineProps<{
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    color: rgb(var(--v-theme-secondary));
+    color: rgb(var(--v-theme-navtext));
     text-transform: capitalize;
-
-
 }
 
 .v-icon {

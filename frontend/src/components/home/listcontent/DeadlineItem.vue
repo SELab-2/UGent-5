@@ -51,7 +51,7 @@ const navigateToProject = () => {
 <style scoped>
 .projectbtn {
     margin: 5px;
-    background-color: #ffffff;
+    background-color: rgb(var(--v-theme-background));
     display: flex;
     transition: background-color 0.3s;
     align-items: center;
@@ -61,7 +61,7 @@ const navigateToProject = () => {
 }
 
 .projectbtn:hover {
-    background-color: #E9EDFA;
+    background-color: rgb(var(--v-theme-tertiary))
 }
 
 .block{
@@ -93,6 +93,6 @@ const navigateToProject = () => {
 }
 
 .p {
-    color: lightslategrey;
+    color: rgb(var(--v-theme-textsecondary));
 }
 </style>

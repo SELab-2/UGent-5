@@ -6,12 +6,16 @@
         <v-list-item data-test="localeSwitcher">
             <LocaleSwitcher />
         </v-list-item>
+        <v-list-item data-test="themeSwitcher">
+            <themeSwitcher />
+        </v-list-item>
     </v-list>
 </template>
 
 <script setup lang="ts">
 import LocaleSwitcher from "@/components/switcher/LocaleSwitcher.vue";
 import LogoutButton from "@/components/buttons/LogoutButton.vue";
+import ThemeSwitcher from "@/components/switcher/ThemeSwitcher.vue"
 
 import { useAuthStore } from "@/stores/auth-store";
 import { storeToRefs } from "pinia";

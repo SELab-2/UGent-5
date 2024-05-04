@@ -45,7 +45,7 @@ const { isLoggedIn } = storeToRefs(useAuthStore());
 }
 
 .v-app-bar-nav-icon{
-    color: rgb(var(--v-theme-secondary));
+    color: rgb(var(--v-theme-navtext));
 }
 
 .leftContent {
@@ -55,7 +55,7 @@ const { isLoggedIn } = storeToRefs(useAuthStore());
 }
 
 .logout {
-    color: rgb(var(--v-theme-secondary));
+    color: rgb(var(--v-theme-navtext));
 }
 
 .switcher{

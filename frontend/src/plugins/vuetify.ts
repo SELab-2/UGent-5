@@ -28,8 +28,11 @@ const vuetify = createVuetify({
                     background: "#ffffff",
                     surface: "#ffffff",
                     text: "#0E2057",
+                    textsecondary: "#868fab",
                     primary: "#1d357e",
-                    secondary: "#DFE5F7"
+                    secondary: "#DFE5F7",
+                    tertiary: "#E9EDFA",
+                    navtext: "#DFE5F7",
                     // TODO: Add rest of colors
                 },
             },
@@ -38,9 +41,12 @@ const vuetify = createVuetify({
                 colors: {
                     background: "#222222",
                     surface: "#222222",
-                    text: "#ffffff",
-                    primary: "#1d357e",
-                    secondary: "#DFE5F7",
+                    text: "#DFE5F7",
+                    textsecondary: "#b2b2b2",
+                    primary: "#233161",
+                    secondary: "#595D6C",
+                    tertiary: "#353740",
+                    navtext: "#DFE5F7",
                     // TODO: Add rest of colors
                 },
             },

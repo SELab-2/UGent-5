@@ -41,12 +41,12 @@ const navigateToCourse = () => {
     align-items: center;
     transition: background-color 0.3s;
     cursor: pointer;
-    background-color: #ffffff;
+    background-color: rgb(var(--v-theme-background));
     border-radius: 2px;
 }
 
 .coursebtn:hover {
-    background-color: #E9EDFA;
+    background-color: rgb(var(--v-theme-tertiary));
 }
 
 .chevron {
@@ -56,6 +56,6 @@ const navigateToCourse = () => {
 }
 
 .teacher {
-    color: lightslategrey;
+    color: rgb(var(--v-theme-textsecondary))
 }
 </style>
