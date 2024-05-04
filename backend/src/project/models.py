@@ -49,7 +49,7 @@ class Requirement(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     project_id: Mapped[int] = mapped_column(ForeignKey(
-        "project.id", ondelete="CASCADE"), nullable=True)
+        "project.id", ondelete="CASCADE"), nullable=False)
     project: Mapped["Project"] = relationship(back_populates="requirements")
 
     # True for mandatory False for prohibited
