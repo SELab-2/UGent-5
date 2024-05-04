@@ -1,33 +1,38 @@
 # Apollo
 
-Apollo is een indieningsplatform waar lesgevers flexibel vereisten kunnen stellen waaraan
-indieningen van studenten moeten voldoen. Deze vereisten kunnen in de vorm zijn
-van checks op de ingediende bestandsstructuur en/of automatisch lopende tests
-wanneer een indiening gemaakt wordt.
+Apollo is an online submission platform where instructors can flexibly set requirements for
+student submissions. These requirements can range from simple checks on the submitted
+file structure to test scripts that run when a submission is made.
 
-Studenten krijgen feedback te zien over hun indiening en weten zo of hun indiening
-voldoet aan de projectvereisten.
+Students quickly receive feedback on their submission, allowing them to know if it meets
+the project requirements.
+
+This repository hosts the web application's source code. To use Apollo, visit https://sel2-5.ugent.be.
 
 ## Wiki
 
-Informatie over de gebruikte technologieën, de gebruikershandleiding en meer kan je vinden in de [wiki](https://github.com/SELab-2/UGent-5/wiki).
+Documentation, including a user manual for teachers, can be found in the
+[Apollo wiki](https://github.com/SELab-2/UGent-5/wiki).
 
-## Voor ontwikkelaars
+## For Developers
 
-De instructies voor het opzetten van de ontwikkelomgeving van de frontend kan je [hier](frontend/README.md) vinden. De instructies voor de backend staan [hier](backend/REAMDE.md).
+Instructions for setting up the frontend development environment can be found
+[here](frontend/README.md).
+
+Instructions for the backend are located [here](backend/REAMDE.md).
 
 ## API
 
-Geautomatiseerde clients kunnen interageren met de webapplicatie via de [API](https://sel2-5.ugent.be/api/docs).
+Automated clients can interact with the web application via the [API](https://sel2-5.ugent.be/api/docs).
 
-## Het team
+## The team
 
 |                  |                                                   |
 |------------------|---------------------------------------------------|
-| Xander Bil       | Systeembeheerder                                  |
-| Michaël Boelaert | Testbeheerder                                     |
-| Mattis Cauwel    | Frontendbeheerder                                 |
-| Dries Huybens    | Backendbeheerder                                  |
-| Pieter Janin     | Customer Relations Officer, Documentatiebeheerder |
-| Bram Reyniers    | Technische lead                                   |
-| Marieke Sinnaeve | Team lead                                         |
+| Xander Bil       | System Administrator                              |
+| Michaël Boelaert | Test Manager                                      |
+| Mattis Cauwel    | Frontend Manager                                  |
+| Dries Huybens    | Backend Manager                                   |
+| Pieter Janin     | Customer Relations Officer, Documentation Manager |
+| Bram Reyniers    | Technical Lead                                    |
+| Marieke Sinnaeve | Team Lead                                         |
