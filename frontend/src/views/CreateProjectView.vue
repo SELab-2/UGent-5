@@ -1,82 +1,82 @@
 <template>
-        <v-container>
-            <v-row>
-                <v-col cols="12" md="6">
-                    <v-text-field
-                        v-model="project_title"
-                        label="Title"
-                        required
-                        placeholder="Enter Title"
-                    />
-                </v-col>
-                <v-col cols="12" md="6">
-                    <CheckBoxList
-                        v-if="teachers.length > 0"
-                        v-model="selectedTeachers"
-                        :title="'Teacher(s)'"
-                        :items="teachers"
-                        description="Assign Teachers"
-                    />
-                    <span v-else>No instructors found.</span>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col cols="12" md="6">
-                    <span v-if="isSubjectsLoading">Loading subjects...</span>
-                    <span v-else-if="isSubjectsError"
-                        >Error loading subjects: {{ subjectsError!.message }}</span
-                    >
-                    <v-select
-                        v-else
-                        v-model="selectedSubject"
-                        :items="subjects"
-                        item-value="value"
-                        item-title="text"
-                        label="Subject"
-                        required
-                        placeholder="Select Subject"
-                    />
-                </v-col>
-                <v-col cols="12" md="6">
-                    <CheckBoxList
-                        v-if="assistants.length > 0"
-                        v-model="selectedAssitants"
-                        :title="'Assistants'"
-                        :items="assistants"
-                        description="Assign Assistants"
-                    />
-                    <span v-else>No assistants found.</span>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col cols="12" md="6">
-                    <DatePicker v-model="deadline" label="Deadline" required />
-                    <DatePicker v-model="publishDate" label="Publish Date" required />
-                </v-col>
-                <v-col cols="12" md="6">
-                    <RadioButtonList
-                        :title="'Group Project Options'"
-                        :options="groupProjectOptions"
-                        @update:radio_date="handleRadioDateChange"
-                        @update:capacity="handleCapacityChange"
-                        required
-                    />
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col cols="12">
-                    <QuillEditor ref="quillEditor" theme="snow" class="quill-editor" />
-                </v-col>
-            </v-row>
-            <v-row>
-                <FilesInput v-model="files" />
-            </v-row>
-            <v-row>
-                <v-col cols="12" class="text-right">
-                    <v-btn @click="submitForm">Submit</v-btn>
-                </v-col>
-            </v-row>
-        </v-container>
+    <v-container>
+        <v-row>
+            <v-col cols="12" md="6">
+                <v-text-field
+                    v-model="project_title"
+                    label="Title"
+                    required
+                    placeholder="Enter Title"
+                />
+            </v-col>
+            <v-col cols="12" md="6">
+                <CheckBoxList
+                    v-if="teachers.length > 0"
+                    v-model="selectedTeachers"
+                    :title="'Teacher(s)'"
+                    :items="teachers"
+                    description="Assign Teachers"
+                />
+                <span v-else>No instructors found.</span>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col cols="12" md="6">
+                <span v-if="isSubjectsLoading">Loading subjects...</span>
+                <span v-else-if="isSubjectsError"
+                    >Error loading subjects: {{ subjectsError!.message }}</span
+                >
+                <v-select
+                    v-else
+                    v-model="selectedSubject"
+                    :items="subjects"
+                    item-value="value"
+                    item-title="text"
+                    label="Subject"
+                    required
+                    placeholder="Select Subject"
+                />
+            </v-col>
+            <v-col cols="12" md="6">
+                <CheckBoxList
+                    v-if="assistants.length > 0"
+                    v-model="selectedAssitants"
+                    :title="'Assistants'"
+                    :items="assistants"
+                    description="Assign Assistants"
+                />
+                <span v-else>No assistants found.</span>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col cols="12" md="6">
+                <DatePicker v-model="deadline" label="Deadline" required />
+                <DatePicker v-model="publishDate" label="Publish Date" required />
+            </v-col>
+            <v-col cols="12" md="6">
+                <RadioButtonList
+                    :title="'Group Project Options'"
+                    :options="groupProjectOptions"
+                    @update:radio_date="handleRadioDateChange"
+                    @update:capacity="handleCapacityChange"
+                    required
+                />
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col cols="12">
+                <QuillEditor ref="quillEditor" theme="snow" class="quill-editor" />
+            </v-col>
+        </v-row>
+        <v-row>
+            <FilesInput v-model="files" />
+        </v-row>
+        <v-row>
+            <v-col cols="12" class="text-right">
+                <v-btn @click="submitForm">Submit</v-btn>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script setup lang="ts">
