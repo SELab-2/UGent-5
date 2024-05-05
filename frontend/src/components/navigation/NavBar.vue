@@ -11,7 +11,7 @@
         </div>
         <template v-slot:append>
             <div class="ugent-logo">
-                <img alt="Logo" class="logo" :src="`src/assets/${$t('logo')}`" height="150" />
+                <img alt="Logo" class="logo" :src="`/src/assets/${$t('logo')}`" height="150" />
             </div>
         </template>
     </v-navigation-drawer>

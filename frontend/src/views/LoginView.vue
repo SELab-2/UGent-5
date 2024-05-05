@@ -9,7 +9,7 @@
             />
             <h3>{{ $t("login.about") }}</h3>
             <a class="login-button" :href="useCASUrl().CASUrl">{{ $t("login.login") }}</a>
-            <img alt="ugent logo" class="ugent-logo" :src="`src/assets/${$t('logo')}`" />
+            <img alt="ugent logo" class="ugent-logo" :src="`/src/assets/${$t('logo')}`" />
             <LocaleSwitcher class="login-switcher" />
         </div>
     </div>
