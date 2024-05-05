@@ -1,6 +1,6 @@
 <template>
     <div class="adminpanel">
-        <v-card :title="$t('admin.users')" flat class="bg-white">
+        <v-card :title="$t('admin.users')" flat>
             <v-card-title>
                 <v-text-field
                     prepend-inner-icon="mdi-magnify"
@@ -120,8 +120,6 @@ const headers = ref([
 }
 
 .table {
-    color: black !important;
-    background-color: white;
-    width: 95%;
+    padding: 15px;
 }
 </style>
