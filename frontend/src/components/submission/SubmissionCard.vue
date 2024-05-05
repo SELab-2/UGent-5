@@ -1,5 +1,5 @@
 <template>
-    <v-card color="white">
+    <v-card>
         <v-card-title>
             {{ $t("submission.status") }}
             <p v-if="submission.date <= project.deadline" :class="Status[submission.status]">
@@ -50,7 +50,7 @@
                     color="error"
                     :text="error!.message"
                 ></v-alert>
-                <v-skeleton-loader v-else :loading="isLoading" type="card" color="white">
+                <v-skeleton-loader v-else :loading="isLoading" type="card">
                     <v-col>
                         <v-chip
                             class="ma-2"
