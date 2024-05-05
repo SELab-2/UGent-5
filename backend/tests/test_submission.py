@@ -33,7 +33,7 @@ async def test_create_submission(client: AsyncClient, group_id: int):
     assert response.status_code == 201
 
     # Leave group
-    await client.delete(f"/api/groups/{group_id}")
+    await client.post(f"/api/groups/{group_id}/leave")
 
     # List files
     id = response.json()['id']
@@ -48,7 +48,7 @@ async def test_create_submission(client: AsyncClient, group_id: int):
     assert response.json()[0]["filename"] in ["testfile1.txt", "testfile2.txt"]
 
     # Leave group
-    await client.delete(f"/api/groups/{group_id}")
+    await client.post(f"/api/groups/{group_id}/leave")
 
     response = await client.get(f"/api/submissions/{id}/files/testfile1.txt")
     assert response.status_code == NotAuthorized().status_code  # Not authorized

@@ -43,5 +43,4 @@ async def patch_permission_validation(
 ):
     await user_permission_validation(project.subject_id, user, db)
 
-
 delete_permission_validation = patch_permission_validation
