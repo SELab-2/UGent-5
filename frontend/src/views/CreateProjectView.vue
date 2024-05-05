@@ -1,5 +1,4 @@
 <template>
-    <BackgroundContainer>
         <v-container>
             <v-row>
                 <v-col cols="12" md="6">
@@ -12,11 +11,13 @@
                 </v-col>
                 <v-col cols="12" md="6">
                     <CheckBoxList
+                        v-if="teachers.length > 0"
                         v-model="selectedTeachers"
                         :title="'Teacher(s)'"
                         :items="teachers"
                         description="Assign Teachers"
                     />
+                    <span v-else>No instructors found.</span>
                 </v-col>
             </v-row>
             <v-row>
@@ -38,11 +39,13 @@
                 </v-col>
                 <v-col cols="12" md="6">
                     <CheckBoxList
+                        v-if="assistants.length > 0"
                         v-model="selectedAssitants"
                         :title="'Assistants'"
                         :items="assistants"
                         description="Assign Assistants"
                     />
+                    <span v-else>No assistants found.</span>
                 </v-col>
             </v-row>
             <v-row>
@@ -74,7 +77,6 @@
                 </v-col>
             </v-row>
         </v-container>
-    </BackgroundContainer>
 </template>
 
 <script setup lang="ts">
