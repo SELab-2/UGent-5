@@ -5,7 +5,7 @@
                 <v-text-field
                     prepend-inner-icon="mdi-magnify"
                     v-model="search"
-                    label="Search"
+                    :label="$t('admin.search')"
                     single-line
                     hide-details
                 ></v-text-field>

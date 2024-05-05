@@ -73,6 +73,7 @@ export default {
     },
     admin: {
         users: "Gebruikers",
+        search: "Zoeken",
         userTable: {
             name: "Naam",
             uid: "UGent ID",
