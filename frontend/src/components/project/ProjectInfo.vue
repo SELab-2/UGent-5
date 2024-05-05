@@ -15,7 +15,6 @@
                         color="primary"
                         class="ma-2"
                         prepend-icon="mdi-account-group"
-                        v-tooltip="`${$t('project.capacity_group')} ${project.capacity}`"
                     >
                         {{ project.capacity }}
                     </v-chip>
