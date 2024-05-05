@@ -101,4 +101,7 @@ export default {
     subjects: {
         title: "My Subjects",
     },
+    group: {
+        not_found: "Group not found",
+    },
 };

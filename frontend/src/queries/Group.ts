@@ -6,7 +6,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { computed } from "vue";
 import {
     createGroups,
-    getGroup,
+    getGroup, getGroupsByProjectId,
     getGroupWithProjectId,
     getSubmissions,
     getUserGroups,
@@ -28,6 +28,10 @@ function GROUP_QUERY_KEY(groupId: number): (string | number)[] {
 
 function submissionsQueryKey(groupId: number): (string | number)[] {
     return ["submissions", groupId];
+}
+
+function PROJECT_GROUPS_QUERY_KEY(projectId: number): (string | number)[] {
+    return ["projectGroups", projectId];
 }
 
 export function useGroupQuery(groupId: Ref<number | undefined>): UseQueryReturnType<Group, Error> {
@@ -113,5 +117,15 @@ export function useSubmissionsQuery(
         queryKey: computed(() => submissionsQueryKey(groupId.value!)),
         queryFn: () => getSubmissions(groupId.value!),
         enabled: computed(() => groupId.value !== undefined),
+    });
+}
+
+export function useProjectGroupsQuery(
+    projectId: Ref<number | undefined>
+): UseQueryReturnType<Group[], Error> {
+    return useQuery<Group[], Error>({
+        queryKey: computed(() => PROJECT_GROUPS_QUERY_KEY(projectId.value!)),
+        queryFn: () => getGroupsByProjectId(projectId.value!),
+        enabled: computed(() => projectId.value !== undefined),
     });
 }

@@ -102,4 +102,7 @@ export default {
     subjects: {
         title: "Mijn vakken",
     },
+    group: {
+        not_found: "Groep niet gevonden",
+    },
 };
