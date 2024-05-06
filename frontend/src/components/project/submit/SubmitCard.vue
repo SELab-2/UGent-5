@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card variant="flat">
         <v-card-item>
             <v-card-title>{{ $t("submit.submit_title") }}</v-card-title>
         </v-card-item>
@@ -8,7 +8,7 @@
             <v-row>
                 <v-col>
                     <v-skeleton-loader :loading="isLoading" type="article">
-                        <ProjectMiniCard :project="project!" />
+                        <ProjectMiniCard :project="project!" class="minicard" />
                     </v-skeleton-loader>
                 </v-col>
                 <v-spacer />
@@ -45,8 +45,4 @@ const { projectId } = toRefs(props);
 const { data: project, isLoading, isError } = useProjectQuery(projectId);
 </script>
 
-<style scoped>
-.card-container {
-    background-color: var(--gray-8);
-}
-</style>
+<style scoped></style>

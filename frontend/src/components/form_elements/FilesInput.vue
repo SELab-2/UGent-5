@@ -3,7 +3,7 @@
         <v-row>
             <v-col>
                 <input @change="updateFiles" ref="fileInput" type="file" multiple hidden />
-                <v-btn class="mb-0" @click="onAddFilesClick">{{
+                <v-btn variant="flat" class="mb-0" @click="onAddFilesClick">{{
                     $t("submit.add_files_button")
                 }}</v-btn>
             </v-col>
@@ -64,5 +64,8 @@ function onDeleteClick(index: number) {
     inputFiles.value.splice(index, 1);
 }
 </script>
-
-<style scoped></style>
+<style scoped>
+.v-btn {
+    background-color: rgb(var(--v-theme-secondary));
+}
+</style>
