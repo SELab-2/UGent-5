@@ -1,0 +1,71 @@
+import {mount} from "@vue/test-utils";
+import {expect, describe, it, vi} from "vitest";
+import SubmitCard from "@/components/project/submit/SubmitCard.vue"
+import {ref} from "vue";
+
+const testAuthStore = {
+    isLoggedIn: ref(true),
+    setLoggedIn(value) {
+        this.isLoggedIn.value = value;
+    },
+};
+
+vi.mock("@/stores/auth-store", () => ({
+    useAuthStore: vi.fn(() => testAuthStore),
+}));
+
+const testProjectQuery = {
+    isError: ref(true),
+    setIsError(value){
+        this.isError.value = value;
+    }
+};
+
+vi.mock('@/queries/Project', () => ({
+    useProjectQuery: vi.fn(() => testProjectQuery),
+}));
+
+vi.mock("@/components/project/ProjectMiniCard.vue", () => ({
+    default: {
+        template: "<div></div>",
+    },
+}));
+
+
+describe("SubmitCard", async () => {
+    const ResizeObserverMock = vi.fn(() => ({
+        observe: vi.fn(),
+        unobserve: vi.fn(),
+        disconnect: vi.fn(),
+    }));
+
+    vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+
+    const wrapper = mount(SubmitCard, {
+        props: {
+            projectId: 1,
+        }
+    });
+
+    it("render card", () => {
+        const Card = wrapper.findComponent({name: 'VCard'})
+        expect(Card).toBeTruthy()
+    });
+
+    it("render title", () => {
+        expect(wrapper.findComponent({name: 'VCardTitle'}).text()).toContain("Oplossing indienen")
+    });
+
+    it("render if error", () => {
+        expect(wrapper.text()).toContain("Error");
+    });
+
+    it("render if not error", async () => {
+        testProjectQuery.setIsError(false);
+        await wrapper.vm.$nextTick();
+        const VContainer = wrapper.findComponent({name: 'VContainer'})
+        expect(VContainer).toBeTruthy()
+        expect(VContainer.text()).toContain("Voeg bestanden toe")
+        expect(VContainer.findComponent({name: 'SubmitForm'})).toBeTruthy()
+    })
+});

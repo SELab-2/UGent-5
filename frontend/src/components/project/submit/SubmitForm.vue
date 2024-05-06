@@ -17,7 +17,7 @@
             </v-row>
             <v-row>
                 <v-col>
-                    <v-btn type="submit">{{ $t("submit.submit_button") }}</v-btn>
+                    <v-btn variant="flat" type="submit">{{ $t("submit.submit_button") }}</v-btn>
                 </v-col>
             </v-row>
         </v-container>
@@ -61,4 +61,8 @@ async function formOnSubmit(event: SubmitEvent) {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.v-btn {
+    background-color: rgb(var(--v-theme-secondary));
+}
+</style>

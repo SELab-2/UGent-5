@@ -1,0 +1,67 @@
+import {mount} from "@vue/test-utils";
+import {expect, describe, it, vi} from "vitest";
+import ProjectMiniCard from "@/components/project/ProjectMiniCard.vue"
+import {ref} from "vue";
+
+const testAuthStore = {
+    isLoggedIn: ref(true),
+    setLoggedIn(value) {
+        this.isLoggedIn.value = value;
+    },
+};
+
+vi.mock("@/stores/auth-store", () => ({
+    useAuthStore: vi.fn(() => testAuthStore),
+}));
+
+const mockProject = {
+    name: "projectnaam",
+    deadline: new Date(),
+    id: 1
+}
+
+const mockSubject = {
+    name: "subjectnaam"
+}
+
+const testSubjectQuery = {
+    data: mockSubject,
+    isLoading: ref(false)
+}
+
+vi.mock("@/queries/Subject", () => ({
+    useSubjectQuery: vi.fn(() => testSubjectQuery),
+}));
+
+
+describe("SubmitCard", async () => {
+    const ResizeObserverMock = vi.fn(() => ({
+        observe: vi.fn(),
+        unobserve: vi.fn(),
+        disconnect: vi.fn(),
+    }));
+
+    vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+
+    const wrapper = mount(ProjectMiniCard, {
+        props: {
+            project: mockProject
+        }
+    });
+
+    it("render card", () => {
+        const Card = wrapper.findComponent({name: 'VCard'})
+        expect(Card).toBeTruthy()
+    });
+
+    it("render project name, deadline and subject name", () => {
+        expect(wrapper.text()).toContain("projectnaam")
+        expect(wrapper.text()).toContain("subjectnaam")
+        expect(wrapper.text()).toContain("Deadline:")
+    });
+
+    it("render button", () => {
+        const VButton = wrapper.findComponent({name: 'VBtn'})
+        expect(VButton.text()).toContain("Naar project")
+    });
+});
