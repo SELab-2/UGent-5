@@ -14,7 +14,7 @@ export async function getUserGroups(): Promise<Group[]> {
 }
 
 export async function getGroupsByProjectId(projectId: number): Promise<Group[]> {
-    return authorized_fetch<{ groups: Group[] }>(`/api/groups?project_id=${projectId}`, {
+    return authorized_fetch<{ groups: Group[] }>(`/api/projects/${projectId}/groups`, {
         method: "GET"
     }).then(
         (data) => data.groups

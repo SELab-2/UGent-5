@@ -5,17 +5,20 @@
             {{ $t("group.not_found") }}
         </h1>
         <div v-else>
+            <h1> {{group.team_name}}</h1>
+            <h2> {{"Project: " + project.name}}</h2>
             <v-card>
-                <v-card-title> {{group.team_name}}</v-card-title>
-                <v-card-subtitle> {{"Project: "+ project.name}} </v-card-subtitle>
-                <v-card-item>
-                    <p>Members:</p>
-                    <div v-for="(member, index) in group.members" :key="index">
-                        {{ member.given_name }}
-                    </div>
+                <v-card-item title="Members:">
+                    <v-row v-for="(member, index) in group.members" :key="index" align="center">
+                        <v-col>{{ member.given_name }}</v-col>
+                        <v-col>
+                            <v-btn v-if="isTeacher" prepend-icon="mdi-close" color="red" onclick="removeStudent(member)">Remove</v-btn>
+                        </v-col>
+                    </v-row>
                 </v-card-item>
-                <v-card-actions v-if="canLeaveGroup">
-                    <v-btn> Leave group </v-btn>
+                <v-card-actions>
+                    <v-btn v-if="canLeaveGroup"> Leave group </v-btn>
+                    <v-btn v-else-if="canJoinGroup"> Join group</v-btn>
                 </v-card-actions>
             </v-card>
         </div>
@@ -28,6 +31,7 @@ import {toRefs, computed} from "vue";
 import {useGroupQuery} from "@/queries/Group";
 import {useProjectQuery} from "@/queries/Project";
 import {useUserQuery} from "@/queries/User";
+import User from "@/models/User";
 
 const props = defineProps<{
     groupId: number;
@@ -52,26 +56,31 @@ const { data: user, isLoading: isLoadingUser,  isError: isErrorUser} = useUserQu
 const isLoading = computed(() => isLoadingGroup.value || isLoadingProject.value || isLoadingUser.value);
 const isError = computed(() => isErrorGroup.value || isErrorProject.value || isErrorUser.value);
 
+const isTeacher = computed(() => user.value.is_teacher || false);
+
 const amountOfMembers = computed(() => {
-    if (!group.value) return 0; // Return 0 if group data is not available
+    if (!group.value) return 0;
     return group.value.members.length;
 });
 
 const isUserInGroup = computed(() => {
-    if (!user.value || !group.value) return false; // Check if user and group data are available
+    if (!user.value || !group.value) return false;
     return group.value.members.some(member => member.uid === user.value.uid);
 });
 
 const canJoinGroup = computed(() => {
-    const totalMembers = group.value?.members.length || 0;
-
-    return !isUserInGroup.value && totalMembers < project.value.capacity;
+    return !isUserInGroup.value && amountOfMembers.value < project.value.capacity;
 });
 
 const canLeaveGroup = computed(() => {
     if (!user.value || !group.value) return false;
-    return project.value.capacity !== 1 && isUserInGroup;
+    return project.value.capacity !== 1 && isUserInGroup && !isTeacher.value;
 });
+
+const removeStudent = (member: User) => {
+    //TODO: fix this function
+};
+
 </script>
 
 <style scoped></style>
