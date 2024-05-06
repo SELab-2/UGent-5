@@ -1,14 +1,14 @@
 <template>
     <div class="container">
-        <v-icon class="moon" icon="mdi mdi-moon-waning-crescent"></v-icon>
         <v-switch
             class="switcher"
             color="white"
             v-model="switchValue"
             false-value="darkTheme"
+            false-icon="mdi-moon-waning-crescent"
             true-value="lightTheme"
+            true-icon="mdi-white-balance-sunny"
         ></v-switch>
-        <v-icon class="sun" icon="mdi mdi-white-balance-sunny"></v-icon>
     </div>
 </template>
 
