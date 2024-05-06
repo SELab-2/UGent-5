@@ -51,7 +51,8 @@ async def test_create_instructor(client: AsyncClient, db: AsyncSession, subject_
     assert response.status_code == 201
 
     await create_user(
-        db, UserCreate(uid="test2", given_name="tester", surname="testy", mail="test@test.test")
+        db, UserCreate(uid="test2", given_name="tester",
+                       surname="testy", mail="test@test.test")
     )
 
     await set_admin(db, "test", False)
@@ -147,7 +148,8 @@ async def test_enroll_student_into_course(client: AsyncClient, db: AsyncSession,
 
     # create user
     await create_user(
-        db, UserCreate(uid="test2", given_name="tester", surname="testy", mail="blabla@gmail.com")
+        db, UserCreate(uid="test2", given_name="tester",
+                       surname="testy", mail="blabla@gmail.com")
     )
 
     # success
@@ -167,7 +169,8 @@ async def test_enroll_student_into_course(client: AsyncClient, db: AsyncSession,
 async def test_get_students(client: AsyncClient, db: AsyncSession, subject_id: int):
     # enroll student
     await create_user(
-        db, UserCreate(uid="get_test", given_name="tester", surname="testy", mail="blabla@gmail.com")
+        db, UserCreate(uid="get_test", given_name="tester",
+                       surname="testy", mail="blabla@gmail.com")
     )
     await set_admin(db, "test", True)
     response = await client.post(
@@ -186,7 +189,8 @@ async def test_delete_student(client: AsyncClient, db: AsyncSession, subject_id:
     # Enroll student
     user_uid = "get_test"  # Keep the user UID for further assertions
     await create_user(
-        db, UserCreate(uid=user_uid, given_name="tester", surname="testy", mail="blabla@gmail.com")
+        db, UserCreate(uid=user_uid, given_name="tester",
+                       surname="testy", mail="blabla@gmail.com")
     )
     await client.post(
         # Use path parameters
