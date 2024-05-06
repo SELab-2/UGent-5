@@ -17,7 +17,7 @@ class ProjectBase(BaseModel):
     deadline: datetime
     description: str
     subject_id: int
-    is_visible: bool = Field(default=False)
+    is_visible: bool = Field(default=True)
     capacity: int = Field(gt=0)
     requirements: List[Requirement] = []
 
