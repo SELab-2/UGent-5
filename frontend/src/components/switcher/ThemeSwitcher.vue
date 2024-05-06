@@ -1,31 +1,31 @@
 <template>
     <div class="container">
-        <v-icon class="moon" icon="mdi mdi-moon-waning-crescent"></v-icon>
         <v-switch
             class="switcher"
             color="white"
             v-model="switchValue"
             false-value="darkTheme"
+            false-icon="mdi-moon-waning-crescent"
             true-value="lightTheme"
+            true-icon="mdi-white-balance-sunny"
+            @update:model-value="(value) => onThemeChange(value!)"
         ></v-switch>
-        <v-icon class="sun" icon="mdi mdi-white-balance-sunny"></v-icon>
     </div>
 </template>
 
 <script setup lang="ts">
 import { useTheme } from "vuetify";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { useThemeStore } from "@/stores/theme-store";
-const theme = useTheme();
 const { storedTheme, setTheme } = useThemeStore();
 
 const switchValue = ref(storedTheme);
+const theme = useTheme();
 
-watch(switchValue, (newValue) => {
-    theme.global.name.value = newValue;
-    setTheme(newValue);
-    console.log(localStorage.getItem("theme"));
-});
+function onThemeChange(value: string) {
+    theme.global.name.value = value;
+    setTheme(value);
+}
 </script>
 
 <style scoped>
