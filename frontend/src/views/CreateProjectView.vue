@@ -76,7 +76,12 @@ import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import { useRoute } from "vue-router";
 import { useSubjectStudentsQuery } from "@/queries/Subject";
 import { useMySubjectsQuery } from "@/queries/User";
-import {useCreateProjectMutation, useProjectQuery, useUploadProjectFilesMutation} from "@/queries/Project";
+import {
+    useCreateProjectMutation,
+    useProjectQuery,
+    useUpdateProjectMutation,
+    useUploadProjectFilesMutation
+} from "@/queries/Project";
 import { useCreateGroupsMutation, useJoinGroupMutation } from "@/queries/Group";
 import { ref, computed, reactive, watch } from "vue";
 import type User from "@/models/User";
@@ -98,7 +103,7 @@ const files = ref<File[]>([]);
 const quillEditor = ref<typeof QuillEditor | null>(null);
 
 const projectId = ref(route.params.projectId);
-const isEditMode = true;
+const isEditMode = computed(() => projectId.value !== undefined);
 console.log("isEditMode:", isEditMode);
 
 const {
@@ -169,6 +174,7 @@ const createProjectMutation = useCreateProjectMutation();
 const createGroupsMutation = useCreateGroupsMutation();
 const joinGroupMutation = useJoinGroupMutation();
 const uploadProjectFilesMutation = useUploadProjectFilesMutation();
+const updateProjectMutation = useUpdateProjectMutation();
 
 function handleRadioDateChange(newDate) {
     enrollDeadline.value = newDate;
@@ -192,63 +198,64 @@ async function submitForm() {
         publish_date: formattedPublishDate,
         enroll_deadline: formattedEnrollDeadline,
     };
+    console.log(publishDate.value);
 
-    try {
-        if(isEditMode.value){
-            await fetch(`/api/projects/${projectId.value}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(projectData)
-            });
-            console.log("Project updated successfully");
-        }
-        else {
-            const createdProjectId = await createProjectMutation.mutateAsync(projectData);
-            console.log("project created with ID:", createdProjectId);
-
-            if (selectedGroupProject.value === "student") {
-                const emptyGroup: GroupForm = {
-                    project_id: createdProjectId,
-                    score: 0,
-                    team_name: "Group 1",
-                };
-                await createGroupsMutation.mutateAsync({
-                    projectId: createdProjectId,
-                    groups: [emptyGroup],
-                });
-            } else if (selectedGroupProject.value === "random") {
-                const groups = divideStudentsIntoGroups(studentsData.value || [], capacity.value);
-                const groupsToCreate = groups.map((_, i) => ({
-                    project_id: createdProjectId,
-                    score: 0,
-                    team_name: "Group " + (i + 1),
-                }));
-                const createdGroups = await createGroupsMutation.mutateAsync({
-                    projectId: createdProjectId,
-                    groups: groupsToCreate,
-                });
-
-                createdGroups.forEach((group, index) => {
-                    groups[index].forEach((student) => {
-                        joinGroupMutation.mutateAsync({
-                            groupId: group.id,
-                            uid: student.uid,
-                        });
-                    });
-                });
-            }
-            if (files.value.length > 0) {
-                const formData = new FormData();
-                files.value.forEach((file) => {
-                    formData.append("files", file);
-                });
-                await uploadProjectFilesMutation.mutateAsync({projectId: createdProjectId, formData});
-                console.log("Files uploaded successfully");
-            }
-        }
-    } catch (error) {
-        console.error("Error during project or group creation or file upload:", error);
-    }
+    // try {
+    //     if(isEditMode.value){
+    //         try{
+    //             updateProjectMutation.mutate({ projectId: projectId.value, projectData });
+    //         }
+    //         catch(error){
+    //             console.log("failed to update project");
+    //         }
+    //     }
+    //     else {
+    //         const createdProjectId = await createProjectMutation.mutateAsync(projectData);
+    //         console.log("project created with ID:", createdProjectId);
+    //
+    //         if (selectedGroupProject.value === "student") {
+    //             const emptyGroup: GroupForm = {
+    //                 project_id: createdProjectId,
+    //                 score: 0,
+    //                 team_name: "Group 1",
+    //             };
+    //             await createGroupsMutation.mutateAsync({
+    //                 projectId: createdProjectId,
+    //                 groups: [emptyGroup],
+    //             });
+    //         } else if (selectedGroupProject.value === "random") {
+    //             const groups = divideStudentsIntoGroups(studentsData.value || [], capacity.value);
+    //             const groupsToCreate = groups.map((_, i) => ({
+    //                 project_id: createdProjectId,
+    //                 score: 0,
+    //                 team_name: "Group " + (i + 1),
+    //             }));
+    //             const createdGroups = await createGroupsMutation.mutateAsync({
+    //                 projectId: createdProjectId,
+    //                 groups: groupsToCreate,
+    //             });
+    //
+    //             createdGroups.forEach((group, index) => {
+    //                 groups[index].forEach((student) => {
+    //                     joinGroupMutation.mutateAsync({
+    //                         groupId: group.id,
+    //                         uid: student.uid,
+    //                     });
+    //                 });
+    //             });
+    //         }
+    //         if (files.value.length > 0) {
+    //             const formData = new FormData();
+    //             files.value.forEach((file) => {
+    //                 formData.append("files", file);
+    //             });
+    //             await uploadProjectFilesMutation.mutateAsync({projectId: createdProjectId, formData});
+    //             console.log("Files uploaded successfully");
+    //         }
+    //     }
+    // } catch (error) {
+    //     console.error("Error during project or group creation or file upload:", error);
+    // }
 }
 
 function shuffle(array: any[]) {
