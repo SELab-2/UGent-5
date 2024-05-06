@@ -43,7 +43,6 @@ async def token(
 
     cas_client.service_url = f"{request.headers.get('origin')}{token_request.returnUrl}"
     user, attributes, _ = cas_client.verify_ticket(token_request.ticket)
-    print(attributes)
 
     # Invalid ticket
     if not user or not attributes:
