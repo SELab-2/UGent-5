@@ -11,7 +11,6 @@ import {
 import { type Ref, computed } from "vue";
 import type Subject from "@/models/Subject";
 import type User from "@/models/User";
-import type Subject from "@/models/Subject";
 import type Project from "@/models/Project";
 import type SubjectDetails from "@/models/SubjectDetails";
 
