@@ -35,7 +35,11 @@ const emit = defineEmits(["update:modelValue"]);
 const menuVisible = ref(false);
 const date = ref(props.modelValue || new Date()); // defaulting to a new Date if modelValue isn't provided
 const time = ref(formatTime(props.modelValue || new Date()));
-
+watch(() => props.modelValue, (newValue) => {
+    if (newValue) {
+        date.value = new Date(newValue);
+    }
+}, { immediate: true });
 function formatTime(date: Date): string {
     return `${date.getHours()}:${date.getMinutes()}`;
 }

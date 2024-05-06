@@ -9,25 +9,11 @@
                     placeholder="Enter Title"
                 />
             </v-col>
-            <v-col cols="12" md="6">
-                <CheckBoxList
-                    v-if="teachers.length > 0"
-                    v-model="selectedTeachers"
-                    :title="'Teacher(s)'"
-                    :items="teachers"
-                    description="Assign Teachers"
-                />
-                <span v-else>No instructors found.</span>
-            </v-col>
         </v-row>
         <v-row>
             <v-col cols="12" md="6">
-                <span v-if="isSubjectsLoading">Loading subjects...</span>
-                <span v-else-if="isSubjectsError"
-                    >Error loading subjects: {{ subjectsError!.message }}</span
-                >
                 <v-select
-                    v-else
+                    v-if="!isEditMode"
                     v-model="selectedSubject"
                     :items="subjects"
                     item-value="value"
@@ -37,24 +23,22 @@
                     placeholder="Select Subject"
                 />
             </v-col>
-            <v-col cols="12" md="6">
-                <CheckBoxList
-                    v-if="assistants.length > 0"
-                    v-model="selectedAssitants"
-                    :title="'Assistants'"
-                    :items="assistants"
-                    description="Assign Assistants"
-                />
-                <span v-else>No assistants found.</span>
-            </v-col>
         </v-row>
         <v-row>
             <v-col cols="12" md="6">
-                <DatePicker v-model="deadline" label="Deadline" required />
-                <DatePicker v-model="publishDate" label="Publish Date" required />
+                <DatePicker
+                    :modelValue="deadline"
+                    @update:modelValue="val => deadline.value = val"
+                    label="Deadline"
+                />
+                <DatePicker
+                    :modelValue="publishDate"
+                    @update:modelValue="val=> deadline.value=val"
+                    label="Publish Date" required />
             </v-col>
             <v-col cols="12" md="6">
                 <RadioButtonList
+                    v-if="!isEditMode"
                     :title="'Group Project Options'"
                     :options="groupProjectOptions"
                     @update:radio_date="handleRadioDateChange"
@@ -79,19 +63,20 @@
     </v-container>
 </template>
 
+
 <script setup lang="ts">
-import CheckBoxList from "@/components/project/CheckboxList.vue";
+import {nextTick} from 'vue';
 import type { CheckBoxItem } from "@/components/project/CheckboxList.vue";
 import DatePicker from "@/components/project/DatePicker.vue";
 import RadioButtonList from "@/components/project/RadiobuttonList.vue";
 import FilesInput from "@/components/form_elements/FilesInput.vue";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
-import BackgroundContainer from "@/components/BackgroundContainer.vue";
+
 import { useRoute } from "vue-router";
-import { useSubjectInstructorsQuery, useSubjectStudentsQuery } from "@/queries/Subject";
+import { useSubjectStudentsQuery } from "@/queries/Subject";
 import { useMySubjectsQuery } from "@/queries/User";
-import { useCreateProjectMutation, useUploadProjectFilesMutation } from "@/queries/Project";
+import {useCreateProjectMutation, useProjectQuery, useUploadProjectFilesMutation} from "@/queries/Project";
 import { useCreateGroupsMutation, useJoinGroupMutation } from "@/queries/Group";
 import { ref, computed, reactive, watch } from "vue";
 import type User from "@/models/User";
@@ -99,12 +84,11 @@ import type { ProjectForm } from "@/models/Project";
 import type { GroupForm } from "@/models/Group";
 
 const route = useRoute();
+console.log("Route params:", route.params);
 
-// Form data
+
 const project_title = ref("");
-const selectedSubject = ref(Number(route.params.subjectId));
-const selectedTeachers = reactive<CheckBoxItem[]>([]);
-const selectedAssitants = reactive<CheckBoxItem[]>([]);
+const projectSubjectId = ref<number | null>(null);
 const deadline = ref(new Date());
 const publishDate = ref(new Date());
 const enrollDeadline = ref(null);
@@ -112,6 +96,51 @@ const selectedGroupProject = ref("student");
 const capacity = ref(1);
 const files = ref<File[]>([]);
 const quillEditor = ref<typeof QuillEditor | null>(null);
+
+const projectId = ref(route.params.projectId);
+const isEditMode = true;
+console.log("isEditMode:", isEditMode);
+
+const {
+    data: projectData,
+    isLoading: isProjectLoading,
+    isError: isProjectError,
+} = useProjectQuery(projectId);
+
+function htmlDecode(input) {
+    const doc = new DOMParser().parseFromString(input, "text/html");
+    return doc.documentElement.textContent;
+}
+
+watch(projectData, (project) => {
+    console.log("Project data changed:", project);
+    if (project) {
+        console.log("Project data loaded successfully", project);
+        project_title.value = project.name;
+        deadline.value = new Date(project.deadline);
+        publishDate.value = new Date(project.publish_date);
+        const description = htmlDecode(project.description);
+        nextTick(() => {
+            if (quillEditor.value) {
+                quillEditor.value.getQuill().clipboard.dangerouslyPasteHTML(description);
+            } else {
+                console.error("Quill Editor is not initialized");
+            }
+        });
+    } else {
+        console.error("Failed to load project data", project);
+    }
+}, { deep: true });
+
+
+
+const selectedSubject = ref<number>(isEditMode ? projectSubjectId.value ?? Number(route.params.subjectId) : Number(route.params.subjectId));
+
+
+watch(isEditMode, (newValue, oldValue) => {
+    console.log(newValue);
+});
+
 
 watch(deadline, (newValue, oldValue) => {
     console.log(`Deadline changed from ${oldValue.toISOString()} to ${newValue.toISOString()}`);
@@ -123,15 +152,9 @@ const {
     isError: isSubjectsError,
     error: subjectsError,
 } = useMySubjectsQuery();
-const { data: instructorsData, isLoading, isError } = useSubjectInstructorsQuery(selectedSubject);
+// const { data: instructorsData, isLoading, isError } = useSubjectInstructorsQuery(selectedSubject);
 const { data: studentsData } = useSubjectStudentsQuery(selectedSubject);
 
-const teachers = computed(
-    () => instructorsData.value?.filter((t) => t.is_teacher).map(formatInstructor) || []
-);
-const assistants = computed(
-    () => instructorsData.value?.filter((a) => !a.is_teacher).map(formatInstructor) || []
-);
 const subjects = computed(
     () =>
         mySubjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []
@@ -171,47 +194,57 @@ async function submitForm() {
     };
 
     try {
-        const createdProjectId = await createProjectMutation.mutateAsync(projectData);
-        console.log("project created with ID:", createdProjectId);
-
-        if (selectedGroupProject.value === "student") {
-            const emptyGroup: GroupForm = {
-                project_id: createdProjectId,
-                score: 0,
-                team_name: "Group 1",
-            };
-            await createGroupsMutation.mutateAsync({
-                projectId: createdProjectId,
-                groups: [emptyGroup],
+        if(isEditMode.value){
+            await fetch(`/api/projects/${projectId.value}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(projectData)
             });
-        } else if (selectedGroupProject.value === "random") {
-            const groups = divideStudentsIntoGroups(studentsData.value || [], capacity.value);
-            const groupsToCreate = groups.map((_, i) => ({
-                project_id: createdProjectId,
-                score: 0,
-                team_name: "Group " + (i + 1),
-            }));
-            const createdGroups = await createGroupsMutation.mutateAsync({
-                projectId: createdProjectId,
-                groups: groupsToCreate,
-            });
+            console.log("Project updated successfully");
+        }
+        else {
+            const createdProjectId = await createProjectMutation.mutateAsync(projectData);
+            console.log("project created with ID:", createdProjectId);
 
-            createdGroups.forEach((group, index) => {
-                groups[index].forEach((student) => {
-                    joinGroupMutation.mutateAsync({
-                        groupId: group.id,
-                        uid: student.uid,
+            if (selectedGroupProject.value === "student") {
+                const emptyGroup: GroupForm = {
+                    project_id: createdProjectId,
+                    score: 0,
+                    team_name: "Group 1",
+                };
+                await createGroupsMutation.mutateAsync({
+                    projectId: createdProjectId,
+                    groups: [emptyGroup],
+                });
+            } else if (selectedGroupProject.value === "random") {
+                const groups = divideStudentsIntoGroups(studentsData.value || [], capacity.value);
+                const groupsToCreate = groups.map((_, i) => ({
+                    project_id: createdProjectId,
+                    score: 0,
+                    team_name: "Group " + (i + 1),
+                }));
+                const createdGroups = await createGroupsMutation.mutateAsync({
+                    projectId: createdProjectId,
+                    groups: groupsToCreate,
+                });
+
+                createdGroups.forEach((group, index) => {
+                    groups[index].forEach((student) => {
+                        joinGroupMutation.mutateAsync({
+                            groupId: group.id,
+                            uid: student.uid,
+                        });
                     });
                 });
-            });
-        }
-        if (files.value.length > 0) {
-            const formData = new FormData();
-            files.value.forEach((file) => {
-                formData.append("files", file);
-            });
-            await uploadProjectFilesMutation.mutateAsync({ projectId: createdProjectId, formData });
-            console.log("Files uploaded successfully");
+            }
+            if (files.value.length > 0) {
+                const formData = new FormData();
+                files.value.forEach((file) => {
+                    formData.append("files", file);
+                });
+                await uploadProjectFilesMutation.mutateAsync({projectId: createdProjectId, formData});
+                console.log("Files uploaded successfully");
+            }
         }
     } catch (error) {
         console.error("Error during project or group creation or file upload:", error);

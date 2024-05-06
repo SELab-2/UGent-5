@@ -8,6 +8,12 @@
                     <ProjectInfo :project="project!" :group="group!" />
                 </v-col>
                 <v-col cols="2" class="button-container">
+                    <router-link :to="`/project/${projectId}/edit`">
+                        <v-btn class="edit-button" color="primary" icon>
+                            <v-icon left>mdi-pencil</v-icon>
+                            {{ $t("project.edit_button") }}
+                        </v-btn>
+                    </router-link>
                     <router-link v-if="group" :to="`/api/groups/${group!.id}`">
                         <v-btn class="group-button" prepend-icon="mdi-account-group">
                             {{ $t("project.group", { number: group!.id }) }}
