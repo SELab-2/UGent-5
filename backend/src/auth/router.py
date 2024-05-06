@@ -43,6 +43,7 @@ async def token(
 
     cas_client.service_url = f"{request.headers.get('origin')}{token_request.returnUrl}"
     user, attributes, _ = cas_client.verify_ticket(token_request.ticket)
+    print(attributes)
 
     # Invalid ticket
     if not user or not attributes:
@@ -53,6 +54,7 @@ async def token(
             db,
             UserCreate(
                 given_name=attributes["givenname"],
+                surname=attributes["surname"],
                 uid=attributes["uid"],
                 mail=attributes["mail"],
             ),

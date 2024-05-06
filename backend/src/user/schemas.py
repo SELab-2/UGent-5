@@ -7,6 +7,7 @@ from src.subject.schemas import Subject
 class Userbase(BaseModel):
     uid: str  # ugentID
     given_name: str
+    surname: str
     mail: str
 
 
