@@ -1,8 +1,7 @@
 import { mount } from "@vue/test-utils";
 import {expect, describe, it, vi} from "vitest";
 import AdminView from "../../src/views/AdminView.vue"
-import {computed, ref, nextTick} from "vue";
-import User from "../../src/models/User";
+import {computed, ref} from "vue";
 
 vi.mock("@/composables/useIsAdmin");
 
@@ -16,14 +15,6 @@ const testAuthStore = {
 vi.mock("@/stores/auth-store", () => ({
     useAuthStore: vi.fn(() => testAuthStore),
 }));
-
-const mockUser: User = {
-    uid: '123456789',
-    given_name: 'John',
-    mail: 'john@example.com',
-    is_teacher: false,
-    is_admin: false,
-};
 
 describe("AdminView", async () => {
     const ResizeObserverMock = vi.fn(() => ({

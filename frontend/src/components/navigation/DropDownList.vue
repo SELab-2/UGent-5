@@ -20,9 +20,8 @@ import ThemeSwitcher from "@/components/switcher/ThemeSwitcher.vue";
 import { useAuthStore } from "@/stores/auth-store";
 import { ref } from "vue";
 
-const { isLoggedIn } = useAuthStore()
-const loggedInValue = ref(isLoggedIn)
-
+const { isLoggedIn } = useAuthStore();
+const loggedInValue = ref(isLoggedIn);
 </script>
 
 <style scoped>
