@@ -23,19 +23,19 @@
 </template>
 
 <script setup lang="ts">
-import Project from "@/models/Project";
-import Group from "@/models/Group";
-import Subject from "@/models/Subject";
+import type Project from "@/models/Project";
+import type Group from "@/models/Group";
+import type Subject from "@/models/Subject";
 import NeedHelpButton from "@/components/buttons/NeedHelpButton.vue";
 import { computed, toRefs } from "vue";
-import User from "@/models/User";
+import type User from "@/models/User";
 import { useUserQuery } from "@/queries/User";
 
 const props = defineProps<{
     project: Project;
     group: Group | null;
     subject: Subject;
-    instructors: User | null;
+    instructors: User[];
 }>();
 
 const { project, group, subject, instructors } = toRefs(props);
