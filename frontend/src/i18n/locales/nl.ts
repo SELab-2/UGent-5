@@ -9,6 +9,8 @@ export default {
         no: "geen",
         to: "naar ",
     },
+    logo: "universiteit-gent-logo-white.png",
+    logout: "uitloggen",
     login: {
         about: "De officiële indienapplicatie van de Universiteit Gent",
         login: "Inloggen",

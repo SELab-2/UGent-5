@@ -9,6 +9,8 @@ export default {
         no: "no",
         to: "to ",
     },
+    logo: "ghent-university-logo-white.png",
+    logout: "logout",
     login: {
         about: "The official submission application of Ghent University",
         login: "Login",

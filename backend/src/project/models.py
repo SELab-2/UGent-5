@@ -13,7 +13,7 @@ class Project(Base):
     deadline: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False)
     publish_date: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), nullable=True, default=datetime.now()
+        DateTime(timezone=True), nullable=True, default=datetime.now
     )
     name: Mapped[str] = mapped_column(nullable=False)
     subject_id: Mapped[int] = mapped_column(
