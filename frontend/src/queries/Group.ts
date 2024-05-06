@@ -10,7 +10,7 @@ import {
     getGroupWithProjectId,
     getSubmissions,
     getUserGroups,
-    joinGroup,
+    joinGroup, joinGroupUser, leaveGroupUser,
 } from "@/services/group";
 import type Submission from "@/models/Submission";
 
@@ -32,6 +32,14 @@ function submissionsQueryKey(groupId: number): (string | number)[] {
 
 function PROJECT_GROUPS_QUERY_KEY(projectId: number): (string | number)[] {
     return ["projectGroups", projectId];
+}
+
+function JOIN_GROUPS_QUERY_KEY(groupId: number): (string | number)[] {
+    return ["JoinGroups", groupId];
+}
+
+function LEAVE_GROUPS_QUERY_KEY(groupId: number): (string | number)[] {
+    return ["LeaveGroups", groupId];
 }
 
 export function useGroupQuery(groupId: Ref<number | undefined>): UseQueryReturnType<Group, Error> {
@@ -127,5 +135,25 @@ export function useProjectGroupsQuery(
         queryKey: computed(() => PROJECT_GROUPS_QUERY_KEY(projectId.value!)),
         queryFn: () => getGroupsByProjectId(projectId.value!),
         enabled: computed(() => projectId.value !== undefined),
+    });
+}
+
+export function useJoinGroupUserQuery(
+    groupId: Ref<number | undefined>
+): UseQueryReturnType<Group, Error> {
+    return useQuery<Group, Error>({
+        queryKey: computed(() => JOIN_GROUPS_QUERY_KEY(groupId.value!)),
+        queryFn: () => joinGroupUser(groupId.value!),
+        enabled: computed(() => groupId.value !== undefined),
+    });
+}
+
+export function useLeaveGroupUserQuery(
+    groupId: Ref<number | undefined>
+): UseQueryReturnType<Group, Error> {
+    return useQuery<Group, Error>({
+        queryKey: computed(() => LEAVE_GROUPS_QUERY_KEY(groupId.value!)),
+        queryFn: () => leaveGroupUser(groupId.value!),
+        enabled: computed(() => groupId.value !== undefined),
     });
 }

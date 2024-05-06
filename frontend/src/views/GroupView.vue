@@ -17,8 +17,12 @@
                     </v-row>
                 </v-card-item>
                 <v-card-actions>
-                    <v-btn v-if="canLeaveGroup"> Leave group </v-btn>
-                    <v-btn v-else-if="canJoinGroup"> Join group</v-btn>
+                    <GroupButtons
+                        :amountOfMembers="amountOfMembers"
+                        :group="group"
+                        :project="project"
+                        :user="user"
+                    />
                 </v-card-actions>
             </v-card>
         </div>
@@ -61,20 +65,6 @@ const isTeacher = computed(() => user.value.is_teacher || false);
 const amountOfMembers = computed(() => {
     if (!group.value) return 0;
     return group.value.members.length;
-});
-
-const isUserInGroup = computed(() => {
-    if (!user.value || !group.value) return false;
-    return group.value.members.some(member => member.uid === user.value.uid);
-});
-
-const canJoinGroup = computed(() => {
-    return !isUserInGroup.value && amountOfMembers.value < project.value.capacity;
-});
-
-const canLeaveGroup = computed(() => {
-    if (!user.value || !group.value) return false;
-    return project.value.capacity !== 1 && isUserInGroup && !isTeacher.value;
 });
 
 const removeStudent = (member: User) => {

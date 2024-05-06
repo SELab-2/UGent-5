@@ -62,3 +62,11 @@ export async function joinGroup(groupId: number, uid: string): Promise<void> {
 export async function getSubmissions(groupId: number): Promise<Submission[]> {
     return authorized_fetch(`/api/groups/${groupId}/submissions`, { method: "GET" });
 }
+
+export async function joinGroupUser(groupId: number): Promise<Group> {
+    return authorized_fetch(`/api/groups/${groupId}`, { method: "POST" });
+}
+
+export async function leaveGroupUser(groupId: number): Promise<Group> {
+    return authorized_fetch(`/api/groups/${groupId}`, { method: "DELETE" });
+}
