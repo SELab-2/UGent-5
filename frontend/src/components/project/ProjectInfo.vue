@@ -3,33 +3,30 @@
         <v-card color="white" class="infostyling">
             <v-card-title>{{ project.name }}</v-card-title>
             <v-card-item>
-                <v-row>
-                    <v-chip label color="primary" class="ma-2" prepend-icon="mdi-calendar">
-                        {{ $d(project.deadline, "long") }}
-                    </v-chip>
-                    <v-chip label color="primary" class="ma-2" prepend-icon="mdi-school">
-                        {{ subject.name }}
-                    </v-chip>
-                    <v-chip
-                        label
-                        color="primary"
-                        class="ma-2"
-                        prepend-icon="mdi-account-group"
-                        v-tooltip="`${$t('project.capacity_group')} ${project.capacity}`"
-                    >
-                        {{ project.capacity }}
-                    </v-chip>
-                    <v-chip
-                        v-for="instructor in instructors"
-                        :key="instructor?.uid"
-                        label
-                        color="primary"
-                        class="ma-2"
-                        prepend-icon="mdi-account"
-                    >
-                        {{ instructor?.given_name }}
-                    </v-chip>
-                </v-row>
+                <v-chip label color="primary" class="ma-2" prepend-icon="mdi-calendar">
+                    {{ $d(project.deadline, "long") }}
+                </v-chip>
+                <v-chip label color="primary" class="ma-2" prepend-icon="mdi-school">
+                    {{ subject.name }}
+                </v-chip>
+                <v-chip
+                    label
+                    color="primary"
+                    class="ma-2"
+                    prepend-icon="mdi-account-group"
+                >
+                    {{ $t("project.capacity_group") + project.capacity }}
+                </v-chip>
+                <v-chip
+                    v-for="instructor in instructors"
+                    :key="instructor?.uid"
+                    label
+                    color="primary"
+                    class="ma-2"
+                    prepend-icon="mdi-account"
+                >
+                    {{ instructor?.given_name }}
+                </v-chip>
             </v-card-item>
             <v-card-item>
                 <v-card-title>

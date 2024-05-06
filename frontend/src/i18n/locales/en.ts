@@ -50,7 +50,7 @@ export default {
         assignment: "Assignment:",
         myProject: "My projects:",
         return_course: "Back to subject",
-        capacity_group: "Maximum amount of group members: ",
+        capacity_group: "Capacity: ",
         edit: "Edit project",
         submissions_list: "All submissions",
         not_found: "No projects found.",

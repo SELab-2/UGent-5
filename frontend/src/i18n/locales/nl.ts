@@ -50,7 +50,7 @@ export default {
         assignment: "Opdracht:",
         myProject: "Mijn projecten:",
         return_course: "Terug naar vak",
-        capacity_group: "Maximaal aantal leden per groep: ",
+        capacity_group: "Capaciteit: ",
         edit: "Bewerk project",
         submissions_list: "Alle indieningen",
         not_found: "Geen projecten teruggevonden.",
