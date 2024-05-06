@@ -7,6 +7,7 @@ export default {
             loading_page: "Aan het laden...",
         },
         no: "geen",
+        to: "naar ",
     },
     login: {
         about: "De officiële indienapplicatie van de Universiteit Gent",
@@ -49,7 +50,6 @@ export default {
         group: "Groep {number}",
         assignment: "Opdracht:",
         myProject: "Mijn projecten:",
-        return_course: "Terug naar vak",
         capacity_group: "Capaciteit: ",
         edit: "Bewerk project",
         submissions_list: "Alle indieningen",

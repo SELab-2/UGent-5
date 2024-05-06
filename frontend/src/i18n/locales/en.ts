@@ -7,6 +7,7 @@ export default {
             loading_page: "Loading...",
         },
         no: "no",
+        to: "to ",
     },
     login: {
         about: "The official submission application of Ghent University",
@@ -49,7 +50,6 @@ export default {
         group: "Group {number}",
         assignment: "Assignment:",
         myProject: "My projects:",
-        return_course: "Back to subject",
         capacity_group: "Capacity: ",
         edit: "Edit project",
         submissions_list: "All submissions",

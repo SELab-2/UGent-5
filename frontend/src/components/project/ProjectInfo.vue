@@ -9,12 +9,7 @@
                 <v-chip label color="primary" class="ma-2" prepend-icon="mdi-school">
                     {{ subject.name }}
                 </v-chip>
-                <v-chip
-                    label
-                    color="primary"
-                    class="ma-2"
-                    prepend-icon="mdi-account-group"
-                >
+                <v-chip label color="primary" class="ma-2" prepend-icon="mdi-account-group">
                     {{ $t("project.capacity_group") + project.capacity }}
                 </v-chip>
                 <v-chip

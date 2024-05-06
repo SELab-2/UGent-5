@@ -13,37 +13,12 @@
                     />
                 </v-col>
                 <v-col cols="2" class="button-container">
-                    <router-link :to="`/subjects/${project!.subject_id}`">
-                        <v-btn class="group-button" prepend-icon="mdi-arrow-left">
-                            {{ $t("project.return_course") }}
-                        </v-btn>
-                    </router-link>
-                    <router-link
-                        v-if="group && !isSoloProject && !isTeacher"
-                        :to="`/groups/${group!.id}`"
-                    >
-                        <v-btn class="group-button" prepend-icon="mdi-account-group">
-                            {{ $t("project.group", { number: group!.id }) }}
-                        </v-btn>
-                    </router-link>
-                    <router-link
-                        v-else-if="!isSoloProject && !isTeacher"
-                        :to="`/projects/${projectId}/groups`"
-                    >
-                        <v-btn class="group-button" prepend-icon="mdi-account-group">
-                            {{ $t("project.group_button") }}
-                        </v-btn>
-                    </router-link>
-                    <NeedHelpButton
-                        v-if="!isTeacher"
-                        class="group-button"
-                        :email="subject!.email"
-                    ></NeedHelpButton>
-                    <router-link v-if="isTeacher" :to="`/projects/${projectId}/edit`">
-                        <v-btn class="group-button" prepend-icon="mdi-pencil">
-                            {{ $t("project.edit") }}
-                        </v-btn>
-                    </router-link>
+                    <ProjectSideBar
+                        :project="project!"
+                        :group="group!"
+                        :subject="subject!"
+                        :instructors="instructors!"
+                    />
                 </v-col>
             </v-row>
         </div>
@@ -54,10 +29,9 @@
 import ProjectInfo from "@/components/project/ProjectInfo.vue";
 import { useProjectQuery } from "@/queries/Project";
 import { computed, toRefs } from "vue";
-import NeedHelpButton from "@/components/buttons/NeedHelpButton.vue";
 import { useUserGroupQuery } from "@/queries/Group";
 import { useSubjectInstructorsQuery, useSubjectQuery } from "@/queries/Subject";
-import { useUserQuery } from "@/queries/User";
+import ProjectSideBar from "@/components/project/ProjectSideBar.vue";
 
 const props = defineProps<{
     projectId: number;
@@ -89,15 +63,6 @@ const {
     isError: isInstructorsError,
 } = useSubjectInstructorsQuery(computed(() => project.value?.subject_id));
 
-const { data: user } = useUserQuery(null);
-
-const isTeacher = computed(() => {
-    if (!user.value || !instructors.value) {
-        return false;
-    }
-    return instructors.value.some((instructor) => instructor.uid === user.value.uid);
-});
-
 const isDataLoading = computed(
     () =>
         isProjectLoading.value ||
@@ -113,17 +78,10 @@ const isDataError = computed(
         isInstructorsError.value ||
         isSubjectError.value
 );
-
-const isSoloProject = computed(() => project.value.capacity === 1);
 </script>
 
 <style scoped>
 .button-container {
     margin-top: 20px;
-}
-
-.group-button {
-    margin-bottom: 5px;
-    min-width: auto;
 }
 </style>
