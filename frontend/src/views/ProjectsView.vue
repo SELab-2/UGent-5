@@ -45,7 +45,10 @@ const filteredProjects = computed(() => {
     const now = new Date();
     const sortedProjects = projects.value
         .slice()
-        .sort((a: Project, b: Project) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
+        .sort(
+            (a: Project, b: Project) =>
+                new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
+        );
 
     switch (activeButton.value) {
         case "archived":
