@@ -40,13 +40,13 @@ import type Group from "@/models/Group";
 import SubmitInfo from "@/components/project/submit/SubmitInfo.vue";
 import { toRefs } from "vue";
 import { Quill } from "@vueup/vue-quill";
-import User from "@/models/User";
-import Subject from "@/models/Subject";
+import type User from "@/models/User";
+import type Subject from "@/models/Subject";
 
 const props = defineProps<{
     project: Project;
     group: Group | null;
-    instructors: User[] | null;
+    instructors: User[];
     subject: Subject;
 }>();
 

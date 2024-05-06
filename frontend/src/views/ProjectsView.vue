@@ -32,12 +32,12 @@
 import { useProjectsQuery } from "@/queries/Project";
 import ProjectMiniCard from "@/components/project/ProjectMiniCard.vue";
 import { computed, ref } from "vue";
-import Project from "@/models/Project";
+import type Project from "@/models/Project";
 
 const { data: projects, isLoading, isError } = useProjectsQuery();
-const noProjectsFound = computed(() => projects.value.length === 0);
+const noProjectsFound = computed(() => projects.value?.length === 0);
 
-const activeButton = ref(null);
+const activeButton = ref("");
 
 const filteredProjects = computed(() => {
     if (!projects.value) return [];
@@ -45,7 +45,7 @@ const filteredProjects = computed(() => {
     const now = new Date();
     const sortedProjects = projects.value
         .slice()
-        .sort((a: Project, b: Project) => new Date(a.deadline) - new Date(b.deadline));
+        .sort((a: Project, b: Project) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
 
     switch (activeButton.value) {
         case "archived":
