@@ -24,11 +24,12 @@ export async function getSubjectProjects(subjectId: number): Promise<Project[]> 
 }
 
 export async function getSubjects(): Promise<Subject[]> {
-    const result = await authorized_fetch<
-        { as_instructor: Subject[]; as_student: Subject[] }
-    >("/api/users/me/subjects", {
-        method: "GET",
-    });
+    const result = await authorized_fetch<{ as_instructor: Subject[]; as_student: Subject[] }>(
+        "/api/users/me/subjects",
+        {
+            method: "GET",
+        }
+    );
     if (!result) return [];
     return [...result.as_instructor, ...result.as_student];
 }
