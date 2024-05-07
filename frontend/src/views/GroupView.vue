@@ -48,7 +48,6 @@ import { toRefs, computed } from "vue";
 import { useGroupQuery, useRemoveUserFromGroupMutation } from "@/queries/Group";
 import { useProjectQuery } from "@/queries/Project";
 import { useUserQuery } from "@/queries/User";
-import User from "@/models/User";
 import GroupButtons from "@/components/buttons/GroupButtons.vue";
 
 const props = defineProps<{

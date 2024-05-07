@@ -32,10 +32,9 @@ const props = defineProps<{
     group: Group;
     project: Project;
     user: User;
-    groups: Group[] | null;
 }>();
 
-const { group, project, user, groups } = toRefs(props);
+const { group, project, user } = toRefs(props);
 
 const amountOfMembers = computed(() => {
     return group.value.members.length;

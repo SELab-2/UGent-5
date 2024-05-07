@@ -15,7 +15,6 @@
                 :project="project"
                 :group="group"
                 :user="user"
-                :groups="groups"
                 class="group-card"
             />
             <v-btn v-if="isTeacher" @click="createGroupMutation">{{
@@ -28,7 +27,6 @@
 <script setup lang="ts">
 import {
     useCreateGroupsMutation,
-    useJoinGroupUserMutation,
     useProjectGroupsQuery,
 } from "@/queries/Group";
 import { computed, toRefs } from "vue";
