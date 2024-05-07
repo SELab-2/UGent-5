@@ -27,13 +27,13 @@
         <v-row>
             <v-col cols="12" md="6">
                 <DatePicker
-                    :modelValue="deadline"
-                    @update:modelValue="val => deadline.value = val"
+                    :modelValue="deadlineModel"
+                    @update:modelValue="updateDeadline"
                     label="Deadline"
                 />
                 <DatePicker
-                    :modelValue="publishDate"
-                    @update:modelValue="val=> deadline.value=val"
+                    :modelValue="publishDateModel"
+                    @update:modelValue="updatePublishDate"
                     label="Publish Date" required />
             </v-col>
             <v-col cols="12" md="6">
@@ -137,19 +137,40 @@ watch(projectData, (project) => {
     }
 }, { deep: true });
 
-
-
-const selectedSubject = ref<number>(isEditMode ? projectSubjectId.value ?? Number(route.params.subjectId) : Number(route.params.subjectId));
-
-
-watch(isEditMode, (newValue, oldValue) => {
-    console.log(newValue);
+const deadlineModel = computed({
+    get: () => deadline.value,
+    set: (newValue) => {
+        if (newValue.toISOString() !== deadline.value.toISOString()) {
+            deadline.value = new Date(newValue);
+        }
+    }
 });
+
+const publishDateModel = computed({
+    get: () => publishDate.value,
+    set: (newValue) => {
+        if (newValue.toISOString() !== publishDate.value.toISOString()) {
+            publishDate.value = new Date(newValue);
+        }
+    }
+});
+
+function updateDeadline(val) {
+    deadlineModel.value = val;
+}
+
+function updatePublishDate(val) {
+    publishDateModel.value = val;
+}
 
 
 watch(deadline, (newValue, oldValue) => {
     console.log(`Deadline changed from ${oldValue.toISOString()} to ${newValue.toISOString()}`);
 });
+
+const selectedSubject = ref<number>(
+    isEditMode.value ? projectSubjectId.value ?? Number(route.params.subjectId) : Number(route.params.subjectId)
+);
 
 const {
     data: mySubjectsData,
@@ -158,7 +179,12 @@ const {
     error: subjectsError,
 } = useMySubjectsQuery();
 // const { data: instructorsData, isLoading, isError } = useSubjectInstructorsQuery(selectedSubject);
-const { data: studentsData } = useSubjectStudentsQuery(selectedSubject);
+// const { data: studentsData } = useSubjectStudentsQuery(selectedSubject);
+let studentsData;
+if (!isEditMode.value) {
+    const queryResult = useSubjectStudentsQuery(selectedSubject);
+    studentsData = queryResult.data;
+}
 
 const subjects = computed(
     () =>
@@ -198,64 +224,63 @@ async function submitForm() {
         publish_date: formattedPublishDate,
         enroll_deadline: formattedEnrollDeadline,
     };
-    console.log(publishDate.value);
 
-    // try {
-    //     if(isEditMode.value){
-    //         try{
-    //             updateProjectMutation.mutate({ projectId: projectId.value, projectData });
-    //         }
-    //         catch(error){
-    //             console.log("failed to update project");
-    //         }
-    //     }
-    //     else {
-    //         const createdProjectId = await createProjectMutation.mutateAsync(projectData);
-    //         console.log("project created with ID:", createdProjectId);
-    //
-    //         if (selectedGroupProject.value === "student") {
-    //             const emptyGroup: GroupForm = {
-    //                 project_id: createdProjectId,
-    //                 score: 0,
-    //                 team_name: "Group 1",
-    //             };
-    //             await createGroupsMutation.mutateAsync({
-    //                 projectId: createdProjectId,
-    //                 groups: [emptyGroup],
-    //             });
-    //         } else if (selectedGroupProject.value === "random") {
-    //             const groups = divideStudentsIntoGroups(studentsData.value || [], capacity.value);
-    //             const groupsToCreate = groups.map((_, i) => ({
-    //                 project_id: createdProjectId,
-    //                 score: 0,
-    //                 team_name: "Group " + (i + 1),
-    //             }));
-    //             const createdGroups = await createGroupsMutation.mutateAsync({
-    //                 projectId: createdProjectId,
-    //                 groups: groupsToCreate,
-    //             });
-    //
-    //             createdGroups.forEach((group, index) => {
-    //                 groups[index].forEach((student) => {
-    //                     joinGroupMutation.mutateAsync({
-    //                         groupId: group.id,
-    //                         uid: student.uid,
-    //                     });
-    //                 });
-    //             });
-    //         }
-    //         if (files.value.length > 0) {
-    //             const formData = new FormData();
-    //             files.value.forEach((file) => {
-    //                 formData.append("files", file);
-    //             });
-    //             await uploadProjectFilesMutation.mutateAsync({projectId: createdProjectId, formData});
-    //             console.log("Files uploaded successfully");
-    //         }
-    //     }
-    // } catch (error) {
-    //     console.error("Error during project or group creation or file upload:", error);
-    // }
+    try {
+        if(isEditMode.value){
+            try{
+                updateProjectMutation.mutate({ projectId: projectId.value, projectData });
+            }
+            catch(error){
+                console.log("failed to update project");
+            }
+        }
+        else {
+            const createdProjectId = await createProjectMutation.mutateAsync(projectData);
+            console.log("project created with ID:", createdProjectId);
+
+            if (selectedGroupProject.value === "student") {
+                const emptyGroup: GroupForm = {
+                    project_id: createdProjectId,
+                    score: 0,
+                    team_name: "Group 1",
+                };
+                await createGroupsMutation.mutateAsync({
+                    projectId: createdProjectId,
+                    groups: [emptyGroup],
+                });
+            } else if (selectedGroupProject.value === "random") {
+                const groups = divideStudentsIntoGroups(studentsData.value || [], capacity.value);
+                const groupsToCreate = groups.map((_, i) => ({
+                    project_id: createdProjectId,
+                    score: 0,
+                    team_name: "Group " + (i + 1),
+                }));
+                const createdGroups = await createGroupsMutation.mutateAsync({
+                    projectId: createdProjectId,
+                    groups: groupsToCreate,
+                });
+
+                createdGroups.forEach((group, index) => {
+                    groups[index].forEach((student) => {
+                        joinGroupMutation.mutateAsync({
+                            groupId: group.id,
+                            uid: student.uid,
+                        });
+                    });
+                });
+            }
+            if (files.value.length > 0) {
+                const formData = new FormData();
+                files.value.forEach((file) => {
+                    formData.append("files", file);
+                });
+                await uploadProjectFilesMutation.mutateAsync({projectId: createdProjectId, formData});
+                console.log("Files uploaded successfully");
+            }
+        }
+    } catch (error) {
+        console.error("Error during project or group creation or file upload:", error);
+    }
 }
 
 function shuffle(array: any[]) {
