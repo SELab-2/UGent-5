@@ -44,7 +44,7 @@ import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectsHeaderContainer from "@/components/subjects/SubjectsHeaderContainer.vue";
 import SubjectCard from "@/components/subjects/SubjectCard.vue";
 import { computed, ref } from "vue";
-import getCurrentAcademicYear from "@/composables/useAcademicYear";
+import useAcademicYear from "@/composables/useAcademicYear";
 
 const { data: subjects, error, isLoading, isError } = useSubjectsQuery();
 
