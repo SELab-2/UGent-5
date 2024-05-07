@@ -1,18 +1,25 @@
 <template>
-    <v-btn v-if="canLeaveGroup" @click="leaveGroupMutation"> {{ $t("group.leave_group") }} </v-btn>
-    <v-btn v-else-if="canJoinGroup" @click="joinGroupMutation"> {{ $t("group.join_group") }} </v-btn>
-    <v-btn v-if="isTeacher" @click="removeGroupMutation"> {{ $t("group.remove_group")}}</v-btn>
+    <v-btn v-if="canLeaveGroup" @click="() => leaveGroup({ groupId: group.id })">
+        {{ $t("group.leave_group") }}
+    </v-btn>
+    <v-btn v-else-if="canJoinGroup" @click="() => joinGroup({ groupId: group.id })">
+        {{ $t("group.join_group") }}
+    </v-btn>
+    <v-btn v-if="isTeacher" @click="() => removeGroup({ groupId: group.id })">
+        {{ $t("group.remove_group") }}
+    </v-btn>
 </template>
 
 <script setup lang="ts">
 import Group from "../../models/Group.js";
 import Project from "../../models/Project.js";
 import User from "../../models/User.js";
-import {computed, toRefs} from "vue";
+import { computed, toRefs } from "vue";
 import {
     useJoinGroupUserMutation,
     useLeaveGroupUserMutation,
-    useRemoveGroupMutation
+    useRemoveGroupMutation,
+    useUserGroupsQuery,
 } from "@/queries/Group";
 
 const props = defineProps<{
@@ -20,13 +27,17 @@ const props = defineProps<{
     project: Project;
     user: User;
     amountOfMembers: number;
-    groups: Group[] | null; //TODO: remove groups and go with user_groups instead
 }>();
 
-const { group, project, user, amountOfMembers, groups} = toRefs(props);
+const { group, project, user, amountOfMembers } = toRefs(props);
 
 const canJoinGroup = computed(() => {
-    return !isUserInGroup.value && amountOfMembers.value < project.value.capacity && !isTeacher.value && !isUserInAnotherGroup.value;
+    return (
+        !isUserInGroup.value &&
+        amountOfMembers.value < project.value.capacity &&
+        !isTeacher.value &&
+        !isUserInAnotherGroup.value
+    );
 });
 
 const canLeaveGroup = computed(() => {
@@ -36,52 +47,23 @@ const canLeaveGroup = computed(() => {
 const isTeacher = computed(() => user.value.is_teacher || false);
 
 const isUserInGroup = computed(() => {
-    return group.value.members.some(member => member.uid === user.value.uid);
+    return group.value.members.some((member) => member.uid === user.value.uid);
 });
+
+const { data: groups } = useUserGroupsQuery();
 
 const isUserInAnotherGroup = computed(() => {
-    if(!groups.value) return false;
-    return groups.value?.some(groupelem => groupelem.members.some(member => (member.uid === user.value.uid && groupelem.id !== group.value.id)));
+    if (!groups.value) return true;
+    return groups.value.some((groupelem) => {
+        return groupelem.project_id === project.value.id && groupelem.id !== group.value.id;
+    });
 });
 
+const { mutateAsync: leaveGroup } = useLeaveGroupUserMutation();
 
-const leaveGroup = useLeaveGroupUserMutation();
-
-const leaveGroupMutation = async () => {
-    try {
-        await leaveGroup.mutate({ groupId: group.value.id });
-    } catch (error) {
-        console.error("Error leaving group:", error);
-        alert("Could not leave group. Please try again.");
-    }
-};
-
-
-const joinGroup = useJoinGroupUserMutation();
-
-const joinGroupMutation = async () => {
-    try {
-        await joinGroup.mutate({ groupId: group.value.id });
-    } catch (error) {
-        console.error("Error joining group:", error);
-        alert("Could not join group. Please try again.");
-    }
-};
-
+const { mutateAsync: joinGroup } = useJoinGroupUserMutation();
 
 const { mutateAsync: removeGroup } = useRemoveGroupMutation();
-
-const removeGroupMutation = async () => {
-    try {
-        await removeGroup.mutate({ groupId: group.value.id });
-    } catch (error) {
-        console.error("Error removing group:", error);
-        alert("Could not remove group. Please try again.");
-    }
-};
-
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -15,7 +15,6 @@
                     :group="group"
                     :project="project"
                     :user="user"
-                    :groups="groups"
                 />
             </v-col>
         </v-row>
@@ -23,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, toRefs} from "vue";
+import { computed, toRefs } from "vue";
 import type Project from "@/models/Project";
 import type Group from "@/models/Group";
 import User from "@/models/User";
@@ -41,12 +40,9 @@ const { group, project, user, groups } = toRefs(props);
 const amountOfMembers = computed(() => {
     return group.value.members.length;
 });
-
-
 </script>
 
 <style scoped>
-
 .v-card-padding {
     padding: 5px;
 }

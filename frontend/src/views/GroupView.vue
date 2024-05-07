@@ -5,16 +5,24 @@
             {{ $t("group.not_found") }}
         </h1>
         <div v-else>
-            <h1> {{group.team_name}}</h1>
-            <h2> {{"Project: " + project.name}}</h2>
+            <h1>{{ group.team_name }}</h1>
+            <h2>{{ "Project: " + project.name }}</h2>
             <v-card>
                 <v-card-item :title="$t('group.members')">
                     <div v-if="group.members.length">
                         <v-row v-for="(member, index) in group.members" :key="index" align="center">
                             <v-col>{{ member.given_name }}</v-col>
                             <v-col>
-                                <v-btn v-if="isTeacher" prepend-icon="mdi-close" color="red" @click="removeFromGroupMutation(member)">
-                                    {{ $t("group.remove") }}</v-btn>
+                                <v-btn
+                                    v-if="isTeacher"
+                                    prepend-icon="mdi-close"
+                                    color="red"
+                                    @click="
+                                        () => removeStudent({ groupId: group.id, uid: member.uid })
+                                    "
+                                >
+                                    {{ $t("group.remove") }}</v-btn
+                                >
                             </v-col>
                         </v-row>
                     </div>
@@ -28,7 +36,6 @@
                         :group="group"
                         :project="project"
                         :user="user"
-                        :groups="null"
                     />
                 </v-card-actions>
             </v-card>
@@ -37,11 +44,10 @@
 </template>
 
 <script setup lang="ts">
-
-import {toRefs, computed} from "vue";
-import {useGroupQuery, useRemoveUserFromGroupMutation} from "@/queries/Group";
-import {useProjectQuery} from "@/queries/Project";
-import {useUserQuery} from "@/queries/User";
+import { toRefs, computed } from "vue";
+import { useGroupQuery, useRemoveUserFromGroupMutation } from "@/queries/Group";
+import { useProjectQuery } from "@/queries/Project";
+import { useUserQuery } from "@/queries/User";
 import User from "@/models/User";
 import GroupButtons from "@/components/buttons/GroupButtons.vue";
 
@@ -51,21 +57,19 @@ const props = defineProps<{
 
 const { groupId } = toRefs(props);
 
-const {
-    data: group,
-    isLoading: isLoadingGroup,
-    isError: isErrorGroup
-} = useGroupQuery(groupId);
+const { data: group, isLoading: isLoadingGroup, isError: isErrorGroup } = useGroupQuery(groupId);
 
 const {
     data: project,
     isLoading: isLoadingProject,
-    isError: isErrorProject
-} = useProjectQuery(computed(() => group.value?.project_id))
+    isError: isErrorProject,
+} = useProjectQuery(computed(() => group.value?.project_id));
 
-const { data: user, isLoading: isLoadingUser,  isError: isErrorUser} = useUserQuery(null);
+const { data: user, isLoading: isLoadingUser, isError: isErrorUser } = useUserQuery(null);
 
-const isLoading = computed(() => isLoadingGroup.value || isLoadingProject.value || isLoadingUser.value);
+const isLoading = computed(
+    () => isLoadingGroup.value || isLoadingProject.value || isLoadingUser.value
+);
 const isError = computed(() => isErrorGroup.value || isErrorProject.value || isErrorUser.value);
 
 const isTeacher = computed(() => user.value.is_teacher || false);
@@ -75,17 +79,7 @@ const amountOfMembers = computed(() => {
     return group.value.members.length;
 });
 
-const removeStudent = useRemoveUserFromGroupMutation();
-
-const removeFromGroupMutation = async (member: User) => {
-    try {
-        await removeStudent.mutate({ groupId: group.value.id, uid: member.uid });
-    } catch (error) {
-        console.error("Error leaving group:", error);
-        alert("Could not leave group. Please try again.");
-    }
-};
-
+const { mutateAsync: removeStudent } = useRemoveUserFromGroupMutation();
 </script>
 
 <style scoped></style>
