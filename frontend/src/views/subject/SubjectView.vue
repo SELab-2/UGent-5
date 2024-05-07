@@ -85,7 +85,7 @@ const router = useRouter();
 const registerLink = computed(() => {
     return router.resolve({
         name: "registerSubject",
-        params: { uuid: subject.value.uuid },
+        params: { uuid: subject.value?.uuid },
     }).path;
 });
 
