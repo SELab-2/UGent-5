@@ -60,7 +60,6 @@ const filteredProjects = computed(() => {
     } else if (filterOption.value === FilterOptions.Completed) {
         return sortedProjects.filter((project) => new Date(project.deadline) <= currentDate) || [];
     }
-    console.error("Invalid filter option");
     return sortedProjects;
 });
 
