@@ -15,6 +15,7 @@
                     :group="group"
                     :project="project"
                     :user="user"
+                    :groups="groups"
                 />
             </v-col>
         </v-row>
@@ -32,9 +33,10 @@ const props = defineProps<{
     group: Group;
     project: Project;
     user: User;
+    groups: Group[] | null;
 }>();
 
-const { group, project, user } = toRefs(props);
+const { group, project, user, groups } = toRefs(props);
 
 const amountOfMembers = computed(() => {
     return group.value.members.length;
@@ -44,8 +46,8 @@ const amountOfMembers = computed(() => {
 </script>
 
 <style scoped>
+
 .v-card-padding {
     padding: 5px;
-    margin-top: 10px;
 }
 </style>

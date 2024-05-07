@@ -68,5 +68,13 @@ export async function joinGroupUser(groupId: number): Promise<Group> {
 }
 
 export async function leaveGroupUser(groupId: number): Promise<Group> {
+    return authorized_fetch(`/api/groups/${groupId}/leave`, { method: "POST" });
+}
+
+export async function removeUserFromGroup(groupId: number, uid: string): Promise<Group> {
+    return authorized_fetch(`/api/groups/${groupId}/${uid}`, { method: "DELETE" });
+}
+
+export async function deleteGroup(groupId: number): Promise<Group> {
     return authorized_fetch(`/api/groups/${groupId}`, { method: "DELETE" });
 }

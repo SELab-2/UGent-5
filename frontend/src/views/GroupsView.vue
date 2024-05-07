@@ -5,9 +5,9 @@
         <div v-else class="projectInfo">
             <h2> {{"Project: " + project.name}}</h2>
             <v-row>
-                <v-col cols="8">Groups:</v-col>
-                <v-col cols="2">Members:</v-col>
-                <v-col cols="2">Actions:</v-col>
+                <v-col cols="8">{{ $t("group.groups") }}</v-col>
+                <v-col cols="2">{{ $t("group.members") }}</v-col>
+                <v-col cols="2">{{ $t("group.actions") }}</v-col>
             </v-row>
             <GroupCard
                 v-for="group in groups"
@@ -15,24 +15,27 @@
                 :project="project"
                 :group="group"
                 :user="user"
+                :groups="groups"
+                class="group-card"
             />
+            <v-btn v-if="isTeacher" @click="createGroupMutation">{{ $t("group.create_group") }}</v-btn>
         </div>
     </v-container>
-    {{test}}
 </template>
 
 <script setup lang="ts">
-import {useProjectGroupsQuery} from "@/queries/Group";
+import {useCreateGroupsMutation, useProjectGroupsQuery} from "@/queries/Group";
 import {computed, toRefs} from "vue";
 import {useProjectQuery} from "@/queries/Project";
 import GroupCard from "@/components/home/cards/GroupCard.vue";
 import {useUserQuery} from "@/queries/User";
+import {GroupForm} from "@/models/Group";
 
 
 const props = defineProps<{
     projectId: number;
 }>();
-
+//TODO: FIX ACTIONS VOOR TEACHER REMOVE/CREATE GORUP
 const { projectId } = toRefs(props);
 
 const {
@@ -53,12 +56,36 @@ const {
     isError: isUserError
 } = useUserQuery(null);
 
-const test = computed(() => groups)
 
 const isDataLoading = computed(() => isProjectLoading.value || isGroupLoading.value || isUserLoading.value);
 
 const isDataError = computed(() => isProjectError.value || isGroupError.value || isUserError.value);
 
+const isTeacher = computed(() => user?.value.is_teacher || false);
+
+const createGroup = useCreateGroupsMutation();
+
+const createGroupMutation = async () => {
+    const groupForm: GroupForm = {
+        project_id: project.value.id,
+        score: 0,
+        team_name: "Group "  + groups.value.length // Set the default team name or prompt the user for input
+    };
+
+    try {
+        await createGroup.mutate({ projectId: projectId.value, groups: [groupForm] });
+    } catch (error) {
+        console.error("Error creating group:", error);
+        alert("Could not create group. Please try again.");
+    }
+};
 </script>
 
-<style scoped></style>
+<style scoped>
+.group-card {
+    height: 50px; /* Adjust the height as needed */
+    margin-bottom: 5px; /* Add margin to separate cards */
+    display: flex; /* Use flexbox */
+    align-items: center; /* Center items vertically */
+}
+</style>

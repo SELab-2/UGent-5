@@ -104,5 +104,14 @@ export default {
     },
     group: {
         not_found: "Groep niet gevonden",
+        groups: "Groepen:",
+        members: "Leden:",
+        actions: "Acties:",
+        no_members_found: "Geen leden teruggevonden.",
+        remove: "Verwijderen",
+        join_group: "Aansluiten",
+        leave_group: "Verlaten",
+        remove_group: "Groep verwijderen",
+        create_group: "Nieuwe groep",
     },
 };
