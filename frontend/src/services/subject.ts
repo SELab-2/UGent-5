@@ -25,7 +25,7 @@ export async function getSubjectProjects(subjectId: number): Promise<Project[]> 
 
 export async function getSubjects(): Promise<Subject[]> {
     const result = await authorized_fetch<
-        { as_instructor: Subject[]; as_student: Subject[] } | undefined
+        { as_instructor: Subject[]; as_student: Subject[] }
     >("/api/users/me/subjects", {
         method: "GET",
     });

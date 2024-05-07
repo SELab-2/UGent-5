@@ -21,6 +21,7 @@ from src.user.schemas import User
 from . import service
 from .models import Status
 from .schemas import File, Submission, SubmissionCreate
+from ..docker_tests.dependencies import get_docker_client
 from ..docker_tests.docker_tests import launch_docker_tests
 from ..docker_tests.utils import submission_path, get_files_from_dir, artifacts_path
 
@@ -47,7 +48,8 @@ async def create_submission(background_tasks: BackgroundTasks,
                             submission_in: SubmissionCreate = Depends(),
                             group: Group = Depends(retrieve_group),
                             user: User = Depends(get_authenticated_user),
-                            db: AsyncSession = Depends(get_async_db)):
+                            db: AsyncSession = Depends(get_async_db),
+                            client=Depends(get_docker_client)):
     project = await retrieve_project(group.project_id, user, db)
     test_files_uuid = project.test_files_uuid
     submission_uuid = upload_files(submission_in.files, project)
@@ -62,8 +64,8 @@ async def create_submission(background_tasks: BackgroundTasks,
 
     # launch docker tests
     if docker_tests_present:
-        background_tasks.add_task(launch_docker_tests, db,
-                                  submission.id, submission.files_uuid, test_files_uuid)
+        background_tasks.add_task(launch_docker_tests,
+                                  submission.id, submission.files_uuid, test_files_uuid, db, client)
 
     return submission
 

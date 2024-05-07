@@ -71,6 +71,8 @@ DATABASE_URI="postgresql://username:password@localhost:5432/dbname"
 alembic upgrade head
 ```
 
+You can find more info about alembic [here](alembic/README.md).
+
 #### Managing the database
 ```sh
 # Stop the database container

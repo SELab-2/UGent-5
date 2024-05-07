@@ -5,10 +5,12 @@ const BASE_URL = import.meta.env.VITE_API_URL;
 
 interface FetchOptions {
     omitContentType?: boolean;
+    toJson?: boolean;
 }
 
 const defaultOptions: FetchOptions = {
     omitContentType: false,
+    toJson: true,
 };
 
 /**
@@ -47,7 +49,8 @@ export async function authorized_fetch<T>(
         await refresh();
         throw new Error("Not authenticated");
     } else if (!response.ok) {
-        throw new Error(response.statusText);
+        const error = await response.json();
+        throw new Error(error.detail);
     }
-    return response.json();
+    return mergedOptions.toJson ? response.json() : response;
 }
