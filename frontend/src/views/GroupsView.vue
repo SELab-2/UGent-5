@@ -25,10 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-    useCreateGroupsMutation,
-    useProjectGroupsQuery,
-} from "@/queries/Group";
+import { useCreateGroupsMutation, useProjectGroupsQuery } from "@/queries/Group";
 import { computed, toRefs } from "vue";
 import { useProjectQuery } from "@/queries/Project";
 import GroupCard from "@/components/home/cards/GroupCard.vue";
