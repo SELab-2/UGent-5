@@ -54,7 +54,7 @@ const academicYears = computed(() => {
     ).sort((a, b) => b - a);
 });
 
-const selectedAcademicYear = ref<number>(getCurrentAcademicYear());
+const selectedAcademicYear = ref<number>(useAcademicYear());
 
 const subjectsByAcademicYear = computed(() => {
     return [...(subjects.value || [])].filter(
