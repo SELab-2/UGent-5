@@ -11,9 +11,9 @@
 </template>
 
 <script setup lang="ts">
-import Group from "../../models/Group.js";
-import Project from "../../models/Project.js";
-import User from "../../models/User.js";
+import type Group from "@/models/Group.js";
+import type Project from "@/models/Project.js";
+import type User from "@/models/User.js";
 import { computed, toRefs } from "vue";
 import {
     useJoinGroupUserMutation,

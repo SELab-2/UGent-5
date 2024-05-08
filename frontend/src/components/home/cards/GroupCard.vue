@@ -25,7 +25,7 @@
 import { computed, toRefs } from "vue";
 import type Project from "@/models/Project";
 import type Group from "@/models/Group";
-import User from "@/models/User";
+import type User from "@/models/User";
 import GroupButtons from "@/components/buttons/GroupButtons.vue";
 
 const props = defineProps<{
