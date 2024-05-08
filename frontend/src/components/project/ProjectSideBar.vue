@@ -60,5 +60,7 @@ const isSoloProject = computed(() => project.value.capacity === 1);
 .group-button {
     margin-bottom: 5px;
     min-width: auto;
+    background-color: rgb(var(--v-theme-primary));
+    color: rgb(var(--v-theme-navtext));
 }
 </style>

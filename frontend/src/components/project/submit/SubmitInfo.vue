@@ -1,5 +1,5 @@
 <template>
-    <v-card color="white">
+    <v-card class="submitCard" variant="outlined">
         <v-card-title>
             {{ $t("submit.submissions") }}
         </v-card-title>
@@ -48,5 +48,17 @@ const latestSubmission = computed(() => {
 <style scoped>
 .subtitle {
     margin-bottom: 10px; /* Adjust as needed */
+}
+
+.submitCard {
+    background-color: rgb(var(--v-theme-background));
+}
+
+.v-btn {
+    background-color: rgb(var(--v-theme-secondary));
+}
+
+.v-card {
+    border-color: rgb(var(--v-theme-text));
 }
 </style>
