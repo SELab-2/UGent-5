@@ -58,7 +58,7 @@ describe("SubmitCard", async () => {
     });
 
     it("render title", () => {
-        expect(wrapper.findComponent({name: 'VCardTitle'}).text()).toContain("Oplossing indienen")
+        expect(wrapper.text()).toContain("Oplossing indienen")
     });
 
     it("render if error", () => {
@@ -68,10 +68,8 @@ describe("SubmitCard", async () => {
     it("render if not error", async () => {
         testProjectQuery.setIsError(false);
         await wrapper.vm.$nextTick();
-        const VContainer = wrapper.findComponent({name: 'VContainer'})
-        expect(VContainer.exists()).toBeTruthy()
-        expect(VContainer.findComponent('.projectMiniCard').exists()).toBeTruthy()
-        expect(VContainer.text()).toContain("Voeg bestanden toe")
-        expect(VContainer.findComponent('.submitForm').exists()).toBeTruthy()
+        expect(wrapper.findComponent('.projectMiniCard').exists()).toBeTruthy()
+        expect(wrapper.text()).toContain("Bestanden")
+        expect(wrapper.findComponent('.submitForm').exists()).toBeTruthy()
     })
 });

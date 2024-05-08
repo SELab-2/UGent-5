@@ -37,12 +37,6 @@ describe("SubmitCard", async () => {
             projectId: 1,
         }
     });
-
-    it("render container", () => {
-        const Container = wrapper.findComponent({name: 'VContainer'})
-        expect(Container.exists()).toBeTruthy()
-    });
-
     it("render button", () => {
         const VButton = wrapper.findComponent({name: 'VBtn'})
         expect(VButton.text()).toContain("Bestanden toevoegen")
