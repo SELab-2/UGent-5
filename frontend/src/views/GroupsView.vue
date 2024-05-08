@@ -3,7 +3,7 @@
         <h1 v-if="isDataLoading" class="welcome">{{ $t("default.loading.loading_page") }}</h1>
         <h1 v-else-if="isDataError" class="welcome">{{ $t("default.error") }}</h1>
         <div v-else class="projectInfo">
-            <h2>{{ "Project: " + project.name }}</h2>
+            <h2>{{ "Project: " + project!.name }}</h2>
             <v-row>
                 <v-col cols="8">{{ $t("group.groups") }}</v-col>
                 <v-col cols="2">{{ $t("group.members") }}</v-col>
@@ -12,12 +12,12 @@
             <GroupCard
                 v-for="group in groups"
                 :key="group.id"
-                :project="project"
+                :project="project!"
                 :group="group"
-                :user="user"
+                :user="user!"
                 class="group-card"
             />
-            <v-btn v-if="isTeacher" @click="createGroupMutation">{{
+            <v-btn v-if="isTeacher" @click="createGroup">{{
                 $t("group.create_group")
             }}</v-btn>
         </div>
@@ -30,7 +30,7 @@ import { computed, toRefs } from "vue";
 import { useProjectQuery } from "@/queries/Project";
 import GroupCard from "@/components/home/cards/GroupCard.vue";
 import { useUserQuery } from "@/queries/User";
-import { GroupForm } from "@/models/Group";
+import { type GroupForm } from "@/models/Group";
 
 const props = defineProps<{
     projectId: number;
@@ -58,21 +58,20 @@ const isDataLoading = computed(
 
 const isDataError = computed(() => isProjectError.value || isGroupError.value || isUserError.value);
 
-const isTeacher = computed(() => user?.value.is_teacher || false);
+const isTeacher = computed(() => user.value?.is_teacher || false);
 
-const { mutateAsync: createGroup } = useCreateGroupsMutation();
+const { mutateAsync: createGroupMutate } = useCreateGroupsMutation();
 
-const createGroupMutation = async () => {
+async function createGroup() {
     const groupForm: GroupForm = {
-        project_id: project.value.id,
+        project_id: project.value!.id,
         score: 0,
-        team_name: "Group " + groups.value.length, // Set the default team name or prompt the user for input
+        team_name: "Group " + groups.value!.length, // Set the default team name or prompt the user for input
     };
 
     try {
-        await createGroup({ projectId: projectId.value, groups: [groupForm] });
+        await createGroupMutate({ projectId: projectId.value, groups: [groupForm] });
     } catch (error) {
-        console.error("Error creating group:", error);
         alert("Could not create group. Please try again.");
     }
 };
