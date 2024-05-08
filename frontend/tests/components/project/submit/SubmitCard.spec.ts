@@ -3,16 +3,6 @@ import {expect, describe, it, vi} from "vitest";
 import SubmitCard from "@/components/project/submit/SubmitCard.vue"
 import {ref} from "vue";
 
-const testAuthStore = {
-    isLoggedIn: ref(true),
-    setLoggedIn(value) {
-        this.isLoggedIn.value = value;
-    },
-};
-
-vi.mock("@/stores/auth-store", () => ({
-    useAuthStore: vi.fn(() => testAuthStore),
-}));
 
 const testProjectQuery = {
     isError: ref(true),
@@ -38,14 +28,6 @@ vi.mock("@/components/project/submit/SubmitForm.vue", () => ({
 }));
 
 describe("SubmitCard", async () => {
-    const ResizeObserverMock = vi.fn(() => ({
-        observe: vi.fn(),
-        unobserve: vi.fn(),
-        disconnect: vi.fn(),
-    }));
-
-    vi.stubGlobal("ResizeObserver", ResizeObserverMock);
-
     const wrapper = mount(SubmitCard, {
         props: {
             projectId: 1,

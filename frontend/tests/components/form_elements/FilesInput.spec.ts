@@ -1,42 +1,9 @@
 import {mount} from "@vue/test-utils";
 import {expect, describe, it, vi} from "vitest";
 import FilesInput from "@/components/form_elements/FilesInput.vue"
-import {ref} from "vue";
-
-const mockRouter = {
-    push: vi.fn(),
-};
-
-vi.mock("vue-router", () => ({
-    useRouter: () => mockRouter,
-}));
-
-
-const testAuthStore = {
-    isLoggedIn: ref(true),
-    setLoggedIn(value) {
-        this.isLoggedIn.value = value;
-    },
-};
-
-vi.mock("@/stores/auth-store", () => ({
-    useAuthStore: vi.fn(() => testAuthStore),
-}));
 
 describe("SubmitCard", async () => {
-    const ResizeObserverMock = vi.fn(() => ({
-        observe: vi.fn(),
-        unobserve: vi.fn(),
-        disconnect: vi.fn(),
-    }));
-
-    vi.stubGlobal("ResizeObserver", ResizeObserverMock);
-
-    const wrapper = mount(FilesInput, {
-        props: {
-            projectId: 1,
-        }
-    });
+    const wrapper = mount(FilesInput, {});
     it("render button", () => {
         const VButton = wrapper.findComponent({name: 'VBtn'})
         expect(VButton.text()).toContain("Bestanden toevoegen")

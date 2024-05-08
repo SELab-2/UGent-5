@@ -3,17 +3,6 @@ import {expect, describe, it, vi} from "vitest";
 import ProjectMiniCard from "@/components/project/ProjectMiniCard.vue"
 import {ref} from "vue";
 
-const testAuthStore = {
-    isLoggedIn: ref(true),
-    setLoggedIn(value) {
-        this.isLoggedIn.value = value;
-    },
-};
-
-vi.mock("@/stores/auth-store", () => ({
-    useAuthStore: vi.fn(() => testAuthStore),
-}));
-
 const mockProject = {
     name: "projectnaam",
     deadline: new Date(),
@@ -35,14 +24,6 @@ vi.mock("@/queries/Subject", () => ({
 
 
 describe("SubmitCard", async () => {
-    const ResizeObserverMock = vi.fn(() => ({
-        observe: vi.fn(),
-        unobserve: vi.fn(),
-        disconnect: vi.fn(),
-    }));
-
-    vi.stubGlobal("ResizeObserver", ResizeObserverMock);
-
     const wrapper = mount(ProjectMiniCard, {
         props: {
             project: mockProject

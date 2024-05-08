@@ -24,20 +24,12 @@ vi.mock("@/stores/auth-store", () => ({
 
 vi.mock("@/components/form_elements/FilesInput.vue", () => ({
     default: {
-        template: "<div></div>",
+        template: "<div class='filesInput'></div>",
     },
 }));
 
 
 describe("SubmitCard", async () => {
-    const ResizeObserverMock = vi.fn(() => ({
-        observe: vi.fn(),
-        unobserve: vi.fn(),
-        disconnect: vi.fn(),
-    }));
-
-    vi.stubGlobal("ResizeObserver", ResizeObserverMock);
-
     const wrapper = mount(SubmitForm, {
         props: {
             projectId: 1,
@@ -49,13 +41,17 @@ describe("SubmitCard", async () => {
         expect(Form.exists()).toBeTruthy()
     });
 
+    it("render files", () => {
+        expect(wrapper.findComponent('.filesInput').exists()).toBeTruthy()
+    });
+
     it("render textarea", () => {
         const Textarea = wrapper.findComponent({name: 'VTextarea'})
         expect(Textarea.text()).toContain("Opmerkingen")
-    })
+    });
 
     it("render button", () => {
         const VButton = wrapper.findComponent({name: 'VBtn'})
         expect(VButton.text()).toContain('Indienen')
-    })
+    });
 });
