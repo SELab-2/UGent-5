@@ -59,7 +59,7 @@ function onDeleteClick(index: number) {
     background-color: rgb(var(--v-theme-secondary));
 }
 
-.files{
+.files {
     margin-top: 15px;
 }
 </style>

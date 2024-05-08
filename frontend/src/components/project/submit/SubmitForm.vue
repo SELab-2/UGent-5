@@ -1,11 +1,7 @@
 <template>
     <v-form validate-on="submit lazy" @submit.prevent="formOnSubmit">
         <FilesInput v-model="inputFiles" />
-        <v-textarea
-            :label="$t('submit.remarks')"
-            name="remarks"
-            v-model="remarksInput"
-        />
+        <v-textarea :label="$t('submit.remarks')" name="remarks" v-model="remarksInput" />
         <v-btn variant="flat" type="submit">{{ $t("submit.submit_button") }}</v-btn>
     </v-form>
 </template>
@@ -52,7 +48,7 @@ async function formOnSubmit(event: SubmitEvent) {
     background-color: rgb(var(--v-theme-secondary));
 }
 
-.v-textarea{
+.v-textarea {
     margin-top: 30px;
 }
 </style>

@@ -8,7 +8,7 @@
         <h2>
             {{ $t("submit.files") }}
         </h2>
-        <SubmitForm :projectId="projectId" class="submitform"/>
+        <SubmitForm :projectId="projectId" class="submitform" />
     </v-card>
 </template>
 
@@ -27,13 +27,12 @@ const { projectId } = toRefs(props);
 const { data: project, isLoading, isError } = useProjectQuery(projectId);
 </script>
 
-
 <style scoped>
-.minicard{
+.minicard {
     margin: 15px 0 30px 0;
     width: 500px;
 }
-.submitform{
+.submitform {
     margin-top: 15px;
 }
 </style>
