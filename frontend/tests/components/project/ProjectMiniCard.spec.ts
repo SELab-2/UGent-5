@@ -51,7 +51,7 @@ describe("SubmitCard", async () => {
 
     it("render card", () => {
         const Card = wrapper.findComponent({name: 'VCard'})
-        expect(Card).toBeTruthy()
+        expect(Card.exists()).toBeTruthy()
     });
 
     it("render project name, deadline and subject name", () => {

@@ -3,6 +3,14 @@ import {expect, describe, it, vi} from "vitest";
 import SubmitForm from "@/components/project/submit/SubmitForm.vue"
 import {ref} from "vue";
 
+const mockRouter = {
+    push: vi.fn(),
+};
+
+vi.mock("vue-router", () => ({
+    useRouter: () => mockRouter,
+}));
+
 const testAuthStore = {
     isLoggedIn: ref(true),
     setLoggedIn(value) {
@@ -38,7 +46,7 @@ describe("SubmitCard", async () => {
 
     it("render form", () => {
         const Form = wrapper.findComponent({name: 'VForm'})
-        expect(Form).toBeTruthy()
+        expect(Form.exists()).toBeTruthy()
     });
 
     it("render textarea", () => {

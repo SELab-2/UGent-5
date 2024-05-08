@@ -27,10 +27,15 @@ vi.mock('@/queries/Project', () => ({
 
 vi.mock("@/components/project/ProjectMiniCard.vue", () => ({
     default: {
-        template: "<div></div>",
+        template: "<div class='projectMiniCard'></div>",
     },
 }));
 
+vi.mock("@/components/project/submit/SubmitForm.vue", () => ({
+    default: {
+        template: "<div class='submitForm'></div>",
+    },
+}));
 
 describe("SubmitCard", async () => {
     const ResizeObserverMock = vi.fn(() => ({
@@ -49,7 +54,7 @@ describe("SubmitCard", async () => {
 
     it("render card", () => {
         const Card = wrapper.findComponent({name: 'VCard'})
-        expect(Card).toBeTruthy()
+        expect(Card.exists()).toBeTruthy()
     });
 
     it("render title", () => {
@@ -64,8 +69,9 @@ describe("SubmitCard", async () => {
         testProjectQuery.setIsError(false);
         await wrapper.vm.$nextTick();
         const VContainer = wrapper.findComponent({name: 'VContainer'})
-        expect(VContainer).toBeTruthy()
+        expect(VContainer.exists()).toBeTruthy()
+        expect(VContainer.findComponent('.projectMiniCard').exists()).toBeTruthy()
         expect(VContainer.text()).toContain("Voeg bestanden toe")
-        expect(VContainer.findComponent({name: 'SubmitForm'})).toBeTruthy()
+        expect(VContainer.findComponent('.submitForm').exists()).toBeTruthy()
     })
 });
