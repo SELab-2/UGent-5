@@ -10,7 +10,11 @@
             <v-card>
                 <v-card-item :title="$t('group.members')">
                     <div v-if="group!.members.length">
-                        <v-row v-for="(member, index) in group!.members" :key="index" align="center">
+                        <v-row
+                            v-for="(member, index) in group!.members"
+                            :key="index"
+                            align="center"
+                        >
                             <v-col>{{ member.given_name }}</v-col>
                             <v-col>
                                 <v-btn

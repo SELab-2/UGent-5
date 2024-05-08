@@ -17,9 +17,7 @@
                 :user="user!"
                 class="group-card"
             />
-            <v-btn v-if="isTeacher" @click="createGroup">{{
-                $t("group.create_group")
-            }}</v-btn>
+            <v-btn v-if="isTeacher" @click="createGroup">{{ $t("group.create_group") }}</v-btn>
         </div>
     </v-container>
 </template>
@@ -74,7 +72,7 @@ async function createGroup() {
     } catch (error) {
         alert("Could not create group. Please try again.");
     }
-};
+}
 </script>
 
 <style scoped>
