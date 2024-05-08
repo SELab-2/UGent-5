@@ -9,7 +9,7 @@
             {{ $t("project.group", { number: group!.id }) }}
         </v-btn>
     </router-link>
-    <router-link v-else-if="!isSoloProject && !isTeacher" :to="`/projects/${project!.id}/groups`">
+    <router-link v-else-if="!isSoloProject && !isTeacher" :to="`/project/${project!.id}/groups`">
         <v-btn class="group-button" prepend-icon="mdi-account-group">
             {{ $t("project.group_button") }}
         </v-btn>
