@@ -21,13 +21,13 @@ export async function createProject(projectData: ProjectForm): Promise<number> {
     }
 }
 
-export async function updateProject(projectId: number, projectData: ProjectForm): Promise<void> {
+export async function updateProject(projectId: number, projectData: Partial<ProjectForm>): Promise<void> {
     const response = await authorized_fetch(`/api/projects/${projectId}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(projectData),
     });
-    return handleResponse<void>(response);
+    return;
 }
 
 // Function to fetch a specific project by its ID

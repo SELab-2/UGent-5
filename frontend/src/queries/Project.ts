@@ -14,7 +14,7 @@ import {
     getSubmissions,
     createProject,
     getProjects,
-    uploadProjectFiles,
+    uploadProjectFiles, updateProject,
 } from "@/services/project";
 import { type Ref, computed } from "vue";
 
@@ -102,9 +102,9 @@ export function useUploadProjectFilesMutation(): UseMutationReturnType<
     });
 }
 
-export function useUpdateProjectMutation(): UseMutationReturnType<void, Error, { projectId: number; projectData: ProjectForm }, void> {
+export function useUpdateProjectMutation(): UseMutationReturnType<void, Error, { projectId: number; projectData: Partial<ProjectForm> }, void> {
     const queryClient = useQueryClient();
-    return useMutation<void, Error, { projectId: number; projectData: ProjectForm }, void>({
+    return useMutation<void, Error, { projectId: number; projectData: Partial<ProjectForm> }, void>({
         mutationFn: ({ projectId, projectData }) => updateProject(projectId, projectData),
 
         onSuccess: (_, variables) => {
