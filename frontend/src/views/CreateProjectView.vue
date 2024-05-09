@@ -118,22 +118,21 @@ function htmlDecode(input) {
 }
 
 watch(projectData, (project) => {
-    console.log("Project data changed:", project);
     if (project) {
-        console.log("Project data loaded successfully", project);
         project_title.value = project.name;
         deadline.value = new Date(project.deadline);
         publishDate.value = new Date(project.publish_date);
-        const description = htmlDecode(project.description);
+        const description = htmlDecode(project.description);  // Ensure decoding here
+
         nextTick(() => {
-            if (quillEditor.value) {
-                quillEditor.value.getQuill().clipboard.dangerouslyPasteHTML(description);
+            if (quillEditor.value && quillEditor.value.getQuill) {
+                let quill = quillEditor.value.getQuill();
+                quill.root.innerHTML = '';  // Clear existing content
+                quill.clipboard.dangerouslyPasteHTML(0, description);  // Paste new HTML at position 0
             } else {
                 console.error("Quill Editor is not initialized");
             }
         });
-    } else {
-        console.error("Failed to load project data", project);
     }
 }, { deep: true });
 
