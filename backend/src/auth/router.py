@@ -61,8 +61,6 @@ async def token(
         )
     if resolved_user.surname == 'SURNAME_DEFAULT':
         resolved_user.surname = attributes["surname"]
-        await db.commit()
-        await db.refresh(resolved_user)
 
     # Create JWT token
     jwt_token = create_jwt_token(attributes["uid"])
