@@ -1,7 +1,7 @@
 import asyncio
 import os
 import shutil
-from typing import Callable, Awaitable
+from typing import Callable, Awaitable, TypeVar, Any
 from uuid import uuid4
 
 from fastapi import UploadFile
@@ -9,10 +9,11 @@ from starlette.responses import FileResponse
 
 from src import config
 
+T = TypeVar('T', bound=Callable[..., Any])
 
-def to_async[**P, R](func: Callable[P, R]) -> Callable[P, Awaitable[R]]:
+def to_async(func: T) -> Callable[..., Awaitable[Any]]:
     """Decorator to make a blocking sync function an awaitable async function."""
-    async def run_async(*args: P.args, **kwargs: P.kwargs) -> R:
+    async def run_async(*args: Any, **kwargs: Any) -> Any:
         return await asyncio.to_thread(func, *args, **kwargs)
     return run_async
 
