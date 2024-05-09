@@ -106,6 +106,7 @@ export default {
     },
     group: {
         not_found: "Group not found",
+        not_found2: "No groups found",
         groups: "Groups:",
         members: "Members:",
         actions: "Actions:",

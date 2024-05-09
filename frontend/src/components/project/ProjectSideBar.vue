@@ -14,7 +14,7 @@
             {{ $t("project.group_button") }}
         </v-btn>
     </router-link>
-    <NeedHelpButton v-if="!isTeacher" class="group-button" :email="subject!.email"></NeedHelpButton>
+    <NeedHelpButton v-if="!isTeacher && subject!.email" class="group-button" :email="subject!.email"></NeedHelpButton>
     <router-link v-if="isTeacher" :to="`/projects/${project!.id}/edit`">
         <v-btn class="group-button" prepend-icon="mdi-pencil">
             {{ $t("project.edit") }}

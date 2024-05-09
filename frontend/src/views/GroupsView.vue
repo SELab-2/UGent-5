@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <h1 v-if="isDataLoading" class="welcome">{{ $t("default.loading.loading_page") }}</h1>
-        <h1 v-else-if="isDataError" class="welcome">{{ $t("default.error") }}</h1>
+        <h1 v-else-if="isDataError" class="welcome">{{ $t("group.not_found2") }}</h1>
         <div v-else class="projectInfo">
             <h2>{{ "Project: " + project!.name }}</h2>
             <v-row>

@@ -107,6 +107,7 @@ export default {
     },
     group: {
         not_found: "Groep niet gevonden",
+        not_found2: "Geen groepen teruggevonden",
         groups: "Groepen:",
         members: "Leden:",
         actions: "Acties:",
