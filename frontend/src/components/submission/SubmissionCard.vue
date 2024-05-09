@@ -2,7 +2,7 @@
     <v-card>
         <v-card-title>
             {{ $t("submission.status") }}
-            <p v-if="submission.date <= project.deadline" :class="Status[submission.status]">
+            <p v-if="new Date(submission.date) <= new Date(deadline)" :class="Status[submission.status]">
                 {{ Status[submission.status] }}
             </p>
             <p v-else class="Deadline">{{ $t("submission.after_deadline") }}</p>
@@ -57,7 +57,7 @@
                             v-for="(item, index) in files"
                             label
                             color="blue"
-                            :key="item.filename"
+                            :key="item.filesortedname"
                             @click="() => downloadFile(index)"
                         >
                             {{ item.filename }}
@@ -74,12 +74,11 @@ import type { Status } from "@/models/Submission";
 import { useFilesQuery } from "@/queries/Submission";
 import { toRefs, computed } from "vue";
 import { download_file } from "@/utils";
-import type Project from "@/models/Project";
 import type Submission from "@/models/Submission";
 
 const props = defineProps<{
     submission: Submission;
-    project: Project;
+    deadline: string;
 }>();
 
 const { submission } = toRefs(props);
@@ -118,3 +117,5 @@ const downloadFile = (index: number) => {
     color: red;
 }
 </style>
+
+

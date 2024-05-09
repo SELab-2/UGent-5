@@ -71,6 +71,12 @@ const router = createRouter({
             props: (route) => ({ groupId: Number(route.params.groupId) }),
         },
         {
+            path: "/project/:projectId(\\d+)/submissions",
+            name: "projectSubmissions",
+            component: () => import("../views/SubmissionsTeacherView.vue"),
+            props: (route) => ({ projectId: Number(route.params.projectId) }),
+        },
+        {
             path: "/subjects",
             name: "subjects",
             component: () => import("../views/subject/SubjectsView.vue"),

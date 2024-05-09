@@ -15,7 +15,7 @@
                     v-for="submission in sorted"
                     :key="submission"
                     :submission="submission"
-                    :project="project!"
+                    :deadline="project.deadline"
                 />
             </v-col>
         </v-skeleton-loader>

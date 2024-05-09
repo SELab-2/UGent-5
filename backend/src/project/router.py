@@ -80,6 +80,7 @@ async def list_groups(groups: GroupList = Depends(retrieve_groups_by_project)):
 async def list_submissions(group_id: int,
                            db: AsyncSession = Depends(get_async_db)
                            ) -> Sequence[Submission]:
+    """Return a list of the latest submission of each group of this project"""
     return await get_submissions_by_project(db, group_id)
 
 
