@@ -1,13 +1,12 @@
-import asyncio
 import os
 import shutil
 from pathlib import Path
 
-import docker
+from docker import DockerClient
 from docker.models.containers import Container
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.docker_tests.utils import tests_path, submission_path, feedback_path, artifacts_path
+from src.docker_tests.utils import tests_path, submission_path, feedback_path, artifacts_path, to_async, touch
 from src.submission.models import Status
 from src.submission.schemas import TestResult
 from src.submission.service import update_submission_status
@@ -17,18 +16,19 @@ from src.submission.service import update_submission_status
 EXIT_TEST_FAILED = 10
 
 
-def touch(*paths: str):
-    for path in paths:
-        open(path, 'a').close()
-
-
 def read_feedback_file(path: str) -> list[str]:
     with open(path, 'r') as f:
         test_feedback = f.readlines()
     return [line.strip() for line in test_feedback]
 
 
-async def launch_docker_tests(db: AsyncSession, submission_id: int, submission_uuid: str, tests_uuid: str):
+async def launch_docker_tests(
+    submission_id: int,
+    submission_uuid: str,
+    tests_uuid: str,
+    db: AsyncSession,
+    client: DockerClient
+):
     artifact_dir = artifacts_path(submission_uuid)
     os.makedirs(artifact_dir)
 
@@ -46,7 +46,7 @@ async def launch_docker_tests(db: AsyncSession, submission_id: int, submission_u
         image_tag = "default_image"
 
         # rebuild default image if changes were made
-        await asyncio.to_thread(build_docker_image, path, image_tag)
+        await build_docker_image(path, image_tag, client)
     else:
         image_tag = tests_uuid
 
@@ -56,8 +56,9 @@ async def launch_docker_tests(db: AsyncSession, submission_id: int, submission_u
         artifact_dir,
         feedback_dir,
         tests_path(tests_uuid),
+        client,
     )
-    exit_code = (await asyncio.to_thread(container.wait))['StatusCode']
+    exit_code = (await wait_until_exit(container))['StatusCode']
 
     if exit_code == 0:
         status = Status.Accepted
@@ -88,9 +89,9 @@ async def launch_docker_tests(db: AsyncSession, submission_id: int, submission_u
     shutil.rmtree(feedback_dir)
 
 
-def build_docker_image(path: str, tag: str):
+@to_async
+def build_docker_image(path: str, tag: str, client: DockerClient):
     """Build a docker image from a directory where a file 'Dockerfile' is present"""
-    client = docker.from_env()
     client.images.build(
         path=path,
         tag=tag,
@@ -104,10 +105,8 @@ def using_default_docker_image(tests_uuid: str) -> bool:
 
 
 def run_docker_tests(
-    image_tag: str, submission_dir: str, artifact_dir: str, feedback_dir: str, tests_dir: str
+    image_tag: str, submission_dir: str, artifact_dir: str, feedback_dir: str, tests_dir: str, client: DockerClient
 ) -> Container:
-    client = docker.from_env()
-
     return client.containers.run(
         image=image_tag,
         volumes={
@@ -128,3 +127,8 @@ def run_docker_tests(
         stdout=True,
         stderr=True,
     )  # pyright: ignore
+
+
+@to_async
+def wait_until_exit(container: Container) -> dict:
+    return container.wait()

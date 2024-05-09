@@ -123,7 +123,7 @@ const {
     isError: isSubjectsError,
     error: subjectsError,
 } = useMySubjectsQuery();
-const { data: instructorsData, isLoading, isError } = useSubjectInstructorsQuery(selectedSubject);
+const { data: instructorsData } = useSubjectInstructorsQuery(selectedSubject);
 const { data: studentsData } = useSubjectStudentsQuery(selectedSubject);
 
 const teachers = computed(

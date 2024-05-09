@@ -6,7 +6,7 @@ export default interface Project {
     // selectedTeachers: string[]; // Assuming you store only teacher IDs
     subject_id: number;
     requirements: [];
-    description: String;
+    description: string;
     capacity: number;
     enroll_deadline: Date;
     publish_date: Date;

@@ -13,7 +13,7 @@ class Project(Base):
     deadline: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False)
     publish_date: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), nullable=True, default=datetime.now()
+        DateTime(timezone=True), nullable=True, default=datetime.now
     )
     name: Mapped[str] = mapped_column(nullable=False)
     subject_id: Mapped[int] = mapped_column(
@@ -27,7 +27,8 @@ class Project(Base):
     )
 
     requirements: Mapped[List["Requirement"]] = relationship(
-        back_populates="project", lazy="joined")
+        # see submission/models/Submission -> testresults
+        back_populates="project", lazy="joined", passive_deletes="all")
 
     test_files_uuid: Mapped[str | None] = mapped_column(nullable=True)
 
@@ -49,7 +50,7 @@ class Requirement(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     project_id: Mapped[int] = mapped_column(ForeignKey(
-        "project.id", ondelete="CASCADE"), nullable=True)
+        "project.id", ondelete="CASCADE"), nullable=False)
     project: Mapped["Project"] = relationship(back_populates="requirements")
 
     # True for mandatory False for prohibited

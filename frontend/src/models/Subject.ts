@@ -1,6 +1,9 @@
 export default interface Subject {
     id: number;
     name: string;
+    academic_year: number;
+    uuid: string;
+    email: string;
 }
 
 export interface UserSubjectList {
