@@ -9,11 +9,11 @@
                 <v-row class="rowheader">
                     <h1>{{ $t("project.myProject") }}</h1>
                     <v-btn-toggle v-model="activeButton">
-                        <v-btn value="archived" class="leftbuttonspace">{{
-                            $t("project.archived")
-                        }}</v-btn>
                         <v-btn value="notFinished" class="leftbuttonspace">{{
                             $t("project.not_finished")
+                        }}</v-btn>
+                        <v-btn value="archived" class="leftbuttonspace">{{
+                            $t("project.archived")
                         }}</v-btn>
                     </v-btn-toggle>
                 </v-row>
@@ -32,28 +32,31 @@
 import { useProjectsQuery } from "@/queries/Project";
 import ProjectMiniCard from "@/components/project/ProjectMiniCard.vue";
 import { computed, ref } from "vue";
-import Project from "@/models/Project";
+import type Project from "@/models/Project";
 
 const { data: projects, isLoading, isError } = useProjectsQuery();
-const noProjectsFound = computed(() => projects.value.length === 0);
+const noProjectsFound = computed(() => projects.value?.length === 0);
 
-const activeButton = ref(null);
+const activeButton = ref("");
 
 const filteredProjects = computed(() => {
     if (!projects.value) return [];
 
     const now = new Date();
+    const sortedProjects = projects.value
+        .slice()
+        .sort(
+            (a: Project, b: Project) =>
+                new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
+        );
+
     switch (activeButton.value) {
         case "archived":
-            return projects.value.slice().filter((project: Project) => {
-                return new Date(project.deadline) < now;
-            });
+            return sortedProjects.filter((project: Project) => new Date(project.deadline) < now);
         case "notFinished":
-            return projects.value.slice().filter((project: Project) => {
-                return new Date(project.deadline) > now;
-            });
+            return sortedProjects.filter((project: Project) => new Date(project.deadline) > now);
         default:
-            return projects.value;
+            return sortedProjects;
     }
 });
 </script>
