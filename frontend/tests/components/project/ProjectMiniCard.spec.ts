@@ -23,7 +23,7 @@ vi.mock("@/queries/Subject", () => ({
 }));
 
 
-describe("SubmitCard", async () => {
+describe("ProjectMiniCard", async () => {
     const wrapper = mount(ProjectMiniCard, {
         props: {
             project: mockProject

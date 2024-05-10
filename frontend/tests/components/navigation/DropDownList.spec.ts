@@ -23,7 +23,7 @@ vi.mock("@/stores/auth-store", () => ({
     useAuthStore: vi.fn(() => testAuthStore),
 }));
 
-describe("DropDownMobile", () => {
+describe("DropDownList", () => {
     const ResizeObserverMock = vi.fn(() => ({
         observe: vi.fn(),
         unobserve: vi.fn(),
