@@ -5,12 +5,12 @@ import type { UseQueryReturnType, UseMutationReturnType } from "@tanstack/vue-qu
 import {
     getSubject,
     getSubjectInstructors,
-    getSubjectProjects,
     getSubjects,
     getSubjectStudents,
     getSubjectByUuid,
     registerToSubject,
 } from "@/services/subject";
+import { getSubjectProjects } from "@/services/project";
 import type User from "@/models/User";
 import type Subject from "@/models/Subject";
 import type Project from "@/models/Project";
@@ -118,13 +118,17 @@ export function useRegisterToSubjectMutation(): UseMutationReturnType<
     Subject,
     Error,
     MaybeRef<string>,
-    {}
+    void
 > {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (uuid) => await registerToSubject(toValue(uuid)),
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: SUBJECTS_QUERY_KEY() });
+        },
+        onError: (error) => {
+            console.error(error);
+            alert("Failed to register to subject");
         },
     });
 }
