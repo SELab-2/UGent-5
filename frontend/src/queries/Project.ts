@@ -14,7 +14,7 @@ import {
     getSubmissions,
     createProject,
     getProjects,
-    uploadProjectFiles, updateProject,
+    uploadProjectFiles, updateProject, deleteProjectFiles, fetchProjectFiles,
 } from "@/services/project";
 import { type Ref, computed } from "vue";
 
@@ -29,6 +29,10 @@ function PROJECTS_QUERY_KEY(): string[] {
 
 function SUBMISSIONS_QUERY_KEY(): string[] {
     return ["submissions"];
+}
+
+function projectFilesQueryKey(projectId: number): (string | number)[] {
+    return ['projectFiles', projectId];
 }
 
 // Hook for fetching project details
@@ -81,6 +85,18 @@ export function useCreateProjectMutation(): UseMutationReturnType<
     });
 }
 
+export function useProjectFilesQuery(projectId: number): UseQueryReturnType<File[], Error> {
+    return useQuery<File[], Error>({
+        queryKey: projectFilesQueryKey(projectId),
+        queryFn: () => fetchProjectFiles(projectId),
+        enabled: !!projectId,  // Only fetch when a projectId is provided
+        onError: (error) => {
+            console.error("Error fetching project files:", error);
+            // Optionally, handle errors with a more sophisticated approach or user feedback
+        },
+        // Additional options can be set here, such as refetchInterval for periodic updates
+    });
+}
 // Hook for uploading files to a project
 export function useUploadProjectFilesMutation(): UseMutationReturnType<
     void, // Type of data returned on success
@@ -98,6 +114,24 @@ export function useUploadProjectFilesMutation(): UseMutationReturnType<
         onError: (error) => {
             console.error("File upload failed", error);
             alert("Could not upload files. Please try again.");
+        },
+    });
+}
+
+export function useDeleteProjectFilesMutation(): UseMutationReturnType<void, Error, { projectId: number; filesToDelete: string[] }, void> {
+    const queryClient = useQueryClient();
+    return useMutation<void, Error, { projectId: number; filesToDelete: string[] }, void>({
+        mutationFn: ({ projectId, filesToDelete }) => deleteProjectFiles(projectId, filesToDelete),
+
+        onSuccess: (_, { projectId }) => {
+            // Invalidate and refetch project file queries to reflect updated data
+            queryClient.invalidateQueries(['projectFiles', projectId]);
+            console.log("Files deleted successfully");
+        },
+
+        onError: (error) => {
+            console.error("Failed to delete project files", error);
+            alert("Could not delete project files. Please try again.");
         },
     });
 }

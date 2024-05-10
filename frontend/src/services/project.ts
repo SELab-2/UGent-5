@@ -54,6 +54,28 @@ export async function uploadProjectFiles(projectId: number, formData: FormData):
     );
 }
 
+export async function fetchProjectFiles(projectId: number): Promise<any> {
+    return authorized_fetch(
+        `/api/projects/${projectId}/test_files`,
+        {
+            method: "GET"
+        }
+    ).then(response => response.json())
+        .catch(error => console.error("Failed to fetch project files:", error));
+}
+
+export async function deleteProjectFiles(projectId: number, filesToDelete: string[]): Promise<void> {
+    return authorized_fetch(
+        `/api/projects/${projectId}/test_files`,
+        {
+            method: "DELETE",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ files: filesToDelete }),
+        },
+        true
+    );
+}
+
 // Function to create a new submission for a specific group
 export async function createSubmission(groupId: number, formData: FormData): Promise<Submission> {
     return authorized_fetch(
