@@ -77,7 +77,7 @@ import { useRoute } from "vue-router";
 import { useSubjectStudentsQuery } from "@/queries/Subject";
 import { useMySubjectsQuery } from "@/queries/User";
 import {
-    useCreateProjectMutation,
+    useCreateProjectMutation, useProjectFilesQuery,
     useProjectQuery,
     useUpdateProjectMutation,
     useUploadProjectFilesMutation
@@ -111,6 +111,12 @@ const {
     isLoading: isProjectLoading,
     isError: isProjectError,
 } = useProjectQuery(projectId);
+console.log(projectId);
+const {
+    data: filesData,
+    isLoading: isFilesLoading,
+    isError: isFilesError,
+} = useProjectFilesQuery(projectId.value);
 
 function htmlDecode(input) {
     const doc = new DOMParser().parseFromString(input, "text/html");
@@ -135,6 +141,15 @@ watch(projectData, (project) => {
         });
     }
 }, { deep: true });
+
+watch(filesData, (newFiles) => {
+    if (newFiles) {
+        // Assuming newFiles is an array of File objects or similar
+        // Directly update the files reactive variable to the new list
+        files.value = newFiles;
+    }
+}, { deep: true });
+
 
 const deadlineModel = computed({
     get: () => deadline.value,

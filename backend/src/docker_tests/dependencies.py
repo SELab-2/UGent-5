@@ -9,10 +9,7 @@ from src.docker_tests.exceptions import DockerDeamonNotFound
 
 def get_docker_client() -> Generator[DockerClient, Any, None]:
     """Creates docker client, which is closed afterwards"""
-    try:
-        client = docker.from_env()
-    except DockerException:
-        raise DockerDeamonNotFound()
+    client = docker.DockerClient(base_url='unix://var/run/docker.sock')
 
     try:
         yield client
