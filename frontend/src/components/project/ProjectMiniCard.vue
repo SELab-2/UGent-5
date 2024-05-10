@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card variant="flat">
         <v-skeleton-loader :loading="isSubjectLoading" type="article">
             <v-card-item>
                 <v-card-title>
@@ -38,4 +38,10 @@ const { data: subject, isLoading: isSubjectLoading } = useSubjectQuery(
 );
 </script>
 
-<style scoped></style>
+<style scoped>
+.v-card,
+.v-skeleton-loader {
+    width: 100%;
+    background-color: rgb(var(--v-theme-secondary));
+}
+</style>
