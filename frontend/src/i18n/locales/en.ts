@@ -77,6 +77,7 @@ export default {
     },
     admin: {
         users: "Users",
+        search: "Search",
         userTable: {
             name: "Name",
             uid: "UGent ID",
