@@ -31,6 +31,7 @@ export default {
         latest_submission: "Latest submission:",
         new_submission: "Submit new",
         status_submission: "Submission is: {status}",
+        no_submission_files: "No submissions found"
     },
     submission: {
         status: "Submission status:",

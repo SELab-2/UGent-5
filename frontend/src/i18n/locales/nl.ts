@@ -31,6 +31,7 @@ export default {
         latest_submission: "Laatste indiening:",
         new_submission: "Nieuwe indiening",
         status_submission: "Indiening is: {status}",
+        no_submission_files: "Geen indieningen gevonden"
     },
     submission: {
         status: "Indiening status: {status}",
