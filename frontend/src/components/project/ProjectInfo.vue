@@ -64,7 +64,7 @@ const renderQuillContent = (content: string) => {
     margin-top: 20px;
 }
 
-.projectCard{
+.projectCard {
     background-color: rgb(var(--v-theme-secondary));
 }
 </style>

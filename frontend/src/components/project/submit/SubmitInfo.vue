@@ -6,7 +6,9 @@
         <v-card-subtitle v-if="latestSubmission" class="subtitle">
             {{ $t("submit.latest_submission") }} {{ $d(latestSubmission.date, "long") }}
         </v-card-subtitle>
-        <v-card-subtitle v-else class="subtitle"> {{ $t("submit.no_submission_files")}}. </v-card-subtitle>
+        <v-card-subtitle v-else class="subtitle">
+            {{ $t("submit.no_submission_files") }}.
+        </v-card-subtitle>
         <div v-if="latestSubmission" class="subtitle">
             <v-card-text>{{
                 $t("submit.status_submission", { status: Status[latestSubmission.status] })
