@@ -92,8 +92,11 @@ import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import { useRoute } from "vue-router";
-import { useSubjectInstructorsQuery, useSubjectStudentsQuery } from "@/queries/Subject";
-import { useMySubjectsQuery } from "@/queries/User";
+import {
+    useSubjectsQuery,
+    useSubjectInstructorsQuery,
+    useSubjectStudentsQuery,
+} from "@/queries/Subject";
 import { useCreateProjectMutation } from "@/queries/Project";
 import { useCreateGroupsMutation, useJoinGroupMutation } from "@/queries/Group";
 import { ref, computed, reactive } from "vue";
@@ -115,11 +118,11 @@ const capacity = ref(1);
 const quillEditor = ref<typeof QuillEditor | null>(null);
 
 const {
-    data: mySubjectsData,
+    data: subjectsData,
     isLoading: isSubjectsLoading,
     isError: isSubjectsError,
     error: subjectsError,
-} = useMySubjectsQuery();
+} = useSubjectsQuery();
 const { data: instructorsData } = useSubjectInstructorsQuery(selectedSubject);
 const { data: studentsData } = useSubjectStudentsQuery(selectedSubject);
 
@@ -131,7 +134,8 @@ const assistants = computed(
 );
 const subjects = computed(
     () =>
-        mySubjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []
+        // mySubjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []
+        subjectsData.value?.map(({ name, id }) => ({ text: name, value: id })) || []
 );
 
 const groupProjectOptions = [

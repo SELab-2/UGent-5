@@ -127,14 +127,3 @@ export function useToggleTeacherMutation(): UseMutationReturnType<
         (user, value) => (user.is_teacher = value)
     );
 }
-
-// Hook for fetching subjects for a user
-export function useMySubjectsQuery(): UseQueryReturnType<UserSubjectList, Error> {
-    return useQuery<UserSubjectList, Error>({
-        queryKey: ["mySubjects"],
-        queryFn: () => {
-            console.log("Fetching subjects with mock data");
-            return getMySubjects();
-        },
-    });
-}
