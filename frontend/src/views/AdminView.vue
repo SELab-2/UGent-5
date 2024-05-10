@@ -1,11 +1,11 @@
 <template>
     <div class="adminpanel">
-        <v-card :title="$t('admin.users')" flat class="bg-white">
+        <v-card :title="$t('admin.users')" flat>
             <v-card-title>
                 <v-text-field
                     prepend-inner-icon="mdi-magnify"
                     v-model="search"
-                    label="Search"
+                    :label="$t('admin.search')"
                     single-line
                     hide-details
                 ></v-text-field>
@@ -120,8 +120,6 @@ const headers = ref([
 }
 
 .table {
-    color: black !important;
-    background-color: white;
-    width: 95%;
+    padding: 15px;
 }
 </style>

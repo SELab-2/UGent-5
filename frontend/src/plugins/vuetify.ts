@@ -39,8 +39,8 @@ const vuetify = createVuetify({
             darkTheme: {
                 dark: true,
                 colors: {
-                    background: "#222222",
-                    surface: "#222222",
+                    background: "#303030",
+                    surface: "#303030",
                     text: "#DFE5F7",
                     textsecondary: "#b2b2b2",
                     primary: "#233161",

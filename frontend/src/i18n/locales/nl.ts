@@ -23,7 +23,7 @@ export default {
         submit_title: "Oplossing indienen",
         submit_button: "Indienen",
         remarks: "Opmerkingen",
-        add_files: "Voeg bestanden toe",
+        files: "Bestanden",
         add_files_button: "Bestanden toevoegen",
         no_files_added: "Je hebt nog geen bestanden toegevoegd.",
         no_files_warning: "Voeg ten minste een bestand toe om een indiening te maken.",
@@ -77,6 +77,7 @@ export default {
     },
     admin: {
         users: "Gebruikers",
+        search: "Zoeken",
         userTable: {
             name: "Naam",
             uid: "UGent ID",
@@ -105,5 +106,18 @@ export default {
 
     subjects: {
         title: "Mijn vakken",
+    },
+    group: {
+        not_found: "Groep niet gevonden",
+        not_found2: "Geen groepen teruggevonden",
+        groups: "Groepen:",
+        members: "Leden:",
+        actions: "Acties:",
+        no_members_found: "Geen leden teruggevonden.",
+        remove: "Verwijderen",
+        join_group: "Aansluiten",
+        leave_group: "Verlaten",
+        remove_group: "Groep verwijderen",
+        create_group: "Nieuwe groep",
     },
 };
