@@ -58,6 +58,7 @@ export default {
         not_found: "Geen projecten teruggevonden.",
         archived: "Gearchiveerd",
         not_finished: "Onafgewerkt",
+        not_found2: "Project niet teruggevonden",
     },
     navigation: {
         home: "Hoofdscherm",

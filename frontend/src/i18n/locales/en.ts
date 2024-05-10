@@ -58,6 +58,7 @@ export default {
         not_found: "No projects found.",
         archived: "Archived",
         not_finished: "Not Finished",
+        not_found2: "Project not found",
     },
     navigation: {
         home: "Home",
