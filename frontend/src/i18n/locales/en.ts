@@ -106,4 +106,17 @@ export default {
     subjects: {
         title: "My Subjects",
     },
+    group: {
+        not_found: "Group not found",
+        not_found2: "No groups found",
+        groups: "Groups:",
+        members: "Members:",
+        actions: "Actions:",
+        no_members_found: "No members found.",
+        remove: "Remove",
+        join_group: "Join group",
+        leave_group: "Leave group",
+        remove_group: "Delete group",
+        create_group: "New group",
+    },
 };

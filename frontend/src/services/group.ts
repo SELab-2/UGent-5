@@ -13,6 +13,12 @@ export async function getUserGroups(): Promise<Group[]> {
     );
 }
 
+export async function getGroupsByProjectId(projectId: number): Promise<Group[]> {
+    return authorized_fetch<{ groups: Group[] }>(`/api/projects/${projectId}/groups`, {
+        method: "GET",
+    }).then((data) => data.groups);
+}
+
 export function getGroupWithProjectId(groups: Group[], projectId: number): Group | null {
     for (const group of groups) {
         if (group.project_id === projectId) {
@@ -53,4 +59,20 @@ export async function joinGroup(groupId: number, uid: string): Promise<void> {
 
 export async function getSubmissions(groupId: number): Promise<Submission[]> {
     return authorized_fetch(`/api/groups/${groupId}/submissions`, { method: "GET" });
+}
+
+export async function joinGroupUser(groupId: number): Promise<Group> {
+    return authorized_fetch(`/api/groups/${groupId}`, { method: "POST" });
+}
+
+export async function leaveGroupUser(groupId: number): Promise<Group> {
+    return authorized_fetch(`/api/groups/${groupId}/leave`, { method: "POST" });
+}
+
+export async function removeUserFromGroup(groupId: number, uid: string): Promise<Group> {
+    return authorized_fetch(`/api/groups/${groupId}/${uid}`, { method: "DELETE" });
+}
+
+export async function deleteGroup(groupId: number): Promise<Group> {
+    return authorized_fetch(`/api/groups/${groupId}`, { method: "DELETE" });
 }
