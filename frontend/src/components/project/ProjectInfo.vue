@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import type Project from "@/models/Project";
 import type Group from "@/models/Group";
-import SubmitInfo from "@/components/project/submit/SubmitInfo.vue";
+import SubmitInfo from "@/components/submission/SubmitInfo.vue";
 import { toRefs } from "vue";
 import { Quill } from "@vueup/vue-quill";
 import type User from "@/models/User";

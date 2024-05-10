@@ -59,6 +59,9 @@ export default {
         archived: "Archived",
         not_finished: "Not Finished",
         not_found2: "Project not found",
+        requirements: "File requirements",
+        mandatory: "Mandatory",
+        forbidden: "Forbidden",
     },
     navigation: {
         home: "Home",

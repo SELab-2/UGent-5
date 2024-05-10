@@ -59,6 +59,9 @@ export default {
         archived: "Gearchiveerd",
         not_finished: "Onafgewerkt",
         not_found2: "Project niet teruggevonden",
+        requirements: "Bestandsvereisten",
+        mandatory: "Verplicht",
+        forbidden: "Verboden",
     },
     navigation: {
         home: "Hoofdscherm",

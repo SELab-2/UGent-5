@@ -1,6 +1,6 @@
 import {mount} from "@vue/test-utils";
 import {expect, describe, it, vi} from "vitest";
-import SubmitForm from "@/components/project/submit/SubmitForm.vue"
+import SubmitForm from "../../../../src/components/submission/SubmitForm.vue"
 import {ref} from "vue";
 
 const mockRouter = {
