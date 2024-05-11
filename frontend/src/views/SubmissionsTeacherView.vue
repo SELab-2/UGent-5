@@ -1,12 +1,15 @@
 <template>
     <v-container>
         <v-alert v-if="isError" title="Error" color="error" :text="error.message"></v-alert>
-        <v-skeleton-loader v-else :loading="projectLoading || groupsLoading" type="card">
+        <v-skeleton-loader v-else :loading="projectLoading || submissionsLoading" type="card">
             <v-col class="mx-auto">
                 <h1>{{ $t("submission.submissions_title", { project: project.name }) }}</h1>
-                <div v-if="submissions.length == 0">
-                    <p>{{ $t("submission.no_submissions") }}</p>
-                </div>
+                <v-alert v-if="submissions.length == 0" icon="$warning" color="warning">
+                    {{ $t("submission.no_submissions") }}</v-alert
+                >
+                <v-alert v-else icon="$info" color="info" closable>
+                    {{ $t("submission.teacher_submissions_info") }}</v-alert
+                >
 
                 <SubmissionTeacherCard
                     class="ma-3"
@@ -21,9 +24,8 @@
 </template>
 
 <script setup lang="ts">
-import { useProjectQuery } from "@/queries/Project";
-import { useSubmissionsQuery, useProjectGroupsQuery } from "@/queries/Group";
-import { computed, toRefs } from "vue";
+import { useProjectQuery, useSubmissionsQuery } from "@/queries/Project";
+import { toRefs } from "vue";
 import SubmissionTeacherCard from "@/components/submission/SubmissionTeacherCard.vue";
 
 const props = defineProps<{
@@ -32,20 +34,11 @@ const props = defineProps<{
 
 const { projectId } = toRefs(props);
 
-
+const {
+    data: submissions,
+    isLoading: submissionsLoading,
+    isError,
+    error,
+} = useSubmissionsQuery(projectId);
 const { data: project, isLoading: projectLoading } = useProjectQuery(projectId);
-
-const { data: groups, error, isLoading: groupsLoading, isError} = useProjectGroupsQuery(projectId);
-
-const submissions = computed(() => {
-    return groups.value?.map(group => {
-        const { data: submissions} = useSubmissionsQuery(group.id);
-        const sorted = computed(() => {
-            return submissions.value?.toSorted((a, b) => new Date(b.date) - new Date(a.date));
-        });
-        return sorted.value?.first();
-    });
-});
-
-
 </script>

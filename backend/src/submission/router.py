@@ -49,7 +49,7 @@ async def create_submission(background_tasks: BackgroundTasks,
                             group: Group = Depends(retrieve_group),
                             user: User = Depends(get_authenticated_user),
                             db: AsyncSession = Depends(get_async_db),
-                            ):
+                            client=Depends(get_docker_client)):
     project = await retrieve_project(group.project_id, user, db)
     test_files_uuid = project.test_files_uuid
     submission_uuid = upload_files(submission_in.files, project)
@@ -63,9 +63,9 @@ async def create_submission(background_tasks: BackgroundTasks,
     )
 
     # launch docker tests
-    """ if docker_tests_present: """
-    """     background_tasks.add_task(launch_docker_tests, """
-    """                               submission.id, submission.files_uuid, test_files_uuid, db, client) """
+    if docker_tests_present:
+        background_tasks.add_task(launch_docker_tests,
+                                  submission.id, submission.files_uuid, test_files_uuid, db, client)
 
     return submission
 

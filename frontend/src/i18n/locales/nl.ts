@@ -43,6 +43,8 @@ export default {
         after_deadline: "Na deadline",
         submissions_title: "Indieningen voor project {project}",
         no_submissions: "Nog geen indieningen",
+        teacher_submissions_info:
+            "Deze pagina bevat een lijst van de laatste indiening van elke groep voor dit project.",
         docker_test: "Testen Output",
     },
     project: {
@@ -56,6 +58,7 @@ export default {
         capacity_group: "Capaciteit: ",
         edit: "Bewerk project",
         submissions_list: "Alle indieningen",
+        submissions_list_teacher: "Alle indieningen voor dit project",
         not_found: "Geen projecten teruggevonden.",
         finished: "Afgerond",
         not_found2: "Project niet teruggevonden",

@@ -1,6 +1,7 @@
 import type Group from "@/models/Group";
 import type Project from "@/models/Project";
 import type { ProjectForm, UserProjectList } from "@/models/Project";
+import type Submission from "@/models/Submission";
 import { authorized_fetch } from "@/services";
 
 function initProjectDate(project: Project): Project {
@@ -51,8 +52,18 @@ export async function createProject(projectData: ProjectForm): Promise<number> {
 }
 
 export async function getGroups(projectId: number): Promise<Group[]> {
-    const result = await authorized_fetch<{ groups: Group[] }>(`/api/projects/${projectId}/groups`, {
+    const result = await authorized_fetch<{ groups: Group[] }>(
+        `/api/projects/${projectId}/groups`,
+        {
+            method: "GET",
+        }
+    );
+    return result.groups;
+}
+
+export async function getSubmissions(projectId: number): Promise<Submission[]> {
+    const result = await authorized_fetch<Submission[]>(`/api/projects/${projectId}/submissions`, {
         method: "GET",
     });
-    return result.groups;
+    return result;
 }

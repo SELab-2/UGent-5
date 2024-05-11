@@ -2,7 +2,10 @@
     <v-card>
         <v-card-title>
             {{ $t("submission.status") }}
-            <p v-if="new Date(submission.date) <= new Date(deadline)" :class="Status[submission.status]">
+            <p
+                v-if="new Date(submission.date) <= new Date(deadline)"
+                :class="Status[submission.status]"
+            >
                 {{ Status[submission.status] }}
             </p>
             <p v-else class="Deadline">{{ $t("submission.after_deadline") }}</p>
@@ -117,5 +120,3 @@ const downloadFile = (index: number) => {
     color: red;
 }
 </style>
-
-

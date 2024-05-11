@@ -43,6 +43,8 @@ export default {
         after_deadline: "After deadline",
         submissions_title: "Submissions for project {project}",
         no_submissions: "No submissions yet",
+        teacher_submissions_info:
+            "This page contains a list of the latest submission of each group for this project.",
         docker_test: "Tests Output",
     },
     project: {
@@ -56,6 +58,7 @@ export default {
         capacity_group: "Capacity: ",
         edit: "Edit project",
         submissions_list: "All submissions",
+        submissions_list_teacher: "All submissions for this project",
         not_found: "No projects found.",
         finished: "Finished",
         not_found2: "Project not found",

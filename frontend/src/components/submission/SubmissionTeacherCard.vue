@@ -1,23 +1,22 @@
 <template>
     <v-card>
         <v-card-title>
-            {{ $t("submission.status") }}
+            {{ $t("project.group", { number: submission.group_id }) }}
         </v-card-title>
-        <v-card-subtitle>
-            {{ $t("submission.datetime") }} {{ $d(submission.date, "long") }}
-        </v-card-subtitle>
 
-        <SubmissionCard
-            class="ma-3"
-            :submission="submission"
-            :deadline="deadline"
-        />
+        <SubmissionCard class="ma-3" :submission="submission" :deadline="deadline" />
+
+        <v-card-actions>
+            <v-btn :to="`/groups/${submission.group_id}/submissions`">
+                {{ $t("project.submissions_list") }}
+            </v-btn>
+        </v-card-actions>
     </v-card>
 </template>
 
 <script setup lang="ts">
 import SubmissionCard from "@/components/submission/SubmissionCard.vue";
-import { toRefs, computed } from "vue";
+import { toRefs } from "vue";
 
 const props = defineProps<{
     submission: Submission;
@@ -25,5 +24,4 @@ const props = defineProps<{
 }>();
 
 const { submission } = toRefs(props);
-
 </script>
