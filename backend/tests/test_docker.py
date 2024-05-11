@@ -80,13 +80,34 @@ async def project_with_custom_tests_id(client: AsyncClient, db: AsyncSession, su
     id = response.json()["id"]
 
     test_files = [
-        ('files', ('entrypoint', open(test_files_path / "test_files_custom/entrypoint", 'rb'))),
-        ('files', ('test.py', open(test_files_path / "test_files_custom/test.py", 'rb'))),
-        ('files', ('Dockerfile', open(test_files_path / "test_files_custom/Dockerfile", 'rb')))
+        ('files', ('tests.zip', open(test_files_path / "test_files_custom/tests.zip", 'rb'))),
     ]
-    # test_files = [
-    #     ('files', ('tests.zip', open(test_files_path / "test_files_custom/tests.zip", 'rb'))),
-    # ]
+    await client.put(
+        f"/api/projects/{id}/test_files",
+        files=test_files
+    )
+    await set_admin(db, "test", False)
+
+    yield id
+
+    # cleanup project files
+    await set_admin(db, "test", True)
+    await client.delete(
+        f"/api/projects/{id}/test_files"
+    )
+
+
+@pytest_asyncio.fixture
+async def project_with_crashing_tests_id(client: AsyncClient, db: AsyncSession, subject_id: int):
+    """upload test files for project"""
+    project["subject_id"] = subject_id
+    await set_admin(db, "test", True)
+    response = await client.post("/api/projects/", json=project)
+    id = response.json()["id"]
+
+    test_files = [
+        ('files', ('Dockerfile', open(test_files_path / "test_files_run_crash/Dockerfile", 'rb'))),
+    ]
     await client.put(
         f"/api/projects/{id}/test_files",
         files=test_files
@@ -115,6 +136,11 @@ async def group_id_with_default_tests(client: AsyncClient, db: AsyncSession, pro
 @pytest_asyncio.fixture
 async def group_id_with_custom_tests(client: AsyncClient, db: AsyncSession, project_with_custom_tests_id: int):
     return await join_group(client, db, project_with_custom_tests_id)
+
+
+@pytest_asyncio.fixture
+async def group_id_with_crashing_tests(client: AsyncClient, db: AsyncSession, project_with_crashing_tests_id: int):
+    return await join_group(client, db, project_with_crashing_tests_id)
 
 
 @pytest_asyncio.fixture
@@ -290,6 +316,33 @@ async def run_tests_crash(client: AsyncClient, group_id: int, cleanup_files):
 
     artifact_response = await client.get(f"/api/submissions/{submission_id}/artifacts")
     assert artifact_response.json() == []  # no generated artifacts
+
+    # cleanup files
+    await cleanup_files(submission_id)
+
+
+@pytest.mark.asyncio
+async def test_docker_run_crash(client: AsyncClient, group_id_with_crashing_tests, cleanup_files):
+    files = [
+        ('files', ('submission.py', open(test_files_path / 'submission_files/correct.py', 'rb'))),
+    ]
+    response = await client.post("/api/submissions/",
+                                 files=files,
+                                 data={"remarks": "test"},
+                                 params={"group_id": group_id_with_crashing_tests},
+                                 )
+
+    assert response.status_code == 201
+    assert response.json()["status"] == Status.InProgress
+    assert response.json()["testresults"] == []
+    submission_id = response.json()["id"]
+
+    # check that result is correct, apparently pytest somehow waits for docker test to finish
+    response = await client.get(f"/api/submissions/{submission_id}")
+    assert response.json()['testresults'] == []
+    assert response.json()['stdout'] is None
+    assert response.json()['stderr'][-68:-2] == '/this/will/crash/on/docker/run: no such file or directory: unknown'
+    assert response.json()['status'] == Status.Crashed
 
     # cleanup files
     await cleanup_files(submission_id)
