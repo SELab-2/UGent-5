@@ -55,15 +55,27 @@ export async function uploadProjectFiles(projectId: number, formData: FormData):
 }
 
 export async function fetchProjectFiles(projectId: number): Promise<any> {
-    return authorized_fetch(
-        `/api/projects/${projectId}/test_files`,
-        {
-            method: "GET"
-        }
-    ).then(response => response.json())
-        .catch(error => console.error("Failed to fetch project files:", error));
-}
+    try {
+        const response = await authorized_fetch(`/api/projects/${projectId}/test_files`, { method: "GET" });
+        console.log("Response received:", response);  // Log the entire response object
 
+        if (!Array.isArray(response) || response.length === 0) {
+            throw new Error("No files found or invalid response format");
+        }
+
+        // You can map through the response if needed, here's how to access elements
+        return response.map(file => ({
+            path: file.path,
+            filename: file.filename,
+            contentType: file.media_type,
+            headers: file._headers,
+            statusCode: file.status_code
+        }));
+    } catch (error) {
+        console.error("Failed to fetch project files:", error);
+        throw error;
+    }
+}
 export async function deleteProjectFiles(projectId: number, filesToDelete: string[]): Promise<void> {
     return authorized_fetch(
         `/api/projects/${projectId}/test_files`,

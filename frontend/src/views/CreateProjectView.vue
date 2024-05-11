@@ -77,7 +77,7 @@ import { useRoute } from "vue-router";
 import { useSubjectStudentsQuery } from "@/queries/Subject";
 import { useMySubjectsQuery } from "@/queries/User";
 import {
-    useCreateProjectMutation, useProjectFilesQuery,
+    useCreateProjectMutation, useDeleteProjectFilesMutation, useProjectFilesQuery,
     useProjectQuery,
     useUpdateProjectMutation,
     useUploadProjectFilesMutation
@@ -144,9 +144,12 @@ watch(projectData, (project) => {
 
 watch(filesData, (newFiles) => {
     if (newFiles) {
-        // Assuming newFiles is an array of File objects or similar
-        // Directly update the files reactive variable to the new list
-        files.value = newFiles;
+        files.value = newFiles.map(file => ({
+            name: file.filename,
+            path: file.path,
+            contentType: file.contentType,
+            size: file.size // Ensure the size is available or handle its absence
+        }));
     }
 }, { deep: true });
 
@@ -215,6 +218,7 @@ const createGroupsMutation = useCreateGroupsMutation();
 const joinGroupMutation = useJoinGroupMutation();
 const uploadProjectFilesMutation = useUploadProjectFilesMutation();
 const updateProjectMutation = useUpdateProjectMutation();
+const deleteProjectFilesMutation = useDeleteProjectFilesMutation();
 
 function handleRadioDateChange(newDate) {
     enrollDeadline.value = newDate;
@@ -241,11 +245,38 @@ async function submitForm() {
 
     try {
         if(isEditMode.value){
-            try{
-                updateProjectMutation.mutate({ projectId: projectId.value, projectData });
-            }
-            catch(error){
-                console.log("failed to update project");
+            try {
+                // Wait for the project update to complete before proceeding
+                await updateProjectMutation.mutateAsync({ projectId: projectId.value, projectData });
+                console.log("Project updated successfully.");
+
+                const { removedUUIDs, addedFiles } = getFileChanges();
+                // console.log(removedUUIDs);
+                // console.log(addedFiles);
+                // // Handle file deletions
+                // if (removedUUIDs.length > 0) {
+                //     await deleteProjectFilesMutation.mutateAsync({
+                //         projectId: projectId.value,
+                //         fileUUIDs: removedUUIDs
+                //     });
+                //     console.log("Removed files successfully");
+                // }
+                //
+                // // Handle file uploads
+                // if (addedFiles.length > 0) {
+                //     const formData = new FormData();
+                //     addedFiles.forEach(file => {
+                //         formData.append("files", file); // Assuming 'file' is a File object
+                //     });
+                //     await uploadProjectFilesMutation.mutateAsync({
+                //         projectId: projectId.value,
+                //         formData
+                //     });
+                //     console.log("Uploaded new files successfully");
+                // }
+            } catch (error) {
+                console.error("Failed during project update or file handling:", error);
+                throw error; // Re-throw the error if you need to handle it further up the chain.
             }
         }
         else {
@@ -297,6 +328,24 @@ async function submitForm() {
     }
 }
 
+function getFileChanges() {
+    console.log("Full project data:", projectData.value); // Check the structure and properties
+    const currentUUIDs = files.value.map(file => file.uuid);
+    console.log("Current UUIDs:", currentUUIDs);
+
+    // Assuming the correct property name is `test_files_uuids` and it's an array
+    const originalUUIDs = projectData.value?.test_files_uuid ?? [];
+    console.log("Original UUIDs:", originalUUIDs);
+
+    // If originalUUIDs is not an array, this will prevent the function from breaking
+    const removedUUIDs = Array.isArray(originalUUIDs) ? originalUUIDs.filter(uuid => !currentUUIDs.includes(uuid)) : [];
+    const addedFiles = files.value.filter(file => !originalUUIDs.includes(file.uuid));
+
+    console.log("Removed UUIDs:", removedUUIDs);
+    console.log("Added Files:", addedFiles);
+
+    return { removedUUIDs, addedFiles };
+}
 function shuffle(array: any[]) {
     let shuffledArray = [...array];
     let currentIndex = shuffledArray.length,

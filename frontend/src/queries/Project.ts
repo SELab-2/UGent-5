@@ -93,9 +93,7 @@ export function useProjectFilesQuery(projectId: number): UseQueryReturnType<File
         enabled: !!projectId,  // Only fetch when a projectId is provided
         onError: (error) => {
             console.error("Error fetching project files:", error);
-            // Optionally, handle errors with a more sophisticated approach or user feedback
         },
-        // Additional options can be set here, such as refetchInterval for periodic updates
     });
 }
 // Hook for uploading files to a project
