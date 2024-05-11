@@ -165,6 +165,35 @@ async def test_no_docker_tests(client: AsyncClient, group_id: int, project_id: i
 
 @pytest.mark.asyncio
 async def test_default_tests_success(client: AsyncClient, group_id_with_default_tests: int, cleanup_files):
+    await run_tests_success(client, group_id_with_default_tests, cleanup_files)
+
+
+@pytest.mark.asyncio
+async def test_default_tests_failure(client: AsyncClient, group_id_with_default_tests: int, cleanup_files):
+    await run_tests_failure(client, group_id_with_default_tests, cleanup_files)
+
+
+@pytest.mark.asyncio
+async def test_default_tests_crash(client: AsyncClient, group_id_with_default_tests: int, cleanup_files):
+    await run_tests_crash(client, group_id_with_default_tests, cleanup_files)
+
+
+@pytest.mark.asyncio
+async def test_custom_tests_success(client: AsyncClient, group_id_with_custom_tests: int, cleanup_files):
+    await run_tests_success(client, group_id_with_custom_tests, cleanup_files)
+
+
+@pytest.mark.asyncio
+async def test_custom_tests_failure(client: AsyncClient, group_id_with_custom_tests: int, cleanup_files):
+    await run_tests_failure(client, group_id_with_custom_tests, cleanup_files)
+
+
+@pytest.mark.asyncio
+async def test_custom_tests_crash(client: AsyncClient, group_id_with_custom_tests: int, cleanup_files):
+    await run_tests_crash(client, group_id_with_custom_tests, cleanup_files)
+
+
+async def run_tests_success(client: AsyncClient, group_id: int, cleanup_files):
     # make submission
     files = [
         ('files', ('submission.py', open(test_files_path / 'submission_files/correct.py', 'rb'))),
@@ -172,7 +201,7 @@ async def test_default_tests_success(client: AsyncClient, group_id_with_default_
     response = await client.post("/api/submissions/",
                                  files=files,
                                  data={"remarks": "test"},
-                                 params={"group_id": group_id_with_default_tests},
+                                 params={"group_id": group_id},
                                  )
 
     assert response.status_code == 201
@@ -198,8 +227,8 @@ async def test_default_tests_success(client: AsyncClient, group_id_with_default_
     await cleanup_files(submission_id)
 
 
-@pytest.mark.asyncio
-async def test_default_tests_failure(client: AsyncClient, group_id_with_default_tests: int, cleanup_files):
+async def run_tests_failure(client: AsyncClient, group_id: int, cleanup_files):
+
     # make submission
     files = [
         ('files', ('submission.py', open(test_files_path / 'submission_files/incorrect.py', 'rb'))),
@@ -207,7 +236,7 @@ async def test_default_tests_failure(client: AsyncClient, group_id_with_default_
     response = await client.post("/api/submissions/",
                                  files=files,
                                  data={"remarks": "test"},
-                                 params={"group_id": group_id_with_default_tests},
+                                 params={"group_id": group_id},
                                  )
 
     assert response.status_code == 201
@@ -232,8 +261,7 @@ async def test_default_tests_failure(client: AsyncClient, group_id_with_default_
     await cleanup_files(submission_id)
 
 
-@pytest.mark.asyncio
-async def test_default_tests_crash(client: AsyncClient, group_id_with_default_tests: int, cleanup_files):
+async def run_tests_crash(client: AsyncClient, group_id: int, cleanup_files):
     # make submission
     files = [
         ('files', ('submission.py', open(test_files_path / 'submission_files/crashed.py', 'rb'))),
@@ -241,7 +269,7 @@ async def test_default_tests_crash(client: AsyncClient, group_id_with_default_te
     response = await client.post("/api/submissions/",
                                  files=files,
                                  data={"remarks": "test"},
-                                 params={"group_id": group_id_with_default_tests},
+                                 params={"group_id": group_id},
                                  )
 
     assert response.status_code == 201
@@ -262,41 +290,6 @@ async def test_default_tests_crash(client: AsyncClient, group_id_with_default_te
 
     artifact_response = await client.get(f"/api/submissions/{submission_id}/artifacts")
     assert artifact_response.json() == []  # no generated artifacts
-
-    # cleanup files
-    await cleanup_files(submission_id)
-
-
-@pytest.mark.asyncio
-async def test_custom_tests_success(client: AsyncClient, group_id_with_custom_tests: int, cleanup_files):
-    # make submission
-    files = [
-        ('files', ('submission.py', open(test_files_path / 'submission_files/correct.py', 'rb'))),
-    ]
-    response = await client.post("/api/submissions/",
-                                 files=files,
-                                 data={"remarks": "test"},
-                                 params={"group_id": group_id_with_custom_tests},
-                                 )
-
-    assert response.status_code == 201
-    assert response.json()["status"] == Status.InProgress
-    assert response.json()["testresults"] == []
-    submission_id = response.json()["id"]
-
-    # check that result is correct, apparently pytest somehow waits for docker test to finish
-    response = await client.get(f"/api/submissions/{submission_id}")
-    assert sorted([(r['succeeded'], r['value']) for r in response.json()['testresults']]) == [
-        (True, 'Eerste test geslaagd'),
-        (True, 'Tweede test geslaagd'),
-    ]
-    assert response.json()['stdout'] == 'hello stdout\n'
-    assert response.json()['stderr'] == 'hello stderr\n'
-    assert response.json()['status'] == Status.Accepted
-
-    artifact_response = await client.get(f"/api/submissions/{submission_id}/artifacts")
-    assert artifact_response.json() == [
-        {'filename': 'artifact.txt', 'media_type': 'text/plain'}]  # generated artifacts
 
     # cleanup files
     await cleanup_files(submission_id)

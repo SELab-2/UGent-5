@@ -7,8 +7,9 @@ def main():
     with open(os.environ['CORRECT'], 'w') as correct, open(os.environ['FAILED'], 'w') as failed:
         correct.write("Eerste test geslaagd\n")
 
-        answer = questionable_code(os.path.join(os.environ['ARTIFACT_DIR'], "artifact.txt"))
-        
+        answer = questionable_code(os.path.join(
+            os.environ['ARTIFACT_DIR'], "artifact.txt"))
+
         if answer == "correct":
             correct.write("Tweede test geslaagd\n")
             exit(0)

@@ -59,13 +59,14 @@ async def create_submission(background_tasks: BackgroundTasks,
     status = Status.InProgress if docker_tests_present else Status.Accepted
 
     submission = await service.create_submission(
-        db, uuid=submission_uuid, remarks=submission_in.remarks, status=status, group_id=group.id, project_id=group.project_id
+        db, uuid=submission_uuid, remarks=submission_in.remarks, status=status, group_id=group.id,
+        project_id=group.project_id
     )
 
     # launch docker tests
     if docker_tests_present:
-        await launch_docker_tests(
-            submission.id, submission.files_uuid, test_files_uuid, db, client)
+        background_tasks.add_task(launch_docker_tests,
+                                  submission.id, submission.files_uuid, test_files_uuid, db, client)
 
     return submission
 
@@ -73,7 +74,8 @@ async def create_submission(background_tasks: BackgroundTasks,
 @router.delete("/{submission_id}",
                dependencies=[Depends(admin_user_validation)],
                status_code=200)
-async def delete_submision(submission: Submission = Depends(retrieve_submission), db: AsyncSession = Depends(get_async_db)):
+async def delete_submission(submission: Submission = Depends(retrieve_submission),
+                            db: AsyncSession = Depends(get_async_db)):
     remove_files(submission.files_uuid)
     await service.delete_submission(db, submission.id)
 

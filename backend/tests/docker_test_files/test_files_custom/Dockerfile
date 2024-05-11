@@ -2,9 +2,10 @@ FROM python:3
 
 WORKDIR /home/runner
 
-COPY entrypoint .
+COPY entrypoint test.py ./
 
 RUN useradd -m runner
-RUN chown -R runner:runner /home/runner/
+RUN chown -R runner:runner .
+RUN chmod +x ./entrypoint
 
-ENTRYPOINT ["/home/runner/entrypoint"]
+ENTRYPOINT ["./entrypoint"]
