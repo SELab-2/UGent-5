@@ -3,6 +3,7 @@ import shutil
 from pathlib import Path
 
 from docker import DockerClient
+from docker.errors import ImageNotFound
 from docker.models.containers import Container
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -98,6 +99,15 @@ def build_docker_image(path: str, tag: str, client: DockerClient):
         forcerm=True
     )
     client.images.prune()  # cleanup dangling images
+
+
+def remove_docker_image_if_exists(tag: str, client: DockerClient):
+    try:
+        client.images.remove(tag)
+    except ImageNotFound:
+        pass
+
+    client.images.prune()
 
 
 def using_default_docker_image(tests_uuid: str) -> bool:

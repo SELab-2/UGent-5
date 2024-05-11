@@ -72,6 +72,37 @@ async def project_with_default_tests_id(client: AsyncClient, db: AsyncSession, s
 
 
 @pytest_asyncio.fixture
+async def project_with_custom_tests_id(client: AsyncClient, db: AsyncSession, subject_id: int):
+    """upload test files for project"""
+    project["subject_id"] = subject_id
+    await set_admin(db, "test", True)
+    response = await client.post("/api/projects/", json=project)
+    id = response.json()["id"]
+
+    test_files = [
+        ('files', ('entrypoint', open(test_files_path / "test_files_custom/entrypoint", 'rb'))),
+        ('files', ('test.py', open(test_files_path / "test_files_custom/test.py", 'rb'))),
+        ('files', ('Dockerfile', open(test_files_path / "test_files_custom/Dockerfile", 'rb')))
+    ]
+    # test_files = [
+    #     ('files', ('tests.zip', open(test_files_path / "test_files_custom/tests.zip", 'rb'))),
+    # ]
+    await client.put(
+        f"/api/projects/{id}/test_files",
+        files=test_files
+    )
+    await set_admin(db, "test", False)
+
+    yield id
+
+    # cleanup project files
+    await set_admin(db, "test", True)
+    await client.delete(
+        f"/api/projects/{id}/test_files"
+    )
+
+
+@pytest_asyncio.fixture
 async def group_id(client: AsyncClient, db: AsyncSession, project_id: int):
     return await join_group(client, db, project_id)
 
@@ -79,6 +110,11 @@ async def group_id(client: AsyncClient, db: AsyncSession, project_id: int):
 @pytest_asyncio.fixture
 async def group_id_with_default_tests(client: AsyncClient, db: AsyncSession, project_with_default_tests_id: int):
     return await join_group(client, db, project_with_default_tests_id)
+
+
+@pytest_asyncio.fixture
+async def group_id_with_custom_tests(client: AsyncClient, db: AsyncSession, project_with_custom_tests_id: int):
+    return await join_group(client, db, project_with_custom_tests_id)
 
 
 @pytest_asyncio.fixture
@@ -226,6 +262,41 @@ async def test_default_tests_crash(client: AsyncClient, group_id_with_default_te
 
     artifact_response = await client.get(f"/api/submissions/{submission_id}/artifacts")
     assert artifact_response.json() == []  # no generated artifacts
+
+    # cleanup files
+    await cleanup_files(submission_id)
+
+
+@pytest.mark.asyncio
+async def test_custom_tests_success(client: AsyncClient, group_id_with_custom_tests: int, cleanup_files):
+    # make submission
+    files = [
+        ('files', ('submission.py', open(test_files_path / 'submission_files/correct.py', 'rb'))),
+    ]
+    response = await client.post("/api/submissions/",
+                                 files=files,
+                                 data={"remarks": "test"},
+                                 params={"group_id": group_id_with_custom_tests},
+                                 )
+
+    assert response.status_code == 201
+    assert response.json()["status"] == Status.InProgress
+    assert response.json()["testresults"] == []
+    submission_id = response.json()["id"]
+
+    # check that result is correct, apparently pytest somehow waits for docker test to finish
+    response = await client.get(f"/api/submissions/{submission_id}")
+    assert sorted([(r['succeeded'], r['value']) for r in response.json()['testresults']]) == [
+        (True, 'Eerste test geslaagd'),
+        (True, 'Tweede test geslaagd'),
+    ]
+    assert response.json()['stdout'] == 'hello stdout\n'
+    assert response.json()['stderr'] == 'hello stderr\n'
+    assert response.json()['status'] == Status.Accepted
+
+    artifact_response = await client.get(f"/api/submissions/{submission_id}/artifacts")
+    assert artifact_response.json() == [
+        {'filename': 'artifact.txt', 'media_type': 'text/plain'}]  # generated artifacts
 
     # cleanup files
     await cleanup_files(submission_id)

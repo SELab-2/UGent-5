@@ -23,7 +23,7 @@ from .service import (
     update_project, update_test_files,
 )
 from ..docker_tests.dependencies import get_docker_client
-from ..docker_tests.docker_tests import using_default_docker_image, build_docker_image
+from ..docker_tests.docker_tests import using_default_docker_image, build_docker_image, remove_docker_image_if_exists
 from ..docker_tests.utils import get_files_from_dir, tests_path, write_and_unpack_files, remove_test_files
 
 router = APIRouter(
@@ -113,7 +113,10 @@ async def put_test_files(
 async def delete_test_files(
     project: Project = Depends(retrieve_project),
     uuid: str = Depends(retrieve_test_files_uuid),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
+    client: DockerClient = Depends(get_docker_client)
 ):
+    remove_docker_image_if_exists(uuid, client)
     remove_test_files(uuid)
+
     return await service.update_test_files(db, project.id, None)
