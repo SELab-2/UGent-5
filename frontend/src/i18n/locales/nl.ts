@@ -110,6 +110,7 @@ export default {
     group: {
         not_found: "Groep niet gevonden",
         not_found2: "Geen groepen teruggevonden",
+        error: "Fout bij het laden van de pagina",
         groups: "Groepen:",
         members: "Leden:",
         actions: "Acties:",
@@ -119,5 +120,9 @@ export default {
         leave_group: "Verlaten",
         remove_group: "Groep verwijderen",
         create_group: "Nieuwe groep",
+        no_students: "Geen studenten gevonden",
+        close: "sluiten",
+        all_students: "Alle studenten",
+        all_students_course: "Alle studenten in vak:",
     },
 };

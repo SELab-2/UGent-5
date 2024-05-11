@@ -44,5 +44,7 @@ const amountOfMembers = computed(() => {
 <style scoped>
 .v-card-padding {
     padding: 5px;
+    margin-bottom: 5px;
+    height: 50px;
 }
 </style>

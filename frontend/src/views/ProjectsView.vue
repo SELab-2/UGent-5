@@ -37,7 +37,7 @@ import type Project from "@/models/Project";
 const { data: projects, isLoading, isError } = useProjectsQuery();
 const noProjectsFound = computed(() => projects.value?.length === 0);
 
-const activeButton = ref("");
+const activeButton = ref("notFinished");
 
 const filteredProjects = computed(() => {
     if (!projects.value) return [];
