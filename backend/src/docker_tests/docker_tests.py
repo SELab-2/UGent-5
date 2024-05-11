@@ -92,7 +92,6 @@ async def launch_docker_tests(
         stdout=stdout if stdout else None,
         stderr=stderr if stderr else None,
     )
-    
 
     await db.close()
 
