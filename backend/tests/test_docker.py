@@ -219,6 +219,7 @@ async def test_custom_tests_crash(client: AsyncClient, group_id_with_custom_test
     await run_tests_crash(client, group_id_with_custom_tests, cleanup_files)
 
 
+@pytest.mark.asyncio
 async def run_tests_success(client: AsyncClient, group_id: int, cleanup_files):
     # make submission
     files = [
@@ -253,6 +254,7 @@ async def run_tests_success(client: AsyncClient, group_id: int, cleanup_files):
     await cleanup_files(submission_id)
 
 
+@pytest.mark.asyncio
 async def run_tests_failure(client: AsyncClient, group_id: int, cleanup_files):
 
     # make submission
@@ -287,6 +289,7 @@ async def run_tests_failure(client: AsyncClient, group_id: int, cleanup_files):
     await cleanup_files(submission_id)
 
 
+@pytest.mark.asyncio
 async def run_tests_crash(client: AsyncClient, group_id: int, cleanup_files):
     # make submission
     files = [
