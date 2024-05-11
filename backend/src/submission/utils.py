@@ -39,7 +39,7 @@ def upload_files(files: list[UploadFile], project: Project) -> str:
                           "msg": f"Required file not found: {r.value}"})
 
     if len(errors):
-        shutil.rmtree(files_path)
+        shutil.rmtree(submissions_path(uuid))
         raise UnMetRequirements(errors)
 
     return uuid

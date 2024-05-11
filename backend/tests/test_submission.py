@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.exceptions import NotAuthorized
 import os
 
+from src.docker_tests.utils import submissions_path
 from src.user.service import set_admin
 # Import Fixtures
 from tests.test_group import group_id
@@ -123,13 +124,16 @@ async def test_project_requirements(client: AsyncClient, group_with_reqs_id: int
     await client.post(f"/api/groups/{group_with_reqs_id}")  # Join group
 
     # Submit without mandatory
+    submissions_before = os.listdir(submissions_path())
     response = await client.post("/api/submissions/", params={"group_id": group_with_reqs_id}, files=[optional])
     assert response.status_code == 422
     assert len(response.json()["detail"]) == 1
     assert response.json()["detail"][0]["requirement"] == "*.py"
     assert response.json()["detail"][0]["type"] == "mandatory"
+    assert os.listdir(submissions_path()) == submissions_before  # submission dirs did not change
 
     # Submit with forbidden
+    submissions_before = os.listdir(submissions_path())
     response = await client.post(
         "/api/submissions/", params={"group_id": group_with_reqs_id}, files=[optional, forbidden]
     )
@@ -138,8 +142,10 @@ async def test_project_requirements(client: AsyncClient, group_with_reqs_id: int
     reqs = [(req["requirement"], req["type"]) for req in response.json()["detail"]]
     assert ("*.py", "mandatory") in reqs
     assert ("*.pdf", "forbidden") in reqs
+    assert os.listdir(submissions_path()) == submissions_before  # submission dirs did not change
 
     # Submit with forbidden and mandatory
+    submissions_before = os.listdir(submissions_path())
     response = await client.post(
         "/api/submissions/", params={"group_id": group_with_reqs_id}, files=[optional, forbidden, mandatory]
     )
@@ -147,12 +153,18 @@ async def test_project_requirements(client: AsyncClient, group_with_reqs_id: int
     assert len(response.json()["detail"]) == 1
     reqs = [(req["requirement"], req["type"]) for req in response.json()["detail"]]
     assert ("*.pdf", "forbidden") == reqs[0]
+    assert os.listdir(submissions_path()) == submissions_before  # submission dirs did not change
 
     # Submit with mandatory
+    submissions_before = os.listdir(submissions_path())
     response = await client.post(
         "/api/submissions/", params={"group_id": group_with_reqs_id}, files=[optional, mandatory]
     )
     assert response.status_code == 201
+
+    # exactly one submission was created with uuid equal to returned uuid
+    assert set(os.listdir(submissions_path())).difference(set(submissions_before)) == {response.json()["files_uuid"]}
+
     await cleanup_files(response.json()["id"])
 
     # cleanup files
