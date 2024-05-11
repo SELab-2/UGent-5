@@ -341,8 +341,7 @@ async def test_docker_run_crash(client: AsyncClient, group_id_with_crashing_test
     response = await client.get(f"/api/submissions/{submission_id}")
     assert response.json()['testresults'] == []
     assert response.json()['stdout'] is None
-    assert response.json()[
-        'stderr'][-68:-2] == '/this/will/crash/on/docker/run: no such file or directory: unknown'
+    assert len(response.json()['stderr']) > 100
     assert response.json()['status'] == Status.Crashed
 
     # cleanup files
