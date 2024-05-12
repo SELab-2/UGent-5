@@ -26,7 +26,6 @@
                 <template v-slot:[`item.is_teacher`]="{ item }">
                     <v-checkbox-btn
                         :model-value="item.is_teacher"
-                        :disabled="item.uid === currentUser?.uid"
                         @update:model-value="() => onToggleTeacher(item)"
                     ></v-checkbox-btn>
                 </template>
