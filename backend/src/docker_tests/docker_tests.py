@@ -13,8 +13,13 @@ from src.submission.models import Status
 from src.submission.schemas import TestResult
 from src.submission.service import update_submission_status
 
+
 # if a container exits with this code, the test failed (exit 0 means the test succeeded)
 EXIT_TEST_FAILED = 10
+
+# mark test runner containers with this label
+REV_DOMAIN = "be.ugent.sel2-5"
+TEST_RUNNER_LABEL = "test_runner"
 
 
 @dataclass
@@ -112,8 +117,11 @@ async def run_docker_tests(image_tag: str, submission_uuid: str, artifact_dir: s
 
     except APIError as e:
         return DockerResult(status=Status.Crashed, test_results=[], stdout=None, stderr=str(e))
+
     finally:
-        container.remove()
+        container.remove(force=True)
+        # remove all stopped containers with test runner tag
+        client.containers.prune(filters={"label": f"{REV_DOMAIN}={TEST_RUNNER_LABEL}"})
 
 
 @to_async
@@ -124,15 +132,18 @@ def build_docker_image(path: str, tag: str, client: DockerClient):
         tag=tag,
         forcerm=True
     )
-    client.images.prune()  # cleanup dangling images
+
+    # clean up dangling images
+    client.images.prune()
 
 
 def remove_docker_image_if_exists(tag: str, client: DockerClient):
     try:
-        client.images.remove(tag)
+        client.images.remove(image=tag, force=True)
     except NotFound:
         pass
 
+    # clean up dangling images
     client.images.prune()
 
 
@@ -157,6 +168,7 @@ def create_container(
     return client.containers.create(
         image=image_tag,
         volumes=volumes,
+        labels={REV_DOMAIN: TEST_RUNNER_LABEL},
         environment={
             'SUBMISSION_DIR': '/submission',
             'ARTIFACT_DIR': '/artifacts',
