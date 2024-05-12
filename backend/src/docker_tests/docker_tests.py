@@ -86,6 +86,8 @@ async def run_docker_tests(image_tag: str, submission_uuid: str, artifact_dir: s
         )
     except APIError as e:
         return DockerResult(status=Status.Crashed, test_results=[], stdout=None, stderr=str(e))
+    finally:
+        client.containers.prune()
 
     try:
         container.start()
