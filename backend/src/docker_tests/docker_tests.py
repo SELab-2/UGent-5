@@ -1,8 +1,8 @@
 import os
 import shutil
+from dataclasses import dataclass
 from pathlib import Path
 
-import docker
 from docker import DockerClient
 from docker.errors import APIError, NotFound
 from docker.models.containers import Container
@@ -15,6 +15,14 @@ from src.submission.service import update_submission_status
 
 # if a container exits with this code, the test failed (exit 0 means the test succeeded)
 EXIT_TEST_FAILED = 10
+
+
+@dataclass
+class DockerResult:
+    status: Status
+    test_results: list[TestResult]
+    stdout: str | None
+    stderr: str | None
 
 
 def read_feedback_file(path: str) -> list[str]:
@@ -51,14 +59,33 @@ async def launch_docker_tests(
         image_tag = tests_uuid
         tests_dir = None
 
-    container = create_container(
-        image_tag,
-        submission_path(submission_uuid),
-        artifact_dir,
-        feedback_dir,
-        tests_dir,
-        client,
+    result = await run_docker_tests(image_tag, submission_uuid, artifact_dir, feedback_dir, tests_dir, client)
+
+    await update_submission_status(
+        db, submission_id, result.status, result.test_results,
+        stdout=result.stdout,
+        stderr=result.stderr,
     )
+
+    await db.close()
+
+    # feedback is stored in the db only
+    shutil.rmtree(feedback_dir)
+
+
+async def run_docker_tests(image_tag: str, submission_uuid: str, artifact_dir: str, feedback_dir: str, tests_dir: str,
+                           client: DockerClient) -> DockerResult:
+    try:
+        container = create_container(
+            image_tag,
+            submission_path(submission_uuid),
+            artifact_dir,
+            feedback_dir,
+            tests_dir,
+            client,
+        )
+    except APIError as e:
+        return DockerResult(status=Status.Crashed, test_results=[], stdout=None, stderr=str(e))
 
     try:
         container.start()
@@ -80,25 +107,13 @@ async def launch_docker_tests(
         stdout = container.logs(stdout=True, stderr=False).decode("utf-8")
         stderr = container.logs(stdout=False, stderr=True).decode("utf-8")
 
+        return DockerResult(status=status, test_results=test_results, stdout=stdout if stdout else None,
+                            stderr=stderr if stderr else None)
+
     except APIError as e:
-        status = Status.Crashed
-        test_results = []
-        stdout = None
-        stderr = str(e)
+        return DockerResult(status=Status.Crashed, test_results=[], stdout=None, stderr=str(e))
+    finally:
         container.remove(force=True)
-
-    container.remove(force=True)
-
-    await update_submission_status(
-        db, submission_id, status, test_results,
-        stdout=stdout if stdout else None,
-        stderr=stderr if stderr else None,
-    )
-
-    await db.close()
-
-    # feedback is stored in the db only
-    shutil.rmtree(feedback_dir)
 
 
 @to_async
