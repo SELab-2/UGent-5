@@ -85,6 +85,7 @@ async def launch_docker_tests(
         test_results = []
         stdout = None
         stderr = str(e)
+        container.remove(force=True)
 
     container.remove(force=True)
 
