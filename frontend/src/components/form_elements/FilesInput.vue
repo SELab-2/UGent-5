@@ -3,7 +3,9 @@
         <v-row>
             <v-col>
                 <input @change="handleFileChange" ref="fileInput" type="file" multiple hidden />
-                <v-btn class="mb-0" @click="triggerFileInput">{{ $t("submit.add_files_button") }}</v-btn>
+                <v-btn class="mb-0" @click="triggerFileInput">{{
+                    $t("submit.add_files_button")
+                }}</v-btn>
             </v-col>
         </v-row>
         <v-row class="mt-0">
@@ -36,7 +38,7 @@ const props = defineProps({
     modelValue: {
         type: Array,
         required: true,
-    }
+    },
 });
 
 const emits = defineEmits(["update:modelValue"]);

@@ -1,46 +1,30 @@
 <template>
-    <div>
-        <v-card class="mx-auto" max-width="500" outlined>
-            <v-card-title class="headline">
-                File Structure
-            </v-card-title>
-            <v-card-text>
-                <v-treeview
-                    v-model="tree"
-                    :items="treeItems"
-                    :open="initiallyOpen"
-                    item-key="id"
-                    item-text="title"
-                    item-children="children"
-                    activatable
-                    open-on-click
-                >
-                    <template v-slot:prepend="{ item }">
-                        <!-- Use getFileIcon to dynamically set the icon based on file extension -->
-                        <v-icon>
-                            {{ getFileIcon(item.title) }}
-                        </v-icon>
-                    </template>
-                </v-treeview>
-            </v-card-text>
-        </v-card>
-    </div>
+    <v-card class="file-display-container" outlined>
+        <v-card-title> Project Files </v-card-title>
+        <v-card-text>
+            <v-treeview v-model="tree" :items="treeItems" activatable hoverable open-on-click>
+                <template v-slot:prepend="{ item }">
+                    <v-icon>{{ getFileIcon(item.title) }}</v-icon>
+                </template>
+            </v-treeview>
+        </v-card-text>
+    </v-card>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
-import { VTreeview } from 'vuetify/labs/VTreeview'
+import { computed, ref } from "vue";
+import { VTreeview } from "vuetify/labs/VTreeview";
 
 const props = defineProps({
-    files: Array
+    files: Array,
 });
 
 const tree = ref([]);
-const initiallyOpen = ref([]);  // Set specific paths if needed
+const initiallyOpen = ref([]); // Set specific paths if needed
 const treeItems = computed(() => {
     const rootNode = {};
-    props.files.forEach(file => {
-        const parts = file.filename.split('/').filter(Boolean);
+    props.files.forEach((file) => {
+        const parts = file.filename.split("/").filter(Boolean);
         let current = rootNode;
 
         parts.forEach((part, index) => {
@@ -64,20 +48,20 @@ const treeItems = computed(() => {
     return buildTree(rootNode);
 });
 
-function buildTree(node, path = '') {
+function buildTree(node, path = "") {
     const result = [];
-    Object.keys(node).forEach(key => {
+    Object.keys(node).forEach((key) => {
         if (!node[key]._isFile && node[key].children) {
             const fullPath = path ? `${path}/${key}` : key;
             result.push({
                 title: node[key].title,
                 id: fullPath,
-                children: buildTree(node[key].children, fullPath)
+                children: buildTree(node[key].children, fullPath),
             });
         } else if (node[key]._isFile) {
             result.push({
                 title: node[key].title,
-                id: node[key].id
+                id: node[key].id,
             });
         }
     });
@@ -85,36 +69,27 @@ function buildTree(node, path = '') {
 }
 
 const icons = ref({
-    html: 'mdi-language-html5',
-    js: 'mdi-nodejs',
-    json: 'mdi-code-json',
-    md: 'mdi-language-markdown',
-    pdf: 'mdi-file-pdf-box',
-    png: 'mdi-file-image',
-    txt: 'mdi-file-document-outline',
-    xls: 'mdi-file-excel',
-    folder: 'mdi-folder', // Closed folder icon
-    folderOpen: 'mdi-folder-open' // Open folder icon
+    html: "mdi-language-html5",
+    js: "mdi-nodejs",
+    json: "mdi-code-json",
+    md: "mdi-language-markdown",
+    pdf: "mdi-file-pdf-box",
+    png: "mdi-file-image",
+    txt: "mdi-file-document-outline",
+    xls: "mdi-file-excel",
+    folder: "mdi-folder", // Closed folder icon
+    folderOpen: "mdi-folder-open", // Open folder icon
 });
 
 function getFileIcon(filename) {
     // Check if the filename has a file extension
-    const extension = filename.split('.').pop();
+    const extension = filename.split(".").pop();
     if (extension === filename) {
         // No extension, likely a folder
-        return 'mdi-folder';
+        return "mdi-folder";
     } else {
         // It's a file, get the corresponding icon
-        return icons.value[extension] || 'mdi-file';
+        return icons.value[extension] || "mdi-file";
     }
 }
 </script>
-
-<style scoped>
-.v-treeview-node__root {
-    color: black;
-}
-</style>
-
-
-

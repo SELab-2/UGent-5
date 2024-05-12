@@ -14,7 +14,10 @@ import {
     getSubmissions,
     createProject,
     getProjects,
-    uploadProjectFiles, updateProject, deleteProjectFiles, fetchProjectFiles,
+    uploadProjectFiles,
+    updateProject,
+    deleteProjectFiles,
+    fetchProjectFiles,
 } from "@/services/project";
 import { type Ref, computed } from "vue";
 
@@ -32,7 +35,7 @@ function SUBMISSIONS_QUERY_KEY(): string[] {
 }
 
 function projectFilesQueryKey(projectId: number): (string | number)[] {
-    return ['projectFiles', projectId];
+    return ["projectFiles", projectId];
 }
 
 // Hook for fetching project details
@@ -86,11 +89,11 @@ export function useCreateProjectMutation(): UseMutationReturnType<
 }
 
 export function useProjectFilesQuery(projectId: number): UseQueryReturnType<File[], Error> {
-    console.log("projectid"+projectId);
+    console.log("projectid" + projectId);
     return useQuery<File[], Error>({
         queryKey: projectFilesQueryKey(projectId),
         queryFn: () => fetchProjectFiles(projectId),
-        enabled: !!projectId,  // Only fetch when a projectId is provided
+        enabled: !!projectId, // Only fetch when a projectId is provided
         onError: (error) => {
             console.error("Error fetching project files:", error);
         },
@@ -117,14 +120,19 @@ export function useUploadProjectFilesMutation(): UseMutationReturnType<
     });
 }
 
-export function useDeleteProjectFilesMutation(): UseMutationReturnType<void, Error, { projectId: number; filesToDelete: string[] }, void> {
+export function useDeleteProjectFilesMutation(): UseMutationReturnType<
+    void,
+    Error,
+    { projectId: number; filesToDelete: string[] },
+    void
+> {
     const queryClient = useQueryClient();
     return useMutation<void, Error, { projectId: number; filesToDelete: string[] }, void>({
         mutationFn: ({ projectId, filesToDelete }) => deleteProjectFiles(projectId, filesToDelete),
 
         onSuccess: (_, { projectId }) => {
             // Invalidate and refetch project file queries to reflect updated data
-            queryClient.invalidateQueries(['projectFiles', projectId]);
+            queryClient.invalidateQueries(["projectFiles", projectId]);
             console.log("Files deleted successfully");
         },
 
@@ -135,23 +143,30 @@ export function useDeleteProjectFilesMutation(): UseMutationReturnType<void, Err
     });
 }
 
-export function useUpdateProjectMutation(): UseMutationReturnType<void, Error, { projectId: number; projectData: Partial<ProjectForm> }, void> {
+export function useUpdateProjectMutation(): UseMutationReturnType<
+    void,
+    Error,
+    { projectId: number; projectData: Partial<ProjectForm> },
+    void
+> {
     const queryClient = useQueryClient();
-    return useMutation<void, Error, { projectId: number; projectData: Partial<ProjectForm> }, void>({
-        mutationFn: ({ projectId, projectData }) => updateProject(projectId, projectData),
+    return useMutation<void, Error, { projectId: number; projectData: Partial<ProjectForm> }, void>(
+        {
+            mutationFn: ({ projectId, projectData }) => updateProject(projectId, projectData),
 
-        onSuccess: (_, variables) => {
-            // Invalidate and refetch project-related queries to reflect updated data
-            queryClient.invalidateQueries(projectQueryKey(variables.projectId));
-            queryClient.invalidateQueries(PROJECTS_QUERY_KEY());
-            console.log("Project updated successfully.");
-        },
+            onSuccess: (_, variables) => {
+                // Invalidate and refetch project-related queries to reflect updated data
+                queryClient.invalidateQueries(projectQueryKey(variables.projectId));
+                queryClient.invalidateQueries(PROJECTS_QUERY_KEY());
+                console.log("Project updated successfully.");
+            },
 
-        onError: (error) => {
-            console.error("Project update failed", error);
-            alert("Failed to update project. Please try again.");
-        },
-    });
+            onError: (error) => {
+                console.error("Project update failed", error);
+                alert("Failed to update project. Please try again.");
+            },
+        }
+    );
 }
 
 export function useSubmissionQuery(): UseQueryReturnType<Submission[], Error> {

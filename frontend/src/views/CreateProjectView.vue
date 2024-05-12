@@ -23,19 +23,6 @@
                     placeholder="Select Subject"
                 />
             </v-col>
-        </v-row>
-        <v-row>
-            <v-col cols="12" md="6">
-                <DatePicker
-                    :modelValue="deadlineModel"
-                    @update:modelValue="updateDeadline"
-                    label="Deadline"
-                />
-                <DatePicker
-                    :modelValue="publishDateModel"
-                    @update:modelValue="updatePublishDate"
-                    label="Publish Date" required />
-            </v-col>
             <v-col cols="12" md="6">
                 <RadioButtonList
                     v-if="!isEditMode"
@@ -48,17 +35,42 @@
             </v-col>
         </v-row>
         <v-row>
+            <v-col cols="12" md="6">
+                <DatePicker
+                    :modelValue="deadlineModel"
+                    @update:modelValue="updateDeadline"
+                    label="Deadline"
+                />
+                <DatePicker
+                    :modelValue="publishDateModel"
+                    @update:modelValue="updatePublishDate"
+                    label="Publish Date"
+                    required
+                />
+            </v-col>
+        </v-row>
+        <v-row>
             <v-col cols="12">
                 <QuillEditor ref="quillEditor" theme="snow" class="quill-editor" />
             </v-col>
         </v-row>
         <v-row>
-            <v-col>
-                <DisplayTestFiles v-if="filesData && filesData.length" :files="filesData" />
+            <v-col cols="12" style="margin-top: 2rem">
+                <DisplayTestFiles
+                    v-if="filesData && filesData.length && isEditMode"
+                    :files="filesData"
+                />
             </v-col>
         </v-row>
         <v-row>
-            <FilesInput v-model="files" />
+            <v-col cols="12">
+                <div v-if="isEditMode" class="file-upload-disclaimer">
+                    <v-alert class="custom-alert" dense text>
+                        Note: Uploading new files will overwrite the existing ones.
+                    </v-alert>
+                </div>
+                <FilesInput v-model="files" />
+            </v-col>
         </v-row>
         <v-row>
             <v-col cols="12" class="text-right">
@@ -68,9 +80,8 @@
     </v-container>
 </template>
 
-
 <script setup lang="ts">
-import {nextTick} from 'vue';
+import { nextTick } from "vue";
 import type { CheckBoxItem } from "@/components/project/CheckboxList.vue";
 import DatePicker from "@/components/project/DatePicker.vue";
 import RadioButtonList from "@/components/project/RadiobuttonList.vue";
@@ -82,10 +93,12 @@ import { useRoute } from "vue-router";
 import { useSubjectStudentsQuery } from "@/queries/Subject";
 import { useMySubjectsQuery } from "@/queries/User";
 import {
-    useCreateProjectMutation, useDeleteProjectFilesMutation, useProjectFilesQuery,
+    useCreateProjectMutation,
+    useDeleteProjectFilesMutation,
+    useProjectFilesQuery,
     useProjectQuery,
     useUpdateProjectMutation,
-    useUploadProjectFilesMutation
+    useUploadProjectFilesMutation,
 } from "@/queries/Project";
 import { useCreateGroupsMutation, useJoinGroupMutation } from "@/queries/Group";
 import { ref, computed, reactive, watch } from "vue";
@@ -96,7 +109,6 @@ import DisplayTestFiles from "@/components/project/DisplayTestFiles.vue";
 
 const route = useRoute();
 console.log("Route params:", route.params);
-
 
 const project_title = ref("");
 const projectSubjectId = ref<number | null>(null);
@@ -130,84 +142,28 @@ function htmlDecode(input) {
     return doc.documentElement.textContent;
 }
 
-watch(projectData, (project) => {
-    if (project) {
-        project_title.value = project.name;
-        deadline.value = new Date(project.deadline);
-        publishDate.value = new Date(project.publish_date);
-        const description = project.description;  // Assuming this is already proper HTML
+watch(
+    projectData,
+    (project) => {
+        if (project) {
+            project_title.value = project.name;
+            deadline.value = new Date(project.deadline);
+            publishDate.value = new Date(project.publish_date);
+            const description = project.description; // Assuming this is already proper HTML
 
-        nextTick(() => {
-            if (quillEditor.value && quillEditor.value.getQuill) {
-                let quill = quillEditor.value.getQuill();
-                quill.root.innerHTML = '';  // Clear existing content
-                quill.clipboard.dangerouslyPasteHTML(description);  // Paste new HTML
-            } else {
-                console.error("Quill Editor is not initialized");
-            }
-        });
-    }
-}, { deep: true });
-
-// files blijven voorlopig even in comments
-watch(filesData, (newFiles) => {
-    console.log("New files:", newFiles);
-    if (newFiles && Array.isArray(newFiles)) {
-        const updatedServerFiles = newFiles.map(fileData => ({
-            name: fileData.filename,
-            path: fileData.path,
-            size: fileData.size  // Assuming size is also available
-        }));
-
-        //display test files needs to be updated here
-
-        // updateFilesBasedOnServerData(updatedServerFiles);
-    }
-}, { deep: true });
-
-function updateFilesBasedOnServerData(updatedServerFiles) {
-    serverFiles.value = updatedServerFiles;  // Update the reactive server files
-    console.log(updatedServerFiles);
-    updateDirectoryStructure();
-}
-
-
-
-function updateDirectoryStructure() {
-    directoryStructure.value = organizeFilesByDirectory(serverFiles.value);
-}
-
-function organizeFilesByDirectory(files) {
-    const root = {};
-    files.forEach(file => {
-        const parts = file.path.split('/').slice(1);  // Skip the first empty part from split
-        let current = root;
-        parts.forEach((part, index) => {
-            if (index === parts.length - 1) {
-                // Assign the file to the last part
-                current[part] = { ...file };
-            } else {
-                // Create a subdirectory if it doesn't exist
-                current[part] = current[part] || {};
-                current = current[part];
-            }
-        });
-    });
-    return root;
-}
-
-
-// function calculateAddedFiles() {
-//     // Files that are in the local 'files' but not in the 'serverFiles'
-//     return files.value.filter(localFile => !serverFiles.value.some(serverFile => serverFile.path === localFile.path));
-// }
-//
-// // Function to find deleted files
-// function calculateDeletedFiles() {
-//     // Files that are in the 'serverFiles' but not in the local 'files'
-//     return serverFiles.value.filter(serverFile => !files.value.some(localFile => localFile.path === serverFile.path));
-// }
-
+            nextTick(() => {
+                if (quillEditor.value && quillEditor.value.getQuill) {
+                    let quill = quillEditor.value.getQuill();
+                    quill.root.innerHTML = ""; // Clear existing content
+                    quill.clipboard.dangerouslyPasteHTML(description); // Paste new HTML
+                } else {
+                    console.error("Quill Editor is not initialized");
+                }
+            });
+        }
+    },
+    { deep: true }
+);
 
 const deadlineModel = computed({
     get: () => deadline.value,
@@ -215,7 +171,7 @@ const deadlineModel = computed({
         if (newValue.toISOString() !== deadline.value.toISOString()) {
             deadline.value = new Date(newValue);
         }
-    }
+    },
 });
 
 const publishDateModel = computed({
@@ -224,7 +180,7 @@ const publishDateModel = computed({
         if (newValue.toISOString() !== publishDate.value.toISOString()) {
             publishDate.value = new Date(newValue);
         }
-    }
+    },
 });
 
 function updateDeadline(val) {
@@ -235,13 +191,10 @@ function updatePublishDate(val) {
     publishDateModel.value = val;
 }
 
-
-watch(deadline, (newValue, oldValue) => {
-    console.log(`Deadline changed from ${oldValue.toISOString()} to ${newValue.toISOString()}`);
-});
-
 const selectedSubject = ref<number>(
-    isEditMode.value ? projectSubjectId.value ?? Number(route.params.subjectId) : Number(route.params.subjectId)
+    isEditMode.value
+        ? projectSubjectId.value ?? Number(route.params.subjectId)
+        : Number(route.params.subjectId)
 );
 
 const {
@@ -250,8 +203,6 @@ const {
     isError: isSubjectsError,
     error: subjectsError,
 } = useMySubjectsQuery();
-// const { data: instructorsData, isLoading, isError } = useSubjectInstructorsQuery(selectedSubject);
-// const { data: studentsData } = useSubjectStudentsQuery(selectedSubject);
 let studentsData;
 if (!isEditMode.value) {
     const queryResult = useSubjectStudentsQuery(selectedSubject);
@@ -299,7 +250,7 @@ async function submitForm() {
     };
 
     try {
-        if(isEditMode.value){
+        if (isEditMode.value) {
             try {
                 // const addedFiles = calculateAddedFiles();
                 // const deletedFiles = calculateDeletedFiles();
@@ -307,29 +258,27 @@ async function submitForm() {
                 // Update the project details first
                 await updateProjectMutation.mutateAsync({
                     projectId: projectId.value,
-                    projectData
+                    projectData,
                 });
 
-                // Handle file uploads
-                // if (addedFiles.length > 0) {
-                //     const formData = new FormData();
-                //     addedFiles.forEach(file => formData.append('files[]', file, file.name));
-                //     await uploadProjectFilesMutation.mutateAsync({ projectId: projectId.value, formData });
-                // }
-                //
-                // // Handle file deletions
-                // if (deletedFiles.length > 0) {
-                //     const filesToDelete = deletedFiles.map(file => file.path);
-                //     await deleteProjectFilesMutation.mutateAsync({ projectId: projectId.value, filesToDelete });
-                // }
+                if (files.value.length > 0) {
+                    const formData = new FormData();
+                    files.value.forEach((file) => {
+                        formData.append("files", file);
+                    });
+                    await uploadProjectFilesMutation.mutateAsync({
+                        projectId: projectId.value,
+                        formData,
+                    });
+                    console.log("Files uploaded successfully");
+                }
 
                 console.log("Project and files updated successfully");
             } catch (error) {
                 console.error("Failed to update project and files", error);
                 alert("Failed to update project and files. Please try again.");
             }
-        }
-        else {
+        } else {
             const createdProjectId = await createProjectMutation.mutateAsync(projectData);
             console.log("project created with ID:", createdProjectId);
 
@@ -369,7 +318,10 @@ async function submitForm() {
                 files.value.forEach((file) => {
                     formData.append("files", file);
                 });
-                await uploadProjectFilesMutation.mutateAsync({projectId: createdProjectId, formData});
+                await uploadProjectFilesMutation.mutateAsync({
+                    projectId: createdProjectId,
+                    formData,
+                });
                 console.log("Files uploaded successfully");
             }
         }
@@ -428,7 +380,22 @@ const handleCapacityChange = (newCapacity: number) => {
 }
 
 .quill-editor {
-    /* Add min-height or height as necessary to control the size of the editor */
-    min-height: 150px; /* Example min-height */
+    min-height: 200px; /* Adjust the height as needed */
+    margin-bottom: 2rem; /* Ensures space between the Quill editor and the file display component */
+}
+.file-display-container {
+    padding: 1rem;
+    border-top: 1px solid #e0e0e0; /* Aesthetic top border for separation */
+}
+
+.file-upload-disclaimer {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.custom-alert {
+    background-color: #eef1f5; /* A light grey-blue background */
+    color: #000000; /* Darker text for better readability */
+    border-left: 4px solid #1d357eff; /* A blue left border for emphasis */
 }
 </style>

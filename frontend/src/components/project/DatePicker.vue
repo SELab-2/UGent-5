@@ -35,22 +35,30 @@ const emit = defineEmits(["update:modelValue"]);
 const menuVisible = ref(false);
 const date = ref(new Date(props.modelValue || Date.now())); // Ensures date is always initialized properly
 const time = ref(formatTime(props.modelValue || new Date()));
-watch(() => props.modelValue, (newValue) => {
-    if (newValue) {
-        date.value = new Date(newValue);
-    }
-}, { immediate: true });
+watch(
+    () => props.modelValue,
+    (newValue) => {
+        if (newValue) {
+            date.value = new Date(newValue);
+        }
+    },
+    { immediate: true }
+);
 function formatTime(date: Date): string {
     // Always format based on local time, since that's what users interact with
-    return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+    return `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
 }
 
-watch([date, time], () => {
-    const [hours, minutes] = time.value.split(":").map(Number);
-    const updatedDate = new Date(date.value);
-    updatedDate.setHours(hours, minutes, 0, 0);
-    emit("update:modelValue", new Date(updatedDate)); // Ensure a new Date object is emitted
-}, { deep: true });
+watch(
+    [date, time],
+    () => {
+        const [hours, minutes] = time.value.split(":").map(Number);
+        const updatedDate = new Date(date.value);
+        updatedDate.setHours(hours, minutes, 0, 0);
+        emit("update:modelValue", new Date(updatedDate)); // Ensure a new Date object is emitted
+    },
+    { deep: true }
+);
 
 // Computed to format the display value in the text field
 const displayDate = computed(() => {

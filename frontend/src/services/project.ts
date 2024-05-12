@@ -21,7 +21,10 @@ export async function createProject(projectData: ProjectForm): Promise<number> {
     }
 }
 
-export async function updateProject(projectId: number, projectData: Partial<ProjectForm>): Promise<void> {
+export async function updateProject(
+    projectId: number,
+    projectData: Partial<ProjectForm>
+): Promise<void> {
     const response = await authorized_fetch(`/api/projects/${projectId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -55,22 +58,24 @@ export async function uploadProjectFiles(projectId: number, formData: FormData):
 }
 
 export async function fetchProjectFiles(projectId: number): Promise<any> {
-    return authorized_fetch(
-        `/api/projects/${projectId}/test_files`,
-        {
-            method: "GET"
-        }
-    ).then(response => {
-        return response;
-    }).catch(error => console.error("Failed to fetch project files:", error));
+    return authorized_fetch(`/api/projects/${projectId}/test_files`, {
+        method: "GET",
+    })
+        .then((response) => {
+            return response;
+        })
+        .catch((error) => console.error("Failed to fetch project files:", error));
 }
 
-export async function deleteProjectFiles(projectId: number, filesToDelete: string[]): Promise<void> {
+export async function deleteProjectFiles(
+    projectId: number,
+    filesToDelete: string[]
+): Promise<void> {
     return authorized_fetch(
         `/api/projects/${projectId}/test_files`,
         {
             method: "DELETE",
-            headers: { 'Content-Type': 'application/json' },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ files: filesToDelete }),
         },
         true
