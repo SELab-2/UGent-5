@@ -120,7 +120,7 @@ async def test_capacity_group(client: AsyncClient, group_id: int, db:  AsyncSess
 
     username = "test2"
     token = create_jwt_token(username)
-    await create_user(db, UserCreate(uid=username, given_name="tester", mail="test@test.test"))
+    await create_user(db, UserCreate(uid=username, given_name="tester", surname="testy", mail="test@test.test"))
 
     # Join group
     response = await client.post(f"/api/groups/{group_id}", headers={"Authorization": f"Bearer {token.token}"})
