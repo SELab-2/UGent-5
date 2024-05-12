@@ -10,14 +10,12 @@ import {
     getGroup,
     getProjectGroups,
     getGroupWithProjectId,
-    getSubmissions,
     getUserGroups,
     addToGroup,
     joinGroup,
     leaveGroup,
     removeFromGroup,
 } from "@/services/group";
-import type Submission from "@/models/Submission";
 
 function USER_GROUPS_QUERY_KEY(): string[] {
     return ["groups"];
@@ -29,10 +27,6 @@ function PROJECT_USER_GROUP_QUERY_KEY(projectId: number): (string | number)[] {
 
 function GROUP_QUERY_KEY(groupId: number): (string | number)[] {
     return ["group", groupId];
-}
-
-function submissionsQueryKey(groupId: number): (string | number)[] {
-    return ["submissions", groupId];
 }
 
 function PROJECT_GROUPS_QUERY_KEY(projectId: number): (string | number)[] {
@@ -111,17 +105,6 @@ export function useJoinGroupMutation(): UseMutationReturnType<
             console.error("Error joining group:", error);
             alert("Could not join group. Please try again.");
         },
-    });
-}
-
-// Hook for fetching all submissions belonging to a group
-export function useSubmissionsQuery(
-    groupId: Ref<number | undefined>
-): UseQueryReturnType<Submission[], Error> {
-    return useQuery<Submission[], Error>({
-        queryKey: computed(() => submissionsQueryKey(groupId.value!)),
-        queryFn: () => getSubmissions(groupId.value!),
-        enabled: computed(() => groupId.value !== undefined),
     });
 }
 

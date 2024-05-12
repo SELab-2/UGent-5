@@ -1,5 +1,5 @@
 import { computed, toValue } from "vue";
-import type { MaybeRefOrGetter, MaybeRef } from "vue";
+import type { MaybeRefOrGetter } from "vue";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import type { UseQueryReturnType, UseMutationReturnType } from "@tanstack/vue-query";
 import {
@@ -117,7 +117,7 @@ export function useSubjectProjectsQuery(
 export function useRegisterToSubjectMutation(): UseMutationReturnType<
     Subject,
     Error,
-    MaybeRef<string>,
+    MaybeRefOrGetter<string>,
     void
 > {
     const queryClient = useQueryClient();
