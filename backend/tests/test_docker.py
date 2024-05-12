@@ -73,7 +73,8 @@ async def group_id(request: SubRequest, client: AsyncClient, db: AsyncSession, s
             ]
         else:
             test_files = [
-                ('files', ('Dockerfile', open(test_files_path / "test_files_run_crash/Dockerfile", 'rb'))),
+                ('files', ('Dockerfile', open(test_files_path /
+                 "test_files_run_crash/Dockerfile", 'rb'))),
             ]
 
         response = await client.put(
