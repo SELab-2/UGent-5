@@ -2,8 +2,9 @@ import os
 import shutil
 from pathlib import Path
 
+import docker
 from docker import DockerClient
-from docker.errors import ImageNotFound, APIError
+from docker.errors import APIError
 from docker.models.containers import Container
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -113,7 +114,7 @@ def build_docker_image(path: str, tag: str, client: DockerClient):
 def remove_docker_image_if_exists(tag: str, client: DockerClient):
     try:
         client.images.remove(tag)
-    except ImageNotFound:
+    except docker.errors.NotFound:
         pass
 
     client.images.prune()
