@@ -77,7 +77,7 @@ import { useRoute } from "vue-router";
 import { useSubjectStudentsQuery } from "@/queries/Subject";
 import { useMySubjectsQuery } from "@/queries/User";
 import {
-    useCreateProjectMutation, useProjectFilesQuery,
+    useCreateProjectMutation, useDeleteProjectFilesMutation, useProjectFilesQuery,
     useProjectQuery,
     useUpdateProjectMutation,
     useUploadProjectFilesMutation
@@ -100,6 +100,7 @@ const enrollDeadline = ref(null);
 const selectedGroupProject = ref("student");
 const capacity = ref(1);
 const files = ref<File[]>([]);
+const serverFiles = ref<File[]>([]);
 const quillEditor = ref<typeof QuillEditor | null>(null);
 
 const projectId = ref(route.params.projectId);
@@ -143,12 +144,39 @@ watch(projectData, (project) => {
 }, { deep: true });
 
 watch(filesData, (newFiles) => {
-    if (newFiles) {
-        // Assuming newFiles is an array of File objects or similar
-        // Directly update the files reactive variable to the new list
-        files.value = newFiles;
+    if (newFiles && Array.isArray(newFiles)) {
+        const updatedServerFiles = newFiles.map(fileData => ({
+            name: fileData.filename,
+            path: fileData.path,
+        }));
+        updateFilesBasedOnServerData(updatedServerFiles);
     }
 }, { deep: true });
+
+function updateFilesBasedOnServerData(updatedServerFiles) {
+    const newFiles = updatedServerFiles.filter(sf => !serverFiles.value.some(f => f.path === sf.path));
+    const removedFiles = serverFiles.value.filter(f => !updatedServerFiles.some(sf => sf.path === f.path));
+
+    serverFiles.value = updatedServerFiles; // Update the server files to the latest state
+
+    // Add new files to local files
+    files.value = [...files.value, ...newFiles];
+
+    // Remove deleted files from local files
+    files.value = files.value.filter(f => !removedFiles.some(rf => rf.path === f.path));
+}
+
+
+function calculateAddedFiles() {
+    // Files that are in the local 'files' but not in the 'serverFiles'
+    return files.value.filter(localFile => !serverFiles.value.some(serverFile => serverFile.path === localFile.path));
+}
+
+// Function to find deleted files
+function calculateDeletedFiles() {
+    // Files that are in the 'serverFiles' but not in the local 'files'
+    return serverFiles.value.filter(serverFile => !files.value.some(localFile => localFile.path === serverFile.path));
+}
 
 
 const deadlineModel = computed({
@@ -214,6 +242,7 @@ const createProjectMutation = useCreateProjectMutation();
 const createGroupsMutation = useCreateGroupsMutation();
 const joinGroupMutation = useJoinGroupMutation();
 const uploadProjectFilesMutation = useUploadProjectFilesMutation();
+const deleteProjectFilesMutation = useDeleteProjectFilesMutation();
 const updateProjectMutation = useUpdateProjectMutation();
 
 function handleRadioDateChange(newDate) {
@@ -241,11 +270,33 @@ async function submitForm() {
 
     try {
         if(isEditMode.value){
-            try{
-                updateProjectMutation.mutate({ projectId: projectId.value, projectData });
-            }
-            catch(error){
-                console.log("failed to update project");
+            try {
+                const addedFiles = calculateAddedFiles();
+                const deletedFiles = calculateDeletedFiles();
+
+                // Update the project details first
+                await updateProjectMutation.mutateAsync({
+                    projectId: projectId.value,
+                    projectData
+                });
+
+                // Handle file uploads
+                if (addedFiles.length > 0) {
+                    const formData = new FormData();
+                    addedFiles.forEach(file => formData.append('files[]', file, file.name));
+                    await uploadProjectFilesMutation.mutateAsync({ projectId: projectId.value, formData });
+                }
+
+                // Handle file deletions
+                if (deletedFiles.length > 0) {
+                    const filesToDelete = deletedFiles.map(file => file.path);
+                    await deleteProjectFilesMutation.mutateAsync({ projectId: projectId.value, filesToDelete });
+                }
+
+                console.log("Project and files updated successfully");
+            } catch (error) {
+                console.error("Failed to update project and files", error);
+                alert("Failed to update project and files. Please try again.");
             }
         }
         else {

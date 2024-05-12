@@ -60,8 +60,9 @@ export async function fetchProjectFiles(projectId: number): Promise<any> {
         {
             method: "GET"
         }
-    ).then(response => response.json())
-        .catch(error => console.error("Failed to fetch project files:", error));
+    ).then(response => {
+        return response;
+    }).catch(error => console.error("Failed to fetch project files:", error));
 }
 
 export async function deleteProjectFiles(projectId: number, filesToDelete: string[]): Promise<void> {
