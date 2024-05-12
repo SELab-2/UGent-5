@@ -4,7 +4,7 @@ from pathlib import Path
 
 import docker
 from docker import DockerClient
-from docker.errors import APIError
+from docker.errors import APIError, NotFound
 from docker.models.containers import Container
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -86,7 +86,7 @@ async def launch_docker_tests(
         stdout = None
         stderr = str(e)
 
-    container.remove()
+    container.remove(force=True)
 
     await update_submission_status(
         db, submission_id, status, test_results,
@@ -114,7 +114,7 @@ def build_docker_image(path: str, tag: str, client: DockerClient):
 def remove_docker_image_if_exists(tag: str, client: DockerClient):
     try:
         client.images.remove(tag)
-    except docker.errors.NotFound:
+    except NotFound:
         pass
 
     client.images.prune()
