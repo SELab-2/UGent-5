@@ -73,7 +73,7 @@ async def launch_docker_tests(
     shutil.rmtree(feedback_dir)
 
 
-async def run_docker_tests(image_tag: str, submission_uuid: str, artifact_dir: str, feedback_dir: str, tests_dir: str,
+async def run_docker_tests(image_tag: str, submission_uuid: str, artifact_dir: str, feedback_dir: str, tests_dir: str | None,
                            client: DockerClient) -> DockerResult:
     try:
         container = create_container(
