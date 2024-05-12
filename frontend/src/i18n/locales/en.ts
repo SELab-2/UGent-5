@@ -16,7 +16,7 @@ export default {
         login: "Login",
     },
     home: {
-        welcome: "Welcome {name}",
+        welcome: "Welcome {name} {surname}",
         logout: "Logout",
     },
     submit: {

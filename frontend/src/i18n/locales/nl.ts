@@ -16,7 +16,7 @@ export default {
         login: "Inloggen",
     },
     home: {
-        welcome: "Welkom {name}",
+        welcome: "Welkom {name} {surname}",
         logout: "Uitloggen",
     },
     submit: {
