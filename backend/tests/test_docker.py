@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 import pytest_asyncio
 from httpx import AsyncClient
+from pytest_asyncio.plugin import SubRequest
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import src.docker_tests.utils as docker_utils
@@ -32,118 +33,6 @@ test_files_path = Path(__file__).parent / "docker_test_files"
 
 
 @pytest_asyncio.fixture
-async def project_id(client: AsyncClient, db: AsyncSession, subject_id: int) -> int:
-    """Create new project"""
-    project["subject_id"] = subject_id
-    await set_admin(db, "test", True)
-    response = await client.post("/api/projects/", json=project)
-    await set_admin(db, "test", False)
-    return response.json()["id"]
-
-
-@pytest_asyncio.fixture
-async def project_with_default_tests_id(client: AsyncClient, db: AsyncSession, subject_id: int):
-    """upload test files for project"""
-    project["subject_id"] = subject_id
-    await set_admin(db, "test", True)
-    response = await client.post("/api/projects/", json=project)
-    id = response.json()["id"]
-
-    test_files = [
-        ('files', ('run', open(test_files_path / "test_files/run", 'rb'))),
-        ('files', ('test.py', open(test_files_path / "test_files/test.py", 'rb')))
-    ]
-    response = await client.put(
-        f"/api/projects/{id}/test_files",
-        files=test_files
-    )
-    await set_admin(db, "test", False)
-    assert response.status_code == 200
-    assert response.json()["test_files_uuid"]
-    yield id
-
-    # cleanup project files
-    await set_admin(db, "test", True)
-    response = await client.delete(
-        f"/api/projects/{id}/test_files"
-    )
-    assert response.status_code == 200
-    assert response.json()["test_files_uuid"] is None
-
-
-@pytest_asyncio.fixture
-async def project_with_custom_tests_id(client: AsyncClient, db: AsyncSession, subject_id: int):
-    """upload test files for project"""
-    project["subject_id"] = subject_id
-    await set_admin(db, "test", True)
-    response = await client.post("/api/projects/", json=project)
-    id = response.json()["id"]
-
-    test_files = [
-        ('files', ('tests.zip', open(test_files_path / "test_files_custom/tests.zip", 'rb'))),
-    ]
-    await client.put(
-        f"/api/projects/{id}/test_files",
-        files=test_files
-    )
-    await set_admin(db, "test", False)
-
-    yield id
-
-    # cleanup project files
-    await set_admin(db, "test", True)
-    await client.delete(
-        f"/api/projects/{id}/test_files"
-    )
-
-
-@pytest_asyncio.fixture
-async def project_with_crashing_tests_id(client: AsyncClient, db: AsyncSession, subject_id: int):
-    """upload test files for project"""
-    project["subject_id"] = subject_id
-    await set_admin(db, "test", True)
-    response = await client.post("/api/projects/", json=project)
-    id = response.json()["id"]
-
-    test_files = [
-        ('files', ('Dockerfile', open(test_files_path / "test_files_run_crash/Dockerfile", 'rb'))),
-    ]
-    await client.put(
-        f"/api/projects/{id}/test_files",
-        files=test_files
-    )
-    await set_admin(db, "test", False)
-
-    yield id
-
-    # cleanup project files
-    await set_admin(db, "test", True)
-    await client.delete(
-        f"/api/projects/{id}/test_files"
-    )
-
-
-@pytest_asyncio.fixture
-async def group_id(client: AsyncClient, db: AsyncSession, project_id: int):
-    return await join_group(client, db, project_id)
-
-
-@pytest_asyncio.fixture
-async def group_id_with_default_tests(client: AsyncClient, db: AsyncSession, project_with_default_tests_id: int):
-    return await join_group(client, db, project_with_default_tests_id)
-
-
-@pytest_asyncio.fixture
-async def group_id_with_custom_tests(client: AsyncClient, db: AsyncSession, project_with_custom_tests_id: int):
-    return await join_group(client, db, project_with_custom_tests_id)
-
-
-@pytest_asyncio.fixture
-async def group_id_with_crashing_tests(client: AsyncClient, db: AsyncSession, project_with_crashing_tests_id: int):
-    return await join_group(client, db, project_with_crashing_tests_id)
-
-
-@pytest_asyncio.fixture
 async def cleanup_files(client: AsyncClient, db: AsyncSession):
     async def cleaner(submission_id):
         await set_admin(db, "test", True)
@@ -162,8 +51,55 @@ async def join_group(client: AsyncClient, db: AsyncSession, project_id: int):
     return group_id
 
 
+@pytest_asyncio.fixture
+async def group_id(request: SubRequest, client: AsyncClient, db: AsyncSession, subject_id: int):
+    """upload test files for project"""
+    project["subject_id"] = subject_id
+    await set_admin(db, "test", True)
+    response = await client.post("/api/projects/", json=project)
+    prjct_id = response.json()["id"]
+
+    if request.param is not None:
+        # upload test files if requested by test function
+
+        if request.param == "default":
+            test_files = [
+                ('files', ('run', open(test_files_path / "test_files/run", 'rb'))),
+                ('files', ('test.py', open(test_files_path / "test_files/test.py", 'rb')))
+            ]
+        elif request.param == "custom":
+            test_files = [
+                ('files', ('tests.zip', open(test_files_path / "test_files_custom/tests.zip", 'rb'))),
+            ]
+        else:
+            test_files = [
+                ('files', ('Dockerfile', open(test_files_path / "test_files_run_crash/Dockerfile", 'rb'))),
+            ]
+
+        response = await client.put(
+            f"/api/projects/{prjct_id}/test_files",
+            files=test_files
+        )
+        assert response.status_code == 200
+        assert response.json()["test_files_uuid"]
+
+    await set_admin(db, "test", False)
+
+    yield await join_group(client, db, prjct_id)
+
+    if request.param is not None:
+        # cleanup project files
+        await set_admin(db, "test", True)
+        response = await client.delete(
+            f"/api/projects/{prjct_id}/test_files"
+        )
+        assert response.status_code == 200
+        assert response.json()["test_files_uuid"] is None
+
+
 @pytest.mark.asyncio
-async def test_no_docker_tests(client: AsyncClient, group_id: int, project_id: int, cleanup_files):
+@pytest.mark.parametrize('group_id', [None], indirect=True)
+async def test_no_docker_tests(client: AsyncClient, group_id: int, cleanup_files):
     with open(test_files_path / "submission_files/correct.py", "rb") as f:
         response = await client.post("/api/submissions/",
                                      files={"files": ("correct.py", f)},
@@ -190,37 +126,8 @@ async def test_no_docker_tests(client: AsyncClient, group_id: int, project_id: i
 
 
 @pytest.mark.asyncio
-async def test_default_tests_success(client: AsyncClient, group_id_with_default_tests: int, cleanup_files):
-    await run_tests_success(client, group_id_with_default_tests, cleanup_files)
-
-
-@pytest.mark.asyncio
-async def test_default_tests_failure(client: AsyncClient, group_id_with_default_tests: int, cleanup_files):
-    await run_tests_failure(client, group_id_with_default_tests, cleanup_files)
-
-
-@pytest.mark.asyncio
-async def test_default_tests_crash(client: AsyncClient, group_id_with_default_tests: int, cleanup_files):
-    await run_tests_crash(client, group_id_with_default_tests, cleanup_files)
-
-
-@pytest.mark.asyncio
-async def test_custom_tests_success(client: AsyncClient, group_id_with_custom_tests: int, cleanup_files):
-    await run_tests_success(client, group_id_with_custom_tests, cleanup_files)
-
-
-@pytest.mark.asyncio
-async def test_custom_tests_failure(client: AsyncClient, group_id_with_custom_tests: int, cleanup_files):
-    await run_tests_failure(client, group_id_with_custom_tests, cleanup_files)
-
-
-@pytest.mark.asyncio
-async def test_custom_tests_crash(client: AsyncClient, group_id_with_custom_tests: int, cleanup_files):
-    await run_tests_crash(client, group_id_with_custom_tests, cleanup_files)
-
-
-@pytest.mark.asyncio
-async def run_tests_success(client: AsyncClient, group_id: int, cleanup_files):
+@pytest.mark.parametrize('group_id', ["default", "custom"], indirect=True)
+async def test_success(client: AsyncClient, group_id: int, cleanup_files):
     # make submission
     files = [
         ('files', ('submission.py', open(test_files_path / 'submission_files/correct.py', 'rb'))),
@@ -255,7 +162,8 @@ async def run_tests_success(client: AsyncClient, group_id: int, cleanup_files):
 
 
 @pytest.mark.asyncio
-async def run_tests_failure(client: AsyncClient, group_id: int, cleanup_files):
+@pytest.mark.parametrize('group_id', ["default", "custom"], indirect=True)
+async def test_failure(client: AsyncClient, group_id: int, cleanup_files):
 
     # make submission
     files = [
@@ -290,7 +198,8 @@ async def run_tests_failure(client: AsyncClient, group_id: int, cleanup_files):
 
 
 @pytest.mark.asyncio
-async def run_tests_crash(client: AsyncClient, group_id: int, cleanup_files):
+@pytest.mark.parametrize('group_id', ["default", "custom"], indirect=True)
+async def test_crash(client: AsyncClient, group_id: int, cleanup_files):
     # make submission
     files = [
         ('files', ('submission.py', open(test_files_path / 'submission_files/crashed.py', 'rb'))),
@@ -325,14 +234,15 @@ async def run_tests_crash(client: AsyncClient, group_id: int, cleanup_files):
 
 
 @pytest.mark.asyncio
-async def test_docker_run_crash(client: AsyncClient, group_id_with_crashing_tests, cleanup_files):
+@pytest.mark.parametrize('group_id', ["crash"], indirect=True)
+async def test_docker_run_crash(client: AsyncClient, group_id: int, cleanup_files):
     files = [
         ('files', ('submission.py', open(test_files_path / 'submission_files/correct.py', 'rb'))),
     ]
     response = await client.post("/api/submissions/",
                                  files=files,
                                  data={"remarks": "test"},
-                                 params={"group_id": group_id_with_crashing_tests},
+                                 params={"group_id": group_id},
                                  )
 
     assert response.status_code == 201
