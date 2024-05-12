@@ -33,7 +33,7 @@ onBeforeMount(() => {
     const { storedTheme } = useThemeStore();
     const theme = useTheme();
     locale.value = selectedLocale;
-    theme.global.name.value = storedTheme;
+    // theme.global.name.value = storedTheme;
 });
 </script>
 

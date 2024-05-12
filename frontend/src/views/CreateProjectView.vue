@@ -53,6 +53,11 @@
             </v-col>
         </v-row>
         <v-row>
+            <v-col>
+                <DisplayTestFiles v-if="filesData && filesData.length" :files="filesData" />
+            </v-col>
+        </v-row>
+        <v-row>
             <FilesInput v-model="files" />
         </v-row>
         <v-row>
@@ -87,6 +92,7 @@ import { ref, computed, reactive, watch } from "vue";
 import type User from "@/models/User";
 import type { ProjectForm } from "@/models/Project";
 import type { GroupForm } from "@/models/Group";
+import DisplayTestFiles from "@/components/project/DisplayTestFiles.vue";
 
 const route = useRoute();
 console.log("Route params:", route.params);
@@ -143,40 +149,64 @@ watch(projectData, (project) => {
     }
 }, { deep: true });
 
+// files blijven voorlopig even in comments
 watch(filesData, (newFiles) => {
+    console.log("New files:", newFiles);
     if (newFiles && Array.isArray(newFiles)) {
         const updatedServerFiles = newFiles.map(fileData => ({
             name: fileData.filename,
             path: fileData.path,
+            size: fileData.size  // Assuming size is also available
         }));
-        updateFilesBasedOnServerData(updatedServerFiles);
+
+        //display test files needs to be updated here
+
+        // updateFilesBasedOnServerData(updatedServerFiles);
     }
 }, { deep: true });
 
 function updateFilesBasedOnServerData(updatedServerFiles) {
-    const newFiles = updatedServerFiles.filter(sf => !serverFiles.value.some(f => f.path === sf.path));
-    const removedFiles = serverFiles.value.filter(f => !updatedServerFiles.some(sf => sf.path === f.path));
-
-    serverFiles.value = updatedServerFiles; // Update the server files to the latest state
-
-    // Add new files to local files
-    files.value = [...files.value, ...newFiles];
-
-    // Remove deleted files from local files
-    files.value = files.value.filter(f => !removedFiles.some(rf => rf.path === f.path));
+    serverFiles.value = updatedServerFiles;  // Update the reactive server files
+    console.log(updatedServerFiles);
+    updateDirectoryStructure();
 }
 
 
-function calculateAddedFiles() {
-    // Files that are in the local 'files' but not in the 'serverFiles'
-    return files.value.filter(localFile => !serverFiles.value.some(serverFile => serverFile.path === localFile.path));
+
+function updateDirectoryStructure() {
+    directoryStructure.value = organizeFilesByDirectory(serverFiles.value);
 }
 
-// Function to find deleted files
-function calculateDeletedFiles() {
-    // Files that are in the 'serverFiles' but not in the local 'files'
-    return serverFiles.value.filter(serverFile => !files.value.some(localFile => localFile.path === serverFile.path));
+function organizeFilesByDirectory(files) {
+    const root = {};
+    files.forEach(file => {
+        const parts = file.path.split('/').slice(1);  // Skip the first empty part from split
+        let current = root;
+        parts.forEach((part, index) => {
+            if (index === parts.length - 1) {
+                // Assign the file to the last part
+                current[part] = { ...file };
+            } else {
+                // Create a subdirectory if it doesn't exist
+                current[part] = current[part] || {};
+                current = current[part];
+            }
+        });
+    });
+    return root;
 }
+
+
+// function calculateAddedFiles() {
+//     // Files that are in the local 'files' but not in the 'serverFiles'
+//     return files.value.filter(localFile => !serverFiles.value.some(serverFile => serverFile.path === localFile.path));
+// }
+//
+// // Function to find deleted files
+// function calculateDeletedFiles() {
+//     // Files that are in the 'serverFiles' but not in the local 'files'
+//     return serverFiles.value.filter(serverFile => !files.value.some(localFile => localFile.path === serverFile.path));
+// }
 
 
 const deadlineModel = computed({
@@ -271,8 +301,8 @@ async function submitForm() {
     try {
         if(isEditMode.value){
             try {
-                const addedFiles = calculateAddedFiles();
-                const deletedFiles = calculateDeletedFiles();
+                // const addedFiles = calculateAddedFiles();
+                // const deletedFiles = calculateDeletedFiles();
 
                 // Update the project details first
                 await updateProjectMutation.mutateAsync({
@@ -281,17 +311,17 @@ async function submitForm() {
                 });
 
                 // Handle file uploads
-                if (addedFiles.length > 0) {
-                    const formData = new FormData();
-                    addedFiles.forEach(file => formData.append('files[]', file, file.name));
-                    await uploadProjectFilesMutation.mutateAsync({ projectId: projectId.value, formData });
-                }
-
-                // Handle file deletions
-                if (deletedFiles.length > 0) {
-                    const filesToDelete = deletedFiles.map(file => file.path);
-                    await deleteProjectFilesMutation.mutateAsync({ projectId: projectId.value, filesToDelete });
-                }
+                // if (addedFiles.length > 0) {
+                //     const formData = new FormData();
+                //     addedFiles.forEach(file => formData.append('files[]', file, file.name));
+                //     await uploadProjectFilesMutation.mutateAsync({ projectId: projectId.value, formData });
+                // }
+                //
+                // // Handle file deletions
+                // if (deletedFiles.length > 0) {
+                //     const filesToDelete = deletedFiles.map(file => file.path);
+                //     await deleteProjectFilesMutation.mutateAsync({ projectId: projectId.value, filesToDelete });
+                // }
 
                 console.log("Project and files updated successfully");
             } catch (error) {
