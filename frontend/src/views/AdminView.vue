@@ -36,6 +36,11 @@
                         @update:model-value="() => onToggleAdmin(item)"
                     ></v-checkbox-btn>
                 </template>
+                <template v-slot:[`item.actions`]="{ item }">
+                    <v-icon v-if="item.uid !== currentUser?.uid" @click="() => onDeleteUser(item)">
+                        mdi-delete
+                    </v-icon>
+                </template>
             </v-data-table-virtual>
         </v-card>
     </div>
@@ -48,6 +53,7 @@ import {
     useUsersQuery,
     useToggleAdminMutation,
     useToggleTeacherMutation,
+    useDeleteUserMutation,
 } from "@/queries/User";
 import type User from "@/models/User";
 
@@ -57,6 +63,7 @@ const { data: currentUser, isLoading: isUserLoading } = useUserQuery(null);
 const { data: users, isLoading: isUsersLoading } = useUsersQuery();
 const { mutateAsync: toggleAdmin } = useToggleAdminMutation();
 const { mutateAsync: toggleTeacher } = useToggleTeacherMutation();
+const { mutateAsync: deleteUser } = useDeleteUserMutation();
 
 /**
  * Sorts boolean values in descending order.
@@ -74,6 +81,10 @@ async function onToggleAdmin(user: User) {
 
 async function onToggleTeacher(user: User) {
     await toggleTeacher(user.uid);
+}
+
+async function onDeleteUser(user: User) {
+    await deleteUser(user.uid);
 }
 
 const headers = ref([
@@ -110,6 +121,9 @@ const headers = ref([
         filterable: false,
         filter: () => true, // disable filter
         sort: sortBool,
+    },
+    {
+        key: "actions",
     },
 ]);
 </script>
