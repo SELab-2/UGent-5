@@ -8,14 +8,14 @@ import {
     createGroups,
     deleteGroup,
     getGroup,
-    getGroupsByProjectId,
+    getProjectGroups,
     getGroupWithProjectId,
     getSubmissions,
     getUserGroups,
+    addToGroup,
     joinGroup,
-    joinGroupUser,
-    leaveGroupUser,
-    removeUserFromGroup,
+    leaveGroup,
+    removeFromGroup,
 } from "@/services/group";
 import type Submission from "@/models/Submission";
 
@@ -102,7 +102,7 @@ export function useJoinGroupMutation(): UseMutationReturnType<
 > {
     const queryClient = useQueryClient();
     return useMutation<void, Error, { groupId: number; uid: string }, void>({
-        mutationFn: ({ groupId, uid }) => joinGroup(groupId, uid), // Call the joinGroup service function
+        mutationFn: ({ groupId, uid }) => addToGroup(groupId, uid), // Call the joinGroup service function
         onSuccess: () => {
             queryClient.invalidateQueries(/* specify the relevant query key */);
             console.log("Successfully joined group");
@@ -130,7 +130,7 @@ export function useProjectGroupsQuery(
 ): UseQueryReturnType<Group[], Error> {
     return useQuery<Group[], Error>({
         queryKey: computed(() => PROJECT_GROUPS_QUERY_KEY(projectId.value!)),
-        queryFn: () => getGroupsByProjectId(projectId.value!),
+        queryFn: () => getProjectGroups(projectId.value!),
         enabled: computed(() => projectId.value !== undefined),
     });
 }
@@ -143,7 +143,7 @@ export function useJoinGroupUserMutation(): UseMutationReturnType<
 > {
     const queryClient = useQueryClient();
     return useMutation<Group, Error, { groupId: number }, void>({
-        mutationFn: ({ groupId }) => joinGroupUser(groupId), // Call the joinGroup service function
+        mutationFn: ({ groupId }) => joinGroup(groupId), // Call the joinGroup service function
         onSuccess: () => {
             queryClient.invalidateQueries(/* specify the relevant query key */);
             console.log("Successfully joined group");
@@ -163,7 +163,7 @@ export function useLeaveGroupUserMutation(): UseMutationReturnType<
 > {
     const queryClient = useQueryClient();
     return useMutation<Group, Error, { groupId: number }, void>({
-        mutationFn: ({ groupId }) => leaveGroupUser(groupId), // Call the joinGroup service function
+        mutationFn: ({ groupId }) => leaveGroup(groupId), // Call the joinGroup service function
         onSuccess: () => {
             queryClient.invalidateQueries(/* specify the relevant query key */);
             console.log("Successfully left group");
@@ -183,7 +183,7 @@ export function useRemoveUserFromGroupMutation(): UseMutationReturnType<
 > {
     const queryClient = useQueryClient();
     return useMutation<Group, Error, { groupId: number; uid: string }, void>({
-        mutationFn: ({ groupId, uid }) => removeUserFromGroup(groupId, uid), // Call the joinGroup service function
+        mutationFn: ({ groupId, uid }) => removeFromGroup(groupId, uid), // Call the joinGroup service function
         onSuccess: () => {
             queryClient.invalidateQueries(/* specify the relevant query key */);
             console.log("Successfully removed from group");
