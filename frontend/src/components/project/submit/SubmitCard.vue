@@ -1,32 +1,14 @@
 <template>
-    <v-card>
-        <v-card-item>
-            <v-card-title>{{ $t("submit.submit_title") }}</v-card-title>
-        </v-card-item>
+    <v-card variant="flat">
+        <h1>{{ $t("submit.submit_title") }}</h1>
         <h1 v-if="isError">Error</h1>
-        <v-container v-else class="card-container">
-            <v-row>
-                <v-col>
-                    <v-skeleton-loader :loading="isLoading" type="article">
-                        <ProjectMiniCard :project="project!" />
-                    </v-skeleton-loader>
-                </v-col>
-                <v-spacer />
-                <v-spacer />
-            </v-row>
-            <v-row>
-                <v-col>
-                    <h1>
-                        {{ $t("submit.add_files") }}
-                    </h1>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col>
-                    <SubmitForm :projectId="projectId" />
-                </v-col>
-            </v-row>
-        </v-container>
+        <v-skeleton-loader :loading="isLoading" type="article">
+            <ProjectMiniCard :project="project!" class="minicard" />
+        </v-skeleton-loader>
+        <h2>
+            {{ $t("submit.files") }}
+        </h2>
+        <SubmitForm :projectId="projectId" class="submitform" />
     </v-card>
 </template>
 
@@ -46,7 +28,11 @@ const { data: project, isLoading, isError } = useProjectQuery(projectId);
 </script>
 
 <style scoped>
-.card-container {
-    background-color: var(--gray-8);
+.minicard {
+    margin: 15px 0 30px 0;
+    width: 500px;
+}
+.submitform {
+    margin-top: 15px;
 }
 </style>

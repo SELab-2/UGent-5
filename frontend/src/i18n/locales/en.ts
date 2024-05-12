@@ -16,14 +16,14 @@ export default {
         login: "Login",
     },
     home: {
-        welcome: "Welcome {name}",
+        welcome: "Welcome {name} {surname}",
         logout: "Logout",
     },
     submit: {
         submit_title: "Submit solution",
         submit_button: "Submit",
         remarks: "Remarks",
-        add_files: "Add files",
+        files: "Files",
         add_files_button: "Add files",
         no_files_added: "No files have been added yet.",
         no_files_warning: "Please add at least one file to submit a solution.",
@@ -58,6 +58,7 @@ export default {
         not_found: "No projects found.",
         archived: "Archived",
         not_finished: "Not Finished",
+        not_found2: "Project not found",
     },
     navigation: {
         home: "Home",
@@ -76,6 +77,7 @@ export default {
     },
     admin: {
         users: "Users",
+        search: "Search",
         userTable: {
             name: "Name",
             uid: "UGent ID",
@@ -103,5 +105,18 @@ export default {
     },
     subjects: {
         title: "My Subjects",
+    },
+    group: {
+        not_found: "Group not found",
+        not_found2: "No groups found",
+        groups: "Groups:",
+        members: "Members:",
+        actions: "Actions:",
+        no_members_found: "No members found.",
+        remove: "Remove",
+        join_group: "Join group",
+        leave_group: "Leave group",
+        remove_group: "Delete group",
+        create_group: "New group",
     },
 };

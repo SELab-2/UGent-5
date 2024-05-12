@@ -6,11 +6,16 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { computed } from "vue";
 import {
     createGroups,
+    deleteGroup,
     getGroup,
+    getGroupsByProjectId,
     getGroupWithProjectId,
     getSubmissions,
     getUserGroups,
     joinGroup,
+    joinGroupUser,
+    leaveGroupUser,
+    removeUserFromGroup,
 } from "@/services/group";
 import type Submission from "@/models/Submission";
 
@@ -28,6 +33,10 @@ function GROUP_QUERY_KEY(groupId: number): (string | number)[] {
 
 function submissionsQueryKey(groupId: number): (string | number)[] {
     return ["submissions", groupId];
+}
+
+function PROJECT_GROUPS_QUERY_KEY(projectId: number): (string | number)[] {
+    return ["projectGroups", projectId];
 }
 
 export function useGroupQuery(groupId: Ref<number | undefined>): UseQueryReturnType<Group, Error> {
@@ -113,5 +122,95 @@ export function useSubmissionsQuery(
         queryKey: computed(() => submissionsQueryKey(groupId.value!)),
         queryFn: () => getSubmissions(groupId.value!),
         enabled: computed(() => groupId.value !== undefined),
+    });
+}
+
+export function useProjectGroupsQuery(
+    projectId: Ref<number | undefined>
+): UseQueryReturnType<Group[], Error> {
+    return useQuery<Group[], Error>({
+        queryKey: computed(() => PROJECT_GROUPS_QUERY_KEY(projectId.value!)),
+        queryFn: () => getGroupsByProjectId(projectId.value!),
+        enabled: computed(() => projectId.value !== undefined),
+    });
+}
+
+export function useJoinGroupUserMutation(): UseMutationReturnType<
+    Group,
+    Error,
+    { groupId: number },
+    void
+> {
+    const queryClient = useQueryClient();
+    return useMutation<Group, Error, { groupId: number }, void>({
+        mutationFn: ({ groupId }) => joinGroupUser(groupId), // Call the joinGroup service function
+        onSuccess: () => {
+            queryClient.invalidateQueries(/* specify the relevant query key */);
+            console.log("Successfully joined group");
+        },
+        onError: (error) => {
+            console.error("Error joining group:", error);
+            alert("Could not join group. Please try again.");
+        },
+    });
+}
+
+export function useLeaveGroupUserMutation(): UseMutationReturnType<
+    Group,
+    Error,
+    { groupId: number },
+    void
+> {
+    const queryClient = useQueryClient();
+    return useMutation<Group, Error, { groupId: number }, void>({
+        mutationFn: ({ groupId }) => leaveGroupUser(groupId), // Call the joinGroup service function
+        onSuccess: () => {
+            queryClient.invalidateQueries(/* specify the relevant query key */);
+            console.log("Successfully left group");
+        },
+        onError: (error) => {
+            console.error("Error leaving group:", error);
+            alert("Could not leave group. Please try again.");
+        },
+    });
+}
+
+export function useRemoveUserFromGroupMutation(): UseMutationReturnType<
+    Group,
+    Error,
+    { groupId: number; uid: string },
+    void
+> {
+    const queryClient = useQueryClient();
+    return useMutation<Group, Error, { groupId: number; uid: string }, void>({
+        mutationFn: ({ groupId, uid }) => removeUserFromGroup(groupId, uid), // Call the joinGroup service function
+        onSuccess: () => {
+            queryClient.invalidateQueries(/* specify the relevant query key */);
+            console.log("Successfully removed from group");
+        },
+        onError: (error) => {
+            console.error("Error removing from group:", error);
+            alert("Could not remove from group. Please try again.");
+        },
+    });
+}
+
+export function useRemoveGroupMutation(): UseMutationReturnType<
+    Group,
+    Error,
+    { groupId: number },
+    void
+> {
+    const queryClient = useQueryClient();
+    return useMutation<Group, Error, { groupId: number }, void>({
+        mutationFn: ({ groupId }) => deleteGroup(groupId), // Call the joinGroup service function
+        onSuccess: () => {
+            queryClient.invalidateQueries(/* specify the relevant query key */);
+            console.log("Successfully removed from group");
+        },
+        onError: (error) => {
+            console.error("Error removing from group:", error);
+            alert("Could not remove from group. Please try again.");
+        },
     });
 }
