@@ -1,6 +1,5 @@
 import type Group from "@/models/Group";
 import type { GroupForm } from "@/models/Group";
-import type Submission from "@/models/Submission";
 import { authorized_fetch } from "@/services/index";
 
 /**
@@ -90,9 +89,4 @@ export async function removeFromGroup(groupId: number, uid: string): Promise<voi
  */
 export async function deleteGroup(groupId: number): Promise<void> {
     return authorized_fetch(`/api/groups/${groupId}`, { method: "DELETE" });
-}
-
-// TODO: Add to submission service
-export async function getSubmissions(groupId: number): Promise<Submission[]> {
-    return authorized_fetch(`/api/groups/${groupId}/submissions`, { method: "GET" });
 }
