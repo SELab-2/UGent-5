@@ -60,6 +60,7 @@ export default {
         archived: "Archived",
         not_finished: "Not Finished",
         not_found2: "Project not found",
+        to_subject: "To subject",
     },
     navigation: {
         home: "Home",

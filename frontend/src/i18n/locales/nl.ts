@@ -60,6 +60,7 @@ export default {
         archived: "Gearchiveerd",
         not_finished: "Onafgewerkt",
         not_found2: "Project niet teruggevonden",
+        to_subject: "Naar vak",
     },
     navigation: {
         home: "Hoofdscherm",

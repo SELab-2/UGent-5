@@ -1,7 +1,7 @@
 <template>
     <router-link :to="`/subjects/${project!.subject_id}`">
         <v-btn class="group-button" prepend-icon="mdi-arrow-left">
-            {{ $t("default.to") + subject!.name }}
+            {{ $t("project.to_subject") }}
         </v-btn>
     </router-link>
     <router-link v-if="group && !isSoloProject && !isTeacher" :to="`/groups/${group!.id}`">
@@ -59,7 +59,7 @@ const isSoloProject = computed(() => project.value.capacity === 1);
 <style scoped>
 .group-button {
     margin-bottom: 5px;
-    min-width: auto;
+    min-width: 150px;
     background-color: rgb(var(--v-theme-primary));
     color: rgb(var(--v-theme-navtext));
 }
