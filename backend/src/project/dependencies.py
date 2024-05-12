@@ -22,7 +22,6 @@ async def retrieve_project(project_id: int,
 
 
 async def retrieve_test_files_uuid(project: Project = Depends(retrieve_project)):
-    print(project.test_files_uuid)
     if project.test_files_uuid is None:
         raise TestsNotFound
     return project.test_files_uuid

@@ -20,7 +20,6 @@ const props = defineProps({
 });
 
 const tree = ref([]);
-const initiallyOpen = ref([]); // Set specific paths if needed
 const treeItems = computed(() => {
     const rootNode = {};
     props.files.forEach((file) => {
@@ -77,18 +76,15 @@ const icons = ref({
     png: "mdi-file-image",
     txt: "mdi-file-document-outline",
     xls: "mdi-file-excel",
-    folder: "mdi-folder", // Closed folder icon
-    folderOpen: "mdi-folder-open", // Open folder icon
+    folder: "mdi-folder",
+    folderOpen: "mdi-folder-open",
 });
 
 function getFileIcon(filename) {
-    // Check if the filename has a file extension
     const extension = filename.split(".").pop();
     if (extension === filename) {
-        // No extension, likely a folder
         return "mdi-folder";
     } else {
-        // It's a file, get the corresponding icon
         return icons.value[extension] || "mdi-file";
     }
 }

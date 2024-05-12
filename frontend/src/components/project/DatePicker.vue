@@ -31,9 +31,8 @@ const props = defineProps<{
 }>();
 const emit = defineEmits(["update:modelValue"]);
 
-// Local reactive state for date and time
 const menuVisible = ref(false);
-const date = ref(new Date(props.modelValue || Date.now())); // Ensures date is always initialized properly
+const date = ref(new Date(props.modelValue || Date.now()));
 const time = ref(formatTime(props.modelValue || new Date()));
 watch(
     () => props.modelValue,
@@ -45,7 +44,6 @@ watch(
     { immediate: true }
 );
 function formatTime(date: Date): string {
-    // Always format based on local time, since that's what users interact with
     return `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
 }
 
@@ -55,18 +53,16 @@ watch(
         const [hours, minutes] = time.value.split(":").map(Number);
         const updatedDate = new Date(date.value);
         updatedDate.setHours(hours, minutes, 0, 0);
-        emit("update:modelValue", new Date(updatedDate)); // Ensure a new Date object is emitted
+        emit("update:modelValue", new Date(updatedDate));
     },
     { deep: true }
 );
 
-// Computed to format the display value in the text field
 const displayDate = computed(() => {
     if (date.value && time.value) {
         const selectedDate = new Date(date.value);
         const [hours, minutes] = time.value.split(":").map(Number);
         selectedDate.setHours(hours, minutes);
-        // Format manually to avoid timezone conversion issues
         return `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, "0")}-${selectedDate.getDate().toString().padStart(2, "0")} ${selectedDate.getHours().toString().padStart(2, "0")}:${selectedDate.getMinutes().toString().padStart(2, "0")}`;
     }
     return "";

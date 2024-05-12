@@ -15,7 +15,6 @@
                 v-model="radio_date"
                 label="Group Selection Deadline"
             ></DatePicker>
-            <!-- Numeric input for Capacity -->
             <v-text-field
                 v-if="selectedOption === 'student' || selectedOption === 'random'"
                 v-model="capacity"

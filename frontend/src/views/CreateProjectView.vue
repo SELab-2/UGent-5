@@ -77,6 +77,12 @@
                 <v-btn @click="submitForm">Submit</v-btn>
             </v-col>
         </v-row>
+        <v-alert v-model="showErrorAlert" type="error" dense dismissible :value="true">
+            {{ errorMessage }}
+        </v-alert>
+        <v-alert v-model="showSuccessAlert" type="success" dense dismissible :value="true">
+            {{ successMessage }}
+        </v-alert>
     </v-container>
 </template>
 
@@ -118,8 +124,11 @@ const enrollDeadline = ref(null);
 const selectedGroupProject = ref("student");
 const capacity = ref(1);
 const files = ref<File[]>([]);
-const serverFiles = ref<File[]>([]);
 const quillEditor = ref<typeof QuillEditor | null>(null);
+const showErrorAlert = ref(false);
+const showSuccessAlert = ref(false);
+const errorMessage = ref("");
+const successMessage = ref("");
 
 const projectId = ref(route.params.projectId);
 const isEditMode = computed(() => projectId.value !== undefined);
@@ -149,13 +158,13 @@ watch(
             project_title.value = project.name;
             deadline.value = new Date(project.deadline);
             publishDate.value = new Date(project.publish_date);
-            const description = project.description; // Assuming this is already proper HTML
+            const description = project.description;
 
             nextTick(() => {
                 if (quillEditor.value && quillEditor.value.getQuill) {
                     let quill = quillEditor.value.getQuill();
-                    quill.root.innerHTML = ""; // Clear existing content
-                    quill.clipboard.dangerouslyPasteHTML(description); // Paste new HTML
+                    quill.root.innerHTML = "";
+                    quill.clipboard.dangerouslyPasteHTML(description);
                 } else {
                     console.error("Quill Editor is not initialized");
                 }
@@ -237,7 +246,7 @@ async function submitForm() {
         ? null
         : enrollDeadline.value.toISOString();
 
-    const projectData: ProjectForm = {
+    const projectData = {
         name: project_title.value,
         deadline: formattedDeadline,
         description: quillEditor.value?.getQuill().root.innerHTML || "",
@@ -252,10 +261,6 @@ async function submitForm() {
     try {
         if (isEditMode.value) {
             try {
-                // const addedFiles = calculateAddedFiles();
-                // const deletedFiles = calculateDeletedFiles();
-
-                // Update the project details first
                 await updateProjectMutation.mutateAsync({
                     projectId: projectId.value,
                     projectData,
@@ -270,20 +275,19 @@ async function submitForm() {
                         projectId: projectId.value,
                         formData,
                     });
-                    console.log("Files uploaded successfully");
                 }
 
-                console.log("Project and files updated successfully");
+                successMessage.value = "Project and files updated successfully";
+                showSuccessAlert.value = true;
             } catch (error) {
                 console.error("Failed to update project and files", error);
-                alert("Failed to update project and files. Please try again.");
+                errorMessage.value = "Failed to update project and files. Please try again.";
+                showErrorAlert.value = true;
             }
         } else {
             const createdProjectId = await createProjectMutation.mutateAsync(projectData);
-            console.log("project created with ID:", createdProjectId);
-
             if (selectedGroupProject.value === "student") {
-                const emptyGroup: GroupForm = {
+                const emptyGroup = {
                     project_id: createdProjectId,
                     score: 0,
                     team_name: "Group 1",
@@ -313,6 +317,7 @@ async function submitForm() {
                     });
                 });
             }
+
             if (files.value.length > 0) {
                 const formData = new FormData();
                 files.value.forEach((file) => {
@@ -322,11 +327,14 @@ async function submitForm() {
                     projectId: createdProjectId,
                     formData,
                 });
-                console.log("Files uploaded successfully");
+                successMessage.value += " and files uploaded successfully.";
+                showSuccessAlert.value = true;
             }
         }
     } catch (error) {
         console.error("Error during project or group creation or file upload:", error);
+        errorMessage.value = "An unexpected error occurred. Please try again.";
+        showErrorAlert.value = true;
     }
 }
 
@@ -376,16 +384,12 @@ const handleCapacityChange = (newCapacity: number) => {
 }
 
 .v-row:not(:last-child) {
-    margin-bottom: 16px; /* Adjust as needed */
+    margin-bottom: 16px;
 }
 
 .quill-editor {
-    min-height: 200px; /* Adjust the height as needed */
-    margin-bottom: 2rem; /* Ensures space between the Quill editor and the file display component */
-}
-.file-display-container {
-    padding: 1rem;
-    border-top: 1px solid #e0e0e0; /* Aesthetic top border for separation */
+    min-height: 200px;
+    margin-bottom: 2rem;
 }
 
 .file-upload-disclaimer {
@@ -394,8 +398,8 @@ const handleCapacityChange = (newCapacity: number) => {
 }
 
 .custom-alert {
-    background-color: #eef1f5; /* A light grey-blue background */
-    color: #000000; /* Darker text for better readability */
-    border-left: 4px solid #1d357eff; /* A blue left border for emphasis */
+    background-color: #eef1f5;
+    color: #000000;
+    border-left: 4px solid #1d357eff;
 }
 </style>
