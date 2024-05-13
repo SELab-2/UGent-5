@@ -31,6 +31,7 @@ export default {
         latest_submission: "Latest submission:",
         new_submission: "Submit new",
         status_submission: "Submission is: {status}",
+        no_submission_files: "No submissions found",
     },
     submission: {
         status: "Submission status:",
@@ -59,6 +60,7 @@ export default {
         archived: "Archived",
         not_finished: "Not Finished",
         not_found2: "Project not found",
+        to_subject: "To subject",
     },
     navigation: {
         home: "Home",

@@ -2,7 +2,7 @@ import {mount} from "@vue/test-utils";
 import {expect, describe, it, vi} from "vitest";
 import FilesInput from "@/components/form_elements/FilesInput.vue"
 
-describe("SubmitCard", async () => {
+describe("FilesInput", async () => {
     const wrapper = mount(FilesInput, {});
     it("render button", () => {
         const VButton = wrapper.findComponent({name: 'VBtn'})

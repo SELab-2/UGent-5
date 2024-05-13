@@ -1,22 +1,21 @@
 <template>
     <v-container>
-        <v-card color="white" class="infostyling">
+        <v-card class="projectCard" variant="flat">
             <v-card-title>{{ project.name }}</v-card-title>
             <v-card-item>
-                <v-chip label color="primary" class="ma-2" prepend-icon="mdi-calendar">
+                <v-chip label class="ma-2" prepend-icon="mdi-calendar">
                     {{ $d(project.deadline, "long") }}
                 </v-chip>
-                <v-chip label color="primary" class="ma-2" prepend-icon="mdi-school">
+                <v-chip label class="ma-2" prepend-icon="mdi-school">
                     {{ subject.name }}
                 </v-chip>
-                <v-chip label color="primary" class="ma-2" prepend-icon="mdi-account-group">
+                <v-chip label class="ma-2" prepend-icon="mdi-account-group">
                     {{ $t("project.capacity_group") + project.capacity }}
                 </v-chip>
                 <v-chip
                     v-for="instructor in instructors"
                     :key="instructor?.uid"
                     label
-                    color="primary"
                     class="ma-2"
                     prepend-icon="mdi-account"
                 >
@@ -63,5 +62,9 @@ const renderQuillContent = (content: string) => {
 .submitInfo {
     padding: 10px;
     margin-top: 20px;
+}
+
+.projectCard {
+    background-color: rgb(var(--v-theme-secondary));
 }
 </style>
