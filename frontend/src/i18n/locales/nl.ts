@@ -31,6 +31,7 @@ export default {
         latest_submission: "Laatste indiening:",
         new_submission: "Nieuwe indiening",
         status_submission: "Indiening is: {status}",
+        no_submission_files: "Geen indieningen gevonden",
     },
     submission: {
         status: "Indiening status: {status}",
@@ -59,6 +60,7 @@ export default {
         archived: "Gearchiveerd",
         not_finished: "Onafgewerkt",
         not_found2: "Project niet teruggevonden",
+        to_subject: "Naar vak",
     },
     navigation: {
         home: "Hoofdscherm",
