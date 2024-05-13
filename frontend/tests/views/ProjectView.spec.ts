@@ -18,7 +18,8 @@ vi.mock('@/queries/Project', () => ({
     useProjectQuery: vi.fn(() => testProjectQuery),
 }));
 
-const testUserGroupQuery = {
+const testProjectGroupsQuery = {
+    data: ref([]),
     isLoading: ref(true),
     isError: ref(true),
     setIsError(value){
@@ -30,7 +31,7 @@ const testUserGroupQuery = {
 };
 
 vi.mock('@/queries/Group', () => ({
-    useUserGroupQuery: vi.fn(() => testUserGroupQuery),
+    useProjectGroupsQuery: vi.fn(() => testProjectGroupsQuery),
 }));
 
 const testSubjectQuery = {
@@ -84,7 +85,7 @@ describe("ProjectView", async () => {
     it("render if error", async () => {
         testProjectQuery.setIsLoading(false)
         testSubjectQuery.setIsLoading(false)
-        testUserGroupQuery.setIsLoading(false)
+        testProjectGroupsQuery.setIsLoading(false)
         testSubjectInstructorsQuery.setIsLoading(false)
         await wrapper.vm.$nextTick();
         expect(wrapper.text()).toContain("Project niet teruggevonden")
@@ -92,7 +93,7 @@ describe("ProjectView", async () => {
     it("render projectinfo", async () => {
         testProjectQuery.setIsError(false)
         testSubjectQuery.setIsError(false)
-        testUserGroupQuery.setIsError(false)
+        testProjectGroupsQuery.setIsError(false)
         testSubjectInstructorsQuery.setIsError(false)
         await wrapper.vm.$nextTick();
         expect(wrapper.findComponent('.projectInfoComponent').exists()).toBeTruthy()
