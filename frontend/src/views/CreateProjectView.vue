@@ -98,7 +98,7 @@ import {
     useSubjectStudentsQuery,
 } from "@/queries/Subject";
 import { useCreateProjectMutation } from "@/queries/Project";
-import { useCreateGroupsMutation, useJoinGroupMutation } from "@/queries/Group";
+import { useCreateGroupsMutation, useAddToGroupMutation } from "@/queries/Group";
 import { ref, computed, reactive } from "vue";
 import type User from "@/models/User";
 import type { ProjectForm } from "@/models/Project";
@@ -145,7 +145,7 @@ const groupProjectOptions = [
 
 const createProjectMutation = useCreateProjectMutation();
 const createGroupsMutation = useCreateGroupsMutation();
-const joinGroupMutation = useJoinGroupMutation();
+const joinGroupMutation = useAddToGroupMutation();
 
 async function submitForm() {
     const projectData: ProjectForm = {

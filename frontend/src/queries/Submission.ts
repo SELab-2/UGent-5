@@ -1,14 +1,9 @@
-import type Submission from "@/models/Submission";
-import { createSubmission, getFiles, getSubmission, getSubmissions } from "@/services/submission";
-import type { MaybeRefOrGetter } from "vue";
 import { computed, toValue } from "vue";
-import {
-    useQuery,
-    useQueryClient,
-    useMutation,
-    type UseMutationReturnType,
-    type UseQueryReturnType,
-} from "@tanstack/vue-query";
+import type { MaybeRefOrGetter } from "vue";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/vue-query";
+import type { UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-query";
+import { createSubmission, getFiles, getSubmission, getSubmissions } from "@/services/submission";
+import type Submission from "@/models/Submission";
 import type FileInfo from "@/models/File";
 
 function SUBMISSION_QUERY_KEY(submissionId: number): (string | number)[] {

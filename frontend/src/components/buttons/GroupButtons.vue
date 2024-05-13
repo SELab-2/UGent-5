@@ -18,7 +18,7 @@ import { computed, toRefs } from "vue";
 import {
     useJoinGroupUserMutation,
     useLeaveGroupUserMutation,
-    useRemoveGroupMutation,
+    useDeleteGroupMutation,
     useUserGroupsQuery,
 } from "@/queries/Group";
 
@@ -63,7 +63,7 @@ const { mutateAsync: leaveGroup } = useLeaveGroupUserMutation();
 
 const { mutateAsync: joinGroup } = useJoinGroupUserMutation();
 
-const { mutateAsync: removeGroup } = useRemoveGroupMutation();
+const { mutateAsync: removeGroup } = useDeleteGroupMutation();
 </script>
 
 <style scoped></style>

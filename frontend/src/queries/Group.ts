@@ -1,11 +1,12 @@
+import { computed, toValue } from "vue";
+import type { MaybeRefOrGetter } from "vue";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
+import type { UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-query";
 import type Group from "@/models/Group";
 import type { GroupForm } from "@/models/Group";
-import type { Ref } from "vue";
-import type { UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-query";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { computed } from "vue";
 import {
     createGroups,
+    createGroup,
     deleteGroup,
     getGroup,
     getProjectGroups,
@@ -16,14 +17,7 @@ import {
     leaveGroup,
     removeFromGroup,
 } from "@/services/group";
-
-function USER_GROUPS_QUERY_KEY(): string[] {
-    return ["groups"];
-}
-
-function PROJECT_USER_GROUP_QUERY_KEY(projectId: number): (string | number)[] {
-    return ["group", "project", projectId];
-}
+import { useCurrentUserQuery } from "@/queries/User";
 
 function GROUP_QUERY_KEY(groupId: number): (string | number)[] {
     return ["group", groupId];
@@ -33,18 +27,41 @@ function PROJECT_GROUPS_QUERY_KEY(projectId: number): (string | number)[] {
     return ["projectGroups", projectId];
 }
 
-export function useGroupQuery(groupId: Ref<number | undefined>): UseQueryReturnType<Group, Error> {
+function USER_GROUPS_QUERY_KEY(): string[] {
+    return ["groups"];
+}
+
+function PROJECT_USER_GROUP_QUERY_KEY(projectId: number): (string | number)[] {
+    return ["group", "project", projectId];
+}
+
+/**
+ * Query composable for fetching a group by id
+ */
+export function useGroupQuery(
+    groupId: MaybeRefOrGetter<number | undefined>
+): UseQueryReturnType<Group, Error> {
     return useQuery<Group, Error>({
-        queryKey: GROUP_QUERY_KEY(groupId.value!),
-        queryFn: () => getGroup(groupId.value!),
-        enabled: computed(() => groupId.value !== undefined),
+        queryKey: GROUP_QUERY_KEY(toValue(groupId)!),
+        queryFn: () => getGroup(toValue(groupId)!),
+        enabled: () => !!toValue(groupId),
     });
 }
 
 /**
- * Get all groups of the current user
- * @returns An array of Group objects
+ * Query composable for fetching all groups of a project
  */
+export function useProjectGroupsQuery(
+    projectId: MaybeRefOrGetter<number | undefined>
+): UseQueryReturnType<Group[], Error> {
+    return useQuery<Group[], Error>({
+        queryKey: computed(() => PROJECT_GROUPS_QUERY_KEY(toValue(projectId)!)),
+        queryFn: () => getProjectGroups(toValue(projectId)!),
+        enabled: !!toValue(projectId),
+    });
+}
+
+// TODO: figure out why this is needed
 export function useUserGroupsQuery(): UseQueryReturnType<Group[], Error> {
     return useQuery<Group[], Error>({
         queryKey: USER_GROUPS_QUERY_KEY(),
@@ -53,21 +70,45 @@ export function useUserGroupsQuery(): UseQueryReturnType<Group[], Error> {
 }
 
 /**
- * Get the group of the current user for a given project
- * @returns The group object, or null if the user is not in a group for this project
- * @param projectId The id of the project
+ * Query composable for fetching the group a user is in for a project
+ * TODO: probably not needed and can be done better
  */
-export function useUserGroupQuery(
-    projectId: Ref<number | undefined>
+export function useProjectGroupQuery(
+    projectId: MaybeRefOrGetter<number | undefined>
 ): UseQueryReturnType<Group | null, Error> {
     const { data: groups } = useUserGroupsQuery();
     return useQuery<Group | null, Error>({
-        queryKey: computed(() => PROJECT_USER_GROUP_QUERY_KEY(projectId.value!)),
-        queryFn: () => getGroupWithProjectId(groups.value!, projectId.value!),
-        enabled: computed(() => groups.value !== undefined),
+        queryKey: computed(() => PROJECT_USER_GROUP_QUERY_KEY(toValue(projectId)!)),
+        queryFn: () => getGroupWithProjectId(groups.value!, toValue(projectId)!),
+        enabled: !!toValue(projectId) && groups.value !== undefined,
     });
 }
 
+/**
+ * Mutation composable for creating a group for a project
+ */
+export function useCreateGroupMutation(): UseMutationReturnType<
+    Group,
+    Error,
+    { group: GroupForm },
+    void
+> {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: ({ group }) => createGroup(group.project_id, group),
+        onSuccess: (_, { group }) => {
+            queryClient.invalidateQueries({ queryKey: PROJECT_GROUPS_QUERY_KEY(group.project_id) });
+        },
+        onError: () => {
+            alert("Could not create group. Please try again.");
+        },
+    });
+}
+
+/**
+ * Mutation composable for creating groups
+ * TODO: should not be necessary
+ */
 export function useCreateGroupsMutation(): UseMutationReturnType<
     Group[],
     Error,
@@ -88,111 +129,166 @@ export function useCreateGroupsMutation(): UseMutationReturnType<
     });
 }
 
-export function useJoinGroupMutation(): UseMutationReturnType<
+/**
+ * Mutation composable for adding a user to a group
+ */
+export function useAddToGroupMutation(): UseMutationReturnType<
     void,
     Error,
     { groupId: number; uid: string },
-    void
+    { previousGroup: Group }
 > {
     const queryClient = useQueryClient();
-    return useMutation<void, Error, { groupId: number; uid: string }, void>({
-        mutationFn: ({ groupId, uid }) => addToGroup(groupId, uid), // Call the joinGroup service function
-        onSuccess: () => {
-            queryClient.invalidateQueries(/* specify the relevant query key */);
-            console.log("Successfully joined group");
+    return useMutation({
+        mutationFn: ({ groupId, uid }) => addToGroup(groupId, uid),
+        onMutate: ({ groupId, uid }) => {
+            const previousGroup = queryClient.getQueryData<Group>(GROUP_QUERY_KEY(groupId));
+            // TODO: this is a placeholder and should be replaced with the
+            // actual user data, but query structure does not support this
+            // currently
+            const newGroup = { ...previousGroup! };
+            newGroup.members.push({
+                uid,
+                given_name: "placeholder",
+                surname: "placeholder",
+                mail: "placeholder",
+                is_teacher: false,
+                is_admin: false,
+            });
+            queryClient.setQueryData<Group>(GROUP_QUERY_KEY(groupId), newGroup);
+            return { previousGroup: previousGroup! };
         },
-        onError: (error) => {
-            console.error("Error joining group:", error);
+        onSuccess: (_, { groupId }) => {
+            queryClient.invalidateQueries({ queryKey: GROUP_QUERY_KEY(groupId) });
+        },
+        onError: (_, { groupId }, ctx) => {
+            queryClient.setQueryData<Group>(GROUP_QUERY_KEY(groupId), ctx!.previousGroup);
             alert("Could not join group. Please try again.");
         },
     });
 }
 
-export function useProjectGroupsQuery(
-    projectId: Ref<number | undefined>
-): UseQueryReturnType<Group[], Error> {
-    return useQuery<Group[], Error>({
-        queryKey: computed(() => PROJECT_GROUPS_QUERY_KEY(projectId.value!)),
-        queryFn: () => getProjectGroups(projectId.value!),
-        enabled: computed(() => projectId.value !== undefined),
-    });
-}
-
+/**
+ * Mutation composable for adding the current user to a group
+ */
 export function useJoinGroupUserMutation(): UseMutationReturnType<
-    Group,
+    void,
     Error,
     { groupId: number },
-    void
+    { previousGroup: Group }
 > {
     const queryClient = useQueryClient();
-    return useMutation<Group, Error, { groupId: number }, void>({
+    return useMutation({
         mutationFn: ({ groupId }) => joinGroup(groupId), // Call the joinGroup service function
-        onSuccess: () => {
-            queryClient.invalidateQueries(/* specify the relevant query key */);
-            console.log("Successfully joined group");
+        onMutate: ({ groupId }) => {
+            const previousGroup = queryClient.getQueryData<Group>(GROUP_QUERY_KEY(groupId));
+            // TODO: this is a placeholder and should be replaced with the
+            // actual user data, but query structure does not support this
+            // currently
+            const newGroup = { ...previousGroup! };
+            newGroup.members.push({
+                uid: "placeholder",
+                given_name: "placeholder",
+                surname: "placeholder",
+                mail: "placeholder",
+                is_teacher: false,
+                is_admin: false,
+            });
+            queryClient.setQueryData<Group>(GROUP_QUERY_KEY(groupId), newGroup);
+            return { previousGroup: previousGroup! };
         },
-        onError: (error) => {
-            console.error("Error joining group:", error);
+        onSuccess: (_, { groupId }) => {
+            queryClient.invalidateQueries({ queryKey: GROUP_QUERY_KEY(groupId) });
+        },
+        onError: (_, { groupId }, ctx) => {
+            queryClient.setQueryData<Group>(GROUP_QUERY_KEY(groupId), ctx!.previousGroup);
             alert("Could not join group. Please try again.");
         },
     });
 }
 
-export function useLeaveGroupUserMutation(): UseMutationReturnType<
-    Group,
-    Error,
-    { groupId: number },
-    void
-> {
-    const queryClient = useQueryClient();
-    return useMutation<Group, Error, { groupId: number }, void>({
-        mutationFn: ({ groupId }) => leaveGroup(groupId), // Call the joinGroup service function
-        onSuccess: () => {
-            queryClient.invalidateQueries(/* specify the relevant query key */);
-            console.log("Successfully left group");
-        },
-        onError: (error) => {
-            console.error("Error leaving group:", error);
-            alert("Could not leave group. Please try again.");
-        },
-    });
-}
-
+/**
+ * Mutation composable for removing a user from a group
+ */
 export function useRemoveUserFromGroupMutation(): UseMutationReturnType<
-    Group,
+    void,
     Error,
     { groupId: number; uid: string },
-    void
+    { previousGroup: Group }
 > {
     const queryClient = useQueryClient();
-    return useMutation<Group, Error, { groupId: number; uid: string }, void>({
-        mutationFn: ({ groupId, uid }) => removeFromGroup(groupId, uid), // Call the joinGroup service function
-        onSuccess: () => {
-            queryClient.invalidateQueries(/* specify the relevant query key */);
-            console.log("Successfully removed from group");
+    return useMutation({
+        mutationFn: ({ groupId, uid }) => removeFromGroup(groupId, uid),
+        onMutate: ({ groupId, uid }) => {
+            const previousGroup = queryClient.getQueryData<Group>(GROUP_QUERY_KEY(groupId));
+            const newGroup = {
+                ...previousGroup!,
+                members: previousGroup!.members.filter((member) => member.uid !== uid),
+            };
+            queryClient.setQueryData<Group>(GROUP_QUERY_KEY(groupId), newGroup);
+            return { previousGroup: previousGroup! };
         },
-        onError: (error) => {
-            console.error("Error removing from group:", error);
+        onSuccess: (_, { groupId }) => {
+            queryClient.invalidateQueries({ queryKey: GROUP_QUERY_KEY(groupId) });
+        },
+        onError: (_, { groupId }, ctx) => {
+            queryClient.setQueryData<Group>(GROUP_QUERY_KEY(groupId), ctx!.previousGroup);
             alert("Could not remove from group. Please try again.");
         },
     });
 }
 
-export function useRemoveGroupMutation(): UseMutationReturnType<
-    Group,
+/**
+ * Mutation composable for removing the current user from a group
+ */
+export function useLeaveGroupUserMutation(): UseMutationReturnType<
+    void,
+    Error,
+    { groupId: number },
+    { previousGroup: Group }
+> {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: ({ groupId }) => leaveGroup(groupId),
+        onMutate: ({ groupId }) => {
+            const previousGroup = queryClient.getQueryData<Group>(GROUP_QUERY_KEY(groupId));
+            const { data: user } = useCurrentUserQuery();
+            const newGroup = {
+                ...previousGroup!,
+                members: previousGroup!.members.filter(
+                    // WARN: This could not break if user query is not resolved yet
+                    (member) => member.uid !== user.value!.uid
+                ),
+            };
+            queryClient.setQueryData<Group>(GROUP_QUERY_KEY(groupId), newGroup);
+            return { previousGroup: previousGroup! };
+        },
+        onSuccess: (_, { groupId }) => {
+            queryClient.invalidateQueries({ queryKey: GROUP_QUERY_KEY(groupId) });
+        },
+        onError: (_, { groupId }, ctx) => {
+            queryClient.setQueryData<Group>(GROUP_QUERY_KEY(groupId), ctx!.previousGroup);
+            alert("Could not leave group. Please try again.");
+        },
+    });
+}
+
+/**
+ * Mutation composable for deleting a group
+ */
+export function useDeleteGroupMutation(): UseMutationReturnType<
+    void,
     Error,
     { groupId: number },
     void
 > {
     const queryClient = useQueryClient();
-    return useMutation<Group, Error, { groupId: number }, void>({
-        mutationFn: ({ groupId }) => deleteGroup(groupId), // Call the joinGroup service function
-        onSuccess: () => {
-            queryClient.invalidateQueries(/* specify the relevant query key */);
-            console.log("Successfully removed from group");
+    return useMutation({
+        mutationFn: ({ groupId }) => deleteGroup(groupId),
+        onSuccess: (_, { groupId }) => {
+            queryClient.invalidateQueries({ queryKey: GROUP_QUERY_KEY(groupId) });
         },
-        onError: (error) => {
-            console.error("Error removing from group:", error);
+        onError: () => {
             alert("Could not remove from group. Please try again.");
         },
     });

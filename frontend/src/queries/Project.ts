@@ -1,15 +1,10 @@
-import {
-    useMutation,
-    useQuery,
-    type UseMutationReturnType,
-    type UseQueryReturnType,
-    useQueryClient,
-} from "@tanstack/vue-query";
+import { computed, toValue } from "vue";
+import type { MaybeRefOrGetter } from "vue";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
+import type { UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-query";
 import type Project from "@/models/Project";
 import type { ProjectForm } from "@/models/Project";
 import { getProject, createProject, getProjects } from "@/services/project";
-import { computed, toValue } from "vue";
-import type { MaybeRefOrGetter } from "vue";
 
 function PROJECT_QUERY_KEY(projectId: number): (string | number)[] {
     return ["project", projectId];

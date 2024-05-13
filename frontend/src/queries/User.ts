@@ -5,15 +5,15 @@ import type { UseQueryReturnType, UseMutationReturnType } from "@tanstack/vue-qu
 import type User from "@/models/User";
 import { getCurrentUser, getUser, getUsers, toggleAdmin, toggleTeacher } from "@/services/user";
 
-function CURRENT_USER_QUERY_KEY(): string[] {
+export function CURRENT_USER_QUERY_KEY(): string[] {
     return ["user"];
 }
 
-function USER_QUERY_KEY(uid: string): string[] {
+export function USER_QUERY_KEY(uid: string): string[] {
     return ["user", uid];
 }
 
-function USERS_QUERY_KEY(): string[] {
+export function USERS_QUERY_KEY(): string[] {
     return ["users"];
 }
 

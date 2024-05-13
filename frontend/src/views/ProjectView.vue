@@ -29,7 +29,7 @@
 import ProjectInfo from "@/components/project/ProjectInfo.vue";
 import { useProjectQuery } from "@/queries/Project";
 import { computed, toRefs } from "vue";
-import { useUserGroupQuery } from "@/queries/Group";
+import { useProjectGroupQuery } from "@/queries/Group";
 import { useSubjectInstructorsQuery, useSubjectQuery } from "@/queries/Subject";
 import ProjectSideBar from "@/components/project/ProjectSideBar.vue";
 
@@ -49,7 +49,7 @@ const {
     data: group,
     isLoading: isGroupLoading,
     isError: isGroupError,
-} = useUserGroupQuery(projectId);
+} = useProjectGroupQuery(projectId);
 
 const {
     data: subject,
