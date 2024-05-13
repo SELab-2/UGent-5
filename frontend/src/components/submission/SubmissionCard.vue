@@ -44,7 +44,12 @@
                 {{ $t("submission.download_info") }}
             </v-card-subtitle>
             <v-container>
-                <v-alert v-if="isError" title="Error" color="error" :text="error.message"></v-alert>
+                <v-alert
+                    v-if="isError"
+                    title="Error"
+                    color="error"
+                    :text="error!.message"
+                ></v-alert>
                 <v-skeleton-loader v-else :loading="isLoading" type="card" color="white">
                     <v-col>
                         <v-chip
@@ -65,11 +70,12 @@
 </template>
 
 <script setup lang="ts">
-import { Status, type Submission } from "@/models/Submission";
+import type { Status } from "@/models/Submission";
 import { useFilesQuery } from "@/queries/Submission";
 import { toRefs, computed } from "vue";
-import { download_file } from "@/utils.ts";
-import Project from "@/models/Project";
+import { download_file } from "@/utils";
+import type Project from "@/models/Project";
+import type Submission from "@/models/Submission";
 
 const props = defineProps<{
     submission: Submission;

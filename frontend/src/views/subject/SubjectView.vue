@@ -1,7 +1,6 @@
 <template>
-    <div v-if="isError" class="v-container">
-        <p>Error...</p>
-    </div>
+    <div v-if="isError" class="v-container">Error...</div>
+    <div v-else-if="isLoading">Loading...</div>
 
     <BackgroundContainer v-else>
         <v-row>

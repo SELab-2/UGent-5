@@ -27,7 +27,7 @@ import { useCreateGroupsMutation, useProjectGroupsQuery } from "@/queries/Group"
 import { computed, toRefs } from "vue";
 import { useProjectQuery } from "@/queries/Project";
 import GroupCard from "@/components/home/cards/GroupCard.vue";
-import { useUserQuery } from "@/queries/User";
+import { useCurrentUserQuery } from "@/queries/User";
 import { type GroupForm } from "@/models/Group";
 
 const props = defineProps<{
@@ -48,13 +48,15 @@ const {
     isError: isGroupError,
 } = useProjectGroupsQuery(projectId);
 
-const { data: user, isLoading: isUserLoading, isError: isUserError } = useUserQuery(null);
+const { data: user, isLoading: isUserLoading, isError: isUserError } = useCurrentUserQuery();
 
 const isDataLoading = computed(
     () => isProjectLoading.value || isGroupLoading.value || isUserLoading.value
 );
 
-const isDataError = computed(() => isProjectError.value || isGroupError.value || isUserError.value);
+const isDataError = computed(
+    () => isProjectError.value || isGroupError.value || isUserError.value
+);
 
 const isTeacher = computed(() => user.value?.is_teacher || false);
 

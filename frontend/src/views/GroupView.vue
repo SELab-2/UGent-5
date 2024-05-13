@@ -51,7 +51,7 @@
 import { toRefs, computed } from "vue";
 import { useGroupQuery, useRemoveUserFromGroupMutation } from "@/queries/Group";
 import { useProjectQuery } from "@/queries/Project";
-import { useUserQuery } from "@/queries/User";
+import { useCurrentUserQuery } from "@/queries/User";
 import GroupButtons from "@/components/buttons/GroupButtons.vue";
 
 const props = defineProps<{
@@ -68,7 +68,8 @@ const {
     isError: isErrorProject,
 } = useProjectQuery(computed(() => group.value?.project_id));
 
-const { data: user, isLoading: isLoadingUser, isError: isErrorUser } = useUserQuery(null);
+const { data: user, isLoading: isLoadingUser, isError: isErrorUser
+} = useCurrentUserQuery();
 
 const isLoading = computed(
     () => isLoadingGroup.value || isLoadingProject.value || isLoadingUser.value
