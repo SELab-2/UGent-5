@@ -35,3 +35,7 @@ export async function toggleAdmin(uid: string): Promise<User> {
 export async function toggleTeacher(uid: string): Promise<User> {
     return authorized_fetch<User>(`/api/users/${uid}/teacher`, { method: "POST" });
 }
+
+export async function deleteUser(uid: string): Promise<void> {
+    return authorized_fetch(`/api/users/${uid}`, { method: "DELETE" });
+}

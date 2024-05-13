@@ -37,6 +37,11 @@ async def set_teacher(db: AsyncSession, user_id: str, value: bool):
     await db.commit()
 
 
+async def delete_user(db: AsyncSession, user_id: str):
+    user = await get_by_id(db, user_id)
+    await db.delete(user)
+
+
 async def get_instructors(db: AsyncSession) -> Sequence[User]:
     result = await db.execute(
         select(User).join(InstructorSubject, User.uid == InstructorSubject.c.uid)

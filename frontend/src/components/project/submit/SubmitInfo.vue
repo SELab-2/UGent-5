@@ -1,12 +1,14 @@
 <template>
-    <v-card color="white">
+    <v-card class="submitCard" variant="outlined">
         <v-card-title>
             {{ $t("submit.submissions") }}
         </v-card-title>
         <v-card-subtitle v-if="latestSubmission" class="subtitle">
             {{ $t("submit.latest_submission") }} {{ $d(latestSubmission.date, "long") }}
         </v-card-subtitle>
-        <v-card-subtitle v-else class="subtitle"> No submissions found. </v-card-subtitle>
+        <v-card-subtitle v-else class="subtitle">
+            {{ $t("submit.no_submission_files") }}.
+        </v-card-subtitle>
         <div v-if="latestSubmission" class="subtitle">
             <v-card-text>{{
                 $t("submit.status_submission", { status: Status[latestSubmission.status] })
@@ -48,5 +50,17 @@ const latestSubmission = computed(() => {
 <style scoped>
 .subtitle {
     margin-bottom: 10px; /* Adjust as needed */
+}
+
+.submitCard {
+    background-color: rgb(var(--v-theme-background));
+}
+
+.v-btn {
+    background-color: rgb(var(--v-theme-secondary));
+}
+
+.v-card {
+    border-color: rgb(var(--v-theme-text));
 }
 </style>

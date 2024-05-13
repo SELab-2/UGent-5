@@ -3,29 +3,20 @@
         <v-switch
             class="switcher"
             color="white"
-            v-model="switchValue"
+            v-model="selectedTheme"
             false-value="darkTheme"
             false-icon="mdi-moon-waning-crescent"
             true-value="lightTheme"
             true-icon="mdi-white-balance-sunny"
-            @update:model-value="(value) => onThemeChange(value!)"
         ></v-switch>
     </div>
 </template>
 
 <script setup lang="ts">
-import { useTheme } from "vuetify";
-import { ref } from "vue";
 import { useThemeStore } from "@/stores/theme-store";
-const { storedTheme, setTheme } = useThemeStore();
+import { storeToRefs } from "pinia";
 
-const switchValue = ref(storedTheme);
-const theme = useTheme();
-
-function onThemeChange(value: string) {
-    theme.global.name.value = value;
-    setTheme(value);
-}
+const { selectedTheme } = storeToRefs(useThemeStore());
 </script>
 
 <style scoped>

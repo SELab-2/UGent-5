@@ -11,7 +11,7 @@ from src.group.schemas import GroupList
 from src.project.schemas import ProjectList
 
 from .exceptions import UserNotFound
-from .schemas import User, UserSimple, UserSubjectList
+from .schemas import User, UserSubjectList
 
 
 async def get_authenticated_user(

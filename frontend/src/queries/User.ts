@@ -3,7 +3,7 @@ import type { MaybeRefOrGetter } from "vue";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/vue-query";
 import type { UseQueryReturnType, UseMutationReturnType } from "@tanstack/vue-query";
 import type User from "@/models/User";
-import { getCurrentUser, getUser, getUsers, toggleAdmin, toggleTeacher } from "@/services/user";
+import { getCurrentUser, getUser, getUsers, toggleAdmin, toggleTeacher, deleteUser } from "@/services/user";
 
 export function CURRENT_USER_QUERY_KEY(): string[] {
     return ["user"];
@@ -76,7 +76,7 @@ function useToggleMutation(
                     return mappedUser;
                 });
             });
-            return { previousUsers: users! };
+            return { previousUsers: users || [] };
         },
         onSettled: (_, __, uid, ctx) => {
             queryClient.invalidateQueries({ queryKey: USERS_QUERY_KEY() });
@@ -118,4 +118,33 @@ export function useToggleTeacherMutation(): UseMutationReturnType<
         (user) => user.is_teacher,
         (user, value) => (user.is_teacher = value)
     );
+}
+
+export function useDeleteUserMutation(): UseMutationReturnType<
+    void,
+    Error,
+    string,
+    { previousUsers: User[] }
+> {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (uid) => {
+            await deleteUser(uid);
+        },
+        onMutate: async (uid) => {
+            const users = queryClient.getQueryData<User[]>(USERS_QUERY_KEY());
+            await queryClient.cancelQueries({ queryKey: USERS_QUERY_KEY() });
+            queryClient.setQueryData<User[]>(USERS_QUERY_KEY(), () => {
+                return users?.filter((user: User) => user.uid !== uid);
+            });
+            return { previousUsers: users || [] };
+        },
+        onSettled: (_, __, uid, ctx) => {
+            queryClient.invalidateQueries({ queryKey: USERS_QUERY_KEY() });
+        },
+        onError: (err, uid, ctx) => {
+            queryClient.setQueryData<User[]>(USERS_QUERY_KEY(), () => ctx!.previousUsers!);
+            alert("Could not delete user");
+        },
+    });
 }
