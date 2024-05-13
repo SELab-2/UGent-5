@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 v-if="isLoading" class="welcome">{{ $t("default.loading.loading_page") }}</h1>
+        <h1 v-if="isLoading">{{ $t("default.loading.loading_page") }}</h1>
         <h1 v-else-if="isError || noProjectsFound" class="welcome">
             {{ $t("project.not_found") }}
         </h1>
@@ -8,9 +8,7 @@
             <div class="rowheader">
                 <h1>{{ $t("project.myProject") }}</h1>
                 <v-btn-toggle v-model="activeButton" class="button">
-                    <v-btn value="finished">{{
-                        $t("project.finished")
-                    }}</v-btn>
+                    <v-btn value="finished">{{ $t("project.finished") }}</v-btn>
                 </v-btn-toggle>
             </div>
             <ProjectMiniCard
@@ -60,7 +58,7 @@ const filteredProjects = computed(() => {
 }
 
 .projectInfo {
-    padding: 10px;
+    padding: 15px;
     margin: 25px;
 }
 
@@ -68,13 +66,12 @@ const filteredProjects = computed(() => {
     display: flex;
     align-items: center;
     margin-bottom: 30px;
-
 }
 
 .button {
     height: 30px;
     margin-top: 10px;
     margin-left: 75px;
-    border: 1px solid rgb(var(--v-theme-text))
+    border: 1px solid rgb(var(--v-theme-text));
 }
 </style>
