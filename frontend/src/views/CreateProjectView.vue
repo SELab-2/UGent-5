@@ -24,11 +24,7 @@
                 />
             </v-col>
             <v-col cols="12" md="6">
-                <v-alert
-                    v-if="!isEditMode"
-                    dense text
-                    class="custom-alert"
-                >
+                <v-alert v-if="!isEditMode" dense text class="custom-alert">
                     Please note: Once submitted, group settings cannot be edited.
                 </v-alert>
                 <RadioButtonList
@@ -409,5 +405,4 @@ const handleCapacityChange = (newCapacity: number) => {
     color: #000000;
     border-left: 4px solid #1d357eff;
 }
-
 </style>
