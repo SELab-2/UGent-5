@@ -1,30 +1,25 @@
 <template>
     <div>
-        <v-container>
-            <h1 v-if="isLoading" class="welcome">{{ $t("default.loading.loading_page") }}</h1>
-            <h1 v-else-if="isError || noProjectsFound" class="welcome">
-                {{ $t("project.not_found") }}
-            </h1>
-            <div v-else class="projectInfo">
-                <v-row class="rowheader">
-                    <h1>{{ $t("project.myProject") }}</h1>
-                    <v-btn-toggle v-model="activeButton">
-                        <v-btn value="notFinished" class="leftbuttonspace">{{
-                            $t("project.not_finished")
-                        }}</v-btn>
-                        <v-btn value="archived" class="leftbuttonspace">{{
-                            $t("project.archived")
-                        }}</v-btn>
-                    </v-btn-toggle>
-                </v-row>
-                <ProjectMiniCard
-                    v-for="project in filteredProjects"
-                    :key="project.id"
-                    :project="project"
-                    class="project-card"
-                />
+        <h1 v-if="isLoading" class="welcome">{{ $t("default.loading.loading_page") }}</h1>
+        <h1 v-else-if="isError || noProjectsFound" class="welcome">
+            {{ $t("project.not_found") }}
+        </h1>
+        <div v-else class="projectInfo">
+            <div class="rowheader">
+                <h1>{{ $t("project.myProject") }}</h1>
+                <v-btn-toggle v-model="activeButton" class="button">
+                    <v-btn value="finished">{{
+                        $t("project.finished")
+                    }}</v-btn>
+                </v-btn-toggle>
             </div>
-        </v-container>
+            <ProjectMiniCard
+                v-for="project in filteredProjects"
+                :key="project.id"
+                :project="project"
+                class="project-card"
+            />
+        </div>
     </div>
 </template>
 
@@ -51,12 +46,10 @@ const filteredProjects = computed(() => {
         );
 
     switch (activeButton.value) {
-        case "archived":
+        case "finished":
             return sortedProjects.filter((project: Project) => new Date(project.deadline) < now);
-        case "notFinished":
-            return sortedProjects.filter((project: Project) => new Date(project.deadline) > now);
         default:
-            return sortedProjects;
+            return sortedProjects.filter((project: Project) => new Date(project.deadline) > now);
     }
 });
 </script>
@@ -68,13 +61,20 @@ const filteredProjects = computed(() => {
 
 .projectInfo {
     padding: 10px;
+    margin: 25px;
 }
 
 .rowheader {
-    padding: 10px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+
 }
 
-.leftbuttonspace {
-    margin-left: 10px;
+.button {
+    height: 30px;
+    margin-top: 10px;
+    margin-left: 75px;
+    border: 1px solid rgb(var(--v-theme-text))
 }
 </style>
