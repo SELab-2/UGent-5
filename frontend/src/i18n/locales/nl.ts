@@ -127,4 +127,10 @@ export default {
         all_students: "Alle studenten",
         all_students_course: "Alle studenten in vak:",
     },
+    about: {
+        about: "Over dit project",
+        p_1: "Dit project is gemaakt in het kader van het vak",
+        p_2: "De broncode is publiek beschikbaar op",
+        developers: "Onze developers",
+    },
 };
