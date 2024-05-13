@@ -1,5 +1,6 @@
 import type User from "@/models/User";
 import type Subject from "@/models/Subject";
+import type { UserSubjectList } from "@/models/Subject";
 import { authorized_fetch } from "@/services";
 
 /**
@@ -19,14 +20,10 @@ export async function getSubjectByUuid(subjectUuid: string): Promise<Subject> {
 /**
  * Fetches all subjects the current user is enrolled in.
  */
-export async function getSubjects(): Promise<Subject[]> {
-    const result = await authorized_fetch<{ as_instructor: Subject[]; as_student: Subject[] }>(
-        "/api/users/me/subjects",
-        {
-            method: "GET",
-        }
-    );
-    return [...result.as_instructor, ...result.as_student];
+export async function getSubjects(): Promise<UserSubjectList> {
+    return await authorized_fetch<UserSubjectList>("/api/users/me/subjects", {
+        method: "GET",
+    });
 }
 
 /**

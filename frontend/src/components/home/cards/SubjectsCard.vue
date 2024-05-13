@@ -3,7 +3,7 @@
     <!-- TODO: Add error handling -->
     <h1 v-else-if="isSubjectsError">Error loading subjects</h1>
     <HomeScreenCard v-else :title="'homescreen.subjects'">
-        <SubjectItem v-for="subject in subjects" :subject="subject" :key="subject.id" />
+        <SubjectItem v-for="subject in [...subjects!.as_student, ...subjects!.as_instructor]" :subject="subject" :key="subject.id" />
     </HomeScreenCard>
 </template>
 

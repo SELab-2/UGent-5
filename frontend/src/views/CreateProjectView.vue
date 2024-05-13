@@ -134,8 +134,7 @@ const assistants = computed(
 );
 const subjects = computed(
     () =>
-        // mySubjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []
-        subjectsData.value?.map(({ name, id }) => ({ text: name, value: id })) || []
+        subjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []
 );
 
 const groupProjectOptions = [

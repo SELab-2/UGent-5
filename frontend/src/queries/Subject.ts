@@ -13,6 +13,7 @@ import {
 import { getSubjectProjects } from "@/services/project";
 import type User from "@/models/User";
 import type Subject from "@/models/Subject";
+import type { UserSubjectList } from "@/models/Subject";
 import type Project from "@/models/Project";
 
 function SUBJECT_QUERY_KEY(subjectId: number | string): (string | number)[] {
@@ -65,8 +66,8 @@ export function useSubjectUuidQuery(
 /**
  * Query composable for fetching all subjects of the current user
  */
-export function useSubjectsQuery(): UseQueryReturnType<Subject[], Error> {
-    return useQuery<Subject[], Error>({
+export function useSubjectsQuery(): UseQueryReturnType<UserSubjectList, Error> {
+    return useQuery<UserSubjectList, Error>({
         queryKey: SUBJECTS_QUERY_KEY(),
         queryFn: getSubjects,
     });
