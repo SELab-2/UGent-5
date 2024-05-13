@@ -29,10 +29,9 @@
 import ProjectInfo from "@/components/project/ProjectInfo.vue";
 import { useProjectQuery } from "@/queries/Project";
 import { computed, toRefs } from "vue";
-import { useProjectGroupsQuery } from "@/queries/Group";
+import { useProjectGroupQuery } from "@/queries/Group";
 import { useSubjectInstructorsQuery, useSubjectQuery } from "@/queries/Subject";
 import ProjectSideBar from "@/components/project/ProjectSideBar.vue";
-import { useCurrentUserQuery } from "@/queries/User";
 
 const props = defineProps<{
     projectId: number;
@@ -47,19 +46,10 @@ const {
 } = useProjectQuery(projectId);
 
 const {
-    data: groups,
-    isLoading: isGroupsLoading,
-    isError: isGroupsError,
-} = useProjectGroupsQuery(projectId);
-
-const { data: user } = useCurrentUserQuery();
-
-const group = computed(() => {
-    if (!groups.value) return null;
-    return groups.value.filter((group) =>
-        group.members.some((member) => member.uid === user.value?.uid)
-    )[0];
-});
+    data: group,
+    isLoading: isGroupLoading,
+    isError: isGroupError,
+} = useProjectGroupQuery(projectId);
 
 const {
     data: subject,
@@ -76,7 +66,7 @@ const {
 const isDataLoading = computed(
     () =>
         isProjectLoading.value ||
-        isGroupsLoading.value ||
+        isGroupLoading.value ||
         isInstructorsLoading.value ||
         isSubjectLoading.value
 );
@@ -84,7 +74,7 @@ const isDataLoading = computed(
 const isDataError = computed(
     () =>
         isProjectError.value ||
-        isGroupsError.value ||
+        isGroupError.value ||
         isInstructorsError.value ||
         isSubjectError.value
 );
