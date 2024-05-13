@@ -1,4 +1,4 @@
-import { ref, watch } from "vue";
+import { computed } from "vue";
 import useIsAdmin from "@/composables/useIsAdmin";
 import { useAuthStore } from "@/stores/auth-store";
 import { storeToRefs } from "pinia";
@@ -28,19 +28,15 @@ const admin_navigations: NavigationData[] = [
 export default function useNavigations() {
     const { isLoggedIn } = storeToRefs(useAuthStore());
     const { isAdmin } = useIsAdmin();
-    const navigations = ref([]);
-
-    const updateNavigations = async () => {
+    const navigations = computed(() => {
         if (!isLoggedIn.value) {
-            navigations.value = noLoginNavigations;
-        } else {
-            const navs = [...main_navigations];
-            if (isAdmin.value) {
-                navs.push(...admin_navigations);
-            }
-            navigations.value = navs;
+            return noLoginNavigations;
         }
-    };
-    watch([isLoggedIn, isAdmin], updateNavigations, { immediate: true });
+        const navs = main_navigations;
+        if (isAdmin.value) {
+            navs.push(...admin_navigations);
+        }
+        return navs;
+    });
     return { navigations };
 }
