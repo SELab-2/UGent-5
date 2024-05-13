@@ -73,6 +73,25 @@ vi.mock("@/components/project/ProjectSideBar.vue", () => ({
     },
 }));
 
+const mockRouter = {
+    push: vi.fn(),
+};
+
+vi.mock("vue-router", () => ({
+    useRouter: () => mockRouter,
+}));
+
+const testAuthStore = {
+    isLoggedIn: ref(true),
+    setLoggedIn(value) {
+        this.isLoggedIn.value = value;
+    },
+};
+
+vi.mock("@/stores/auth-store", () => ({
+    useAuthStore: vi.fn(() => testAuthStore),
+}));
+
 describe("ProjectView", async () => {
     const wrapper = mount(ProjectView, {
         props: {
