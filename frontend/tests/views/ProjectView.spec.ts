@@ -19,7 +19,6 @@ vi.mock('@/queries/Project', () => ({
 }));
 
 const testProjectGroupsQuery = {
-    data: ref([]),
     isLoading: ref(true),
     isError: ref(true),
     setIsError(value){
@@ -31,7 +30,7 @@ const testProjectGroupsQuery = {
 };
 
 vi.mock('@/queries/Group', () => ({
-    useProjectGroupsQuery: vi.fn(() => testProjectGroupsQuery),
+    useProjectGroupQuery: vi.fn(() => testProjectGroupsQuery),
 }));
 
 const testSubjectQuery = {
