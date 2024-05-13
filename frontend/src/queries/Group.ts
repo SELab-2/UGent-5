@@ -61,7 +61,6 @@ export function useProjectGroupsQuery(
     });
 }
 
-// TODO: figure out why this is needed
 export function useUserGroupsQuery(): UseQueryReturnType<Group[], Error> {
     return useQuery<Group[], Error>({
         queryKey: USER_GROUPS_QUERY_KEY(),
@@ -71,7 +70,6 @@ export function useUserGroupsQuery(): UseQueryReturnType<Group[], Error> {
 
 /**
  * Query composable for fetching the group a user is in for a project
- * TODO: probably not needed and can be done better
  */
 export function useProjectGroupQuery(
     projectId: MaybeRefOrGetter<number | undefined>
@@ -107,7 +105,6 @@ export function useCreateGroupMutation(): UseMutationReturnType<
 
 /**
  * Mutation composable for creating groups
- * TODO: should not be necessary
  */
 export function useCreateGroupsMutation(): UseMutationReturnType<
     Group[],

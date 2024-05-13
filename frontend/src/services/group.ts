@@ -9,7 +9,6 @@ export async function getGroup(groupId: number): Promise<Group> {
     return authorized_fetch(`/api/groups/${groupId}`, { method: "GET" });
 }
 
-// TODO: figure out why this is needed
 export async function getUserGroups(): Promise<Group[]> {
     const result = await authorized_fetch<{ groups: Group[] }>(`/api/users/me/groups`, {
         method: "GET",
@@ -17,7 +16,6 @@ export async function getUserGroups(): Promise<Group[]> {
     return result.groups;
 }
 
-// TODO: figure out why this is needed
 export function getGroupWithProjectId(groups: Group[], projectId: number): Group | null {
     for (const group of groups) {
         if (group.project_id === projectId) {
@@ -48,7 +46,6 @@ export async function createGroup(projectId: number, group: GroupForm): Promise<
     });
 }
 
-// TODO: can this be moved?
 export async function createGroups(projectId: number, groups: GroupForm[]): Promise<Group[]> {
     const createPromises = groups.map((group) => createGroup(projectId, group));
     return Promise.all(createPromises);
