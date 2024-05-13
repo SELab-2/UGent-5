@@ -133,8 +133,7 @@ const assistants = computed(
     () => instructorsData.value?.filter((a) => !a.is_teacher).map(formatInstructor) || []
 );
 const subjects = computed(
-    () =>
-        subjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []
+    () => subjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []
 );
 
 const groupProjectOptions = [

@@ -2,9 +2,7 @@
     <div v-if="isError" class="v-container">
         <p>Error: {{ error }}</p>
     </div>
-    <div v-if="isLoading">
-        Loading...
-    </div>
+    <div v-if="isLoading">Loading...</div>
 
     <BackgroundContainer v-else>
         <v-row>
@@ -31,7 +29,7 @@ import { useSubjectsQuery } from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectsHeaderContainer from "@/components/subjects/SubjectsHeaderContainer.vue";
 import SubjectCard from "@/components/subjects/SubjectCard.vue";
-import {computed} from "vue";
+import { computed } from "vue";
 
 const { data: subjects, error, isLoading, isError } = useSubjectsQuery();
 const subjectsList = computed(() => {
