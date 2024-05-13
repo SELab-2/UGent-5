@@ -18,6 +18,10 @@ export async function toggleTeacher(uid: string): Promise<User> {
     return authorized_fetch<User>(`/api/users/${uid}/teacher`, { method: "POST" });
 }
 
+export async function deleteUser(uid: string): Promise<void> {
+    return authorized_fetch(`/api/users/${uid}`, { method: "DELETE" });
+}
+
 // Fetches all subjects for logged in user
 export async function getMySubjects(): Promise<UserSubjectList> {
     return authorized_fetch("/api/users/me/subjects", { method: "GET" });
