@@ -3,7 +3,14 @@ import type { MaybeRefOrGetter } from "vue";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/vue-query";
 import type { UseQueryReturnType, UseMutationReturnType } from "@tanstack/vue-query";
 import type User from "@/models/User";
-import { getCurrentUser, getUser, getUsers, toggleAdmin, toggleTeacher, deleteUser } from "@/services/user";
+import {
+    getCurrentUser,
+    getUser,
+    getUsers,
+    toggleAdmin,
+    toggleTeacher,
+    deleteUser,
+} from "@/services/user";
 
 export function CURRENT_USER_QUERY_KEY(): string[] {
     return ["user"];

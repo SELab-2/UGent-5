@@ -54,9 +54,7 @@ const isDataLoading = computed(
     () => isProjectLoading.value || isGroupLoading.value || isUserLoading.value
 );
 
-const isDataError = computed(
-    () => isProjectError.value || isGroupError.value || isUserError.value
-);
+const isDataError = computed(() => isProjectError.value || isGroupError.value || isUserError.value);
 
 const isTeacher = computed(() => user.value?.is_teacher || false);
 

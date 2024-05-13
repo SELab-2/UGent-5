@@ -68,8 +68,7 @@ const {
     isError: isErrorProject,
 } = useProjectQuery(computed(() => group.value?.project_id));
 
-const { data: user, isLoading: isLoadingUser, isError: isErrorUser
-} = useCurrentUserQuery();
+const { data: user, isLoading: isLoadingUser, isError: isErrorUser } = useCurrentUserQuery();
 
 const isLoading = computed(
     () => isLoadingGroup.value || isLoadingProject.value || isLoadingUser.value

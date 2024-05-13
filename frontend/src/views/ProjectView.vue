@@ -54,13 +54,12 @@ const {
 
 const { data: user } = useCurrentUserQuery();
 
-const group = computed(
-    () => {
-        if (!groups.value) return null;
-        return groups.value.filter((group) =>
-            group.members.some((member) => member.uid === user.value?.uid)
-        )[0]
-    });
+const group = computed(() => {
+    if (!groups.value) return null;
+    return groups.value.filter((group) =>
+        group.members.some((member) => member.uid === user.value?.uid)
+    )[0];
+});
 
 const {
     data: subject,
