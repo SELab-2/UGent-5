@@ -27,9 +27,10 @@ const props = defineProps<{
     project: Project;
     user: User;
     amountOfMembers: number;
+    isTeacher: boolean;
 }>();
 
-const { group, project, user, amountOfMembers } = toRefs(props);
+const { group, project, user, amountOfMembers, isTeacher } = toRefs(props);
 
 const canJoinGroup = computed(() => {
     return (
@@ -43,8 +44,6 @@ const canJoinGroup = computed(() => {
 const canLeaveGroup = computed(() => {
     return project.value.capacity !== 1 && isUserInGroup.value && !isTeacher.value;
 });
-
-const isTeacher = computed(() => user.value.is_teacher || false);
 
 const isUserInGroup = computed(() => {
     return group.value.members.some((member) => member.uid === user.value.uid);
