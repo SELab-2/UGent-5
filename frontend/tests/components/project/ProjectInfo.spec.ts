@@ -46,7 +46,7 @@ describe("ProjectInfo", async () => {
         expect(text).toContain("projectname")
         expect(text).toContain("subjectname")
         expect(text).toContain("Capaciteit: 2")
-        expect(text).toContain("instructor 1")
+        expect(text).toContain("I. Doe")
         expect(text).toContain("this is a testassignment")
 
     });
