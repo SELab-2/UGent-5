@@ -13,7 +13,7 @@
                     aspect-ratio="16/9"
                     height="120px"
                 >
-                    <v-card-title>
+                    <v-card-title class="subject-title">
                         {{ subject?.name }}
                         <v-icon class="">mdi-chevron-right</v-icon>
                     </v-card-title>
@@ -49,4 +49,9 @@ defineProps<{
     position: relative;
     width: 100%;
 }
+
+.subject-title {
+    color: white;
+}
+
 </style>

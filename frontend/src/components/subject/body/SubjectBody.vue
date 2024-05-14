@@ -17,9 +17,6 @@
             <SubjectProjectsPage :projects="projects" :is-loading="isLoading"></SubjectProjectsPage>
         </v-window-item>
         <v-window-item value="1" key="1">
-            <SubjectAnnouncementsPage />
-        </v-window-item>
-        <v-window-item value="2" key="2">
             <SubjectGroupsPage />
         </v-window-item>
     </v-window>
@@ -38,7 +35,7 @@ defineProps<{
     isLoading: boolean;
 }>();
 
-const items = ["projects", "announcements", "groups"];
+const items = ["projects", "groups"];
 const tab = ref(0);
 </script>
 
