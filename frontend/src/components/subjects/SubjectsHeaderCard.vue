@@ -7,22 +7,20 @@
                 </v-card-title>
 
                 <v-card-text>
-                    <v-skeleton-loader type="button" color="white">
-                        <div class="chip_container">
-                            <v-chip-group mandatory v-model="activeAcademicYear" column>
-                                <v-chip
-                                    v-for="(academicYear, index) in academicYears"
-                                    :key="index"
-                                    :value="academicYear"
-                                    color="primary"
-                                    class="ma-1"
-                                    variant="tonal"
-                                >
-                                    {{ academicYear - 1 + "-" + academicYear }}
-                                </v-chip>
-                            </v-chip-group>
-                        </div>
-                    </v-skeleton-loader>
+                    <div class="chip_container">
+                        <v-chip-group mandatory v-model="activeAcademicYear" column>
+                            <v-chip
+                                v-for="(academicYear, index) in academicYears"
+                                :key="index"
+                                :value="academicYear"
+                                color="primary"
+                                class="ma-1"
+                                variant="tonal"
+                            >
+                                {{ academicYear - 1 + "-" + academicYear }}
+                            </v-chip>
+                        </v-chip-group>
+                    </div>
                 </v-card-text>
             </v-col>
         </v-row>
@@ -67,9 +65,5 @@ watch(activeAcademicYear, (newVal: number | undefined) => {
 
 .chip_container {
     overflow-x: auto;
-}
-
-.card-loader {
-    border-radius: 25px;
 }
 </style>
