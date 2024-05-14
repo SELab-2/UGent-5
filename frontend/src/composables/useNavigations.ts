@@ -32,7 +32,7 @@ export default function useNavigations() {
         if (!isLoggedIn.value) {
             return noLoginNavigations;
         }
-        const navs = main_navigations;
+        const navs = [...main_navigations];
         if (isAdmin.value) {
             navs.push(...admin_navigations);
         }

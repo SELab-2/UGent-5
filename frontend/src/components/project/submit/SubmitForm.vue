@@ -1,26 +1,8 @@
 <template>
     <v-form validate-on="submit lazy" @submit.prevent="formOnSubmit">
-        <v-container>
-            <v-row>
-                <v-col>
-                    <FilesInput v-model="inputFiles" />
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col>
-                    <v-textarea
-                        :label="$t('submit.remarks')"
-                        name="remarks"
-                        v-model="remarksInput"
-                    />
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col>
-                    <v-btn type="submit">{{ $t("submit.submit_button") }}</v-btn>
-                </v-col>
-            </v-row>
-        </v-container>
+        <FilesInput v-model="inputFiles" />
+        <v-textarea :label="$t('submit.remarks')" name="remarks" v-model="remarksInput" />
+        <v-btn variant="flat" type="submit">{{ $t("submit.submit_button") }}</v-btn>
     </v-form>
 </template>
 
@@ -28,7 +10,7 @@
 import { computed, ref, toRefs } from "vue";
 import FilesInput from "@/components/form_elements/FilesInput.vue";
 import { useRouter } from "vue-router";
-import { useCreateSubmissionMutation } from "@/queries/Project";
+import { useCreateSubmissionMutation } from "@/queries/Submission";
 import { useUserGroupQuery } from "@/queries/Group";
 import { useI18n } from "vue-i18n";
 
@@ -55,11 +37,18 @@ async function formOnSubmit(event: SubmitEvent) {
     for (const inputFile of inputFiles.value) {
         formData.append("files", inputFile);
     }
-    const data = await mutateAsync(formData);
+    await mutateAsync(formData);
 
-    const submission_id = data.id;
-    await router.push(`/submission/${submission_id}`);
+    await router.push(`/groups/${group.value?.id}/submissions`);
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.v-btn {
+    background-color: rgb(var(--v-theme-secondary));
+}
+
+.v-textarea {
+    margin-top: 30px;
+}
+</style>

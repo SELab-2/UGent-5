@@ -1,6 +1,5 @@
 import type Project from "@/models/Project";
 import type { ProjectForm } from "@/models/Project";
-import type Submission from "@/models/Submission";
 import { authorized_fetch } from "@/services";
 
 export async function createProject(projectData: ProjectForm): Promise<number> {
@@ -31,20 +30,4 @@ export async function getProjects(): Promise<Project[]> {
         method: "GET",
     });
     return result.projects;
-}
-
-// Function to create a new submission for a specific group
-export async function createSubmission(groupId: number, formData: FormData): Promise<Submission> {
-    return authorized_fetch(
-        `/api/submissions/?group_id=${groupId}`,
-        {
-            method: "POST",
-            body: formData,
-        },
-        true
-    );
-}
-
-export async function getSubmissions(): Promise<Submission[]> {
-    return authorized_fetch(`/api/submissions/`, { method: "GET" });
 }

@@ -1,11 +1,11 @@
 <template>
     <div class="adminpanel">
-        <v-card :title="$t('admin.users')" flat class="bg-white">
+        <v-card :title="$t('admin.users')" flat>
             <v-card-title>
                 <v-text-field
                     prepend-inner-icon="mdi-magnify"
                     v-model="search"
-                    label="Search"
+                    :label="$t('admin.search')"
                     single-line
                     hide-details
                 ></v-text-field>
@@ -26,7 +26,6 @@
                 <template v-slot:[`item.is_teacher`]="{ item }">
                     <v-checkbox-btn
                         :model-value="item.is_teacher"
-                        :disabled="item.uid === currentUser?.uid"
                         @update:model-value="() => onToggleTeacher(item)"
                     ></v-checkbox-btn>
                 </template>
@@ -36,6 +35,11 @@
                         :disabled="item.uid === currentUser?.uid"
                         @update:model-value="() => onToggleAdmin(item)"
                     ></v-checkbox-btn>
+                </template>
+                <template v-slot:[`item.actions`]="{ item }">
+                    <v-icon v-if="item.uid !== currentUser?.uid" @click="() => onDeleteUser(item)">
+                        mdi-delete
+                    </v-icon>
                 </template>
             </v-data-table-virtual>
         </v-card>
@@ -49,6 +53,7 @@ import {
     useUsersQuery,
     useToggleAdminMutation,
     useToggleTeacherMutation,
+    useDeleteUserMutation,
 } from "@/queries/User";
 import type User from "@/models/User";
 
@@ -58,6 +63,7 @@ const { data: currentUser, isLoading: isUserLoading } = useUserQuery(null);
 const { data: users, isLoading: isUsersLoading } = useUsersQuery();
 const { mutateAsync: toggleAdmin } = useToggleAdminMutation();
 const { mutateAsync: toggleTeacher } = useToggleTeacherMutation();
+const { mutateAsync: deleteUser } = useDeleteUserMutation();
 
 /**
  * Sorts boolean values in descending order.
@@ -75,6 +81,10 @@ async function onToggleAdmin(user: User) {
 
 async function onToggleTeacher(user: User) {
     await toggleTeacher(user.uid);
+}
+
+async function onDeleteUser(user: User) {
+    await deleteUser(user.uid);
 }
 
 const headers = ref([
@@ -112,6 +122,9 @@ const headers = ref([
         filter: () => true, // disable filter
         sort: sortBool,
     },
+    {
+        key: "actions",
+    },
 ]);
 </script>
 <style scoped>
@@ -120,8 +133,6 @@ const headers = ref([
 }
 
 .table {
-    color: black !important;
-    background-color: white;
-    width: 95%;
+    padding: 15px;
 }
 </style>

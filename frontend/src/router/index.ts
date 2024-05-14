@@ -59,6 +59,18 @@ const router = createRouter({
             props: (route) => ({ projectId: Number(route.params.projectId) }),
         },
         {
+            path: "/project/:projectId(\\d+)/groups",
+            name: "groups",
+            component: () => import("../views/GroupsView.vue"),
+            props: (route) => ({ projectId: Number(route.params.projectId) }),
+        },
+        {
+            path: "/groups/:groupId(\\d+)",
+            name: "group",
+            component: () => import("../views/GroupView.vue"),
+            props: (route) => ({ groupId: Number(route.params.groupId) }),
+        },
+        {
             path: "/subjects",
             name: "subjects",
             component: () => import("../views/subject/SubjectsView.vue"),
@@ -81,6 +93,18 @@ const router = createRouter({
             name: "registerSubject",
             component: () => import("../views/SubjectRegisterView.vue"),
             props: (route) => ({ uuid: String(route.params.uuid) }),
+        },
+        {
+            path: "/submissions/:submissionId(\\d+)",
+            name: "submission",
+            component: () => import("../views/SubmissionView.vue"),
+            props: (route) => ({ submissionId: Number(route.params.submissionId) }),
+        },
+        {
+            path: "/groups/:groupId(\\d+)/submissions",
+            name: "submissions",
+            component: () => import("../views/SubmissionsView.vue"),
+            props: (route) => ({ groupId: Number(route.params.groupId) }),
         },
         {
             path: "/settings",
