@@ -8,7 +8,6 @@
                 :title="title"
                 :academic-year="academicYear"
                 :instructors="instructors"
-                :is-loading="isLoading"
                 :is-instructor="isInstructor"
             >
             </SubjectHeaderCard>
@@ -25,7 +24,6 @@ defineProps<{
     title: string;
     academicYear: number;
     instructors: User[];
-    isLoading: boolean;
     imagePath: string;
     isInstructor: boolean;
 }>();

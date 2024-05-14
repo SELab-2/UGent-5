@@ -1,34 +1,32 @@
 <template>
-    <v-skeleton-loader type="card" class="card-loader">
-        <v-card variant="text" class="title-card" rounded="xl" width="100%">
-            <v-row>
-                <v-col>
-                    <v-card-title class="title">
-                        {{ $t("subjects.title") }}
-                    </v-card-title>
+    <v-card variant="text" class="title-card" rounded="xl" width="100%">
+        <v-row>
+            <v-col>
+                <v-card-title class="title">
+                    {{ $t("subjects.title") }}
+                </v-card-title>
 
-                    <v-card-text>
-                        <v-skeleton-loader type="button" color="white">
-                            <div class="chip_container">
-                                <v-chip-group mandatory v-model="activeAcademicYear" column>
-                                    <v-chip
-                                        v-for="(academicYear, index) in academicYears"
-                                        :key="index"
-                                        :value="academicYear"
-                                        color="primary"
-                                        class="ma-1"
-                                        variant="tonal"
-                                    >
-                                        {{ academicYear - 1 + "-" + academicYear }}
-                                    </v-chip>
-                                </v-chip-group>
-                            </div>
-                        </v-skeleton-loader>
-                    </v-card-text>
-                </v-col>
-            </v-row>
-        </v-card>
-    </v-skeleton-loader>
+                <v-card-text>
+                    <v-skeleton-loader type="button" color="white">
+                        <div class="chip_container">
+                            <v-chip-group mandatory v-model="activeAcademicYear" column>
+                                <v-chip
+                                    v-for="(academicYear, index) in academicYears"
+                                    :key="index"
+                                    :value="academicYear"
+                                    color="primary"
+                                    class="ma-1"
+                                    variant="tonal"
+                                >
+                                    {{ academicYear - 1 + "-" + academicYear }}
+                                </v-chip>
+                            </v-chip-group>
+                        </div>
+                    </v-skeleton-loader>
+                </v-card-text>
+            </v-col>
+        </v-row>
+    </v-card>
 </template>
 
 <script setup lang="ts">
@@ -37,7 +35,6 @@ import getCurrentAcademicYear from "@/composables/useAcademicYear";
 
 const props = defineProps<{
     academicYears: number[];
-    isLoading: boolean;
 }>();
 const { academicYears } = toRefs(props);
 const activeAcademicYear = ref(getCurrentAcademicYear());

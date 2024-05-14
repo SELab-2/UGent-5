@@ -3,7 +3,6 @@
         <v-col cols="6">
             <SubjectsHeaderCard
                 :academic-years="academicYears"
-                :is-loading="isLoading"
                 @academic-year-changed="onAcademicYearChanged"
             ></SubjectsHeaderCard>
         </v-col>
@@ -21,7 +20,6 @@ import SubjectHeaderImage from "@/components/subject/header/SubjectHeaderImage.v
 
 defineProps<{
     academicYears: number[];
-    isLoading: boolean;
 }>();
 
 const emit = defineEmits<{

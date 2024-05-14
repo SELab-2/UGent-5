@@ -16,27 +16,25 @@
                 </v-chip>
             </v-chip-group>
         </v-card-subtitle>
-        <v-skeleton-loader type="card" color="white">
-            <v-card-text>
-                <div class="scrollable-tabs">
-                    <v-tabs
-                        v-if="projects!.length > 0"
-                        direction="vertical"
-                        v-model="selectedTab"
-                        show-arrows
-                        prev-icon="mdi-chevron-up"
-                        next-icon="mdi-chevron-down"
-                    >
-                        <v-tab v-for="project in projects" :key="project.id" :value="project.id">
-                            <SubjectTab :projectName="project.name"></SubjectTab>
-                        </v-tab>
-                    </v-tabs>
-                    <div v-else class="placeholder">
-                        <p>{{ $t("subject.projectsPage.no_projects") }}</p>
-                    </div>
+        <v-card-text>
+            <div class="scrollable-tabs">
+                <v-tabs
+                    v-if="projects!.length > 0"
+                    direction="vertical"
+                    v-model="selectedTab"
+                    show-arrows
+                    prev-icon="mdi-chevron-up"
+                    next-icon="mdi-chevron-down"
+                >
+                    <v-tab v-for="project in projects" :key="project.id" :value="project.id">
+                        <SubjectTab :projectName="project.name"></SubjectTab>
+                    </v-tab>
+                </v-tabs>
+                <div v-else class="placeholder">
+                    <p>{{ $t("subject.projectsPage.no_projects") }}</p>
                 </div>
-            </v-card-text>
-        </v-skeleton-loader>
+            </div>
+        </v-card-text>
     </v-card>
 </template>
 
@@ -49,7 +47,6 @@ import { ref, watch } from "vue";
 const props = defineProps<{
     projects: Project[];
     selectedTab: number;
-    isLoading: boolean;
 }>();
 
 const selectedTab = ref(props.selectedTab);

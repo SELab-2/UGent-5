@@ -73,7 +73,6 @@ import { ref } from "vue";
 defineProps<{
     selectedTab: number;
     project: Project;
-    isLoading: boolean;
 }>();
 
 const expanded = ref(false);

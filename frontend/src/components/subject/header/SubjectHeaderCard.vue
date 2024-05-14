@@ -1,35 +1,33 @@
 <template>
     <v-card variant="text" class="title-card" height="165">
-        <v-skeleton-loader type="card" color="white">
-            <v-row>
-                <v-col :cols="isInstructor? 10 : 12">
-                    <v-card-title class="title">
-                        {{ title }}
-                    </v-card-title>
-                    <v-card-text>
+        <v-row>
+            <v-col :cols="isInstructor ? 10 : 12">
+                <v-card-title class="title">
+                    {{ title }}
+                </v-card-title>
+                <v-card-text>
+                    <HeaderSubtitleButton
+                        :title="`${$t('subject.academy_year')} ${academicYear - 1}-${academicYear}`"
+                        :clickable="false"
+                        :active="false"
+                    ></HeaderSubtitleButton>
+                    <div class="d-flex justify-start instr-container">
                         <HeaderSubtitleButton
-                            :title="`${$t('subject.academy_year')} ${academicYear - 1}-${academicYear}`"
+                            v-for="instructor in instructors"
+                            :key="instructor.uid"
+                            :title="instructor.given_name"
                             :clickable="false"
                             :active="false"
                         ></HeaderSubtitleButton>
-                        <div class="d-flex justify-start instr-container">
-                            <HeaderSubtitleButton
-                                v-for="instructor in instructors"
-                                :key="instructor.uid"
-                                :title="instructor.given_name"
-                                :clickable="false"
-                                :active="false"
-                            ></HeaderSubtitleButton>
-                        </div>
-                    </v-card-text>
-                </v-col>
-                <v-col v-if="isInstructor" cols="2">
-                    <router-link to="" class="link">
-                        <v-icon size="large">mdi-square-edit-outline</v-icon>
-                    </router-link>
-                </v-col>
-            </v-row>
-        </v-skeleton-loader>
+                    </div>
+                </v-card-text>
+            </v-col>
+            <v-col v-if="isInstructor" cols="2">
+                <router-link to="" class="link">
+                    <v-icon size="large">mdi-square-edit-outline</v-icon>
+                </router-link>
+            </v-col>
+        </v-row>
     </v-card>
 </template>
 
@@ -41,7 +39,6 @@ defineProps<{
     title: string;
     academicYear: number;
     instructors: User[];
-    isLoading: boolean;
     isInstructor: boolean;
 }>();
 </script>

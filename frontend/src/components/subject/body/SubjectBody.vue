@@ -14,7 +14,7 @@
 
     <v-window v-model="tab">
         <v-window-item value="0" key="0">
-            <SubjectProjectsPage :projects="projects" :is-loading="isLoading"></SubjectProjectsPage>
+            <SubjectProjectsPage :projects="projects"></SubjectProjectsPage>
         </v-window-item>
         <v-window-item value="1" key="1">
             <SubjectGroupsPage />
@@ -24,7 +24,6 @@
 
 <script setup lang="ts">
 import SubjectProjectsPage from "@/components/subject/body/projects/SubjectProjectsPage.vue";
-import SubjectAnnouncementsPage from "@/components/subject/body/announcements/SubjectAnnouncementsPage.vue";
 import SubjectGroupsPage from "@/components/subject/body/groups/SubjectGroupsPage.vue";
 
 import { ref } from "vue";
@@ -32,7 +31,6 @@ import type Project from "@/models/Project";
 
 defineProps<{
     projects: Project[];
-    isLoading: boolean;
 }>();
 
 const items = ["projects", "groups"];

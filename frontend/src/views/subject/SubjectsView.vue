@@ -2,40 +2,41 @@
     <div v-if="isError" class="v-container">
         <p>Error: {{ error }}</p>
     </div>
-    <v-row v-else>
-        <v-col :cols="isTeacher ? 10 : 12">
-            <BackgroundContainer>
-                <v-row>
-                    <v-col>
-                        <SubjectsHeaderContainer
-                            :academic-years="academicYears"
-                            :is-loading="isLoading"
-                            @academic-year-changed="onAcademicYearChanged"
-                        ></SubjectsHeaderContainer>
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col v-for="(subject, index) in subjectsByAcademicYear" :key="index" cols="6">
-                        <SubjectCard
-                            :subject="subject"
-                            :is-loading="isLoading"
-                            class="subject-card"
+
+    <v-skeleton-loader v-else type="card" :loading="isLoading">
+        <v-row>
+            <v-col :cols="isTeacher ? 10 : 12">
+                <BackgroundContainer>
+                    <v-row>
+                        <v-col>
+                            <SubjectsHeaderContainer
+                                :academic-years="academicYears"
+                                @academic-year-changed="onAcademicYearChanged"
+                            ></SubjectsHeaderContainer>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col
+                            v-for="(subject, index) in subjectsByAcademicYear"
+                            :key="index"
+                            cols="6"
                         >
-                        </SubjectCard>
-                    </v-col>
-                </v-row>
-            </BackgroundContainer>
-        </v-col>
-        <v-col v-if="isTeacher" cols="2">
-            <div class="action-btn-container">
-                <router-link to="">
-                    <v-btn prepend-icon="mdi-plus-circle">
-                        {{ $t("subjects.create_subject") }}
-                    </v-btn>
-                </router-link>
-            </div>
-        </v-col>
-    </v-row>
+                            <SubjectCard :subject="subject" class="subject-card"> </SubjectCard>
+                        </v-col>
+                    </v-row>
+                </BackgroundContainer>
+            </v-col>
+            <v-col v-if="isTeacher" cols="2">
+                <div class="action-btn-container">
+                    <router-link to="">
+                        <v-btn prepend-icon="mdi-plus-circle">
+                            {{ $t("subjects.create_subject") }}
+                        </v-btn>
+                    </router-link>
+                </div>
+            </v-col>
+        </v-row>
+    </v-skeleton-loader>
 </template>
 
 <script setup lang="ts">
@@ -56,7 +57,7 @@ const academicYears = computed(() => {
 });
 
 const selectedAcademicYear = ref<number>(useAcademicYear());
-const {isTeacher} = useIsTeacher();
+const { isTeacher } = useIsTeacher();
 
 const subjectsByAcademicYear = computed(() => {
     return [...(subjects.value || [])].filter(
