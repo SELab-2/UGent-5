@@ -7,8 +7,8 @@ export default function useAcademicYear(): number {
     // If the current date is before September 15, the default selected academic year is the current year.
     // Otherwise, the academic year is the next year.
     if (currentMonth < 8 || (currentMonth === 8 && currentDay < 15)) {
-        return currentYear;
+        return currentYear - 2000;
     } else {
-        return currentYear + 1;
+        return currentYear + 1 - 2000;
     }
 }

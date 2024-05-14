@@ -30,6 +30,7 @@
                             :instructors="subject!.instructors"
                             :academic-year="subject!.academic_year"
                             :is-loading="isLoading"
+                            :is-instructor="isInstructor"
                             image-path="https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png"
                         ></SubjectHeaderContainer>
                     </v-col>
@@ -45,7 +46,7 @@
                 </v-row>
             </BackgroundContainer>
         </v-col>
-        <v-col cols="2">
+        <v-col v-if="isInstructor" cols="2">
             <div class="action-btn-container">
                 <router-link :to="{ name: 'create-project', params: { subjectId: subjectId } }">
                     <v-btn prepend-icon="mdi-plus-circle">
@@ -70,6 +71,8 @@ import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectHeaderContainer from "@/components/subject/header/SubjectHeaderContainer.vue";
 import SubjectBody from "@/components/subject/body/SubjectBody.vue";
 import { useRouter } from "vue-router";
+import useIsTeacher from "@/composables/useIsTeacher";
+import {useUserQuery} from "@/queries/User";
 
 const props = defineProps<{
     subjectId: number;
@@ -79,6 +82,12 @@ const { subjectId } = toRefs(props);
 const snackbar = ref(false);
 
 const { data: subject, error, isLoading, isError } = useSubjectDetailsQuery(subjectId);
+const {data: user, isLoading: isLoadingUser, isError: isErrorUser} = useUserQuery(null);
+
+const isInstructor = computed(() => {
+    return [...(subject.value?.instructors || [])].some((instructor) => instructor.uid === user.value.uid);
+});
+
 
 const router = useRouter();
 

@@ -9,6 +9,7 @@
                 :academic-year="academicYear"
                 :instructors="instructors"
                 :is-loading="isLoading"
+                :is-instructor="isInstructor"
             >
             </SubjectHeaderCard>
         </v-col>
@@ -26,6 +27,7 @@ defineProps<{
     instructors: User[];
     isLoading: boolean;
     imagePath: string;
+    isInstructor: boolean;
 }>();
 </script>
 

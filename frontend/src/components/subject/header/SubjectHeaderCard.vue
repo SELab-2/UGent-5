@@ -2,7 +2,7 @@
     <v-card variant="text" class="title-card" height="165">
         <v-skeleton-loader type="card" color="white">
             <v-row>
-                <v-col cols="11">
+                <v-col :cols="isInstructor? 10 : 12">
                     <v-card-title class="title">
                         {{ title }}
                     </v-card-title>
@@ -23,10 +23,11 @@
                         </div>
                     </v-card-text>
                 </v-col>
-                <router-link to="" class="link">
-                    <v-icon size="large">mdi-square-edit-outline</v-icon>
-                </router-link>
-                <v-col> </v-col>
+                <v-col v-if="isInstructor" cols="2">
+                    <router-link to="" class="link">
+                        <v-icon size="large">mdi-square-edit-outline</v-icon>
+                    </router-link>
+                </v-col>
             </v-row>
         </v-skeleton-loader>
     </v-card>
@@ -41,6 +42,7 @@ defineProps<{
     academicYear: number;
     instructors: User[];
     isLoading: boolean;
+    isInstructor: boolean;
 }>();
 </script>
 
