@@ -8,7 +8,7 @@
             <v-card-text class="student-list">
                 <div v-if="students.length > 0">
                     <v-card-item v-for="(student, index) in students" :key="index">
-                        {{ student.given_name }}
+                        {{ student.given_name + " " + student.surname }}
                     </v-card-item>
                 </div>
                 <div v-else>
