@@ -1,4 +1,4 @@
-export default function getCurrentAcademicYear(): number {
+export default function useAcademicYear(): number {
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth();
