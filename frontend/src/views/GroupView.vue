@@ -77,7 +77,6 @@ const {
     isError: isErrorInstructors,
 } = useSubjectInstructorsQuery(computed(() => project.value?.subject_id));
 
-
 const isLoading = computed(
     () =>
         isLoadingGroup.value ||
