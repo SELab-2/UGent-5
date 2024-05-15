@@ -1,11 +1,11 @@
 <template>
-    <v-btn v-if="canLeaveGroup" @click="leaveGroupAndRedirect">
+    <v-btn v-if="canLeaveGroup" @click="leaveGroupAndRedirect" variant="flat">
         {{ $t("group.leave_group") }}
     </v-btn>
-    <v-btn v-else-if="canJoinGroup" @click="joinGroupAndRedirect">
+    <v-btn v-else-if="canJoinGroup" @click="joinGroupAndRedirect" variant="flat">
         {{ $t("group.join_group") }}
     </v-btn>
-    <v-btn v-if="isTeacher" @click="() => removeGroup({ groupId: group.id })">
+    <v-btn v-if="isTeacher" @click="() => removeGroup({ groupId: group.id })" variant="flat">
         {{ $t("group.remove_group") }}
     </v-btn>
 </template>
@@ -77,4 +77,11 @@ const leaveGroupAndRedirect = async () => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.v-btn {
+    text-decoration: underline;
+    background-color: rgb(var(--v-theme-secondary));
+    padding: 2px;
+}
+
+</style>

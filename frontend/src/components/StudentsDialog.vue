@@ -1,5 +1,5 @@
 <template>
-    <v-btn @click="openDialog" class="dialog-link" variant="flat">{{ $t(title) }}</v-btn>
+    <v-btn @click="openDialog" class="dialog-link" variant="outlined">{{ $t(title) }}</v-btn>
     <v-dialog v-model="dialog" max-width="500px" max-height="500px">
         <v-card>
             <v-card-title>{{ $t(title) }}</v-card-title>
@@ -14,7 +14,7 @@
                 </div>
             </v-card-text>
             <v-card-actions>
-                <v-btn color="primary" @click="closeDialog">{{ $t("group.close") }}</v-btn>
+                <v-btn @click="closeDialog">{{ $t("group.close") }}</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -27,6 +27,7 @@ import { ref, toRefs } from "vue";
 const props = defineProps<{
     students: User[] | null;
     title: string
+
 }>();
 
 const { students } = toRefs(props);

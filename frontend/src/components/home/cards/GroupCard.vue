@@ -1,5 +1,5 @@
 <template>
-    <v-card class="v-card-padding">
+    <v-card class="groupcard" variant="flat">
         <v-row>
             <v-col cols="8">
                 <StudentsDialog :students="group.members" :title="group.team_name"/>
@@ -41,10 +41,14 @@ const amountOfMembers = computed(() => {
 </script>
 
 <style scoped>
-.v-card-padding {
-    padding: 5px;
-    margin-bottom: 5px;
+.groupcard {
+    margin: 5px 0 5px 0;
     height: 50px;
+    background-color: rgb(var(--v-theme-secondary));
 }
 
+.v-row {
+    display: flex;
+    align-items: center;
+}
 </style>

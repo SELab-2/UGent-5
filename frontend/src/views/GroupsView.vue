@@ -5,6 +5,7 @@
         <div v-else class="projectInfo">
             <h2>{{ "Project: " + project!.name }}</h2>
             <StudentsDialog :students="allStudents" title="group.all_students"/>
+            <v-divider class="border-opacity-50"></v-divider>
             <div v-if="groups.length > 0">
                 <v-row>
                     <v-col cols="8">{{ $t("group.groups") }}</v-col>
@@ -25,7 +26,7 @@
                     <v-col cols="8"> {{ $t("group.not_found2") }}</v-col>
                 </v-row>
             </div>
-            <v-btn v-if="isTeacher" @click="createGroup">{{ $t("group.create_group") }}</v-btn>
+            <v-btn v-if="isTeacher" @click="createGroup" variant="flat">{{ $t("group.create_group") }}</v-btn>
         </div>
     </v-container>
 </template>
@@ -98,10 +99,22 @@ async function createGroup() {
 </script>
 
 <style scoped>
+
+.v-container{
+    padding: 25px;
+}
+
 .group-card {
     height: 50px; /* Adjust the height as needed */
     margin-bottom: 5px; /* Add margin to separate cards */
     display: flex; /* Use flexbox */
     align-items: center; /* Center items vertically */
 }
+
+.v-divider{
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+
 </style>
