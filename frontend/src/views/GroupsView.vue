@@ -18,6 +18,7 @@
                     :project="project!"
                     :group="group"
                     :user="user!"
+                    :isTeacher="isTeacher!"
                     class="group-card"
                 />
             </div>
@@ -38,7 +39,7 @@ import { useProjectQuery } from "@/queries/Project";
 import GroupCard from "@/components/home/cards/GroupCard.vue";
 import { useUserQuery } from "@/queries/User";
 import { type GroupForm } from "@/models/Group";
-import { useSubjectStudentsQuery } from "@/queries/Subject";
+import { useSubjectInstructorsQuery, useSubjectStudentsQuery } from "@/queries/Subject";
 import StudentsDialog from "@/components/StudentsDialog.vue";
 
 const props = defineProps<{
@@ -67,19 +68,36 @@ const {
     isError: isUsersError,
 } = useSubjectStudentsQuery(computed(() => project.value?.subject_id));
 
+const {
+    data: instructors,
+    isLoading: isLoadingInstructors,
+    isError: isErrorInstructors,
+} = useSubjectInstructorsQuery(computed(() => project.value?.subject_id));
+
 const isDataLoading = computed(
     () =>
         isProjectLoading.value ||
         isGroupLoading.value ||
         isUserLoading.value ||
-        isUsersLoading.value
+        isUsersLoading.value ||
+        isLoadingInstructors.value
 );
 
 const isDataError = computed(
-    () => isProjectError.value || isGroupError.value || isUserError.value || isUsersError.value
+    () =>
+        isProjectError.value ||
+        isGroupError.value ||
+        isUserError.value ||
+        isUsersError.value ||
+        isErrorInstructors.value
 );
 
-const isTeacher = computed(() => user.value?.is_teacher || false);
+const isTeacher = computed(() => {
+    if (!user.value || !instructors.value) {
+        return false;
+    }
+    return instructors.value.some((instructor) => instructor.uid === user.value.uid);
+});
 
 const { mutateAsync: createGroupMutate } = useCreateGroupsMutation();
 
