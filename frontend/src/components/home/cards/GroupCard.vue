@@ -45,8 +45,6 @@ const amountOfMembers = computed(() => {
     return group.value.members.length;
 });
 
-const isTeacher = computed(() => user.value.is_teacher || false);
-
 const toGroupPage = async () => {
     router.push(`/groups/${group.value.id}`);
 };
