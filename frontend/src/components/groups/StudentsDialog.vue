@@ -26,8 +26,7 @@ import { ref, toRefs } from "vue";
 
 const props = defineProps<{
     students: User[] | null;
-    title: string
-
+    title: string;
 }>();
 
 const { students } = toRefs(props);
@@ -58,6 +57,6 @@ function closeDialog() {
 }
 
 .dialog-link {
-    background-color: rgb(var(--v-theme-secondary))
+    background-color: rgb(var(--v-theme-secondary));
 }
 </style>

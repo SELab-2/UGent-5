@@ -107,8 +107,7 @@ const { mutateAsync: removeStudent } = useRemoveUserFromGroupMutation();
 </script>
 
 <style scoped>
-
-.v-card{
+.v-card {
     margin-top: 15px;
     background-color: rgb(var(--v-theme-secondary));
 }
@@ -116,5 +115,4 @@ const { mutateAsync: removeStudent } = useRemoveUserFromGroupMutation();
 .members {
     margin-top: 15px;
 }
-
 </style>

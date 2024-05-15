@@ -4,7 +4,7 @@
         <h1 v-else-if="isDataError" class="welcome">{{ $t("group.error") }}</h1>
         <div v-else class="projectInfo">
             <h2>{{ "Project: " + project!.name }}</h2>
-            <StudentsDialog :students="allStudents" :title="$t('group.all_students')"/>
+            <StudentsDialog :students="allStudents" :title="$t('group.all_students')" />
             <v-divider class="border-opacity-50"></v-divider>
             <div v-if="groups.length > 0">
                 <v-row>
@@ -27,7 +27,9 @@
                     <v-col cols="8"> {{ $t("group.not_found2") }}</v-col>
                 </v-row>
             </div>
-            <v-btn v-if="isTeacher" @click="createGroup" variant="flat">{{ $t("group.create_group") }}</v-btn>
+            <v-btn v-if="isTeacher" @click="createGroup" variant="flat">{{
+                $t("group.create_group")
+            }}</v-btn>
         </div>
     </v-container>
 </template>
@@ -60,10 +62,7 @@ const {
     isError: isGroupError,
 } = useProjectGroupsQuery(projectId);
 
-const { data: user,
-    isLoading: isUserLoading,
-    isError: isUserError
-} = useUserQuery(null);
+const { data: user, isLoading: isUserLoading, isError: isUserError } = useUserQuery(null);
 
 const {
     data: allStudents,
@@ -120,8 +119,7 @@ async function createGroup() {
 </script>
 
 <style scoped>
-
-.v-container{
+.v-container {
     padding: 25px;
 }
 
@@ -132,10 +130,8 @@ async function createGroup() {
     align-items: center; /* Center items vertically */
 }
 
-.v-divider{
+.v-divider {
     margin-bottom: 15px;
     margin-top: 15px;
 }
-
-
 </style>

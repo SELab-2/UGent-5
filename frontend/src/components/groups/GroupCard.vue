@@ -2,7 +2,7 @@
     <v-card class="groupcard" variant="flat">
         <v-row>
             <v-col cols="7">
-                <StudentsDialog :students="group.members" :title="group.team_name"/>
+                <StudentsDialog :students="group.members" :title="group.team_name" />
                 <v-btn v-if="isTeacher" variant="flat" @click="toGroupPage">
                     {{ $t("group.to_grouppage") }}
                 </v-btn>
@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, toRefs} from "vue";
+import { computed, toRefs } from "vue";
 import type Project from "@/models/Project";
 import type Group from "@/models/Group";
 import type User from "@/models/User";
@@ -48,7 +48,6 @@ const amountOfMembers = computed(() => {
 const toGroupPage = async () => {
     router.push(`/groups/${group.value.id}`);
 };
-
 </script>
 
 <style scoped>

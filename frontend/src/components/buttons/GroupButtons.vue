@@ -78,7 +78,7 @@ const leaveGroupAndRedirect = async () => {
 const removeGroupAndRedirect = async () => {
     await removeGroup({ groupId: group.value.id });
     router.push(`/project/${project.value.id}/groups`);
-}
+};
 </script>
 
 <style scoped>
@@ -87,5 +87,4 @@ const removeGroupAndRedirect = async () => {
     background-color: rgb(var(--v-theme-secondary));
     padding: 2px;
 }
-
 </style>
