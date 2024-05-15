@@ -24,7 +24,7 @@ function GROUP_QUERY_KEY(groupId: number): (string | number)[] {
 }
 
 function PROJECT_GROUPS_QUERY_KEY(projectId: number): (string | number)[] {
-    return ["projectGroups", projectId];
+    return ["project", "groups", projectId];
 }
 
 function USER_GROUPS_QUERY_KEY(): string[] {
@@ -276,14 +276,17 @@ export function useLeaveGroupUserMutation(): UseMutationReturnType<
 export function useDeleteGroupMutation(): UseMutationReturnType<
     void,
     Error,
-    { groupId: number },
+    { groupId: number; projectId: number },
     void
 > {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: ({ groupId }) => deleteGroup(groupId),
-        onSuccess: (_, { groupId }) => {
+        onSuccess: (_, { groupId, projectId }) => {
             queryClient.invalidateQueries({ queryKey: GROUP_QUERY_KEY(groupId) });
+            queryClient.invalidateQueries({
+                queryKey: PROJECT_GROUPS_QUERY_KEY(projectId),
+            });
         },
         onError: () => {
             alert("Could not remove from group. Please try again.");

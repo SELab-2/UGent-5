@@ -5,7 +5,16 @@
     <v-btn v-else-if="canJoinGroup" @click="() => joinGroup({ groupId: group.id })">
         {{ $t("group.join_group") }}
     </v-btn>
-    <v-btn v-if="isTeacher" @click="() => removeGroup({ groupId: group.id })">
+    <v-btn
+        v-if="isTeacher"
+        @click="
+            () =>
+                removeGroup({
+                    groupId: group.id,
+                    projectId: project.id,
+                })
+        "
+    >
         {{ $t("group.remove_group") }}
     </v-btn>
 </template>
