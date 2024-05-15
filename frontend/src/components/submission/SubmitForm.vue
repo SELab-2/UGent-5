@@ -1,6 +1,10 @@
 <template>
     <div>
-        <RequirementsCard v-if="project.requirements.length > 0" :requirements=project.requirements :unmetRequirements=unmetRequirements  />
+        <RequirementsCard
+            v-if="project.requirements.length > 0"
+            :requirements="project.requirements"
+            :unmetRequirements="unmetRequirements"
+        />
         <v-form validate-on="submit lazy" @submit.prevent="formOnSubmit" class="submission-form">
             <FilesInput v-model="inputFiles" />
             <v-textarea :label="$t('submit.remarks')" name="remarks" v-model="remarksInput" />
@@ -25,7 +29,7 @@ const props = defineProps<{
 }>();
 
 const { project } = toRefs(props);
-const projectId = computed(() => project.value.id)
+const projectId = computed(() => project.value.id);
 
 const router = useRouter();
 const { t } = useI18n();
@@ -35,7 +39,7 @@ const remarksInput = ref<string | null>(null);
 const unmetRequirements = ref<UnmetRequirement[]>([]);
 
 const { data: group } = useUserGroupQuery(projectId);
-const groupId = computed(() => group.value?.id)
+const groupId = computed(() => group.value?.id);
 const { mutateAsync } = useCreateSubmissionMutation(groupId);
 
 async function formOnSubmit(event: SubmitEvent) {
@@ -53,14 +57,12 @@ async function formOnSubmit(event: SubmitEvent) {
         await mutateAsync(formData);
         await router.push(`/groups/${group.value?.id}/submissions`);
     } catch (error) {
-        if (error instanceof(Error)) {
-            unmetRequirements.value = error.cause.map(r => {
-                return {requirement: {mandatory: r.mandatory, value: r.value},
-                files: r.files}
-            })
+        if (error instanceof Error) {
+            unmetRequirements.value = error.cause.map((r) => {
+                return { requirement: { mandatory: r.mandatory, value: r.value }, files: r.files };
+            });
         }
     }
-
 }
 </script>
 

@@ -1,15 +1,15 @@
 <template>
     <v-skeleton-loader :loading="isLoading" type="article">
-    <v-card>
-        <v-card-item>
-            <h1>{{ $t("submit.submit_title") }}</h1>
-            <h1 v-if="isError">Error</h1>
-            <ProjectMiniCard :project="project!" class="mini-card" />
-        </v-card-item>
-        <v-card-item>
-            <SubmitForm :project="project!" class="submit-form" />
-        </v-card-item>
-    </v-card>
+        <v-card>
+            <v-card-item>
+                <h1>{{ $t("submit.submit_title") }}</h1>
+                <h1 v-if="isError">Error</h1>
+                <ProjectMiniCard :project="project!" class="mini-card" />
+            </v-card-item>
+            <v-card-item>
+                <SubmitForm :project="project!" class="submit-form" />
+            </v-card-item>
+        </v-card>
     </v-skeleton-loader>
 </template>
 

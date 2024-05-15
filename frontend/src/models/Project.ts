@@ -36,7 +36,6 @@ export interface UnmetRequirement {
     files: string[] | undefined;
 }
 
-
 export enum FilterOptions {
     All = "All",
     Completed = "Completed",

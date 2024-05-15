@@ -47,6 +47,6 @@ export function useCreateSubmissionMutation(
     groupId: Ref<number | undefined>
 ): UseMutationReturnType<Object, Error, FormData, void> {
     return useMutation<Object, Error, FormData, void>({
-        mutationFn: (formData) => createSubmission(groupId.value!, formData)
+        mutationFn: (formData) => createSubmission(groupId.value!, formData),
     });
 }
