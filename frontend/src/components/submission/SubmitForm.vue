@@ -1,9 +1,12 @@
 <template>
-    <v-form validate-on="submit lazy" @submit.prevent="formOnSubmit">
-        <FilesInput v-model="inputFiles" />
-        <v-textarea :label="$t('submit.remarks')" name="remarks" v-model="remarksInput" />
-        <v-btn variant="flat" type="submit">{{ $t("submit.submit_button") }}</v-btn>
-    </v-form>
+    <div>
+        <RequirementsCard :requirements=project!.requirements :unmetRequirements=unmetRequirements  />
+        <v-form validate-on="submit lazy" @submit.prevent="formOnSubmit" class="submission-form">
+            <FilesInput v-model="inputFiles" />
+            <v-textarea :label="$t('submit.remarks')" name="remarks" v-model="remarksInput" />
+            <v-btn variant="flat" type="submit">{{ $t("submit.submit_button") }}</v-btn>
+        </v-form>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -13,19 +16,27 @@ import { useRouter } from "vue-router";
 import { useCreateSubmissionMutation } from "@/queries/Submission";
 import { useUserGroupQuery } from "@/queries/Group";
 import { useI18n } from "vue-i18n";
+import RequirementsCard from "@/components/project/RequirementsCard.vue";
+import type Project from "@/models/Project";
+import type { UnmetRequirement } from "@/models/Project";
 
 const props = defineProps<{
-    projectId: number;
+    project: Project;
 }>();
 
-const { projectId } = toRefs(props);
+const { project } = toRefs(props);
+const projectId = computed(() => project.value.id)
+const groupId = computed(() => group.value?.id)
+
 const router = useRouter();
 const { t } = useI18n();
 
 const inputFiles = ref<File[]>([]);
 const remarksInput = ref<string | null>(null);
+const unmetRequirements = ref<UnmetRequirement[] | null>(null);
+
 const { data: group } = useUserGroupQuery(projectId);
-const { mutateAsync } = useCreateSubmissionMutation(computed(() => group.value?.id));
+const { mutateAsync } = useCreateSubmissionMutation(groupId);
 
 async function formOnSubmit(event: SubmitEvent) {
     if (inputFiles.value.length === 0) {
@@ -37,9 +48,19 @@ async function formOnSubmit(event: SubmitEvent) {
     for (const inputFile of inputFiles.value) {
         formData.append("files", inputFile);
     }
-    await mutateAsync(formData);
 
-    await router.push(`/groups/${group.value?.id}/submissions`);
+    try {
+        await mutateAsync(formData);
+        await router.push(`/groups/${group.value?.id}/submissions`);
+    } catch (error) {
+        if (error instanceof(Error)) {
+            unmetRequirements.value = error.cause.map(r => {
+                return {"requirement": {"mandatory": r.mandatory, "value": r.value},
+                "files": r.files}
+            })
+        }
+    }
+
 }
 </script>
 
@@ -49,6 +70,10 @@ async function formOnSubmit(event: SubmitEvent) {
 }
 
 .v-textarea {
+    margin-top: 30px;
+}
+
+.submission-form {
     margin-top: 30px;
 }
 </style>

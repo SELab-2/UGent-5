@@ -5,7 +5,7 @@ export default interface Project {
     // groupProjectType: string;
     // selectedTeachers: string[]; // Assuming you store only teacher IDs
     subject_id: number;
-    requirements: [Requirement];
+    requirements: Requirement[];
     description: string;
     capacity: number;
 }
@@ -30,6 +30,12 @@ export interface Requirement {
     mandatory: boolean;
     value: string;
 }
+
+export interface UnmetRequirement {
+    requirement: Requirement;
+    files: string[] | undefined;
+}
+
 
 export enum FilterOptions {
     All = "All",

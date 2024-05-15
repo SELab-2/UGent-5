@@ -32,10 +32,10 @@ def upload_files(files: list[UploadFile], project: Project) -> str:
         matches = [file for file in filelist if fnmatch.fnmatch(file, r.value)]
 
         if not r.mandatory and len(matches):
-            errors.append({"type": "forbidden", "requirement": r.value,
+            errors.append({"mandatory": False, "value": r.value,
                           "msg": f"Forbidden file(s) found: {r.value}", "files": matches})
         elif r.mandatory and not len(matches):
-            errors.append({"type": "mandatory", "requirement": r.value,
+            errors.append({"mandatory": True, "value": r.value,
                           "msg": f"Required file not found: {r.value}"})
 
     if len(errors):

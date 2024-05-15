@@ -23,7 +23,7 @@ vi.mock("@/components/project/ProjectMiniCard.vue", () => ({
 
 vi.mock("@/components/project/submit/SubmitForm.vue", () => ({
     default: {
-        template: "<div class='submitForm'></div>",
+        template: "<div class='submit-form'></div>",
     },
 }));
 

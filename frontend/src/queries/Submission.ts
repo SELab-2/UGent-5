@@ -45,12 +45,8 @@ export function useFilesQuery(
 // Hook for creating a new submission
 export function useCreateSubmissionMutation(
     groupId: Ref<number | undefined>
-): UseMutationReturnType<Submission, Error, FormData, void> {
-    return useMutation<Submission, Error, FormData, void>({
-        mutationFn: (formData) => createSubmission(groupId.value!, formData),
-        onError: (error) => {
-            console.error("Submission creation failed", error);
-            alert("Could not create submission. Please try again.");
-        },
+): UseMutationReturnType<Object, Error, FormData, void> {
+    return useMutation<Object, Error, FormData, void>({
+        mutationFn: (formData) => createSubmission(groupId.value!, formData)
     });
 }

@@ -63,6 +63,8 @@ export default {
         requirements: "Bestandsvereisten",
         mandatory: "Verplicht",
         forbidden: "Verboden",
+        unmet_mandatory: "Dit verplichte bestand is niet aanwezig in jouw indiening.",
+        unmet_forbidden: "Deze ingediende bestanden zijn verboden:",
         to_subject: "Naar vak",
     },
     navigation: {
