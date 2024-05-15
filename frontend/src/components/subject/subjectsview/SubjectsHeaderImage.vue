@@ -6,24 +6,13 @@
         :src="imagePath"
         class="header-img"
     >
-        <SubjectIcon
-            :is-instructor="isInstructor"
-            size="xxx-large"
-            class="subject-icon"
-        ></SubjectIcon>
     </v-img>
 </template>
 
 <script setup lang="ts">
-import SubjectIcon from "@/components/subject/extra/SubjectIcon.vue";
-import {ref} from "vue";
-
 defineProps<{
     imagePath: string;
 }>();
-
-const isInstructor = ref<boolean>(true);
-
 </script>
 
 <style scoped>

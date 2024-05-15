@@ -9,14 +9,11 @@
                 aspect-ratio="16/9"
                 height="120px"
             >
-
-                <v-icon
-                    color="white"
+                <SubjectIcon
+                    :is-instructor="isInstructor"
                     size="xx-large"
                     class="subject-icon"
-                >
-                    mdi-account-tie
-                </v-icon>
+                ></SubjectIcon>
                 <v-card-title class="subject-title">
                     {{ subject?.name }}
                     <v-icon class="">mdi-chevron-right</v-icon>
@@ -28,16 +25,18 @@
 
 <script setup lang="ts">
 import type Subject from "@/models/Subject";
+import SubjectIcon from "@/components/subject/extra/SubjectIcon.vue";
+import {ref} from "vue";
 
 defineProps<{
     subject: Subject;
 }>();
+
+const isInstructor = ref<boolean>(true);
+
 </script>
 
 <style scoped>
-.card-loader {
-    border-radius: 25px;
-}
 
 .router-link {
     text-decoration: none;

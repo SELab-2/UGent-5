@@ -7,16 +7,16 @@
             ></SubjectsHeaderCard>
         </v-col>
         <v-col>
-            <SubjectHeaderImage
+            <SubjectsHeaderImage
                 image-path="https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png"
-            ></SubjectHeaderImage>
+            ></SubjectsHeaderImage>
         </v-col>
     </v-row>
 </template>
 
 <script setup lang="ts">
 import SubjectsHeaderCard from "@/components/subject/subjectsview/SubjectsHeaderCard.vue";
-import SubjectHeaderImage from "@/components/subject/subjectview/header/SubjectHeaderImage.vue";
+import SubjectsHeaderImage from "@/components/subject/subjectsview/SubjectsHeaderImage.vue";
 
 defineProps<{
     academicYears: number[];
