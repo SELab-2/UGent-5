@@ -32,11 +32,11 @@
 </template>
 
 <script setup lang="ts">
-import SubjectProjectsList from "@/components/subject/body/projects/list/SubjectProjectsList.vue";
+import SubjectProjectsList from "@/components/subject/subjectview/body/projects/list/SubjectProjectsList.vue";
 import type Project from "@/models/Project";
 import { FilterOptions } from "@/models/Project";
 import { computed, ref, toRefs } from "vue";
-import SubjectProjectPage from "@/components/subject/body/projects/SubjectProjectPage.vue";
+import SubjectProjectPage from "@/components/subject/subjectview/body/projects/SubjectProjectPage.vue";
 
 const props = defineProps<{
     projects: Project[];
@@ -53,9 +53,9 @@ const filteredProjects = computed(() => {
     if (filterOption.value === FilterOptions.All) {
         return sortedProjects;
     } else if (filterOption.value === FilterOptions.Active) {
-        return sortedProjects.filter((project) => new Date(project.deadline) > currentDate) || [];
+        return sortedProjects.filter((project) => new Date(project.deadline) > currentDate);
     } else if (filterOption.value === FilterOptions.Completed) {
-        return sortedProjects.filter((project) => new Date(project.deadline) <= currentDate) || [];
+        return sortedProjects.filter((project) => new Date(project.deadline) <= currentDate);
     }
     return sortedProjects;
 });

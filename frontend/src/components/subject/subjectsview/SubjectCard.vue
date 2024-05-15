@@ -9,6 +9,14 @@
                 aspect-ratio="16/9"
                 height="120px"
             >
+
+                <v-icon
+                    color="white"
+                    size="xx-large"
+                    class="subject-icon"
+                >
+                    mdi-account-tie
+                </v-icon>
                 <v-card-title class="subject-title">
                     {{ subject?.name }}
                     <v-icon class="">mdi-chevron-right</v-icon>
@@ -46,5 +54,11 @@ defineProps<{
 
 .subject-title {
     color: white;
+}
+
+.subject-icon {
+    position: absolute;
+    top: 10px;
+    right: 15px;
 }
 </style>

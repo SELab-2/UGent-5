@@ -65,8 +65,8 @@
 import { computed, ref, toRefs } from "vue";
 import { useSubjectDetailsQuery } from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
-import SubjectHeaderContainer from "@/components/subject/header/SubjectHeaderContainer.vue";
-import SubjectBody from "@/components/subject/body/SubjectBody.vue";
+import SubjectHeaderContainer from "@/components/subject/subjectview/header/SubjectHeaderContainer.vue";
+import SubjectBody from "@/components/subject/subjectview/body/SubjectBody.vue";
 import { useRouter } from "vue-router";
 import { useUserQuery } from "@/queries/User";
 

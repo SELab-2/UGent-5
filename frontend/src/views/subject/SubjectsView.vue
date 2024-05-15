@@ -42,13 +42,15 @@
 <script setup lang="ts">
 import { useSubjectsQuery } from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
-import SubjectsHeaderContainer from "@/components/subjects/SubjectsHeaderContainer.vue";
-import SubjectCard from "@/components/subjects/SubjectCard.vue";
+import SubjectsHeaderContainer from "@/components/subject/subjectsview/SubjectsHeaderContainer.vue";
+import SubjectCard from "@/components/subject/subjectsview/SubjectCard.vue";
 import { computed, ref } from "vue";
 import useAcademicYear from "@/composables/useAcademicYear";
 import useIsTeacher from "@/composables/useIsTeacher";
 
 const { data: subjects, error, isLoading, isError } = useSubjectsQuery();
+const selectedAcademicYear = ref<number>(useAcademicYear());
+const { isTeacher } = useIsTeacher();
 
 const academicYears = computed(() => {
     return Array.from(
@@ -56,14 +58,17 @@ const academicYears = computed(() => {
     ).sort((a, b) => b - a);
 });
 
-const selectedAcademicYear = ref<number>(useAcademicYear());
-const { isTeacher } = useIsTeacher();
-
 const subjectsByAcademicYear = computed(() => {
     return [...(subjects.value || [])].filter(
         (subject) => subject.academic_year === selectedAcademicYear.value
     );
 });
+
+/* will be necessary to show checkboxes in header when queries refactoring returns instructor and student subjects
+const isInstructor = computed(() => {
+    return isTeacher;
+});
+ */
 
 const onAcademicYearChanged = (academicYear: number) => {
     selectedAcademicYear.value = academicYear;

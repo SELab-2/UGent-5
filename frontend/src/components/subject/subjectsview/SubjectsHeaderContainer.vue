@@ -15,8 +15,8 @@
 </template>
 
 <script setup lang="ts">
-import SubjectsHeaderCard from "@/components/subjects/SubjectsHeaderCard.vue";
-import SubjectHeaderImage from "@/components/subject/header/SubjectHeaderImage.vue";
+import SubjectsHeaderCard from "@/components/subject/subjectsview/SubjectsHeaderCard.vue";
+import SubjectHeaderImage from "@/components/subject/subjectview/header/SubjectHeaderImage.vue";
 
 defineProps<{
     academicYears: number[];

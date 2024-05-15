@@ -23,19 +23,35 @@
                     </div>
                 </v-card-text>
             </v-col>
+            <v-col cols="3">
+                <v-checkbox
+                    class="align-right"
+                    v-model="showInstructorSubjects"
+                >
+                    instructor vakken
+                </v-checkbox>
+                <v-checkbox
+                    class="align-right"
+                    v-model="showStudentSubjects"
+                >
+                    student vakken
+                </v-checkbox>
+            </v-col>
         </v-row>
     </v-card>
 </template>
 
 <script setup lang="ts">
 import { ref, toRefs, watch } from "vue";
-import getCurrentAcademicYear from "@/composables/useAcademicYear";
+import useAcademicYear from "@/composables/useAcademicYear";
 
 const props = defineProps<{
     academicYears: number[];
 }>();
 const { academicYears } = toRefs(props);
-const activeAcademicYear = ref(getCurrentAcademicYear());
+const activeAcademicYear = ref(useAcademicYear());
+const showInstructorSubjects = ref(true);
+const showStudentSubjects = ref(true);
 
 const emit = defineEmits<{
     (e: "academic-year-changed", academicYear: number): void;

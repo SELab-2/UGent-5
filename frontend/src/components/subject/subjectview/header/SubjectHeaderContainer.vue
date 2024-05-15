@@ -16,9 +16,9 @@
 </template>
 
 <script setup lang="ts">
-import SubjectHeaderCard from "@/components/subject/header/SubjectHeaderCard.vue";
+import SubjectHeaderCard from "@/components/subject/subjectview/header/SubjectHeaderCard.vue";
 import type User from "@/models/User";
-import SubjectHeaderImage from "@/components/subject/header/SubjectHeaderImage.vue";
+import SubjectHeaderImage from "@/components/subject/subjectview/header/SubjectHeaderImage.vue";
 
 defineProps<{
     title: string;
