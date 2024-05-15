@@ -1,5 +1,7 @@
 <template>
-    <h2 class="welcome">{{ $t("home.welcome", { name: user.given_name }) }}!</h2>
+    <h2 class="welcome">
+        {{ $t("home.welcome", { name: user.given_name, surname: user.surname }) }}!
+    </h2>
     <v-switch
         :model-value="user.is_admin"
         label="is_admin"

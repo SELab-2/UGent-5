@@ -1,11 +1,11 @@
 <template>
-    <v-btn v-if="canLeaveGroup" @click="() => leaveGroup({ groupId: group.id })">
+    <v-btn v-if="canLeaveGroup" @click="leaveGroupAndRedirect" variant="flat">
         {{ $t("group.leave_group") }}
     </v-btn>
-    <v-btn v-else-if="canJoinGroup" @click="() => joinGroup({ groupId: group.id })">
+    <v-btn v-else-if="canJoinGroup" @click="joinGroupAndRedirect" variant="flat">
         {{ $t("group.join_group") }}
     </v-btn>
-    <v-btn v-if="isTeacher" @click="() => removeGroup({ groupId: group.id })">
+    <v-btn v-if="isTeacher" @click="removeGroupAndRedirect" variant="flat">
         {{ $t("group.remove_group") }}
     </v-btn>
 </template>
@@ -21,6 +21,7 @@ import {
     useRemoveGroupMutation,
     useUserGroupsQuery,
 } from "@/queries/Group";
+import router from "@/router";
 
 const props = defineProps<{
     group: Group;
@@ -63,6 +64,28 @@ const { mutateAsync: leaveGroup } = useLeaveGroupUserMutation();
 const { mutateAsync: joinGroup } = useJoinGroupUserMutation();
 
 const { mutateAsync: removeGroup } = useRemoveGroupMutation();
+
+const joinGroupAndRedirect = async () => {
+    await joinGroup({ groupId: group.value.id });
+    router.push(`/groups/${group.value.id}`);
+};
+
+const leaveGroupAndRedirect = async () => {
+    await leaveGroup({ groupId: group.value.id });
+    router.push(`/project/${project.value.id}/groups`);
+};
+
+const removeGroupAndRedirect = async () => {
+    await removeGroup({ groupId: group.value.id });
+    router.push(`/project/${project.value.id}/groups`);
+}
 </script>
 
-<style scoped></style>
+<style scoped>
+.v-btn {
+    text-decoration: underline;
+    background-color: rgb(var(--v-theme-secondary));
+    padding: 2px;
+}
+
+</style>
