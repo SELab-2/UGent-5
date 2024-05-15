@@ -4,13 +4,13 @@
         <h1 v-else-if="isDataError" class="welcome">{{ $t("group.error") }}</h1>
         <div v-else class="projectInfo">
             <h2>{{ "Project: " + project!.name }}</h2>
+            <StudentsDialog :students="allStudents" title="group.all_students"/>
             <div v-if="groups.length > 0">
                 <v-row>
                     <v-col cols="8">{{ $t("group.groups") }}</v-col>
                     <v-col cols="2">{{ $t("group.members") }}</v-col>
                     <v-col cols="2">{{ $t("group.actions") }}</v-col>
                 </v-row>
-                <AllstudentsDialog :students="allStudents" />
                 <GroupCard
                     v-for="group in groups"
                     :key="group.id"
@@ -38,7 +38,7 @@ import GroupCard from "@/components/home/cards/GroupCard.vue";
 import { useUserQuery } from "@/queries/User";
 import { type GroupForm } from "@/models/Group";
 import { useSubjectStudentsQuery } from "@/queries/Subject";
-import AllstudentsDialog from "@/components/AllstudentsDialog.vue";
+import StudentsDialog from "@/components/StudentsDialog.vue";
 
 const props = defineProps<{
     projectId: number;

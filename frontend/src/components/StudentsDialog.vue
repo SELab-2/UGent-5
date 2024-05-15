@@ -1,10 +1,8 @@
 <template>
-    <v-card class="v-card-padding">
-        <div @click="openDialog" class="dialog-link">{{ $t("group.all_students") }}</div>
-    </v-card>
+    <v-btn @click="openDialog" class="dialog-link" variant="flat">{{ $t(title) }}</v-btn>
     <v-dialog v-model="dialog" max-width="500px" max-height="500px">
         <v-card>
-            <v-card-title>{{ $t("group.all_students_course") }}</v-card-title>
+            <v-card-title>{{ $t(title) }}</v-card-title>
             <v-card-text class="student-list">
                 <div v-if="students.length > 0">
                     <v-card-item v-for="(student, index) in students" :key="index">
@@ -28,6 +26,7 @@ import { ref, toRefs } from "vue";
 
 const props = defineProps<{
     students: User[] | null;
+    title: string
 }>();
 
 const { students } = toRefs(props);
@@ -49,12 +48,15 @@ function closeDialog() {
 }
 
 .dialog-link {
-    cursor: pointer;
-    color: blue;
-    text-decoration: underline;
+    margin: 15px;
 }
+
 .v-card-padding {
     padding: 5px;
     margin-bottom: 5px;
+}
+
+.dialog-link {
+    background-color: rgb(var(--v-theme-secondary))
 }
 </style>
