@@ -2,9 +2,7 @@
     <v-card class="v-card-padding">
         <v-row>
             <v-col cols="8">
-                <router-link :to="`/groups/${group.id}`">
-                    {{ group.team_name }}
-                </router-link>
+                <StudentsDialog :students="group.members" :title="group.team_name"/>
             </v-col>
             <v-col cols="2">
                 {{ amountOfMembers + "/" + project.capacity }}
@@ -22,11 +20,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, toRefs } from "vue";
+import {computed, ref, toRefs} from "vue";
 import type Project from "@/models/Project";
 import type Group from "@/models/Group";
 import type User from "@/models/User";
 import GroupButtons from "@/components/buttons/GroupButtons.vue";
+import StudentsDialog from "@/components/StudentsDialog.vue";
 
 const props = defineProps<{
     group: Group;
@@ -47,4 +46,5 @@ const amountOfMembers = computed(() => {
     margin-bottom: 5px;
     height: 50px;
 }
+
 </style>
