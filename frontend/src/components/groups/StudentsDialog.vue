@@ -1,8 +1,8 @@
 <template>
-    <v-btn @click="openDialog" class="dialog-link" variant="outlined">{{ $t(title) }}</v-btn>
+    <v-btn @click="openDialog" class="dialog-link" variant="outlined">{{ title }}</v-btn>
     <v-dialog v-model="dialog" max-width="500px" max-height="500px">
         <v-card>
-            <v-card-title>{{ $t(title) }}</v-card-title>
+            <v-card-title>{{ title }}</v-card-title>
             <v-card-text class="student-list">
                 <div v-if="students.length > 0">
                     <v-card-item v-for="(student, index) in students" :key="index">

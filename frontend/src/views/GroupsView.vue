@@ -4,13 +4,13 @@
         <h1 v-else-if="isDataError" class="welcome">{{ $t("group.error") }}</h1>
         <div v-else class="projectInfo">
             <h2>{{ "Project: " + project!.name }}</h2>
-            <StudentsDialog :students="allStudents" title="group.all_students"/>
+            <StudentsDialog :students="allStudents" :title="$t('group.all_students')"/>
             <v-divider class="border-opacity-50"></v-divider>
             <div v-if="groups.length > 0">
                 <v-row>
-                    <v-col cols="8">{{ $t("group.groups") }}</v-col>
+                    <v-col cols="7">{{ $t("group.groups") }}</v-col>
                     <v-col cols="2">{{ $t("group.members") }}</v-col>
-                    <v-col cols="2">{{ $t("group.actions") }}</v-col>
+                    <v-col cols="3">{{ $t("group.actions") }}</v-col>
                 </v-row>
                 <GroupCard
                     v-for="group in groups"
@@ -36,11 +36,11 @@
 import { useCreateGroupsMutation, useProjectGroupsQuery } from "@/queries/Group";
 import { computed, toRefs } from "vue";
 import { useProjectQuery } from "@/queries/Project";
-import GroupCard from "@/components/home/cards/GroupCard.vue";
+import GroupCard from "@/components/groups/GroupCard.vue";
 import { useUserQuery } from "@/queries/User";
 import { type GroupForm } from "@/models/Group";
 import { useSubjectInstructorsQuery, useSubjectStudentsQuery } from "@/queries/Subject";
-import StudentsDialog from "@/components/StudentsDialog.vue";
+import StudentsDialog from "@/components/groups/StudentsDialog.vue";
 
 const props = defineProps<{
     projectId: number;

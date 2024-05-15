@@ -1,7 +1,7 @@
 <template>
     <v-card class="groupcard" variant="flat">
         <v-row>
-            <v-col cols="8">
+            <v-col cols="7">
                 <StudentsDialog :students="group.members" :title="group.team_name"/>
                 <v-btn v-if="isTeacher" variant="flat" @click="toGroupPage">
                     {{ $t("group.to_grouppage") }}
@@ -10,7 +10,7 @@
             <v-col cols="2">
                 {{ amountOfMembers + "/" + project.capacity }}
             </v-col>
-            <v-col cols="2">
+            <v-col cols="3">
                 <GroupButtons
                     :amountOfMembers="amountOfMembers"
                     :group="group"
@@ -24,12 +24,12 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref, toRefs} from "vue";
+import {computed, toRefs} from "vue";
 import type Project from "@/models/Project";
 import type Group from "@/models/Group";
 import type User from "@/models/User";
 import GroupButtons from "@/components/buttons/GroupButtons.vue";
-import StudentsDialog from "@/components/StudentsDialog.vue";
+import StudentsDialog from "@/components/groups/StudentsDialog.vue";
 import router from "@/router";
 
 const props = defineProps<{

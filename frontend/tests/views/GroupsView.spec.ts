@@ -79,13 +79,13 @@ vi.mock('@/queries/Subject', () => ({
     useSubjectInstructorsQuery: vi.fn(() => testSubjectInstructorsQuery),
 }))
 
-vi.mock("@/components/StudentsDialog.vue", () => ({
+vi.mock("@/components/groups/StudentsDialog.vue", () => ({
     default: {
         template: "<div class='studentsDialog'></div>",
     },
 }));
 
-vi.mock("@/components/home/cards/GroupCard.vue", () => ({
+vi.mock("@/components/groups/GroupCard.vue", () => ({
     default: {
         template: "<div class='groupCard'></div>",
     },
