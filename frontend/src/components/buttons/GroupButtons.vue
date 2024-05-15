@@ -1,8 +1,14 @@
 <template>
-    <v-btn v-if="canLeaveGroup" @click="() => leaveGroup({ groupId: group.id })">
+    <v-btn
+        v-if="canLeaveGroup"
+        @click="() => leaveGroup({ groupId: group.id, projectId: project.id })"
+    >
         {{ $t("group.leave_group") }}
     </v-btn>
-    <v-btn v-else-if="canJoinGroup" @click="() => joinGroup({ groupId: group.id })">
+    <v-btn
+        v-else-if="canJoinGroup"
+        @click="() => joinGroup({ groupId: group.id, projectId: project.id })"
+    >
         {{ $t("group.join_group") }}
     </v-btn>
     <v-btn

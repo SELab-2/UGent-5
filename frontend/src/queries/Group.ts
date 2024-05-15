@@ -171,34 +171,52 @@ export function useAddToGroupMutation(): UseMutationReturnType<
 export function useJoinGroupUserMutation(): UseMutationReturnType<
     void,
     Error,
-    { groupId: number },
-    { previousGroup: Group }
+    { groupId: number; projectId: number },
+    { previousGroup?: Group; previousProjectGroups?: Group[] }
 > {
     const queryClient = useQueryClient();
+    const { data: user } = useCurrentUserQuery();
     return useMutation({
         mutationFn: ({ groupId }) => joinGroup(groupId), // Call the joinGroup service function
-        onMutate: ({ groupId }) => {
+        onMutate: ({ groupId, projectId }) => {
             const previousGroup = queryClient.getQueryData<Group>(GROUP_QUERY_KEY(groupId));
-            // TODO: this is a placeholder and should be replaced with the
-            // actual user data, but query structure does not support this
-            // currently
-            const newGroup = { ...previousGroup! };
-            newGroup.members.push({
-                uid: "placeholder",
-                given_name: "placeholder",
-                surname: "placeholder",
-                mail: "placeholder",
-                is_teacher: false,
-                is_admin: false,
-            });
-            queryClient.setQueryData<Group>(GROUP_QUERY_KEY(groupId), newGroup);
-            return { previousGroup: previousGroup! };
+            const previousProjectGroups = queryClient.getQueryData<Group[]>(
+                PROJECT_GROUPS_QUERY_KEY(projectId)
+            );
+            if (previousGroup) {
+                const newGroup = { ...previousGroup, members: [...previousGroup.members] };
+                // WARN: This could break if user query is not resolved yet
+                newGroup.members.push(user.value!);
+                queryClient.setQueryData<Group>(GROUP_QUERY_KEY(groupId), newGroup);
+            }
+            const newProjectGroups =
+                previousProjectGroups?.map((group) => {
+                    if (group.id !== groupId) {
+                        return group;
+                    }
+                    // WARN: This could break if user query is not resolved yet
+                    return { ...group, members: [...group.members, user.value!] };
+                }) || [];
+            queryClient.setQueryData<Group[]>(
+                PROJECT_GROUPS_QUERY_KEY(projectId),
+                newProjectGroups
+            );
+            return { previousGroup, previousProjectGroups };
         },
-        onSuccess: (_, { groupId }) => {
+        onSuccess: (_, { groupId, projectId }) => {
             queryClient.invalidateQueries({ queryKey: GROUP_QUERY_KEY(groupId) });
+            queryClient.invalidateQueries({ queryKey: PROJECT_GROUPS_QUERY_KEY(projectId) });
         },
         onError: (_, { groupId }, ctx) => {
-            queryClient.setQueryData<Group>(GROUP_QUERY_KEY(groupId), ctx!.previousGroup);
+            if (ctx && ctx.previousGroup) {
+                queryClient.setQueryData<Group>(GROUP_QUERY_KEY(groupId), ctx.previousGroup);
+            }
+            if (ctx && ctx.previousProjectGroups) {
+                queryClient.setQueryData<Group[]>(
+                    PROJECT_GROUPS_QUERY_KEY(ctx.previousProjectGroups[0].project_id),
+                    ctx.previousProjectGroups
+                );
+            }
             alert("Could not join group. Please try again.");
         },
     });
@@ -235,36 +253,64 @@ export function useRemoveUserFromGroupMutation(): UseMutationReturnType<
     });
 }
 
+const getGroupWithoutUser = (group: Group, uid: string) => {
+    return {
+        ...group,
+        members: group.members.filter((member) => member.uid !== uid),
+    };
+};
+
 /**
  * Mutation composable for removing the current user from a group
  */
 export function useLeaveGroupUserMutation(): UseMutationReturnType<
     void,
     Error,
-    { groupId: number },
-    { previousGroup: Group }
+    { groupId: number; projectId: number },
+    { previousGroup?: Group; previousProjectGroups?: Group[] }
 > {
     const queryClient = useQueryClient();
+    const { data: user } = useCurrentUserQuery();
     return useMutation({
         mutationFn: ({ groupId }) => leaveGroup(groupId),
-        onMutate: ({ groupId }) => {
+        onMutate: ({ groupId, projectId }) => {
             const previousGroup = queryClient.getQueryData<Group>(GROUP_QUERY_KEY(groupId));
-            const { data: user } = useCurrentUserQuery();
-            const newGroup = {
-                ...previousGroup!,
-                members: previousGroup!.members.filter(
-                    // WARN: This could not break if user query is not resolved yet
-                    (member) => member.uid !== user.value!.uid
-                ),
-            };
-            queryClient.setQueryData<Group>(GROUP_QUERY_KEY(groupId), newGroup);
-            return { previousGroup: previousGroup! };
+            const previousProjectGroups = queryClient.getQueryData<Group[]>(
+                PROJECT_GROUPS_QUERY_KEY(projectId)
+            );
+            if (previousGroup) {
+                // WARN: This could break if user query is not resolved yet
+                const newGroup = getGroupWithoutUser(previousGroup, user.value!.uid);
+                queryClient.setQueryData<Group>(GROUP_QUERY_KEY(groupId), newGroup);
+            }
+            const newProjectGroups =
+                previousProjectGroups?.map((group) => {
+                    if (group.id !== groupId) {
+                        return group;
+                    }
+                    // WARN: This could break if user query is not resolved yet
+                    return getGroupWithoutUser(group, user.value!.uid);
+                }) || [];
+            queryClient.setQueryData<Group[]>(
+                PROJECT_GROUPS_QUERY_KEY(projectId),
+                newProjectGroups
+            );
+            return { previousGroup, previousProjectGroups };
         },
-        onSuccess: (_, { groupId }) => {
+        onSuccess: (_, { groupId, projectId }) => {
             queryClient.invalidateQueries({ queryKey: GROUP_QUERY_KEY(groupId) });
+            queryClient.invalidateQueries({ queryKey: PROJECT_GROUPS_QUERY_KEY(projectId) });
         },
         onError: (_, { groupId }, ctx) => {
-            queryClient.setQueryData<Group>(GROUP_QUERY_KEY(groupId), ctx!.previousGroup);
+            if (ctx && ctx.previousGroup) {
+                queryClient.setQueryData<Group>(GROUP_QUERY_KEY(groupId), ctx.previousGroup);
+            }
+            if (ctx && ctx.previousProjectGroups) {
+                queryClient.setQueryData<Group[]>(
+                    PROJECT_GROUPS_QUERY_KEY(ctx.previousProjectGroups[0].project_id),
+                    ctx.previousProjectGroups
+                );
+            }
             alert("Could not leave group. Please try again.");
         },
     });
