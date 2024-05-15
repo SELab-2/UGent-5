@@ -1,6 +1,6 @@
 <template>
     <div>
-        <RequirementsCard :requirements=project!.requirements :unmetRequirements=unmetRequirements  />
+        <RequirementsCard v-if="project.requirements.length > 0" :requirements=project.requirements :unmetRequirements=unmetRequirements  />
         <v-form validate-on="submit lazy" @submit.prevent="formOnSubmit" class="submission-form">
             <FilesInput v-model="inputFiles" />
             <v-textarea :label="$t('submit.remarks')" name="remarks" v-model="remarksInput" />
@@ -33,7 +33,7 @@ const { t } = useI18n();
 
 const inputFiles = ref<File[]>([]);
 const remarksInput = ref<string | null>(null);
-const unmetRequirements = ref<UnmetRequirement[] | null>(null);
+const unmetRequirements = ref<UnmetRequirement[]>([]);
 
 const { data: group } = useUserGroupQuery(projectId);
 const { mutateAsync } = useCreateSubmissionMutation(groupId);
@@ -55,8 +55,8 @@ async function formOnSubmit(event: SubmitEvent) {
     } catch (error) {
         if (error instanceof(Error)) {
             unmetRequirements.value = error.cause.map(r => {
-                return {"requirement": {"mandatory": r.mandatory, "value": r.value},
-                "files": r.files}
+                return {requirement: {mandatory: r.mandatory, value: r.value},
+                files: r.files}
             })
         }
     }

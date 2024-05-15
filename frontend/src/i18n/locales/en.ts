@@ -65,6 +65,7 @@ export default {
         forbidden: "Forbidden",
         unmet_mandatory: "This mandatory file was not included in your submission.",
         unmet_forbidden: "These submitted files are not allowed:",
+        unmet_reqs_warning: "Your submission did not satisfy all file requirements.",
         to_subject: "To subject",
     },
     navigation: {
