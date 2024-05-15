@@ -16,7 +16,7 @@ export default {
         login: "Inloggen",
     },
     home: {
-        welcome: "Welkom {name}",
+        welcome: "Welkom {name} {surname}",
         logout: "Uitloggen",
     },
     submit: {
@@ -31,6 +31,7 @@ export default {
         latest_submission: "Laatste indiening:",
         new_submission: "Nieuwe indiening",
         status_submission: "Indiening is: {status}",
+        no_submission_files: "Geen indieningen gevonden",
     },
     submission: {
         status: "Indiening status: {status}",
@@ -62,6 +63,7 @@ export default {
         requirements: "Bestandsvereisten",
         mandatory: "Verplicht",
         forbidden: "Verboden",
+        to_subject: "Naar vak",
     },
     navigation: {
         home: "Hoofdscherm",
@@ -80,6 +82,7 @@ export default {
     },
     admin: {
         users: "Gebruikers",
+        search: "Zoeken",
         userTable: {
             name: "Naam",
             uid: "UGent ID",
@@ -108,5 +111,23 @@ export default {
 
     subjects: {
         title: "Mijn vakken",
+    },
+    group: {
+        not_found: "Groep niet gevonden",
+        not_found2: "Geen groepen teruggevonden",
+        error: "Fout bij het laden van de pagina",
+        groups: "Groepen:",
+        members: "Leden:",
+        actions: "Acties:",
+        no_members_found: "Geen leden teruggevonden.",
+        remove: "Verwijderen",
+        join_group: "Aansluiten",
+        leave_group: "Verlaten",
+        remove_group: "Groep verwijderen",
+        create_group: "Nieuwe groep",
+        no_students: "Geen studenten gevonden",
+        close: "sluiten",
+        all_students: "Alle studenten",
+        all_students_course: "Alle studenten in vak:",
     },
 };

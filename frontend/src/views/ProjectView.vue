@@ -4,7 +4,7 @@
         <h1 v-else-if="isDataError" class="welcome">{{ $t("project.not_found2") }}</h1>
         <div v-else class="projectInfo">
             <v-row>
-                <v-col cols="10">
+                <v-col class="col-sm-12 col-md-6 col-lg-8">
                     <ProjectInfo
                         :project="project!"
                         :group="group!"
@@ -83,5 +83,6 @@ const isDataError = computed(
 <style scoped>
 .button-container {
     margin-top: 20px;
+    min-width: 170px;
 }
 </style>

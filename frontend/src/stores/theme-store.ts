@@ -1,16 +1,24 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import { useTheme } from "vuetify";
 
 export const useThemeStore = defineStore("theme", () => {
-    const storedTheme = ref(localStorage.getItem("theme"));
+    const theme = useTheme();
 
-    function setTheme(newTheme?: string | null) {
-        if (!newTheme) {
-            return;
-        }
-        storedTheme.value = newTheme;
+    const selectedTheme = ref(localStorage.getItem("theme") || theme.global.name.value);
+
+    function setTheme(newTheme: string) {
+        theme.global.name.value = newTheme;
         localStorage.setItem("theme", newTheme);
     }
 
-    return { storedTheme, setTheme };
+    watch(
+        selectedTheme,
+        (newTheme) => {
+            setTheme(newTheme);
+        },
+        { immediate: true }
+    );
+
+    return { selectedTheme, setTheme };
 });

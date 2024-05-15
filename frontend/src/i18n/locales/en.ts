@@ -16,7 +16,7 @@ export default {
         login: "Login",
     },
     home: {
-        welcome: "Welcome {name}",
+        welcome: "Welcome {name} {surname}",
         logout: "Logout",
     },
     submit: {
@@ -31,6 +31,7 @@ export default {
         latest_submission: "Latest submission:",
         new_submission: "Submit new",
         status_submission: "Submission is: {status}",
+        no_submission_files: "No submissions found",
     },
     submission: {
         status: "Submission status:",
@@ -62,6 +63,7 @@ export default {
         requirements: "File requirements",
         mandatory: "Mandatory",
         forbidden: "Forbidden",
+        to_subject: "To subject",
     },
     navigation: {
         home: "Home",
@@ -80,6 +82,7 @@ export default {
     },
     admin: {
         users: "Users",
+        search: "Search",
         userTable: {
             name: "Name",
             uid: "UGent ID",
@@ -107,5 +110,23 @@ export default {
     },
     subjects: {
         title: "My Subjects",
+    },
+    group: {
+        not_found: "Group not found",
+        not_found2: "No groups found",
+        error: "Error loading page",
+        groups: "Groups:",
+        members: "Members:",
+        actions: "Actions:",
+        no_members_found: "No members found.",
+        remove: "Remove",
+        join_group: "Join group",
+        leave_group: "Leave group",
+        remove_group: "Delete group",
+        create_group: "New group",
+        no_students: "No students found",
+        close: "close",
+        all_students: "All students",
+        all_students_course: "All students in course:",
     },
 };

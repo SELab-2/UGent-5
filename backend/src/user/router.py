@@ -15,6 +15,7 @@ from .dependencies import (
 )
 from .schemas import User, UserSimple, UserSubjectList
 from .service import set_admin, set_teacher, get_all_users
+from . import service
 
 router = APIRouter(
     prefix="/api/users",
@@ -49,6 +50,15 @@ async def user_info(user: UserSimple = Depends(retrieve_user)) -> UserSimple:
     Get information about a user
     """
     return user
+
+
+@router.delete("/{user_id}", dependencies=[Depends(admin_user_validation)])
+async def delete_user(user: User = Depends(retrieve_user), db: AsyncSession
+                      = Depends(get_async_db)):
+    """
+    Delete a user
+    """
+    await service.delete_user(db, user.uid)
 
 
 @router.get("/me/subjects")

@@ -29,7 +29,7 @@ vi.mock("@/components/form_elements/FilesInput.vue", () => ({
 }));
 
 
-describe("SubmitCard", async () => {
+describe("SubmitForm", async () => {
     const wrapper = mount(SubmitForm, {
         props: {
             projectId: 1,
