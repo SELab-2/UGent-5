@@ -21,9 +21,4 @@ defineProps<{
     height: 165px;
 }
 
-.subject-icon {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-}
 </style>
