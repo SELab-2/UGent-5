@@ -15,7 +15,7 @@
                             :key="index"
                             align="center"
                         >
-                            <v-col>{{ member.given_name }}</v-col>
+                            <v-col>{{ member.given_name + " " + member.surname }}</v-col>
                             <v-col>
                                 <v-btn
                                     v-if="isTeacher"

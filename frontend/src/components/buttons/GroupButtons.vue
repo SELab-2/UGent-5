@@ -1,8 +1,8 @@
 <template>
-    <v-btn v-if="canLeaveGroup" @click="() => leaveGroup({ groupId: group.id })">
+    <v-btn v-if="canLeaveGroup" @click="leaveGroupAndRedirect">
         {{ $t("group.leave_group") }}
     </v-btn>
-    <v-btn v-else-if="canJoinGroup" @click="() => joinGroup({ groupId: group.id })">
+    <v-btn v-else-if="canJoinGroup" @click="joinGroupAndRedirect">
         {{ $t("group.join_group") }}
     </v-btn>
     <v-btn v-if="isTeacher" @click="() => removeGroup({ groupId: group.id })">
@@ -21,6 +21,7 @@ import {
     useRemoveGroupMutation,
     useUserGroupsQuery,
 } from "@/queries/Group";
+import router from "@/router";
 
 const props = defineProps<{
     group: Group;
@@ -64,6 +65,16 @@ const { mutateAsync: leaveGroup } = useLeaveGroupUserMutation();
 const { mutateAsync: joinGroup } = useJoinGroupUserMutation();
 
 const { mutateAsync: removeGroup } = useRemoveGroupMutation();
+
+const joinGroupAndRedirect = async () => {
+    await joinGroup({ groupId: group.value.id });
+    router.push(`/groups/${group.value.id}`);
+};
+
+const leaveGroupAndRedirect = async () => {
+    await leaveGroup({ groupId: group.value.id });
+    router.push(`/project/${project.value.id}/groups`);
+};
 </script>
 
 <style scoped></style>
