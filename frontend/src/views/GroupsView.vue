@@ -60,7 +60,10 @@ const {
     isError: isGroupError,
 } = useProjectGroupsQuery(projectId);
 
-const { data: user, isLoading: isUserLoading, isError: isUserError } = useUserQuery(null);
+const { data: user,
+    isLoading: isUserLoading,
+    isError: isUserError
+} = useUserQuery(null);
 
 const {
     data: allStudents,
