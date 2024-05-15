@@ -1,6 +1,6 @@
 import {mount} from "@vue/test-utils";
 import {expect, describe, it, vi} from "vitest";
-import SubmitCard from "../../../../src/components/submission/SubmitCard.vue"
+import SubmitCard from "../../../src/components/submission/SubmitCard.vue"
 import {ref} from "vue";
 
 
