@@ -111,6 +111,7 @@ export default {
     group: {
         not_found: "Group not found",
         not_found2: "No groups found",
+        error: "Error loading page",
         groups: "Groups:",
         members: "Members:",
         actions: "Actions:",
@@ -120,5 +121,9 @@ export default {
         leave_group: "Leave group",
         remove_group: "Delete group",
         create_group: "New group",
+        no_students: "No students found",
+        close: "close",
+        all_students: "All students",
+        all_students_course: "All students in course:",
     },
 };

@@ -15,7 +15,7 @@
                             :key="index"
                             align="center"
                         >
-                            <v-col>{{ member.given_name }}</v-col>
+                            <v-col>{{ member.given_name + " " + member.surname }}</v-col>
                             <v-col>
                                 <v-btn
                                     v-if="isTeacher"
@@ -40,6 +40,7 @@
                         :group="group!"
                         :project="project!"
                         :user="user!"
+                        :isTeacher="isTeacher!"
                     />
                 </v-card-actions>
             </v-card>
@@ -53,6 +54,7 @@ import { useGroupQuery, useRemoveUserFromGroupMutation } from "@/queries/Group";
 import { useProjectQuery } from "@/queries/Project";
 import { useCurrentUserQuery } from "@/queries/User";
 import GroupButtons from "@/components/buttons/GroupButtons.vue";
+import { useSubjectInstructorsQuery } from "@/queries/Subject";
 
 const props = defineProps<{
     groupId: number;
@@ -69,13 +71,31 @@ const {
 } = useProjectQuery(computed(() => group.value?.project_id));
 
 const { data: user, isLoading: isLoadingUser, isError: isErrorUser } = useCurrentUserQuery();
+const {
+    data: instructors,
+    isLoading: isLoadingInstructors,
+    isError: isErrorInstructors,
+} = useSubjectInstructorsQuery(computed(() => project.value?.subject_id));
+
 
 const isLoading = computed(
-    () => isLoadingGroup.value || isLoadingProject.value || isLoadingUser.value
+    () =>
+        isLoadingGroup.value ||
+        isLoadingProject.value ||
+        isLoadingUser.value ||
+        isLoadingInstructors.value
 );
-const isError = computed(() => isErrorGroup.value || isErrorProject.value || isErrorUser.value);
+const isError = computed(
+    () =>
+        isErrorGroup.value || isErrorProject.value || isErrorUser.value || isErrorInstructors.value
+);
 
-const isTeacher = computed(() => user.value?.is_teacher || false);
+const isTeacher = computed(() => {
+    if (!user.value || !instructors.value) {
+        return false;
+    }
+    return instructors.value.some((instructor) => instructor.uid === user.value.uid);
+});
 
 const amountOfMembers = computed(() => {
     if (!group.value) return 0;
