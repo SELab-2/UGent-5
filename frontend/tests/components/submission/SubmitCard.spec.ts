@@ -21,9 +21,9 @@ vi.mock("@/components/project/ProjectMiniCard.vue", () => ({
     },
 }));
 
-vi.mock("@/components/project/submit/SubmitForm.vue", () => ({
+vi.mock("@/components/submission/SubmitForm.vue", () => ({
     default: {
-        template: "<div class='submit-form'></div>",
+        template: "<div class='submitForm'></div>",
     },
 }));
 
@@ -51,7 +51,6 @@ describe("SubmitCard", async () => {
         testProjectQuery.setIsError(false);
         await wrapper.vm.$nextTick();
         expect(wrapper.findComponent('.projectMiniCard').exists()).toBeTruthy()
-        expect(wrapper.text()).toContain("Bestanden")
         expect(wrapper.findComponent('.submitForm').exists()).toBeTruthy()
     })
 });

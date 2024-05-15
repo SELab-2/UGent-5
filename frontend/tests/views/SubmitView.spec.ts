@@ -2,7 +2,7 @@ import {mount} from "@vue/test-utils";
 import {expect, describe, it, vi} from "vitest";
 import SubmitView from "../../src/views/SubmitView.vue";
 
-vi.mock("@/components/project/submit/SubmitCard.vue", () => ({
+vi.mock("@/components/submission/SubmitCard.vue", () => ({
     default: {
         template: "<div class='submitCard'></div>",
     },

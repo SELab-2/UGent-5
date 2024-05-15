@@ -26,7 +26,6 @@ const props = defineProps<{
 
 const { project } = toRefs(props);
 const projectId = computed(() => project.value.id)
-const groupId = computed(() => group.value?.id)
 
 const router = useRouter();
 const { t } = useI18n();
@@ -36,6 +35,7 @@ const remarksInput = ref<string | null>(null);
 const unmetRequirements = ref<UnmetRequirement[]>([]);
 
 const { data: group } = useUserGroupQuery(projectId);
+const groupId = computed(() => group.value?.id)
 const { mutateAsync } = useCreateSubmissionMutation(groupId);
 
 async function formOnSubmit(event: SubmitEvent) {
