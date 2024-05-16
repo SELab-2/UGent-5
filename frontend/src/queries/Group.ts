@@ -300,6 +300,7 @@ export function useLeaveGroupUserMutation(): UseMutationReturnType<
         onSuccess: (_, { groupId, projectId }) => {
             queryClient.invalidateQueries({ queryKey: GROUP_QUERY_KEY(groupId) });
             queryClient.invalidateQueries({ queryKey: PROJECT_GROUPS_QUERY_KEY(projectId) });
+            queryClient.invalidateQueries({ queryKey: USER_GROUPS_QUERY_KEY() });
         },
         onError: (_, { groupId }, ctx) => {
             if (ctx && ctx.previousGroup) {
