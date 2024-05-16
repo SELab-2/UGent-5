@@ -11,7 +11,7 @@ const mockProject = {
 }
 
 const mockInstructors = [
-    {uid: "1", given_name: "instructor 1"}
+    {uid: "1", given_name: "instructor 1", surname: "Doe"}
 ]
 
 const mockSubject = {
@@ -46,7 +46,7 @@ describe("ProjectInfo", async () => {
         expect(text).toContain("projectname")
         expect(text).toContain("subjectname")
         expect(text).toContain("Capaciteit: 2")
-        expect(text).toContain("instructor 1")
+        expect(text).toContain("I. Doe")
         expect(text).toContain("this is a testassignment")
 
     });
@@ -66,7 +66,7 @@ describe("ProjectInfo", async () => {
         expect(text).toContain("projectname")
         expect(text).toContain("subjectname")
         expect(text).toContain("Capaciteit: 2")
-        expect(text).toContain("instructor 1")
+        expect(text).toContain("I. Doe")
         expect(text).toContain("this is a testassignment")
     })
 });

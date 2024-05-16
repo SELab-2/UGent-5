@@ -14,6 +14,11 @@
             {{ $t("project.group_button") }}
         </v-btn>
     </router-link>
+    <router-link v-else-if="isTeacher" :to="`/project/${project!.id}/groups`">
+        <v-btn class="group-button" prepend-icon="mdi-account-group">
+            {{ $t("project.to_groups") }}
+        </v-btn>
+    </router-link>
     <NeedHelpButton
         v-if="!isTeacher && subject!.email"
         class="group-button"

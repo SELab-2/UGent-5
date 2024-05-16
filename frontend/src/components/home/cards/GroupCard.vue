@@ -15,6 +15,7 @@
                     :group="group"
                     :project="project"
                     :user="user"
+                    :isTeacher="isTeacher"
                 />
             </v-col>
         </v-row>
@@ -32,9 +33,10 @@ const props = defineProps<{
     group: Group;
     project: Project;
     user: User;
+    isTeacher: boolean;
 }>();
 
-const { group, project, user } = toRefs(props);
+const { group, project, user, isTeacher } = toRefs(props);
 
 const amountOfMembers = computed(() => {
     return group.value.members.length;
