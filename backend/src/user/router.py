@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.dependencies import authentication_validation
 from src.dependencies import get_async_db
 from src.group.schemas import GroupList
-from src.project.schemas import ProjectList
+from src.project.schemas import UserProjectList
 
 from .dependencies import (
     get_authenticated_user,
@@ -73,8 +73,8 @@ async def list_subjects(
 
 @router.get("/me/projects")
 async def list_projects(
-    projects: ProjectList = Depends(retrieve_projects),
-) -> ProjectList:
+    projects: UserProjectList = Depends(retrieve_projects),
+) -> UserProjectList:
     """
     Get the projects of the current user
     """

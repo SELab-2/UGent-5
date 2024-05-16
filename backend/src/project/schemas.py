@@ -1,6 +1,5 @@
 from datetime import datetime
-from typing import Optional, Sequence, List
-from html import escape
+from typing import List, Optional, Sequence
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -43,6 +42,12 @@ class Project(ProjectBase):
 class ProjectList(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     projects: Sequence[Project]
+
+
+class UserProjectList(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    as_instructor: Sequence[Project]
+    as_student: Sequence[Project]
 
 
 class ProjectUpdate(BaseModel):

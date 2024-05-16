@@ -16,15 +16,18 @@ import { useProjectsQuery } from "@/queries/Project";
 import { computed } from "vue";
 
 const { data: projects } = useProjectsQuery();
-const deadlines = computed<Deadline[]>(
-    () =>
-        projects.value
-            ?.filter((project) => project.deadline > new Date())
+
+const deadlines = computed<Deadline[]>(() => {
+    if (!projects.value) return [];
+    return (
+        [...projects.value.as_student, ...projects.value.as_instructor]
+            .filter((project) => project.deadline > new Date())
             .sort((a, b) => a.deadline.getTime() - b.deadline.getTime())
             .slice(0, 5)
             .map((project) => ({
                 project,
                 status: "none",
             })) || []
-);
+    );
+});
 </script>
