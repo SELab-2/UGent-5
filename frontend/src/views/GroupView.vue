@@ -52,7 +52,7 @@
 import { toRefs, computed } from "vue";
 import { useGroupQuery, useRemoveUserFromGroupMutation } from "@/queries/Group";
 import { useProjectQuery } from "@/queries/Project";
-import { useUserQuery } from "@/queries/User";
+import { useCurrentUserQuery } from "@/queries/User";
 import GroupButtons from "@/components/buttons/GroupButtons.vue";
 import { useSubjectInstructorsQuery } from "@/queries/Subject";
 
@@ -70,13 +70,12 @@ const {
     isError: isErrorProject,
 } = useProjectQuery(computed(() => group.value?.project_id));
 
+const { data: user, isLoading: isLoadingUser, isError: isErrorUser } = useCurrentUserQuery();
 const {
     data: instructors,
     isLoading: isLoadingInstructors,
     isError: isErrorInstructors,
 } = useSubjectInstructorsQuery(computed(() => project.value?.subject_id));
-
-const { data: user, isLoading: isLoadingUser, isError: isErrorUser } = useUserQuery(null);
 
 const isLoading = computed(
     () =>

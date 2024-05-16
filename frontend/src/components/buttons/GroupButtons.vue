@@ -5,7 +5,16 @@
     <v-btn v-else-if="canJoinGroup" @click="joinGroupAndRedirect">
         {{ $t("group.join_group") }}
     </v-btn>
-    <v-btn v-if="isTeacher" @click="() => removeGroup({ groupId: group.id })">
+    <v-btn
+        v-if="isTeacher"
+        @click="
+            () =>
+                removeGroup({
+                    groupId: group.id,
+                    projectId: project.id,
+                })
+        "
+    >
         {{ $t("group.remove_group") }}
     </v-btn>
 </template>
@@ -18,7 +27,7 @@ import { computed, toRefs } from "vue";
 import {
     useJoinGroupUserMutation,
     useLeaveGroupUserMutation,
-    useRemoveGroupMutation,
+    useDeleteGroupMutation,
     useUserGroupsQuery,
 } from "@/queries/Group";
 import router from "@/router";
@@ -63,15 +72,15 @@ const { mutateAsync: leaveGroup } = useLeaveGroupUserMutation();
 
 const { mutateAsync: joinGroup } = useJoinGroupUserMutation();
 
-const { mutateAsync: removeGroup } = useRemoveGroupMutation();
+const { mutateAsync: removeGroup } = useDeleteGroupMutation();
 
 const joinGroupAndRedirect = async () => {
-    await joinGroup({ groupId: group.value.id });
+    await joinGroup({ groupId: group.value.id, projectId: project.value.id });
     router.push(`/groups/${group.value.id}`);
 };
 
 const leaveGroupAndRedirect = async () => {
-    await leaveGroup({ groupId: group.value.id });
+    await leaveGroup({ groupId: group.value.id, projectId: project.value.id });
     router.push(`/project/${project.value.id}/groups`);
 };
 </script>
