@@ -1,21 +1,24 @@
 <template>
-    <BackgroundContainer>
+    <div class="registerview">
         <v-alert v-if="isError" title="Error" color="error" :text="error.message"></v-alert>
-        <v-skeleton-loader v-else :loading="isLoading" type="card" color="white">
-            <v-container align="center">
+        <v-skeleton-loader v-else :loading="isLoading" type="card">
+            <v-container align="center" class="container">
                 <h1>{{ $t("subject.register") }} {{ subject.name }}</h1>
-                <v-row justify="center">
-                    <v-btn variant="text" class="register" @click="register"> Ok </v-btn>
-                    <v-btn variant="text" class="cancel" @click="cancel"> Cancel </v-btn>
+                <v-row justify="center" class="buttons">
+                    <v-btn variant="text" class="register" @click="register">
+                        {{ $t("subject.ok") }}
+                    </v-btn>
+                    <v-btn variant="text" class="cancel" @click="cancel">
+                        {{ $t("subject.cancel") }}
+                    </v-btn>
                 </v-row>
             </v-container>
         </v-skeleton-loader>
-    </BackgroundContainer>
+    </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
-import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import { registerSubjectQuery, useSubjectUuidQuery } from "@/queries/Subject";
 import { useRouter } from "vue-router";
 
@@ -37,7 +40,17 @@ const cancel = () => router.push({ name: "home" });
 </script>
 
 <style scoped lang="scss">
-.h1 {
-    margin-bottom: 30px;
+.registerview {
+    margin: 25px;
+}
+
+.buttons {
+    margin-top: 50px;
+}
+
+.container {
+    background-color: rgb(var(--v-theme-secondary));
+    border-radius: 3px;
+    color: rgb(var(--v-theme-text));
 }
 </style>
