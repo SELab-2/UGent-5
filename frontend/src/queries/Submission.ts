@@ -1,4 +1,4 @@
-import { computed, toValue } from "vue";
+import { computed, ref, toValue, watch } from "vue";
 import type { MaybeRefOrGetter } from "vue";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/vue-query";
 import type { UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-query";
@@ -33,7 +33,6 @@ export function useSubmissionQuery(
         queryKey: computed(() => SUBMISSION_QUERY_KEY(toValue(submissionId)!)),
         queryFn: () => getSubmission(toValue(submissionId)!),
         enabled: () => !!toValue(submissionId),
-        retry: false,
     });
 }
 
@@ -58,9 +57,14 @@ export function useProjectSubmissionsQuery(
     projectId: MaybeRefOrGetter<number | undefined>
 ): UseQueryReturnType<Submission[], Error> {
     const { data: group } = useProjectGroupQuery(projectId);
-    return useQuery<Submission[], Error>({
+    return useQuery({
         queryKey: computed(() => PROJECT_SUBMISSIONS_QUERY_KEY(toValue(projectId)!)),
-        queryFn: () => getSubmissions(group.value!.id),
+        queryFn: async () => {
+            // HACK: Without this null-check, queries where there is no group will take a long time to resolve
+            // also, this should be `!group.value`, but javascript...
+            if (group.value === null) return [];
+            return await getSubmissions(group.value!.id);
+        },
         enabled: () => !!toValue(projectId),
     });
 }

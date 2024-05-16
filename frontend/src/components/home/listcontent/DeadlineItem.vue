@@ -26,7 +26,7 @@ const props = defineProps<{
 
 const { project } = toRefs(props);
 
-const { data: submissions } = useProjectSubmissionsQuery(computed(() => project.value.id));
+const { data: submissions } = useProjectSubmissionsQuery(project.value.id);
 
 const latestSubmissionStatus = computed(() => {
     if (!submissions.value || submissions.value.length === 0) return null;
