@@ -38,7 +38,7 @@
     </v-container>
 </template>
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { watch, ref, defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
     modelValue: Array
@@ -46,30 +46,40 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 
+// Reactive internal state based on the initial modelValue
 const internalRequirements = ref([...props.modelValue]);
+
+// Input field model
 const newRequirement = ref('');
 
+// Validation rules
 const rules = {
     required: value => !!value || 'Required.'
 };
 
+// Function to add a new requirement
 const addRequirement = () => {
     if (newRequirement.value) {
         const newReq = { value: newRequirement.value, mandatory: true };
         internalRequirements.value.push(newReq);
         emit('update:modelValue', internalRequirements.value);
-        newRequirement.value = ''; // Clear the input after adding
+        newRequirement.value = ''; // Clear the input field
     }
 };
 
+// Function to delete a requirement
 const deleteRequirement = (index) => {
     internalRequirements.value.splice(index, 1);
     emit('update:modelValue', internalRequirements.value);
 };
 
-watch(internalRequirements, (newValue) => {
-    emit('update:modelValue', newValue);
+// Watching the props.modelValue to update internalRequirements accordingly
+watch(() => props.modelValue, (newVal) => {
+    if (newVal !== internalRequirements.value) {
+        internalRequirements.value = [...newVal];
+    }
 }, { deep: true });
+
 
 </script>
 

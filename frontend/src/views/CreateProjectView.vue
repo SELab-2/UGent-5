@@ -75,7 +75,7 @@
                 </div>
                 <FilesInput v-model="files" />
             </v-col>
-            <v-col>
+            <v-col cols="12">
                 <RequirementsInput v-model="requirements" />
             </v-col>
         </v-row>
@@ -165,11 +165,13 @@ watch(
     projectData,
     (project) => {
         if (project) {
+            console.log("project",project);
             project_title.value = project.name;
             deadline.value = new Date(project.deadline);
             publishDate.value = new Date(project.publish_date);
+            requirements.value = project.requirements.map(req => ({ ...req }));
             const description = project.description;
-
+            console.log(requirements.value);
             nextTick(() => {
                 if (quillEditor.value && quillEditor.value.getQuill) {
                     let quill = quillEditor.value.getQuill();
