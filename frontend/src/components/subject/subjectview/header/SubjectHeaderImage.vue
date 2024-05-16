@@ -1,7 +1,7 @@
 <template>
     <v-img aspect-ratio="16/9" cover rounded="xl" :src="imagePath" class="header-img">
         <SubjectIcon
-            :is-instructor="isInstructor"
+            :role="role"
             size="xxx-large"
             class="subject-icon"
         ></SubjectIcon>
@@ -11,12 +11,13 @@
 <script setup lang="ts">
 import SubjectIcon from "@/components/subject/extra/SubjectIcon.vue";
 import { ref } from "vue";
+import {SubjectRole} from "@/models/Subject";
 
 defineProps<{
     imagePath: string;
 }>();
 
-const isInstructor = ref<boolean>(true);
+const role = ref<SubjectRole>(SubjectRole.Student);
 </script>
 
 <style scoped>

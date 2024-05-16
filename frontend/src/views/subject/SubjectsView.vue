@@ -21,7 +21,11 @@
                             :key="index"
                             cols="6"
                         >
-                            <SubjectCard :subject="subject.subjectData" class="subject-card"> </SubjectCard>
+                            <SubjectCard
+                                :subject="subject.subjectData"
+                                :role="subject.role"
+                                class="subject-card"
+                            ></SubjectCard>
                         </v-col>
                     </v-row>
                 </BackgroundContainer>

@@ -10,7 +10,7 @@
                 height="120px"
             >
                 <SubjectIcon
-                    :is-instructor="isInstructor"
+                    :role="role"
                     size="xx-large"
                     class="subject-icon"
                 ></SubjectIcon>
@@ -24,15 +24,15 @@
 </template>
 
 <script setup lang="ts">
-import type Subject from "@/models/Subject";
+import Subject, {SubjectRole} from "@/models/Subject";
 import SubjectIcon from "@/components/subject/extra/SubjectIcon.vue";
 import { ref } from "vue";
 
 defineProps<{
     subject: Subject;
+    role: SubjectRole;
 }>();
 
-const isInstructor = ref<boolean>(true);
 </script>
 
 <style scoped>
