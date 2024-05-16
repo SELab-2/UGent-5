@@ -28,9 +28,11 @@
                 </v-card-title>
                 <div v-html="renderQuillContent(project.description)"></div>
             </v-card-item>
-            <v-btn color="blue" v-if="isTeacher" :to="`/project/${project.id}/submissions`">
-                {{ $t("project.submissions_list_teacher") }}
-            </v-btn>
+            <v-card-actions>
+                <v-btn color="blue" v-if="isTeacher" :to="`/project/${project.id}/submissions`">
+                    {{ $t("project.submissions_list_teacher") }}
+                </v-btn>
+            </v-card-actions>
         </v-card>
         <SubmitInfo
             class="submitInfo"
@@ -44,7 +46,6 @@
 <script setup lang="ts">
 import type Project from "@/models/Project";
 import type Group from "@/models/Group";
-import { useUserQuery } from "@/queries/User";
 import SubmitInfo from "@/components/project/submit/SubmitInfo.vue";
 import { toRefs, computed } from "vue";
 import { Quill } from "@vueup/vue-quill";
@@ -55,24 +56,18 @@ const props = defineProps<{
     project: Project;
     group: Group | null;
     instructors: User[];
+    user: User;
     subject: Subject;
 }>();
 
-const { project, group, instructors, subject } = toRefs(props);
+const { project, group, instructors, subject, user } = toRefs(props);
 
-const { data: user, isSuccess: userSuccess } = useUserQuery();
-
-const isTeacher = computed(() => {
-    if (userSuccess) {
-        return (
-            user.value.is_teacher ||
-            user.value.is_admin ||
-            instructors.value?.some((element) => element.uid == user.value.uid)
-        );
-    } else {
-        return false;
-    }
-});
+const isTeacher = computed(
+    () =>
+        user.value.is_teacher ||
+        user.value.is_admin ||
+        instructors.value?.some((element) => element.uid == user.value.uid)
+);
 
 const renderQuillContent = (content: string) => {
     const quill = new Quill(document.createElement("div"));

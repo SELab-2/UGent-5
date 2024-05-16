@@ -12,6 +12,7 @@
                         :group="group!"
                         :instructors="instructors!"
                         :subject="subject!"
+                        :user="user!"
                     />
                 </v-col>
                 <v-col cols="2" class="button-container">
@@ -33,6 +34,7 @@ import { useProjectQuery } from "@/queries/Project";
 import { computed, toRefs } from "vue";
 import { useProjectGroupQuery } from "@/queries/Group";
 import { useSubjectInstructorsQuery, useSubjectQuery } from "@/queries/Subject";
+import { useUserQuery } from "@/queries/User";
 import ProjectSideBar from "@/components/project/ProjectSideBar.vue";
 
 const props = defineProps<{
@@ -65,12 +67,15 @@ const {
     isError: isInstructorsError,
 } = useSubjectInstructorsQuery(computed(() => project.value?.subject_id));
 
+const { data: user, isLoading: isUserLoading, isError: isUserError } = useUserQuery();
+
 const isDataLoading = computed(
     () =>
         isProjectLoading.value ||
         isGroupLoading.value ||
         isInstructorsLoading.value ||
-        isSubjectLoading.value
+        isSubjectLoading.value ||
+        isUserLoading.value
 );
 
 const isDataError = computed(
@@ -78,7 +83,8 @@ const isDataError = computed(
         isProjectError.value ||
         isGroupError.value ||
         isInstructorsError.value ||
-        isSubjectError.value
+        isSubjectError.value ||
+        isUserError.value
 );
 </script>
 
