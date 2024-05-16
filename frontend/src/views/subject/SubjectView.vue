@@ -63,13 +63,14 @@ import { computed, ref, toRefs } from "vue";
 import {
     useSubjectQuery,
     useSubjectProjectsQuery,
-    useSubjectInstructorsQuery, useUuidSubjectQuery,
+    useSubjectInstructorsQuery,
+    useUuidSubjectQuery,
 } from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectHeaderContainer from "@/components/subject/subjectview/header/SubjectHeaderContainer.vue";
 import SubjectBody from "@/components/subject/subjectview/body/SubjectBody.vue";
 import { useRouter } from "vue-router";
-import {useCurrentUserQuery, useUserQuery} from "@/queries/User";
+import { useCurrentUserQuery } from "@/queries/User";
 
 const props = defineProps<{
     subjectId: number;
@@ -94,25 +95,30 @@ const {
     isError: isInstructorsError,
 } = useSubjectInstructorsQuery(subjectId);
 
-const {
-    data: user,
-    isLoading: isUserLoading,
-    isError: isUserError
-} = useCurrentUserQuery();
+const { data: user, isLoading: isUserLoading, isError: isUserError } = useCurrentUserQuery();
 
 const {
     data: subjectUuid,
     isLoading: isSubjectUuidLoading,
-    isError: isSubjectUuidError
+    isError: isSubjectUuidError,
 } = useUuidSubjectQuery(subjectId);
 
 const isLoading = computed(
-    () => isSubjectLoading.value || isProjectsLoading.value || isInstructorsLoading.value || isUserLoading.value || isSubjectUuidLoading.value
+    () =>
+        isSubjectLoading.value ||
+        isProjectsLoading.value ||
+        isInstructorsLoading.value ||
+        isUserLoading.value ||
+        isSubjectUuidLoading.value
 );
 const isError = computed(
-    () => isSubjectError.value || isProjectsError.value || isInstructorsError.value || isUserError.value || isSubjectUuidError.value
+    () =>
+        isSubjectError.value ||
+        isProjectsError.value ||
+        isInstructorsError.value ||
+        isUserError.value ||
+        isSubjectUuidError.value
 );
-
 
 const isInstructor = computed(() => {
     return [...(instructors.value || [])].some((instructor) => instructor?.uid === user.value?.uid);
