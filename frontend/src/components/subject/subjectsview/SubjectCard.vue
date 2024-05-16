@@ -26,18 +26,16 @@
 <script setup lang="ts">
 import type Subject from "@/models/Subject";
 import SubjectIcon from "@/components/subject/extra/SubjectIcon.vue";
-import {ref} from "vue";
+import { ref } from "vue";
 
 defineProps<{
     subject: Subject;
 }>();
 
 const isInstructor = ref<boolean>(true);
-
 </script>
 
 <style scoped>
-
 .router-link {
     text-decoration: none;
     width: 100%;
