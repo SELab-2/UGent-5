@@ -21,7 +21,7 @@ const deadlines = computed<Deadline[]>(
         projects.value
             ?.filter((project) => project.deadline > new Date())
             .sort((a, b) => a.deadline.getTime() - b.deadline.getTime())
-            .slice(0,5)
+            .slice(0, 5)
             .map((project) => ({
                 project,
                 status: "none",

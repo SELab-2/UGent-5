@@ -6,7 +6,7 @@
             <p class="p">{{ deadline.project.subject_id }}</p>
         </div>
         <div class="rightcontent">
-            {{ formattedDate }}
+            {{ $d(deadline.project.deadline, "short") }}
         </div>
     </div>
 </template>
@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { type Deadline } from "@/models/Project";
 import router from "@/router";
-import { toRefs, computed } from "vue";
+import { toRefs } from "vue";
 
 const props = defineProps<{
     deadline: Deadline;
@@ -30,16 +30,6 @@ const getBackgroundClass = () => {
         none: deadline.value.status === "none",
     };
 };
-
-const formattedDate = computed(() =>
-    deadline.value.project.deadline.toLocaleTimeString([], {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-    })
-);
 
 const navigateToProject = () => {
     router.push(`/project/${deadline.value.project.id}`);
