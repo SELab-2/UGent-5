@@ -15,9 +15,9 @@ import {SubjectRole} from "@/models/Subject";
 
 defineProps<{
     imagePath: string;
+    role: SubjectRole;
 }>();
 
-const role = ref<SubjectRole>(SubjectRole.Student);
 </script>
 
 <style scoped>
