@@ -67,7 +67,6 @@ const subjectsByAcademicYear = computed(() => {
     );
 });
 
-
 /* will be necessary to show checkboxes in header when queries refactoring returns instructor and student subjects
 const isInstructor = computed(() => {
     return isTeacher;

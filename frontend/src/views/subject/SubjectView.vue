@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref, toRefs} from "vue";
+import { computed, ref, toRefs } from "vue";
 import {
     useSubjectQuery,
     useSubjectProjectsQuery,
@@ -77,7 +77,6 @@ const props = defineProps<{
 
 const { subjectId } = toRefs(props);
 const snackbar = ref(false);
-
 
 const {
     data: subject,
@@ -102,13 +101,10 @@ const isError = computed(
     () => isSubjectError.value || isProjectsError.value || isInstructorsError.value
 );
 
-
 const { data: user } = useUserQuery(null); // refactor queries once pr querie refactor is merged
 
 const isInstructor = computed(() => {
-    return [...(instructors.value || [])].some(
-        (instructor) => instructor?.uid === user.value?.uid
-    );
+    return [...(instructors.value || [])].some((instructor) => instructor?.uid === user.value?.uid);
 });
 
 const router = useRouter();
@@ -125,7 +121,6 @@ const copyRegisterLink = () => {
     navigator.clipboard.writeText(`${baseAddress}${registerLink.value}`);
     snackbar.value = true;
 };
-
 </script>
 ;
 <style scoped>
