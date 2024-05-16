@@ -77,7 +77,7 @@ const onAcademicYearChanged = (academicYear: number) => {
 
 <style scoped>
 .subject-card {
-    margin-top: 10px; /* Adjust as needed */
+    margin-top: 10px;
 }
 
 .action-btn-container {

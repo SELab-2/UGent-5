@@ -51,9 +51,6 @@
                     </router-link>
                     <v-btn prepend-icon="mdi-content-copy" @click="copyRegisterLink">
                         {{ $t("subject.register_link_button.title") }}
-                        <v-tooltip activator="parent" location="start" max-width="200vw">
-                            {{ $t("subject.register_link_button.tooltip") }}
-                        </v-tooltip>
                     </v-btn>
                 </div>
             </v-col>

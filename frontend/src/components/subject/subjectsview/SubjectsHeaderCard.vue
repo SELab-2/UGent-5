@@ -23,19 +23,17 @@
                     </div>
                 </v-card-text>
             </v-col>
-            <v-col cols="3">
+            <v-col cols="6">
                 <v-checkbox
-                    class="align-right"
+                    class="subject-checkbox"
                     v-model="showInstructorSubjects"
-                >
-                    instructor vakken
-                </v-checkbox>
+                    :label="$t('subjects.instructor_subjects')"
+                ></v-checkbox>
                 <v-checkbox
-                    class="align-right"
+                    class="subject-checkbox"
                     v-model="showStudentSubjects"
-                >
-                    student vakken
-                </v-checkbox>
+                    :label="$t('subjects.student_subjects')"
+                ></v-checkbox>
             </v-col>
         </v-row>
     </v-card>
@@ -81,5 +79,14 @@ watch(activeAcademicYear, (newVal: number | undefined) => {
 
 .chip_container {
     overflow-x: auto;
+}
+
+.checkbox container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.subject-checkbox {
+    margin-top: -15px;
 }
 </style>
