@@ -21,7 +21,7 @@
                             :key="index"
                             cols="6"
                         >
-                            <SubjectCard :subject="subject" class="subject-card"> </SubjectCard>
+                            <SubjectCard :subject="subject.subjectData" class="subject-card"> </SubjectCard>
                         </v-col>
                     </v-row>
                 </BackgroundContainer>
@@ -47,23 +47,26 @@ import SubjectCard from "@/components/subject/subjectsview/SubjectCard.vue";
 import { computed, ref } from "vue";
 import useAcademicYear from "@/composables/useAcademicYear";
 import useIsTeacher from "@/composables/useIsTeacher";
+import {SubjectRole} from "@/models/Subject";
 
 const { data: subjects, error, isLoading, isError } = useSubjectsQuery();
 const subjectsList = computed(() => {
-    return [...subjects.value!.as_student, ...subjects.value!.as_instructor] || [];
+    const studentSubjects = subjects.value!.as_student.map(subject => ({subjectData: subject, role: SubjectRole.Student}));
+    const instructorSubjects = subjects.value!.as_instructor.map(subject => ({subjectData: subject, role: SubjectRole.Instructor}));
+    return [...studentSubjects, ...instructorSubjects];
 });
 const selectedAcademicYear = ref<number>(useAcademicYear());
 const { isTeacher } = useIsTeacher();
 
 const academicYears = computed(() => {
     return Array.from(
-        new Set([...(subjectsList.value || [])].map((subject) => subject.academic_year))
+        new Set([...(subjectsList.value || [])].map((subject) => subject.subjectData.academic_year))
     ).sort((a, b) => b - a);
 });
 
 const subjectsByAcademicYear = computed(() => {
     return [...(subjectsList.value || [])].filter(
-        (subject) => subject.academic_year === selectedAcademicYear.value
+        (subject) => subject.subjectData.academic_year === selectedAcademicYear.value
     );
 });
 
