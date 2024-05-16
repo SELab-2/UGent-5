@@ -16,7 +16,6 @@
                 label="Group Selection Deadline"
             ></DatePicker>
             <v-text-field
-                v-if="selectedOption === 'student' || selectedOption === 'random'"
                 v-model="capacity"
                 label="Capacity"
                 type="number"
@@ -28,44 +27,54 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import DatePicker from "./DatePicker.vue"; // Import your custom DatePicker component
+import DatePicker from "./DatePicker.vue";
 
 interface RadioButtonOption {
     label: string;
     value: string;
 }
 
-const model = defineModel<string>({});
-
-defineProps<{
+const props = defineProps<{
     title: string;
     options: RadioButtonOption[];
 }>();
 
 const isToggled = ref(true);
-const selectedOption = ref(model);
+const selectedOption = ref("");
 const radio_date = ref<Date | null>(null);
 const capacity = ref(1); // Default capacity
 
 const emit = defineEmits<{
     (e: "update:radio_date", value: Date | null): void;
     (e: "update:capacity", value: number): void;
+    (e: "update:selectedOption", value: string): void;
 }>();
 
 watch(selectedOption, (newValue) => {
     if (newValue === "student") {
-        // Ensure radio_date can be set
-        radio_date.value = new Date(); // or keep the existing date
-    } else {
-        // Reset radio_date when 'student' is not selected
+        radio_date.value = new Date();
+    }
+    else{
         radio_date.value = null;
     }
-    emit("update:radio_date", radio_date.value);
+    emit("update:selectedOption", newValue);
+});
 
-    // Adjust capacity based on the selected option
-    if (newValue !== "student" && newValue !== "random") {
-        capacity.value = 1; // Reset capacity
+watch(radio_date, (newVal) => {
+    emit("update:radio_date", newVal);
+});
+
+watch(isToggled, (newValue) => {
+    if (!newValue) {
+        capacity.value = 1;
+        radio_date.value = null;
+        emit("update:capacity", capacity.value);
     }
-    emit("update:capacity", capacity.value);
+});
+
+watch(capacity, (newValue) => {
+    if (isToggled.value) {
+        emit("update:capacity", newValue);
+    }
 });
 </script>

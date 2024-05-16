@@ -33,6 +33,7 @@
                     :options="groupProjectOptions"
                     @update:radio_date="handleRadioDateChange"
                     @update:capacity="handleCapacityChange"
+                    @update:selected-option="handleOptionChange"
                     required
                 />
             </v-col>
@@ -236,114 +237,131 @@ const createProjectMutation = useCreateProjectMutation();
 const createGroupsMutation = useCreateGroupsMutation();
 const joinGroupMutation = useJoinGroupMutation();
 const uploadProjectFilesMutation = useUploadProjectFilesMutation();
-const deleteProjectFilesMutation = useDeleteProjectFilesMutation();
 const updateProjectMutation = useUpdateProjectMutation();
 
 function handleRadioDateChange(newDate) {
+    console.log(newDate);
     enrollDeadline.value = newDate;
 }
 
-async function submitForm() {
-    const formattedDeadline = deadline.value.toISOString();
-    const formattedPublishDate = publishDate.value.toISOString();
-    const formattedEnrollDeadline = !enrollDeadline.value
-        ? null
-        : enrollDeadline.value.toISOString();
+function handleOptionChange(newVal){
+    selectedGroupProject.value = newVal;
+    console.log(newVal);
+}
 
-    const projectData = {
+function setSuccessAlert(message) {
+    successMessage.value = message;
+    showSuccessAlert.value = true;
+}
+
+async function submitForm() {
+    const projectData = formatProjectData();
+
+    try {
+        if (isEditMode.value) {
+            await updateProject(projectData);
+        } else {
+            await createProject(projectData);
+        }
+        handleFiles(projectData.project_id);
+        navigateToProject(projectData.project_id);
+    } catch (error) {
+        console.error("Error during project or group creation or file upload:", error);
+        showErrorAlert("An unexpected error occurred. Please try again.");
+    }
+}
+
+function formatProjectData() {
+    return {
         name: project_title.value,
-        deadline: formattedDeadline,
+        deadline: deadline.value.toISOString(),
         description: quillEditor.value?.getQuill().root.innerHTML || "",
         subject_id: selectedSubject.value,
         is_visible: true,
         capacity: capacity.value,
         requirements: [],
-        publish_date: formattedPublishDate,
-        enroll_deadline: formattedEnrollDeadline,
+        publish_date: publishDate.value.toISOString(),
+        enroll_deadline: enrollDeadline.value ? enrollDeadline.value.toISOString() : null,
     };
+}
 
-    try {
-        if (isEditMode.value) {
-            try {
-                await updateProjectMutation.mutateAsync({
-                    projectId: projectId.value,
-                    projectData,
-                });
+async function updateProject(projectData) {
+    await updateProjectMutation.mutateAsync({
+        projectId: projectId.value,
+        projectData,
+    });
+    setSuccessAlert("Project updated successfully.");
+}
 
-                if (files.value.length > 0) {
-                    const formData = new FormData();
-                    files.value.forEach((file) => {
-                        formData.append("files", file);
-                    });
-                    await uploadProjectFilesMutation.mutateAsync({
-                        projectId: projectId.value,
-                        formData,
-                    });
-                }
+async function createProject(projectData) {
+    const createdProjectId = await createProjectMutation.mutateAsync(projectData);
+    projectData.project_id = createdProjectId;
+    await handleGroupCreation(createdProjectId);
+    setSuccessAlert("Project created successfully.");
+}
 
-                router.push({ name: "project", params: { projectId: projectId.value } });
-                successMessage.value = "Project updated successfully.";
-                showSuccessAlert.value = true;
-            } catch (error) {
-                console.error("Failed to update project and files", error);
-                errorMessage.value = "Failed to update project and files. Please try again.";
-                showErrorAlert.value = true;
-            }
-        } else {
-            const createdProjectId = await createProjectMutation.mutateAsync(projectData);
-            if (selectedGroupProject.value === "student") {
-                const emptyGroup = {
-                    project_id: createdProjectId,
-                    score: 0,
-                    team_name: "Group 1",
-                };
-                await createGroupsMutation.mutateAsync({
-                    projectId: createdProjectId,
-                    groups: [emptyGroup],
-                });
-            } else if (selectedGroupProject.value === "random") {
-                const groups = divideStudentsIntoGroups(studentsData.value || [], capacity.value);
-                const groupsToCreate = groups.map((_, i) => ({
-                    project_id: createdProjectId,
-                    score: 0,
-                    team_name: "Group " + (i + 1),
-                }));
-                const createdGroups = await createGroupsMutation.mutateAsync({
-                    projectId: createdProjectId,
-                    groups: groupsToCreate,
-                });
-
-                createdGroups.forEach((group, index) => {
-                    groups[index].forEach((student) => {
-                        joinGroupMutation.mutateAsync({
-                            groupId: group.id,
-                            uid: student.uid,
-                        });
-                    });
-                });
-            }
-
-            if (files.value.length > 0) {
-                const formData = new FormData();
-                files.value.forEach((file) => {
-                    formData.append("files", file);
-                });
-                await uploadProjectFilesMutation.mutateAsync({
-                    projectId: createdProjectId,
-                    formData,
-                });
-                successMessage.value += " and files uploaded successfully.";
-                showSuccessAlert.value = true;
-            }
-            router.push({ name: "project", params: { projectId: createdProjectId } });
-            successMessage.value = "Project created successfully.";
-            showSuccessAlert.value = true;
-        }
-    } catch (error) {
-        console.error("Error during project or group creation or file upload:", error);
-        errorMessage.value = "An unexpected error occurred. Please try again.";
-        showErrorAlert.value = true;
+async function handleGroupCreation(projectId) {
+    console.log(selectedGroupProject.value);
+    if (selectedGroupProject.value === "student" && capacity.value != 1) {
+        const emptyGroups = generateEmptyGroups(projectId);
+        await createGroupsMutation.mutateAsync({ projectId, groups: emptyGroups });
+    } else if (selectedGroupProject.value === "random" || capacity.value === 1) {
+        const groups = divideStudentsIntoGroups(studentsData.value || [], capacity.value);
+        console.log(groups);
+        const groupsToCreate = groups.map((_, i) => ({
+            project_id: projectId,
+            score: 0,
+            team_name: "Group " + (i + 1),
+        }));
+        const createdGroups = await createGroupsMutation.mutateAsync({
+            projectId: projectId,
+            groups: groupsToCreate,
+        });
+        joinStudentsToGroups(createdGroups, groups);
     }
+}
+
+async function joinStudentsToGroups(createdGroups, studentGroups) {
+    for (let i = 0; i < createdGroups.length; i++) {
+        const group = createdGroups[i];
+        const students = studentGroups[i];
+        for (const student of students) {
+            await joinGroupMutation.mutateAsync({
+                groupId: group.id,
+                uid: student.uid,
+            });
+        }
+    }
+}
+
+function generateEmptyGroups(projectId) {
+    const numberOfGroups = Math.ceil(studentsData.value.length / capacity.value);
+    const emptyGroups = [];
+    for (let i = 0; i < numberOfGroups; i++) {
+        emptyGroups.push({
+            project_id: projectId,
+            score: 0,
+            team_name: `Group ${i + 1}`,
+        });
+    }
+    return emptyGroups;
+}
+
+async function handleFiles(projectId) {
+    if (files.value.length > 0) {
+        const formData = new FormData();
+        files.value.forEach((file) => {
+            formData.append("files", file);
+        });
+        await uploadProjectFilesMutation.mutateAsync({
+            projectId: projectId,
+            formData,
+        });
+    }
+}
+
+function navigateToProject(projectId) {
+    router.push({ name: "project", params: { projectId } });
 }
 
 function shuffle(array: any[]) {
@@ -367,6 +385,8 @@ function shuffle(array: any[]) {
 function divideStudentsIntoGroups(students: User[], capacity: number) {
     students = shuffle(students);
     let groups = [];
+    console.log(students.length);
+    console.log(capacity);
     const numberOfGroups = Math.ceil(students.length / capacity);
     for (let i = 0; i < numberOfGroups; i++) {
         groups.push(students.slice(i * capacity, (i + 1) * capacity));
@@ -375,13 +395,9 @@ function divideStudentsIntoGroups(students: User[], capacity: number) {
     return groups;
 }
 
-function formatInstructor(user: User): CheckBoxItem {
-    const checked = false;
-    return { id: user.uid, label: user.given_name, checked };
-}
-
 const handleCapacityChange = (newCapacity: number) => {
     capacity.value = newCapacity;
+    console.log(capacity.value);
 };
 </script>
 
