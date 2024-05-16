@@ -59,6 +59,12 @@
 </template>
 
 <script setup lang="ts">
+import { computed, toRefs } from "vue";
+import {
+    useSubjectQuery,
+    useSubjectProjectsQuery,
+    useSubjectInstructorsQuery,
+} from "@/queries/Subject";
 import { computed, ref, toRefs } from "vue";
 import { useSubjectDetailsQuery } from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
@@ -97,6 +103,28 @@ const copyRegisterLink = () => {
     navigator.clipboard.writeText(`${baseAddress}${registerLink.value}`);
     snackbar.value = true;
 };
+const {
+    data: subject,
+    isLoading: isSubjectLoading,
+    isError: isSubjectError,
+} = useSubjectQuery(subjectId);
+const {
+    data: projects,
+    isLoading: isProjectsLoading,
+    isError: isProjectsError,
+} = useSubjectProjectsQuery(subjectId);
+const {
+    data: instructors,
+    isLoading: isInstructorsLoading,
+    isError: isInstructorsError,
+} = useSubjectInstructorsQuery(subjectId);
+
+const isLoading = computed(
+    () => isSubjectLoading.value || isProjectsLoading.value || isInstructorsLoading.value
+);
+const isError = computed(
+    () => isSubjectError.value || isProjectsError.value || isInstructorsError.value
+);
 </script>
 ;
 <style scoped>

@@ -64,6 +64,10 @@ const subjectsByAcademicYear = computed(() => {
     );
 });
 
+const { data: subjects, error, isLoading, isError } = useSubjectsQuery();
+const subjectsList = computed(() => {
+    return [...subjects.value!.as_student, ...subjects.value!.as_instructor] || [];
+});
 /* will be necessary to show checkboxes in header when queries refactoring returns instructor and student subjects
 const isInstructor = computed(() => {
     return isTeacher;

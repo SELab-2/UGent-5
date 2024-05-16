@@ -40,7 +40,7 @@ const testUserQuery = {
 }
 
 vi.mock('@/queries/User', () => ({
-    useUserQuery: vi.fn(() => testUserQuery),
+    useCurrentUserQuery: vi.fn(() => testUserQuery)
 }));
 
 vi.mock("@/components/buttons/NeedHelpButton.vue", () => ({
