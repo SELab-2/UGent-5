@@ -100,8 +100,8 @@ export default {
             active: "Active",
             completed: "Completed",
             no_projects: "No projects found.",
-            show_assignment: "Show full assignment",
-            hide_assignment: "Hide assignment",
+            show_assignment: "Show more",
+            hide_assignment: "Hide less",
         },
         project: {
             assignment: "Assignment",

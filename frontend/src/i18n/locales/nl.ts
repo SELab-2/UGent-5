@@ -100,8 +100,8 @@ export default {
             active: "Actief",
             completed: "Voltooid",
             no_projects: "Geen projecten gevonden.",
-            show_assignment: "Toon volledige opdracht",
-            hide_assignment: "Verberg opdracht",
+            show_assignment: "Meer",
+            hide_assignment: "Minder",
         },
         project: {
             assignment: "Opdracht",
