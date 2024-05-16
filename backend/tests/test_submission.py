@@ -26,6 +26,7 @@ project_with_reqs = {
     "is_visible": True,
     "capacity": 1,
     "requirements": [{"mandatory": "true", "value": "*.py"}, {"mandatory": "false", "value": "*.pdf"}],
+    "publish_date": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
 }
 
 group_data = {"team_name": "test group", "project_id": 0}
