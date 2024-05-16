@@ -8,7 +8,7 @@ import {
     getSubjects,
     getSubjectStudents,
     getSubjectByUuid,
-    registerToSubject,
+    registerToSubject, getSubjectUuid,
 } from "@/services/subject";
 import { getSubjectProjects } from "@/services/project";
 import type User from "@/models/User";
@@ -34,6 +34,11 @@ function SUBJECT_STUDENTS_QUERY_KEY(subjectId: number): (string | number)[] {
 
 function SUBJECT_PROJECTS_QUERY_KEY(subjectId: number): (string | number)[] {
     return ["subject", "projects", subjectId];
+}
+
+function SUBJECT_UUID_QUERY_KEY(subjectId: string): (string | number)[] {
+    return ["subject", "uuid", subjectId];
+
 }
 
 /**
@@ -110,6 +115,17 @@ export function useSubjectProjectsQuery(
         queryFn: () => getSubjectProjects(toValue(subjectId)!),
         enabled: () => !!toValue(subjectId),
     });
+}
+
+export function useUuidSubjectQuery(
+    subjectId: MaybeRefOrGetter<number | undefined>
+): UseQueryReturnType<string, Error> {
+    return useQuery<string, Error>({
+        queryKey: computed(() => SUBJECT_UUID_QUERY_KEY(toValue(subjectId)!)),
+        queryFn: () => getSubjectUuid(toValue(subjectId)!),
+        enabled: () => !!toValue(subjectId),
+    });
+
 }
 
 /**
