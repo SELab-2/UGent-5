@@ -91,6 +91,8 @@ export default {
     },
     subject: {
         register: "Registreer bij vak:",
+        ok: "Oké",
+        cancel: "Annuleer",
         academy_year: "Academiejaar",
         projects: "Projecten",
         announcements: "Meldingen",
