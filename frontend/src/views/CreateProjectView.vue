@@ -115,6 +115,7 @@ import type User from "@/models/User";
 import type { ProjectForm } from "@/models/Project";
 import type { GroupForm } from "@/models/Group";
 import DisplayTestFiles from "@/components/project/DisplayTestFiles.vue";
+import router from "@/router";
 
 const route = useRoute();
 console.log("Route params:", route.params);
@@ -280,7 +281,8 @@ async function submitForm() {
                     });
                 }
 
-                successMessage.value = "Project and files updated successfully";
+                router.push({ name: "project", params: { projectId: projectId.value } });
+                successMessage.value = "Project updated successfully.";
                 showSuccessAlert.value = true;
             } catch (error) {
                 console.error("Failed to update project and files", error);
@@ -333,6 +335,9 @@ async function submitForm() {
                 successMessage.value += " and files uploaded successfully.";
                 showSuccessAlert.value = true;
             }
+            router.push({ name: "project", params: { projectId: createdProjectId } });
+            successMessage.value = "Project created successfully.";
+            showSuccessAlert.value = true;
         }
     } catch (error) {
         console.error("Error during project or group creation or file upload:", error);
