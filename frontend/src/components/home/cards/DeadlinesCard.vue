@@ -18,9 +18,13 @@ import { computed } from "vue";
 const { data: projects } = useProjectsQuery();
 const deadlines = computed<Deadline[]>(
     () =>
-        projects.value?.map((project) => ({
-            project,
-            status: "none",
-        })) || []
+        projects.value
+            ?.filter((project) => project.deadline > new Date())
+            .sort((a, b) => a.deadline.getTime() - b.deadline.getTime())
+            .slice(0,5)
+            .map((project) => ({
+                project,
+                status: "none",
+            })) || []
 );
 </script>
