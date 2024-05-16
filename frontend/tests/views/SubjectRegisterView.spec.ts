@@ -22,7 +22,7 @@ const testSubjectsUuidQuery = {
 }
 
 vi.mock("@/queries/Subject", () => ({
-    registerSubjectQuery: vi.fn(() => vi.fn()),
+    useRegisterToSubjectMutation: vi.fn(() => vi.fn()),
     useSubjectUuidQuery: vi.fn(() => testSubjectsUuidQuery)
 }))
 
