@@ -68,6 +68,11 @@
                     </v-col>
                 </v-skeleton-loader>
             </v-container>
+            <v-card-actions>
+                <v-btn @click="downloadAll">
+                    {{ $t("submission.download_all_files") }}
+                </v-btn>
+            </v-card-actions>
         </v-card-item>
     </v-card>
 </template>
@@ -96,6 +101,13 @@ const {
 const downloadFile = (index: number) => {
     const file = files.value![index];
     download_file(`/api/submissions/${submission.value!.id}/files/${file.filename}`, file.filename);
+};
+
+const downloadAll = () => {
+    download_file(
+        `/api/submissions/${submission.value!.id}/zip`,
+        `submission_group_${submission.value?.group_id}`
+    );
 };
 </script>
 

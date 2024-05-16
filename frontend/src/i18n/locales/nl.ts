@@ -46,6 +46,7 @@ export default {
         teacher_submissions_info:
             "Deze pagina bevat een lijst van de laatste indiening van elke groep voor dit project.",
         docker_test: "Testen Output",
+        download_all_files: "Download alle bestanden",
     },
     project: {
         deadline: "Deadline",
