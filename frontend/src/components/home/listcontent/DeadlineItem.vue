@@ -3,7 +3,7 @@
         <div :class="getBackgroundClass()"></div>
         <div class="leftcontent">
             <h3>{{ deadline.project.name }}</h3>
-            <p class="p">{{ deadline.project.subject_id }}</p>
+            <p v-if="!isSubjectLoading" class="p">{{ subject!.name }}</p>
         </div>
         <div class="rightcontent">
             {{ $d(deadline.project.deadline, "short") }}
@@ -13,6 +13,7 @@
 
 <script setup lang="ts">
 import { type Deadline } from "@/models/Project";
+import { useSubjectQuery } from "@/queries/Subject";
 import router from "@/router";
 import { toRefs } from "vue";
 
@@ -21,6 +22,10 @@ const props = defineProps<{
 }>();
 
 const { deadline } = toRefs(props);
+
+const { data: subject, isLoading: isSubjectLoading } = useSubjectQuery(
+    () => deadline.value.project.subject_id
+);
 
 const getBackgroundClass = () => {
     return {
