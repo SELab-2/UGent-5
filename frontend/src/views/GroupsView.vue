@@ -36,7 +36,7 @@ import { useCreateGroupsMutation, useProjectGroupsQuery } from "@/queries/Group"
 import { computed, toRefs } from "vue";
 import { useProjectQuery } from "@/queries/Project";
 import GroupCard from "@/components/home/cards/GroupCard.vue";
-import { useUserQuery } from "@/queries/User";
+import { useCurrentUserQuery } from "@/queries/User";
 import { type GroupForm } from "@/models/Group";
 import { useSubjectInstructorsQuery, useSubjectStudentsQuery } from "@/queries/Subject";
 import AllstudentsDialog from "@/components/AllstudentsDialog.vue";
@@ -59,7 +59,7 @@ const {
     isError: isGroupError,
 } = useProjectGroupsQuery(projectId);
 
-const { data: user, isLoading: isUserLoading, isError: isUserError } = useUserQuery(null);
+const { data: user, isLoading: isUserLoading, isError: isUserError } = useCurrentUserQuery();
 
 const {
     data: allStudents,
