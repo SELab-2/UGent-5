@@ -49,25 +49,25 @@ import useAcademicYear from "@/composables/useAcademicYear";
 import useIsTeacher from "@/composables/useIsTeacher";
 
 const { data: subjects, error, isLoading, isError } = useSubjectsQuery();
+const subjectsList = computed(() => {
+    return [...subjects.value!.as_student, ...subjects.value!.as_instructor] || [];
+});
 const selectedAcademicYear = ref<number>(useAcademicYear());
 const { isTeacher } = useIsTeacher();
 
 const academicYears = computed(() => {
     return Array.from(
-        new Set([...(subjects.value || [])].map((subject) => subject.academic_year))
+        new Set([...(subjectsList.value || [])].map((subject) => subject.academic_year))
     ).sort((a, b) => b - a);
 });
 
 const subjectsByAcademicYear = computed(() => {
-    return [...(subjects.value || [])].filter(
+    return [...(subjectsList.value || [])].filter(
         (subject) => subject.academic_year === selectedAcademicYear.value
     );
 });
 
-const { data: subjects, error, isLoading, isError } = useSubjectsQuery();
-const subjectsList = computed(() => {
-    return [...subjects.value!.as_student, ...subjects.value!.as_instructor] || [];
-});
+
 /* will be necessary to show checkboxes in header when queries refactoring returns instructor and student subjects
 const isInstructor = computed(() => {
     return isTeacher;

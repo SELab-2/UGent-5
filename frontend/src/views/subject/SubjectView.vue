@@ -28,7 +28,7 @@
                             <SubjectHeaderContainer
                                 v-if="subject"
                                 :title="subject!.name"
-                                :instructors="subject!.instructors"
+                                :instructors="instructors"
                                 :academic-year="subject!.academic_year"
                                 :is-instructor="isInstructor"
                                 image-path="https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png"
@@ -37,7 +37,7 @@
                     </v-row>
                     <v-row>
                         <v-col>
-                            <SubjectBody v-if="subject" :projects="subject!.projects"></SubjectBody>
+                            <SubjectBody v-if="subject" :projects="projects"></SubjectBody>
                         </v-col>
                     </v-row>
                 </BackgroundContainer>
@@ -59,14 +59,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, toRefs } from "vue";
+import {computed, ref, toRefs} from "vue";
 import {
     useSubjectQuery,
     useSubjectProjectsQuery,
     useSubjectInstructorsQuery,
 } from "@/queries/Subject";
-import { computed, ref, toRefs } from "vue";
-import { useSubjectDetailsQuery } from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectHeaderContainer from "@/components/subject/subjectview/header/SubjectHeaderContainer.vue";
 import SubjectBody from "@/components/subject/subjectview/body/SubjectBody.vue";
@@ -80,29 +78,7 @@ const props = defineProps<{
 const { subjectId } = toRefs(props);
 const snackbar = ref(false);
 
-const { data: subject, error, isLoading, isError } = useSubjectDetailsQuery(subjectId);
-const { data: user } = useUserQuery(null); // refactor queries once pr querie refactor is merged
 
-const isInstructor = computed(() => {
-    return [...(subject.value?.instructors || [])].some(
-        (instructor) => instructor.uid === user.value.uid
-    );
-});
-
-const router = useRouter();
-
-const registerLink = computed(() => {
-    return router.resolve({
-        name: "registerSubject",
-        params: { uuid: subject.value?.uuid },
-    }).path;
-});
-
-const copyRegisterLink = () => {
-    const baseAddress = window.location.origin;
-    navigator.clipboard.writeText(`${baseAddress}${registerLink.value}`);
-    snackbar.value = true;
-};
 const {
     data: subject,
     isLoading: isSubjectLoading,
@@ -125,6 +101,31 @@ const isLoading = computed(
 const isError = computed(
     () => isSubjectError.value || isProjectsError.value || isInstructorsError.value
 );
+
+
+const { data: user } = useUserQuery(null); // refactor queries once pr querie refactor is merged
+
+const isInstructor = computed(() => {
+    return [...(instructors.value || [])].some(
+        (instructor) => instructor?.uid === user.value?.uid
+    );
+});
+
+const router = useRouter();
+
+const registerLink = computed(() => {
+    return router.resolve({
+        name: "registerSubject",
+        params: { uuid: subject.value?.uuid },
+    }).path;
+});
+
+const copyRegisterLink = () => {
+    const baseAddress = window.location.origin;
+    navigator.clipboard.writeText(`${baseAddress}${registerLink.value}`);
+    snackbar.value = true;
+};
+
 </script>
 ;
 <style scoped>
