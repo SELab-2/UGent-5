@@ -30,7 +30,6 @@ import ProjectInfo from "@/components/project/ProjectInfo.vue";
 
 import { useProjectQuery } from "@/queries/Project";
 import { computed, toRefs } from "vue";
-import NeedHelpButton from "@/components/buttons/NeedHelpButton.vue";
 import { useUserGroupQuery } from "@/queries/Group";
 import { useSubjectInstructorsQuery, useSubjectQuery } from "@/queries/Subject";
 import ProjectSideBar from "@/components/project/ProjectSideBar.vue";

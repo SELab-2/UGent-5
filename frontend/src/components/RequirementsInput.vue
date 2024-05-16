@@ -1,0 +1,77 @@
+<template>
+    <v-container>
+        <v-row>
+            <v-col cols="12">
+                <v-form @submit.prevent="addRequirement">
+                    <v-text-field
+                        v-model="newRequirement"
+                        label="Enter requirement"
+                        append-icon="mdi-file-plus"
+                        @click:append="addRequirement"
+                        :rules="[rules.required]"
+                        dense
+                        solo
+                        autocomplete="off"
+                    />
+                </v-form>
+            </v-col>
+        </v-row>
+        <v-row v-for="(req, index) in internalRequirements" :key="index" class="align-center my-1">
+            <v-col cols="10">
+                <v-chip class="me-2" color="blue" text-color="white">
+                    {{ req.value }}
+                </v-chip>
+            </v-col>
+            <v-col cols="2" class="d-flex justify-space-between align-center">
+                <v-switch
+                    v-model="req.mandatory"
+                    :label="req.mandatory ? 'Mandatory' : 'Forbidden'"
+                    :color="req.mandatory ? 'green' : 'red'"
+                    hide-details
+                    inset
+                ></v-switch>
+                <v-btn icon @click="deleteRequirement(index)">
+                    <v-icon>mdi-delete</v-icon>
+                </v-btn>
+            </v-col>
+        </v-row>
+    </v-container>
+</template>
+<script setup lang="ts">
+import { ref, watch } from 'vue';
+
+const props = defineProps({
+    modelValue: Array
+});
+
+const emit = defineEmits(['update:modelValue']);
+
+const internalRequirements = ref([...props.modelValue]);
+const newRequirement = ref('');
+
+const rules = {
+    required: value => !!value || 'Required.'
+};
+
+const addRequirement = () => {
+    if (newRequirement.value) {
+        const newReq = { value: newRequirement.value, mandatory: true };
+        internalRequirements.value.push(newReq);
+        emit('update:modelValue', internalRequirements.value);
+        newRequirement.value = ''; // Clear the input after adding
+    }
+};
+
+const deleteRequirement = (index) => {
+    internalRequirements.value.splice(index, 1);
+    emit('update:modelValue', internalRequirements.value);
+};
+
+watch(internalRequirements, (newValue) => {
+    emit('update:modelValue', newValue);
+}, { deep: true });
+
+</script>
+
+
+

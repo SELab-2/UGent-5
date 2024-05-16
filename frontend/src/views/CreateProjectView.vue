@@ -75,6 +75,9 @@
                 </div>
                 <FilesInput v-model="files" />
             </v-col>
+            <v-col>
+                <RequirementsInput v-model="requirements" />
+            </v-col>
         </v-row>
         <v-row>
             <v-col cols="12" class="text-right">
@@ -91,7 +94,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick } from "vue";
+import {nextTick, toRaw} from "vue";
 import type { CheckBoxItem } from "@/components/project/CheckboxList.vue";
 import DatePicker from "@/components/project/DatePicker.vue";
 import RadioButtonList from "@/components/project/RadiobuttonList.vue";
@@ -117,6 +120,7 @@ import type { ProjectForm } from "@/models/Project";
 import type { GroupForm } from "@/models/Group";
 import DisplayTestFiles from "@/components/project/DisplayTestFiles.vue";
 import router from "@/router";
+import RequirementsInput from "@/components/RequirementsInput.vue";
 
 const route = useRoute();
 console.log("Route params:", route.params);
@@ -134,6 +138,7 @@ const showErrorAlert = ref(false);
 const showSuccessAlert = ref(false);
 const errorMessage = ref("");
 const successMessage = ref("");
+const requirements = ref([]);
 
 const projectId = ref(route.params.projectId);
 const isEditMode = computed(() => projectId.value !== undefined);
@@ -240,23 +245,30 @@ const uploadProjectFilesMutation = useUploadProjectFilesMutation();
 const updateProjectMutation = useUpdateProjectMutation();
 
 function handleRadioDateChange(newDate) {
-    console.log(newDate);
     enrollDeadline.value = newDate;
 }
 
 function handleOptionChange(newVal){
     selectedGroupProject.value = newVal;
-    console.log(newVal);
 }
+
+const handleCapacityChange = (newCapacity: number) => {
+    capacity.value = newCapacity;
+};
 
 function setSuccessAlert(message) {
     successMessage.value = message;
     showSuccessAlert.value = true;
 }
 
+function setErrorAlert(message) {
+    errorMessage.value = message; // Set the error message
+    showErrorAlert.value = true; // Show the error alert
+}
+
 async function submitForm() {
     const projectData = formatProjectData();
-
+    console.log(projectData);
     try {
         if (isEditMode.value) {
             await updateProject(projectData);
@@ -267,7 +279,7 @@ async function submitForm() {
         navigateToProject(projectData.project_id);
     } catch (error) {
         console.error("Error during project or group creation or file upload:", error);
-        showErrorAlert("An unexpected error occurred. Please try again.");
+        setErrorAlert("An unexpected error occurred. Please try again.");
     }
 }
 
@@ -279,7 +291,7 @@ function formatProjectData() {
         subject_id: selectedSubject.value,
         is_visible: true,
         capacity: capacity.value,
-        requirements: [],
+        requirements: toRaw(requirements.value),
         publish_date: publishDate.value.toISOString(),
         enroll_deadline: enrollDeadline.value ? enrollDeadline.value.toISOString() : null,
     };
@@ -394,11 +406,6 @@ function divideStudentsIntoGroups(students: User[], capacity: number) {
 
     return groups;
 }
-
-const handleCapacityChange = (newCapacity: number) => {
-    capacity.value = newCapacity;
-    console.log(capacity.value);
-};
 </script>
 
 <style>
