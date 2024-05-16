@@ -1,33 +1,22 @@
 <template>
     <HomeScreenCard :title="'homescreen.deadlines'">
-        <DeadlineItem
-            v-for="deadline in deadlines"
-            :deadline="deadline"
-            :key="deadline.project.id"
-        />
+        <DeadlineItem v-for="project in filteredProjects" :project="project" :key="project.id" />
     </HomeScreenCard>
 </template>
 
 <script setup lang="ts">
 import HomeScreenCard from "@/components/home/cards/HomeScreenCard.vue";
 import DeadlineItem from "@/components/home/listcontent/DeadlineItem.vue";
-import { type Deadline } from "@/models/Project";
 import { useProjectsQuery } from "@/queries/Project";
 import { computed } from "vue";
 
 const { data: projects } = useProjectsQuery();
 
-const deadlines = computed<Deadline[]>(() => {
+const filteredProjects = computed(() => {
     if (!projects.value) return [];
-    return (
-        [...projects.value.as_student, ...projects.value.as_instructor]
-            .filter((project) => project.deadline > new Date())
-            .sort((a, b) => a.deadline.getTime() - b.deadline.getTime())
-            .slice(0, 5)
-            .map((project) => ({
-                project,
-                status: "none",
-            })) || []
-    );
+    return [...projects.value.as_student, ...projects.value.as_instructor]
+        .filter((project) => project.deadline > new Date())
+        .sort((a, b) => a.deadline.getTime() - b.deadline.getTime())
+        .slice(0, 5);
 });
 </script>

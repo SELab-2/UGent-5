@@ -5,13 +5,18 @@ import type { UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-qu
 import { createSubmission, getFiles, getSubmission, getSubmissions } from "@/services/submission";
 import type Submission from "@/models/Submission";
 import type FileInfo from "@/models/File";
+import { useProjectGroupQuery } from "./Group";
 
 function SUBMISSION_QUERY_KEY(submissionId: number): (string | number)[] {
     return ["submission", submissionId];
 }
 
 function SUBMISSIONS_QUERY_KEY(groupId: number): (string | number)[] {
-    return ["submissions", groupId];
+    return ["submissions", "group", groupId];
+}
+
+function PROJECT_SUBMISSIONS_QUERY_KEY(projectId: number): (string | number)[] {
+    return ["submissions", "project", projectId];
 }
 
 function FILES_QUERY_KEY(submissionId: number): (string | number)[] {
@@ -42,6 +47,21 @@ export function useSubmissionsQuery(
         queryKey: computed(() => SUBMISSIONS_QUERY_KEY(toValue(groupId)!)),
         queryFn: () => getSubmissions(toValue(groupId)!),
         enabled: () => !!toValue(groupId),
+    });
+}
+
+/**
+ * Query composable for fetching all submissions of the group of the current user
+ * in the project with the given id
+ */
+export function useProjectSubmissionsQuery(
+    projectId: MaybeRefOrGetter<number | undefined>
+): UseQueryReturnType<Submission[], Error> {
+    const { data: group } = useProjectGroupQuery(projectId);
+    return useQuery<Submission[], Error>({
+        queryKey: computed(() => PROJECT_SUBMISSIONS_QUERY_KEY(toValue(projectId)!)),
+        queryFn: () => getSubmissions(group.value!.id),
+        enabled: () => !!toValue(projectId),
     });
 }
 

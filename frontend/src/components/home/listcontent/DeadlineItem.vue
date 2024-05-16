@@ -1,43 +1,52 @@
 <template>
     <div class="projectbtn" @click="navigateToProject">
-        <div :class="getBackgroundClass()"></div>
+        <div :class="submissionToClass(latestSubmissionStatus)"></div>
         <div class="leftcontent">
-            <h3>{{ deadline.project.name }}</h3>
+            <h3>{{ project.name }}</h3>
             <p v-if="!isSubjectLoading" class="p">{{ subject!.name }}</p>
         </div>
         <div class="rightcontent">
-            {{ $d(deadline.project.deadline, "short") }}
+            {{ $d(project.deadline, "short") }}
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { type Deadline } from "@/models/Project";
-import { useSubjectQuery } from "@/queries/Subject";
+import { computed, toRefs } from "vue";
 import router from "@/router";
-import { toRefs } from "vue";
+import type Project from "@/models/Project";
+import type Submission from "@/models/Submission";
+import { Status } from "@/models/Submission";
+import { useSubjectQuery } from "@/queries/Subject";
+import { useProjectSubmissionsQuery } from "@/queries/Submission";
 
 const props = defineProps<{
-    deadline: Deadline;
+    project: Project;
 }>();
 
-const { deadline } = toRefs(props);
+const { project } = toRefs(props);
 
-const { data: subject, isLoading: isSubjectLoading } = useSubjectQuery(
-    () => deadline.value.project.subject_id
-);
+const { data: submissions } = useProjectSubmissionsQuery(computed(() => project.value.id));
 
-const getBackgroundClass = () => {
+const latestSubmissionStatus = computed(() => {
+    if (!submissions.value || submissions.value.length === 0) return null;
+    return [...submissions.value].sort((a, b) => b.date.getTime() - a.date.getTime())[0];
+});
+
+const { data: subject, isLoading: isSubjectLoading } = useSubjectQuery(project.value.subject_id);
+
+function submissionToClass(submission: Submission | null) {
     return {
         block: true,
-        accepted: deadline.value.status === "accepted",
-        rejected: deadline.value.status === "rejected",
-        none: deadline.value.status === "none",
+        in_progress: submission?.status === Status.InProgress,
+        accepted: submission?.status === Status.Accepted,
+        rejected: submission?.status === Status.Rejected || submission?.status === Status.Crashed,
+        none: !submission,
     };
-};
+}
 
 const navigateToProject = () => {
-    router.push(`/project/${deadline.value.project.id}`);
+    router.push(`/project/${project.value.id}`);
 };
 </script>
 
@@ -74,6 +83,11 @@ const navigateToProject = () => {
 .rejected {
     background-color: darkred;
 }
+
+.in_progress {
+    background-color: orange;
+}
+
 .leftcontent {
     margin-left: 20px;
 }
