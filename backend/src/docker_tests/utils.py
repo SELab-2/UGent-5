@@ -10,9 +10,9 @@ from starlette.responses import FileResponse
 from src import config
 
 
-def to_async(func):
+def to_async[**P, R](func: Callable[P, R]) -> Callable[P, Awaitable[R]]:
     """Decorator to make a blocking sync function an awaitable async function."""
-    async def run_async(*args, **kwargs):
+    async def run_async(*args: P.args, **kwargs: P.kwargs) -> R:
         return await asyncio.to_thread(func, *args, **kwargs)
     return run_async
 
