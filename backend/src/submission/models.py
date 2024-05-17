@@ -18,7 +18,7 @@ class Submission(Base):
     __tablename__ = "submission"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    date: Mapped[datetime] = mapped_column(default=datetime.now(),
+    date: Mapped[datetime] = mapped_column(default=datetime.now,
                                            nullable=False)
     status: Mapped[Status] = mapped_column(default=Status.InProgress, nullable=False)
     remarks: Mapped[str] = mapped_column(nullable=True)

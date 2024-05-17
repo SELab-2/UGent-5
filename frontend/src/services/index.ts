@@ -3,6 +3,16 @@ import { storeToRefs } from "pinia";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
+interface FetchOptions {
+    omitContentType?: boolean;
+    toJson?: boolean;
+}
+
+const defaultOptions: FetchOptions = {
+    omitContentType: false,
+    toJson: true,
+};
+
 /**
  * Fetch data from the API
  * @param endpoint API endpoint
@@ -13,8 +23,9 @@ const BASE_URL = import.meta.env.VITE_API_URL;
 export async function authorized_fetch<T>(
     endpoint: string,
     requestOptions: RequestInit,
-    omitContentType: boolean = false
+    options: FetchOptions = {}
 ): Promise<T> {
+    const mergedOptions = { ...defaultOptions, ...options };
     const { token, isLoggedIn } = storeToRefs(useAuthStore());
     const { refresh } = useAuthStore();
     if (!isLoggedIn) {
@@ -26,7 +37,7 @@ export async function authorized_fetch<T>(
         ...requestOptions.headers,
     };
 
-    const headers = omitContentType
+    const headers = mergedOptions.omitContentType
         ? strippedHeaders
         : { ...strippedHeaders, "Content-Type": contentType };
 
@@ -38,7 +49,8 @@ export async function authorized_fetch<T>(
         await refresh();
         throw new Error("Not authenticated");
     } else if (!response.ok) {
-        throw new Error(response.statusText);
+        const error = await response.json();
+        throw new Error(error.detail);
     }
-    return response.json();
+    return mergedOptions.toJson ? response.json() : response;
 }

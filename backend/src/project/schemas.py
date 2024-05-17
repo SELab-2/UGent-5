@@ -17,13 +17,9 @@ class ProjectBase(BaseModel):
     deadline: datetime
     description: str
     subject_id: int
-    is_visible: bool = Field(default=False)
+    is_visible: bool = Field(default=True)
     capacity: int = Field(gt=0)
     requirements: List[Requirement] = []
-
-    @field_validator("description")
-    def validate_description(cls, value: str) -> str:
-        return escape(value, quote=False)
 
 
 class ProjectCreate(ProjectBase):
@@ -61,7 +57,3 @@ class ProjectUpdate(BaseModel):
         if value is not None and value < datetime.now(value.tzinfo):
             raise ValueError("The deadline cannot be in the past")
         return value
-
-    @field_validator("description")
-    def validate_description(cls, value: str) -> str:
-        return escape(value, quote=False)

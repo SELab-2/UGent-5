@@ -1,30 +1,23 @@
 <template>
     <div>
-        <v-container>
-            <h1 v-if="isLoading" class="welcome">{{ $t("default.loading.loading_page") }}</h1>
-            <h1 v-else-if="isError || noProjectsFound" class="welcome">
-                {{ $t("project.not_found") }}
-            </h1>
-            <div v-else class="projectInfo">
-                <v-row class="rowheader">
-                    <h1>{{ $t("project.myProject") }}</h1>
-                    <v-btn-toggle v-model="activeButton">
-                        <v-btn value="archived" class="leftbuttonspace">{{
-                            $t("project.archived")
-                        }}</v-btn>
-                        <v-btn value="notFinished" class="leftbuttonspace">{{
-                            $t("project.not_finished")
-                        }}</v-btn>
-                    </v-btn-toggle>
-                </v-row>
-                <ProjectMiniCard
-                    v-for="project in filteredProjects"
-                    :key="project.id"
-                    :project="project"
-                    class="project-card"
-                />
+        <h1 v-if="isLoading">{{ $t("default.loading.loading_page") }}</h1>
+        <h1 v-else-if="isError || noProjectsFound" class="welcome">
+            {{ $t("project.not_found") }}
+        </h1>
+        <div v-else class="projectInfo">
+            <div class="rowheader">
+                <h1>{{ $t("project.myProject") }}</h1>
+                <v-btn-toggle v-model="activeButton" class="button">
+                    <v-btn value="finished">{{ $t("project.finished") }}</v-btn>
+                </v-btn-toggle>
             </div>
-        </v-container>
+            <ProjectMiniCard
+                v-for="project in filteredProjects"
+                :key="project.id"
+                :project="project"
+                class="project-card"
+            />
+        </div>
     </div>
 </template>
 
@@ -32,28 +25,29 @@
 import { useProjectsQuery } from "@/queries/Project";
 import ProjectMiniCard from "@/components/project/ProjectMiniCard.vue";
 import { computed, ref } from "vue";
-import Project from "@/models/Project";
+import type Project from "@/models/Project";
 
 const { data: projects, isLoading, isError } = useProjectsQuery();
-const noProjectsFound = computed(() => projects.value.length === 0);
+const noProjectsFound = computed(() => projects.value?.length === 0);
 
-const activeButton = ref(null);
+const activeButton = ref("notFinished");
 
 const filteredProjects = computed(() => {
     if (!projects.value) return [];
 
     const now = new Date();
+    const sortedProjects = projects.value
+        .slice()
+        .sort(
+            (a: Project, b: Project) =>
+                new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
+        );
+
     switch (activeButton.value) {
-        case "archived":
-            return projects.value.slice().filter((project: Project) => {
-                return new Date(project.deadline) < now;
-            });
-        case "notFinished":
-            return projects.value.slice().filter((project: Project) => {
-                return new Date(project.deadline) > now;
-            });
+        case "finished":
+            return sortedProjects.filter((project: Project) => new Date(project.deadline) < now);
         default:
-            return projects.value;
+            return sortedProjects.filter((project: Project) => new Date(project.deadline) > now);
     }
 });
 </script>
@@ -64,14 +58,20 @@ const filteredProjects = computed(() => {
 }
 
 .projectInfo {
-    padding: 10px;
+    padding: 15px;
+    margin: 25px;
 }
 
 .rowheader {
-    padding: 10px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
 }
 
-.leftbuttonspace {
-    margin-left: 10px;
+.button {
+    height: 30px;
+    margin-top: 10px;
+    margin-left: 75px;
+    border: 1px solid rgb(var(--v-theme-text));
 }
 </style>

@@ -92,10 +92,13 @@ import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import { useRoute } from "vue-router";
-import { useSubjectInstructorsQuery, useSubjectStudentsQuery } from "@/queries/Subject";
-import { useMySubjectsQuery } from "@/queries/User";
+import {
+    useSubjectsQuery,
+    useSubjectInstructorsQuery,
+    useSubjectStudentsQuery,
+} from "@/queries/Subject";
 import { useCreateProjectMutation } from "@/queries/Project";
-import { useCreateGroupsMutation, useJoinGroupMutation } from "@/queries/Group";
+import { useCreateGroupsMutation, useAddToGroupMutation } from "@/queries/Group";
 import { ref, computed, reactive } from "vue";
 import type User from "@/models/User";
 import type { ProjectForm } from "@/models/Project";
@@ -115,12 +118,12 @@ const capacity = ref(1);
 const quillEditor = ref<typeof QuillEditor | null>(null);
 
 const {
-    data: mySubjectsData,
+    data: subjectsData,
     isLoading: isSubjectsLoading,
     isError: isSubjectsError,
     error: subjectsError,
-} = useMySubjectsQuery();
-const { data: instructorsData, isLoading, isError } = useSubjectInstructorsQuery(selectedSubject);
+} = useSubjectsQuery();
+const { data: instructorsData } = useSubjectInstructorsQuery(selectedSubject);
 const { data: studentsData } = useSubjectStudentsQuery(selectedSubject);
 
 const teachers = computed(
@@ -130,8 +133,7 @@ const assistants = computed(
     () => instructorsData.value?.filter((a) => !a.is_teacher).map(formatInstructor) || []
 );
 const subjects = computed(
-    () =>
-        mySubjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []
+    () => subjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []
 );
 
 const groupProjectOptions = [
@@ -141,7 +143,7 @@ const groupProjectOptions = [
 
 const createProjectMutation = useCreateProjectMutation();
 const createGroupsMutation = useCreateGroupsMutation();
-const joinGroupMutation = useJoinGroupMutation();
+const joinGroupMutation = useAddToGroupMutation();
 
 async function submitForm() {
     const projectData: ProjectForm = {

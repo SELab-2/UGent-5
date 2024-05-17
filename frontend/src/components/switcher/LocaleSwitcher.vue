@@ -1,11 +1,10 @@
 <template>
     <div class="switcher">
-        <v-icon icon="mdi-earth" />
         <template v-for="(availableLocale, index) in availableLocales" :key="availableLocale">
             <v-btn
                 variant="text"
-                :class="availableLocale === locale ? 'selected-option' : 'locale-option'"
-                @click="handleLocaleChange(availableLocale)"
+                :class="availableLocale === selectedLocale ? 'selected-option' : 'locale-option'"
+                @click="selectedLocale = availableLocale"
             >
                 {{ availableLocale }}
             </v-btn>
@@ -15,21 +14,17 @@
 </template>
 
 <script setup lang="ts">
-import { useLocale } from "@/stores/locale-store";
+import { useLocaleStore } from "@/stores/locale-store";
+import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 
-const { setLocale } = useLocale();
-const { locale, availableLocales } = useI18n();
-
-function handleLocaleChange(selectedLocale: string) {
-    locale.value = selectedLocale;
-    setLocale(selectedLocale);
-}
+const { availableLocales } = useI18n();
+const { selectedLocale } = storeToRefs(useLocaleStore());
 </script>
 
 <style lang="scss" scoped>
 .switcher {
-    color: var(--color-text-on-primary);
+    color: rgb(var(--v-theme-navtext));
     display: flex;
     align-items: center;
 }
@@ -39,7 +34,7 @@ function handleLocaleChange(selectedLocale: string) {
 }
 
 .selected-option {
-    color: var(--color-text-on-primary);
+    color: rgb(var(--v-theme-navtext));
     font-style: bold;
 }
 </style>

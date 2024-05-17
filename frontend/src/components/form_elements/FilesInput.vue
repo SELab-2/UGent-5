@@ -1,34 +1,24 @@
 <template>
-    <v-container>
-        <v-row>
-            <v-col>
-                <input @change="updateFiles" ref="fileInput" type="file" multiple hidden />
-                <v-btn class="mb-0" @click="onAddFilesClick">{{
-                    $t("submit.add_files_button")
-                }}</v-btn>
-            </v-col>
-        </v-row>
-        <v-row class="mt-0">
-            <v-col>
-                <div v-if="inputFiles.length === 0">
-                    <p>{{ $t("submit.no_files_added") }}</p>
-                </div>
-                <div v-else>
-                    <v-chip
-                        v-for="(item, index) in inputFiles"
-                        :key="item.name"
-                        class="ma-1"
-                        closable
-                        label
-                        @click:close="() => onDeleteClick(index)"
-                    >
-                        <v-icon icon="mdi-file" start></v-icon>
-                        {{ item.name }} ({{ formatBytes(item.size) }})
-                    </v-chip>
-                </div>
-            </v-col>
-        </v-row>
-    </v-container>
+    <input @change="updateFiles" ref="fileInput" type="file" multiple hidden />
+    <v-btn variant="flat" class="mb-0" @click="onAddFilesClick">{{
+        $t("submit.add_files_button")
+    }}</v-btn>
+    <div v-if="inputFiles.length === 0" class="files">
+        <p>{{ $t("submit.no_files_added") }}</p>
+    </div>
+    <div v-else>
+        <v-chip
+            v-for="(item, index) in inputFiles"
+            :key="item.name"
+            class="ma-1"
+            closable
+            label
+            @click:close="() => onDeleteClick(index)"
+        >
+            <v-icon icon="mdi-file" start></v-icon>
+            {{ item.name }} ({{ formatBytes(item.size) }})
+        </v-chip>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -64,5 +54,12 @@ function onDeleteClick(index: number) {
     inputFiles.value.splice(index, 1);
 }
 </script>
+<style scoped>
+.v-btn {
+    background-color: rgb(var(--v-theme-secondary));
+}
 
-<style scoped></style>
+.files {
+    margin-top: 15px;
+}
+</style>
