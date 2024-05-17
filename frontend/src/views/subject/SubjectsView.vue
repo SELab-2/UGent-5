@@ -5,7 +5,7 @@
 
     <v-skeleton-loader v-else type="card" :loading="isLoading">
         <v-row>
-            <v-col :cols="isTeacher ? 10 : 12">
+            <v-col :cols="isAdmin || isTeacher ? 10 : 12">
                 <BackgroundContainer>
                     <v-row>
                         <v-col>

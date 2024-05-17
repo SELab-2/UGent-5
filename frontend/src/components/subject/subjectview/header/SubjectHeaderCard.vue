@@ -47,7 +47,6 @@ defineProps<{
 .title-card {
     background-color: white;
     padding: 20px;
-    border-radius: 20px;
 }
 
 .title {

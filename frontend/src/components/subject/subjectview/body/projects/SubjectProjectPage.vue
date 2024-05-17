@@ -1,6 +1,6 @@
 <template>
     <div class="project-container">
-        <v-card class="project-card" variant="text" rounded="xl">
+        <v-card class="project-card" variant="text">
             <router-link
                 :to="{ name: 'project', params: { projectId: project.id } }"
                 class="router"
@@ -61,11 +61,11 @@
                 </v-card-actions>
             </div>
         </v-card>
-        <v-card class="project-card" rounded="xl" variant="text">
+        <v-card class="project-card" variant="text">
             <v-card-title class="card_title">{{ $t("subject.project.group") }}</v-card-title>
         </v-card>
 
-        <v-card class="project-card" rounded="xl" variant="text">
+        <v-card class="project-card" variant="text">
             <v-card-title class="card_title">{{ $t("subject.project.submissions") }}</v-card-title>
         </v-card>
     </div>
@@ -126,7 +126,6 @@ const renderQuillContent = (content: string) => {
     width: 100%;
     height: 80px; /* Adjust the height as needed */
     background-color: var(--color-primary); /* Desired background color */
-    border-radius: 20px 20px 0 0; /* Rounded corners for top half */
     z-index: -1; /* Ensure the colored zone is behind the card content */
 }
 

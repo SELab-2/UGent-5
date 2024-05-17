@@ -16,7 +16,7 @@
 
             <v-col cols="1">
                 <router-link :to="{ name: 'subjects' }">
-                    <v-btn variant="elevated" class="back-button" rounded="xl" size="large">
+                    <v-btn variant="elevated" class="back-button"  size="large">
                         <v-icon>mdi-arrow-left</v-icon>
                     </v-btn>
                 </router-link>

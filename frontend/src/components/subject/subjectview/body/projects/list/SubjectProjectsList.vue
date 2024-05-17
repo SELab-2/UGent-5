@@ -75,7 +75,6 @@ watch(activeButton, (newVal: string) => {
 .projects-card {
     background-color: white;
     padding: 20px;
-    border-radius: 20px;
     display: flex;
     flex-direction: column;
     max-height: 55vh;
@@ -105,7 +104,6 @@ watch(activeButton, (newVal: string) => {
     align-items: center;
     height: 200px; /* Adjust height as needed */
     border: 1px solid #ccc;
-    border-radius: 8px;
 }
 
 .placeholder p {

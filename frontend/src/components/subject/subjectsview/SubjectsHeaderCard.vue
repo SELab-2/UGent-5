@@ -1,5 +1,5 @@
 <template>
-    <v-card variant="text" class="title-card" rounded="xl" width="100%">
+    <v-card variant="text" class="title-card" width="100%">
         <v-row>
             <v-col>
                 <v-card-title class="title">
