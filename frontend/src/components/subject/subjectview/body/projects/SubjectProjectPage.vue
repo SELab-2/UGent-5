@@ -7,8 +7,8 @@
             >
                 <div class="colored-zone"></div>
                 <v-card-title class="title">
-                    <v-row>
-                        <v-col>
+                    <v-row >
+                        <v-col class="title-col" cols="10">
                             <span>{{ project.name }}</span>
                         </v-col>
                         <v-col class="text-right">
@@ -146,4 +146,17 @@ const assignmentLength = 100;
 .project-container::-webkit-scrollbar {
     width: 0; /* For Chrome, Safari, and Opera */
 }
+
+.title-col {
+    display: flex;
+    justify-content: space-between;
+    max-width: 80%;
+    overflow: auto;
+    scrollbar-width: none;
+}
+
+.title-col::-webkit-scrollbar {
+    width: 0; /* For Chrome, Safari, and Opera */
+}
+
 </style>
