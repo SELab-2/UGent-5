@@ -18,12 +18,22 @@ const testSubjectsUuidQuery = {
         this.isError.value = value
     },
     error: ref({message: "test error message"}),
-    data: {name: "testsubject"}
+    data: ref({name: "testsubject", id: 1}),
+    setData(id){
+        this.data.value.id = id
+    }
+}
+
+const testSubjectsQuery = {
+    data: ref({as_student: [
+            {id: 2}
+        ]})
 }
 
 vi.mock("@/queries/Subject", () => ({
     useRegisterToSubjectMutation: vi.fn(() => vi.fn()),
-    useSubjectUuidQuery: vi.fn(() => testSubjectsUuidQuery)
+    useSubjectUuidQuery: vi.fn(() => testSubjectsUuidQuery),
+    useSubjectsQuery: vi.fn(() => testSubjectsQuery),
 }))
 
 describe("SubjectRegisterView", () => {
@@ -39,5 +49,10 @@ describe("SubjectRegisterView", () => {
         testSubjectsUuidQuery.setError(false)
         await wrapper.vm.$nextTick()
         expect(wrapper.text()).toContain("Registreer bij vak: testsubject")
+    });
+    it("render if already registered", async () => {
+        testSubjectsUuidQuery.setData(2)
+        await wrapper.vm.$nextTick()
+        expect(wrapper.text()).toContain("Je bent al ingeschreven voor dit vak.")
     })
 });

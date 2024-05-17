@@ -93,6 +93,7 @@ export default {
         register: "Registreer bij vak:",
         ok: "Oké",
         cancel: "Annuleer",
+        registered: "Je bent al ingeschreven voor dit vak",
         academy_year: "Academiejaar",
         projects: "Projecten",
         announcements: "Meldingen",
