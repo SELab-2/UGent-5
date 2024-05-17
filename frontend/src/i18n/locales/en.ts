@@ -121,6 +121,7 @@ export default {
         create_subject: "Create subject",
         instructor_subjects: "Show instructor subjects",
         student_subjects: "Show student subjects",
+        no_subjects: "No subjects found.",
     },
     group: {
         not_found: "Group not found",

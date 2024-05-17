@@ -122,6 +122,7 @@ export default {
         create_subject: "Nieuw vak",
         instructor_subjects: "Toon lesgever vakken",
         student_subjects: "Toon student vakken",
+        no_subjects: "Geen vakken gevonden.",
     },
     group: {
         not_found: "Groep niet gevonden",
