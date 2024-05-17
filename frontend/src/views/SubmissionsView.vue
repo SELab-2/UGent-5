@@ -14,8 +14,8 @@
                     class="ma-3"
                     v-for="submission in sorted"
                     :key="submission"
-                    :submission="submission"
-                    :deadline="project.deadline"
+                    :submission="submission!"
+                    :deadline="project.deadline!"
                 />
             </v-col>
         </v-skeleton-loader>

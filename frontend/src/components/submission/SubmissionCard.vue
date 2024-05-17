@@ -2,10 +2,7 @@
     <v-card>
         <v-card-title>
             {{ $t("submission.status") }}
-            <p
-                v-if="new Date(submission.date) <= new Date(deadline)"
-                :class="Status[submission.status]"
-            >
+            <p v-if="new Date(submission.date) <= deadline" :class="Status[submission.status]">
                 {{ Status[submission.status] }}
             </p>
             <p v-else class="Deadline">{{ $t("submission.after_deadline") }}</p>
@@ -78,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Status } from "@/models/Submission";
+import { Status } from "@/models/Submission";
 import { useFilesQuery } from "@/queries/Submission";
 import { toRefs, computed } from "vue";
 import { download_file } from "@/utils";
@@ -86,7 +83,7 @@ import type Submission from "@/models/Submission";
 
 const props = defineProps<{
     submission: Submission;
-    deadline: string;
+    deadline: Date;
 }>();
 
 const { submission } = toRefs(props);

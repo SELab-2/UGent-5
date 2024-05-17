@@ -2,7 +2,13 @@ import { computed, toValue } from "vue";
 import type { MaybeRefOrGetter } from "vue";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/vue-query";
 import type { UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-query";
-import { createSubmission, getFiles, getSubmission, getSubmissions } from "@/services/submission";
+import {
+    createSubmission,
+    getFiles,
+    getProjectSubmissions,
+    getSubmission,
+    getSubmissions,
+} from "@/services/submission";
 import type Submission from "@/models/Submission";
 import type FileInfo from "@/models/File";
 import { useProjectGroupQuery } from "./Group";
@@ -17,6 +23,10 @@ function SUBMISSIONS_QUERY_KEY(groupId: number): (string | number)[] {
 
 function PROJECT_SUBMISSIONS_QUERY_KEY(projectId: number): (string | number)[] {
     return ["submissions", "project", projectId];
+}
+
+function PROJECT_SUBMISSIONS_QUERY_KEY(projectId: number): (string | number)[] {
+    return ["submissions_project", projectId];
 }
 
 function FILES_QUERY_KEY(submissionId: number): (string | number)[] {
@@ -53,7 +63,7 @@ export function useSubmissionsQuery(
  * Query composable for fetching all submissions of the group of the current user
  * in the project with the given id
  */
-export function useProjectSubmissionsQuery(
+export function useUserProjectSubmissionsQuery(
     projectId: MaybeRefOrGetter<number | undefined>
 ): UseQueryReturnType<Submission[], Error> {
     const { data: group } = useProjectGroupQuery(projectId);
@@ -69,6 +79,20 @@ export function useProjectSubmissionsQuery(
     });
 }
 
+
+/**
+ * Query composable for fetching all latest submissions of each group from a project.
+ */
+export function useProjectSubmissionsQuery(
+    projectId: MaybeRefOrGetter<number | undefined>
+): UseQueryReturnType<Submission[], Error> {
+    return useQuery<Submission[], Error>({
+        queryKey: computed(() => PROJECT_SUBMISSIONS_QUERY_KEY(toValue(projectId)!)),
+        queryFn: () => getProjectSubmissions(toValue(projectId)!),
+        enabled: () => !!toValue(projectId),
+    });
+}
+
 /**
  * Query composable for fetching files for a submission
  */
@@ -79,7 +103,6 @@ export function useFilesQuery(
         queryKey: computed(() => FILES_QUERY_KEY(toValue(submissionId)!)),
         queryFn: () => getFiles(toValue(submissionId)!),
         enabled: () => !!toValue(submissionId),
-        retry: false,
     });
 }
 

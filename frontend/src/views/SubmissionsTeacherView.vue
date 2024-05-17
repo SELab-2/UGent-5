@@ -24,7 +24,8 @@
 </template>
 
 <script setup lang="ts">
-import { useProjectQuery, useSubmissionsQuery } from "@/queries/Project";
+import { useProjectQuery } from "@/queries/Project";
+import { useProjectSubmissionsQuery } from "@/queries/Submission";
 import { toRefs } from "vue";
 import SubmissionTeacherCard from "@/components/submission/SubmissionTeacherCard.vue";
 
@@ -39,6 +40,6 @@ const {
     isLoading: submissionsLoading,
     isError,
     error,
-} = useSubmissionsQuery(projectId);
+} = useProjectSubmissionsQuery(projectId);
 const { data: project, isLoading: projectLoading } = useProjectQuery(projectId);
 </script>
