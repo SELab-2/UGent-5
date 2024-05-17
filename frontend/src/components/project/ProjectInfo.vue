@@ -19,7 +19,7 @@
                     class="ma-2"
                     prepend-icon="mdi-account"
                 >
-                    {{ instructor?.given_name }}
+                    {{ getAbbreviatedName(instructor) }}
                 </v-chip>
             </v-card-item>
             <v-card-item>
@@ -55,6 +55,13 @@ const renderQuillContent = (content: string) => {
     const quill = new Quill(document.createElement("div"));
     quill.root.innerHTML = content;
     return quill.root.innerHTML;
+};
+
+const getAbbreviatedName = (instructor: User) => {
+    if (instructor) {
+        return instructor.given_name.charAt(0).toUpperCase() + ". " + instructor.surname;
+    }
+    return "";
 };
 </script>
 

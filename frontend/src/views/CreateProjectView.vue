@@ -101,8 +101,16 @@ import RadioButtonList from "@/components/project/RadiobuttonList.vue";
 import FilesInput from "@/components/form_elements/FilesInput.vue";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
-
+import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import { useRoute } from "vue-router";
+import {
+    useSubjectsQuery,
+    useSubjectInstructorsQuery,
+    useSubjectStudentsQuery,
+} from "@/queries/Subject";
+
+import { useCreateGroupsMutation, useAddToGroupMutation } from "@/queries/Group";
+import { ref, computed, reactive } from "vue";
 import { useSubjectStudentsQuery } from "@/queries/Subject";
 import { useMySubjectsQuery } from "@/queries/User";
 import {
@@ -113,7 +121,6 @@ import {
     useUpdateProjectMutation,
     useUploadProjectFilesMutation,
 } from "@/queries/Project";
-import { useCreateGroupsMutation, useJoinGroupMutation } from "@/queries/Group";
 import { ref, computed, reactive, watch } from "vue";
 import type User from "@/models/User";
 import type { ProjectForm } from "@/models/Project";
@@ -123,8 +130,9 @@ import router from "@/router";
 import RequirementsInput from "@/components/RequirementsInput.vue";
 
 const route = useRoute();
-console.log("Route params:", route.params);
+;
 
+// Form data
 const project_title = ref("");
 const projectSubjectId = ref<number | null>(null);
 const deadline = ref(new Date());
@@ -219,20 +227,16 @@ const selectedSubject = ref<number>(
 );
 
 const {
-    data: mySubjectsData,
+    data: subjectsData,
     isLoading: isSubjectsLoading,
     isError: isSubjectsError,
     error: subjectsError,
-} = useMySubjectsQuery();
-let studentsData;
-if (!isEditMode.value) {
-    const queryResult = useSubjectStudentsQuery(selectedSubject);
-    studentsData = queryResult.data;
-}
+} = useSubjectsQuery();
+const { data: instructorsData } = useSubjectInstructorsQuery(selectedSubject);
+const { data: studentsData } = useSubjectStudentsQuery(selectedSubject);
 
 const subjects = computed(
-    () =>
-        mySubjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []
+    () => subjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []
 );
 
 const groupProjectOptions = [
@@ -242,7 +246,7 @@ const groupProjectOptions = [
 
 const createProjectMutation = useCreateProjectMutation();
 const createGroupsMutation = useCreateGroupsMutation();
-const joinGroupMutation = useJoinGroupMutation();
+const joinGroupMutation = useAddToGroupMutation();
 const uploadProjectFilesMutation = useUploadProjectFilesMutation();
 const updateProjectMutation = useUpdateProjectMutation();
 
@@ -399,8 +403,6 @@ function shuffle(array: any[]) {
 function divideStudentsIntoGroups(students: User[], capacity: number) {
     students = shuffle(students);
     let groups = [];
-    console.log(students.length);
-    console.log(capacity);
     const numberOfGroups = Math.ceil(students.length / capacity);
     for (let i = 0; i < numberOfGroups; i++) {
         groups.push(students.slice(i * capacity, (i + 1) * capacity));

@@ -11,7 +11,7 @@ import { computed, ref, toRefs } from "vue";
 import FilesInput from "@/components/form_elements/FilesInput.vue";
 import { useRouter } from "vue-router";
 import { useCreateSubmissionMutation } from "@/queries/Submission";
-import { useUserGroupQuery } from "@/queries/Group";
+import { useProjectGroupQuery } from "@/queries/Group";
 import { useI18n } from "vue-i18n";
 
 const props = defineProps<{
@@ -24,7 +24,7 @@ const { t } = useI18n();
 
 const inputFiles = ref<File[]>([]);
 const remarksInput = ref<string | null>(null);
-const { data: group } = useUserGroupQuery(projectId);
+const { data: group } = useProjectGroupQuery(projectId);
 const { mutateAsync } = useCreateSubmissionMutation(computed(() => group.value?.id));
 
 async function formOnSubmit(event: SubmitEvent) {

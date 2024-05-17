@@ -14,6 +14,11 @@
             {{ $t("project.group_button") }}
         </v-btn>
     </router-link>
+    <router-link v-else-if="isTeacher" :to="`/project/${project!.id}/groups`">
+        <v-btn class="group-button" prepend-icon="mdi-account-group">
+            {{ $t("project.to_groups") }}
+        </v-btn>
+    </router-link>
     <NeedHelpButton
         v-if="!isTeacher && subject!.email"
         class="group-button"
@@ -33,7 +38,7 @@ import type Subject from "@/models/Subject";
 import NeedHelpButton from "@/components/buttons/NeedHelpButton.vue";
 import { computed, toRefs } from "vue";
 import type User from "@/models/User";
-import { useUserQuery } from "@/queries/User";
+import { useCurrentUserQuery } from "@/queries/User";
 
 const props = defineProps<{
     project: Project;
@@ -44,7 +49,7 @@ const props = defineProps<{
 
 const { project, group, subject, instructors } = toRefs(props);
 
-const { data: user } = useUserQuery(null);
+const { data: user } = useCurrentUserQuery();
 
 const isTeacher = computed(() => {
     if (!user.value || !instructors.value) {

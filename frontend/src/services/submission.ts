@@ -2,12 +2,23 @@ import type Submission from "@/models/Submission";
 import { authorized_fetch } from ".";
 import type FileInfo from "@/models/File";
 
-// Function to fetch a specific submission by its ID
+/**
+ * Fetches the submission with the given ID.
+ */
 export async function getSubmission(submissionId: number): Promise<Submission> {
     return authorized_fetch(`/api/submissions/${submissionId}`, { method: "GET" });
 }
 
-// Function to create a new submission for a specific group
+/**
+ * Fetches all submissions of a group.
+ */
+export async function getSubmissions(groupId: number): Promise<Submission[]> {
+    return authorized_fetch(`/api/groups/${groupId}/submissions`, { method: "GET" });
+}
+
+/**
+ * Creates a new submission for a group.
+ */
 export async function createSubmission(groupId: number, formData: FormData): Promise<Submission> {
     return authorized_fetch(
         `/api/submissions/?group_id=${groupId}`,
@@ -15,10 +26,13 @@ export async function createSubmission(groupId: number, formData: FormData): Pro
             method: "POST",
             body: formData,
         },
-        true
+        { omitContentType: true }
     );
 }
 
+/**
+ * Fetches fileinfo of files of a submission.
+ */
 export async function getFiles(submissionId: number): Promise<FileInfo[]> {
     return authorized_fetch(`/api/submissions/${submissionId}/files`, {
         method: "GET",

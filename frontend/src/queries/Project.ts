@@ -1,10 +1,7 @@
-import {
-    useMutation,
-    useQuery,
-    type UseMutationReturnType,
-    type UseQueryReturnType,
-    useQueryClient,
-} from "@tanstack/vue-query";
+import { computed, toValue } from "vue";
+import type { MaybeRefOrGetter } from "vue";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
+import type { UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-query";
 import type Project from "@/models/Project";
 import type { ProjectForm } from "@/models/Project";
 import type Submission from "@/models/Submission";
@@ -20,9 +17,9 @@ import {
     fetchProjectFiles,
 } from "@/services/project";
 import { type Ref, computed } from "vue";
+import { getProject, createProject, getProjects } from "@/services/project";
 
-// Key generator for project queries
-function projectQueryKey(projectId: number): (string | number)[] {
+function PROJECT_QUERY_KEY(projectId: number): (string | number)[] {
     return ["project", projectId];
 }
 
@@ -30,6 +27,9 @@ function PROJECTS_QUERY_KEY(): string[] {
     return ["projects"];
 }
 
+/**
+ * Query composable for fetching a project by id
+ */
 function SUBMISSIONS_QUERY_KEY(): string[] {
     return ["submissions"];
 }
@@ -40,19 +40,22 @@ function projectFilesQueryKey(projectId: number): (string | number)[] {
 
 // Hook for fetching project details
 export function useProjectQuery(
-    projectId: Ref<number | undefined>
+    projectId: MaybeRefOrGetter<number | undefined>
 ): UseQueryReturnType<Project, Error> {
     return useQuery<Project, Error>({
-        queryKey: computed(() => projectQueryKey(projectId.value!)),
-        queryFn: () => getProject(projectId.value!),
-        enabled: computed(() => projectId.value !== undefined),
+        queryKey: computed(() => PROJECT_QUERY_KEY(toValue(projectId)!)),
+        queryFn: () => getProject(toValue(projectId)!),
+        enabled: () => !!toValue(projectId),
     });
 }
 
+/**
+ * Query composable for fetching all projects of the current user
+ */
 export function useProjectsQuery(): UseQueryReturnType<Project[], Error> {
     return useQuery<Project[], Error>({
         queryKey: PROJECTS_QUERY_KEY(),
-        queryFn: () => getProjects(),
+        queryFn: getProjects,
     });
 }
 
@@ -68,6 +71,9 @@ export function useCreateSubmissionMutation(
         },
     });
 }
+/**
+ * Mutation composable for creating a project
+ */
 export function useCreateProjectMutation(): UseMutationReturnType<
     number,
     Error,
@@ -77,9 +83,8 @@ export function useCreateProjectMutation(): UseMutationReturnType<
     const queryClient = useQueryClient();
     return useMutation<number, Error, ProjectForm, void>({
         mutationFn: createProject,
-        onSuccess: (createdProjectId) => {
-            queryClient.invalidateQueries({ queryKey: ["create-project"] });
-            console.log("Project created with ID:", createdProjectId);
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: PROJECTS_QUERY_KEY() });
         },
         onError: (error) => {
             console.error("Project creation failed", error);

@@ -1,7 +1,7 @@
 import { authorized_fetch } from "./services";
 
 export async function download_file(url: string, filename: string) {
-    const data = await authorized_fetch<Response>(url, { method: "GET" }, false, false).then(
+    const data = await authorized_fetch<Response>(url, { method: "GET" }, { toJson: false }).then(
         (response) => response.blob()
     );
 

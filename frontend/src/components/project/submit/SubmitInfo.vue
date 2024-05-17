@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { useSubmissionsQuery } from "@/queries/Group";
+import { useSubmissionsQuery } from "@/queries/Submission";
 import { toRefs, computed } from "vue";
 import type Project from "@/models/Project";
 import type Group from "@/models/Group";
