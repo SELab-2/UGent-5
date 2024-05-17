@@ -8,17 +8,19 @@ export default interface Project {
     capacity: number;
     enroll_deadline: Date;
     publish_date: Date;
+    test_files_uuid: string;
 }
 
 export interface ProjectForm {
     name: string;
     deadline: Date;
-    description: string;
     subject_id: number;
-    test_files_uuid: string;
-    is_visible: boolean;
-    capacity: number;
     requirements: Requirement[];
+    description: string;
+    capacity: number;
+    enroll_deadline: Date;
+    publish_date: Date;
+    test_files_uuid: string;
 }
 
 export interface Deadline {

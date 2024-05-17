@@ -9,19 +9,6 @@ function initProjectDate(project: Project): Project {
 /**
  * Fetches the project with the given ID.
  */
-export async function updateProject(
-    projectId: number,
-    projectData: Partial<ProjectForm>
-): Promise<void> {
-    const response = await authorized_fetch(`/api/projects/${projectId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(projectData),
-    });
-    return;
-}
-
-// Function to fetch a specific project by its ID
 export async function getProject(projectId: number): Promise<Project> {
     const result = await authorized_fetch<Project>(`/api/projects/${projectId}`, { method: "GET" });
     return initProjectDate(result);
@@ -59,16 +46,30 @@ export async function createProject(projectData: ProjectForm): Promise<number> {
     return response.id;
 }
 
+export async function updateProject(
+    projectId: number,
+    projectData: Partial<ProjectForm>
+): Promise<void> {
+    const response = await authorized_fetch(`/api/projects/${projectId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(projectData),
+    });
+    return;
+}
+
+
+
 // Function to upload test files to a specific project
 export async function uploadProjectFiles(projectId: number, formData: FormData): Promise<void> {
-    return authorized_fetch(
-        `/api/projects/${projectId}/test_files`,
-        {
-            method: "PUT",
-            body: formData,
-        },
-        true
-    );
+    console.log("we geraken hier?");
+    for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+    }
+    await authorized_fetch(`/api/projects/${projectId}/test_files`, {
+        method: 'PUT',
+        body: formData,
+    }, {omitContentType: true});
 }
 
 export async function fetchProjectFiles(projectId: number): Promise<any> {

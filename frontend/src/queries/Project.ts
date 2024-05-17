@@ -1,4 +1,4 @@
-import { computed, toValue } from "vue";
+import {computed, type Ref, toValue} from "vue";
 import type { MaybeRefOrGetter } from "vue";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import type { UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-query";
@@ -16,8 +16,6 @@ import {
     deleteProjectFiles,
     fetchProjectFiles,
 } from "@/services/project";
-import { type Ref, computed } from "vue";
-import { getProject, createProject, getProjects } from "@/services/project";
 
 function PROJECT_QUERY_KEY(projectId: number): (string | number)[] {
     return ["project", projectId];
@@ -108,15 +106,15 @@ export function useProjectFilesQuery(projectId: number): UseQueryReturnType<File
 export function useUploadProjectFilesMutation(): UseMutationReturnType<
     void, // Type of data returned on success
     Error, // Type of error
-    { projectId: number; formData: FormData }, // Arguments the mutation function accepts
-    void // Context or rollback information on error
+    { projectId: number; formData: FormData },
+    void
 > {
     const queryClient = useQueryClient();
     return useMutation<void, Error, { projectId: number; formData: FormData }, void>({
         mutationFn: ({ projectId, formData }) => uploadProjectFiles(projectId, formData),
         onSuccess: (_, { projectId }) => {
-            queryClient.invalidateQueries({ queryKey: projectQueryKey(projectId) });
-            console.log("Files uploaded successfully");
+                queryClient.invalidateQueries({ queryKey: PROJECT_QUERY_KEY(projectId) });
+                console.log("Files uploaded successfully");
         },
         onError: (error) => {
             console.error("File upload failed", error);

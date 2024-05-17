@@ -94,14 +94,12 @@
 </template>
 
 <script setup lang="ts">
-import {nextTick, toRaw} from "vue";
-import type { CheckBoxItem } from "@/components/project/CheckboxList.vue";
+import {nextTick, toRaw, watch} from "vue";
 import DatePicker from "@/components/project/DatePicker.vue";
 import RadioButtonList from "@/components/project/RadiobuttonList.vue";
 import FilesInput from "@/components/form_elements/FilesInput.vue";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
-import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import { useRoute } from "vue-router";
 import {
     useSubjectsQuery,
@@ -110,27 +108,19 @@ import {
 } from "@/queries/Subject";
 
 import { useCreateGroupsMutation, useAddToGroupMutation } from "@/queries/Group";
-import { ref, computed, reactive } from "vue";
-import { useSubjectStudentsQuery } from "@/queries/Subject";
-import { useMySubjectsQuery } from "@/queries/User";
+import { ref, reactive, computed } from "vue";
 import {
     useCreateProjectMutation,
-    useDeleteProjectFilesMutation,
     useProjectFilesQuery,
     useProjectQuery,
     useUpdateProjectMutation,
     useUploadProjectFilesMutation,
 } from "@/queries/Project";
-import { ref, computed, reactive, watch } from "vue";
 import type User from "@/models/User";
-import type { ProjectForm } from "@/models/Project";
-import type { GroupForm } from "@/models/Group";
 import DisplayTestFiles from "@/components/project/DisplayTestFiles.vue";
 import router from "@/router";
 import RequirementsInput from "@/components/RequirementsInput.vue";
-
 const route = useRoute();
-;
 
 // Form data
 const project_title = ref("");
@@ -172,7 +162,7 @@ function htmlDecode(input) {
 watch(
     projectData,
     (project) => {
-        if (project) {
+        if(project) {
             console.log("project",project);
             project_title.value = project.name;
             deadline.value = new Date(project.deadline);
@@ -273,16 +263,16 @@ function setErrorAlert(message) {
 }
 
 async function submitForm() {
-    const projectData = formatProjectData();
-    console.log(projectData);
+    // const projectData = formatProjectData();
+    // console.log(projectData);
     try {
-        if (isEditMode.value) {
-            await updateProject(projectData);
-        } else {
-            await createProject(projectData);
-        }
-        handleFiles(projectData.project_id);
-        navigateToProject(projectData.project_id);
+    //     if (isEditMode.value) {
+    //         await updateProject(projectData);
+    //     } else {
+    //         await createProject(projectData);
+    //     }
+        handleFiles(80);
+        // navigateToProject(projectData.project_id);
     } catch (error) {
         console.error("Error during project or group creation or file upload:", error);
         setErrorAlert("An unexpected error occurred. Please try again.");
