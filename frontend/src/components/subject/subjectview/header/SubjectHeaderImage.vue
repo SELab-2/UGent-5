@@ -1,23 +1,17 @@
 <template>
     <v-img aspect-ratio="16/9" cover :src="imagePath" class="header-img">
-        <SubjectIcon
-            :role="role"
-            size="xxx-large"
-            class="subject-icon"
-        ></SubjectIcon>
+        <SubjectIcon :role="role" size="xxx-large" class="subject-icon"></SubjectIcon>
     </v-img>
 </template>
 
 <script setup lang="ts">
 import SubjectIcon from "@/components/subject/extra/SubjectIcon.vue";
-import { ref } from "vue";
-import {SubjectRole} from "@/models/Subject";
+import { SubjectRole } from "@/models/Subject";
 
 defineProps<{
     imagePath: string;
     role: SubjectRole;
 }>();
-
 </script>
 
 <style scoped>

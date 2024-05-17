@@ -16,7 +16,7 @@
 
             <v-col cols="1">
                 <router-link :to="{ name: 'subjects' }">
-                    <v-btn variant="elevated" class="back-button"  size="large">
+                    <v-btn variant="elevated" class="back-button" size="large">
                         <v-icon>mdi-arrow-left</v-icon>
                     </v-btn>
                 </router-link>
@@ -99,11 +99,7 @@ const {
     isLoading: isInstructorsLoading,
     isError: isInstructorsError,
 } = useSubjectInstructorsQuery(subjectId);
-const {
-    data: user,
-    isLoading: isUserLoading,
-    isError: isUserError
-} = useCurrentUserQuery();
+const { data: user, isLoading: isUserLoading, isError: isUserError } = useCurrentUserQuery();
 
 const isLoading = computed(
     () =>
@@ -124,9 +120,8 @@ const isError = computed(
 const isInstructor = computed(() => {
     return [...(instructors.value || [])].some((instructor) => instructor?.uid === user.value?.uid);
 });
-const {isAdmin} = useIsAdmin();
-const {isTeacher} = useIsTeacher();
-
+const { isAdmin } = useIsAdmin();
+const { isTeacher } = useIsTeacher();
 </script>
 ;
 <style scoped>

@@ -79,7 +79,6 @@ const updateFilterOption = (option: FilterOptions) => {
     align-items: center;
     height: 400px; /* Adjust height as needed */
     border: 1px solid #ccc;
-    border-radius: 8px;
 }
 
 .placeholder p {

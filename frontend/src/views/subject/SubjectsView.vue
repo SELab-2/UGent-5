@@ -18,11 +18,8 @@
                         </v-col>
                     </v-row>
                     <v-row>
-                        <div
-                            v-if="filteredSubjectsByAcademicYear.length === 0"
-                            class="no-results"
-                        >
-                            <h1>{{$t('subjects.no_subjects')}}</h1>
+                        <div v-if="filteredSubjectsByAcademicYear.length === 0" class="no-results">
+                            <h1>{{ $t("subjects.no_subjects") }}</h1>
                         </div>
                         <v-col
                             v-else
@@ -53,25 +50,25 @@
 </template>
 
 <script setup lang="ts">
-import {useSubjectsQuery} from "@/queries/Subject";
+import { useSubjectsQuery } from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectsHeaderContainer from "@/components/subject/subjectsview/SubjectsHeaderContainer.vue";
 import SubjectCard from "@/components/subject/subjectsview/SubjectCard.vue";
-import {computed, ref} from "vue";
+import { computed, ref } from "vue";
 import useAcademicYear from "@/composables/useAcademicYear";
 import useIsTeacher from "@/composables/useIsTeacher";
 import useIsAdmin from "@/composables/useIsAdmin";
-import {type SubjectFilter, SubjectRole} from "@/models/Subject";
+import { type SubjectFilter, SubjectRole } from "@/models/Subject";
 
-const {data: subjects, error, isLoading, isError} = useSubjectsQuery();
+const { data: subjects, error, isLoading, isError } = useSubjectsQuery();
 const subjectsList = computed(() => {
-    const instructorSubjects = subjects.value!.as_instructor.map(subject => ({
+    const instructorSubjects = subjects.value!.as_instructor.map((subject) => ({
         subjectData: subject,
-        role: SubjectRole.Instructor
+        role: SubjectRole.Instructor,
     }));
-    const studentSubjects = subjects.value!.as_student.map(subject => ({
+    const studentSubjects = subjects.value!.as_student.map((subject) => ({
         subjectData: subject,
-        role: SubjectRole.Student
+        role: SubjectRole.Student,
     }));
 
     return [...instructorSubjects, ...studentSubjects];
@@ -79,11 +76,10 @@ const subjectsList = computed(() => {
 const activeAcademicYear = ref<number>(useAcademicYear());
 const activeSubjectsFilter = ref<SubjectFilter>({
     showInstructorSubjects: true,
-    showStudentSubjects: true
+    showStudentSubjects: true,
 });
-const {isTeacher} = useIsTeacher();
-const {isAdmin} = useIsAdmin();
-
+const { isTeacher } = useIsTeacher();
+const { isAdmin } = useIsAdmin();
 
 const academicYears = computed(() => {
     return Array.from(
@@ -100,10 +96,16 @@ const subjectsByAcademicYear = computed(() => {
 const filteredSubjectsByAcademicYear = computed(() => {
     const subjects = [...(subjectsByAcademicYear.value || [])];
     return subjects.filter((subject) => {
-        if (activeSubjectsFilter.value.showInstructorSubjects && subject.role === SubjectRole.Instructor) {
+        if (
+            activeSubjectsFilter.value.showInstructorSubjects &&
+            subject.role === SubjectRole.Instructor
+        ) {
             return true;
         }
-        if (activeSubjectsFilter.value.showStudentSubjects && subject.role === SubjectRole.Student) {
+        if (
+            activeSubjectsFilter.value.showStudentSubjects &&
+            subject.role === SubjectRole.Student
+        ) {
             return true;
         }
         return false;
