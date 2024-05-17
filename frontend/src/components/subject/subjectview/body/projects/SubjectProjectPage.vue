@@ -25,21 +25,26 @@
 
             <v-card-text>
                 <h2>{{ $t("subject.project.assignment") }}</h2>
-                <p
+                <div
                     v-if="project.description && project.description.length <= assignmentLength"
                     class="project_description"
+                    v-html="renderQuillContent(project.description)"
                 >
-                    {{ project.description }}
-                </p>
+                </div>
                 <!-- Show truncated description if not expanded -->
-                <p v-else-if="project.description && !expanded" class="project_description">
-                    {{ project.description.substring(0, assignmentLength) + "..." }}
-                </p>
+                <div
+                    v-else-if="project.description && !expanded"
+                    class="project_description"
+                    v-html="renderQuillContent(project.description.substring(0, assignmentLength) + '...')"
+                >
+                </div>
                 <!-- Show full description if expanded -->
                 <v-expand-transition>
-                    <div v-if="expanded">
-                        <p class="project_description">{{ project.description }}</p>
-                    </div>
+                    <div
+                        v-if="expanded"
+                        class="project_description"
+                        v-html="renderQuillContent(project.description)"
+                    ></div>
                 </v-expand-transition>
             </v-card-text>
             <!-- Toggle button for expanding/collapsing description -->
@@ -60,7 +65,7 @@
             <v-card-title class="card_title">{{ $t("subject.project.group") }}</v-card-title>
         </v-card>
 
-        <v-card class="project-card" rounded="xl" variant="text" height="410px">
+        <v-card class="project-card" rounded="xl" variant="text">
             <v-card-title class="card_title">{{ $t("subject.project.submissions") }}</v-card-title>
         </v-card>
     </div>
@@ -69,6 +74,7 @@
 <script setup lang="ts">
 import type Project from "@/models/Project";
 import { ref } from "vue";
+import {Quill} from "@vueup/vue-quill";
 
 defineProps<{
     selectedTab: number;
@@ -77,6 +83,12 @@ defineProps<{
 
 const expanded = ref(false);
 const assignmentLength = 100;
+
+const renderQuillContent = (content: string) => {
+    const quill = new Quill(document.createElement("div"));
+    quill.root.innerHTML = content;
+    return quill.root.innerHTML;
+};
 </script>
 
 <style scoped>
