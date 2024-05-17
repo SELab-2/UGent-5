@@ -1,7 +1,7 @@
 import { computed, toValue } from "vue";
 import type { MaybeRefOrGetter } from "vue";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import type { UseQueryReturnType, UseMutationReturnType } from "@tanstack/vue-query";
+import type { UseQueryReturnType, UseMutationReturnType, QueryClient } from "@tanstack/vue-query";
 import {
     getSubject,
     getSubjectInstructors,
@@ -66,11 +66,16 @@ export function useSubjectUuidQuery(
 /**
  * Query composable for fetching all subjects of the current user
  */
-export function useSubjectsQuery(): UseQueryReturnType<UserSubjectList, Error> {
-    return useQuery<UserSubjectList, Error>({
-        queryKey: SUBJECTS_QUERY_KEY(),
-        queryFn: getSubjects,
-    });
+export function useSubjectsQuery(
+    queryClient?: QueryClient
+): UseQueryReturnType<UserSubjectList, Error> {
+    return useQuery<UserSubjectList, Error>(
+        {
+            queryKey: SUBJECTS_QUERY_KEY(),
+            queryFn: getSubjects,
+        },
+        queryClient
+    );
 }
 
 /**

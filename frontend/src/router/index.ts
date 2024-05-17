@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { type Middleware, type MiddlewareContext, nextFactory } from "./middleware/index";
+import { type Middleware, type MiddlewareContext } from "./middleware/index";
 import isAuthenticated from "./middleware/isAuthenticated";
 import loginMiddleware from "./middleware/login";
 import useCanVisit, {
@@ -158,22 +158,29 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-    const middleware: Middleware[] = [];
+    const middlewares: Middleware[] = [];
 
     // Always check for authentication
-    middleware.push(isAuthenticated);
+    middlewares.push(isAuthenticated);
 
     // Add additional middleware if specified
     if (to.meta.middleware) {
         const meta_middleware = Array.isArray(to.meta.middleware)
             ? to.meta.middleware
             : [to.meta.middleware];
-        middleware.push(...meta_middleware.filter((m) => m !== isAuthenticated));
+        middlewares.push(...meta_middleware.filter((m) => m !== isAuthenticated));
     }
 
-    const context: MiddlewareContext = { to, from, next, router };
-    const nextMiddleware = nextFactory(context, middleware, 0);
-    return nextMiddleware();
+    let new_next = next;
+    for (let middleware of middlewares) {
+        const context: MiddlewareContext = { to, from, next: new_next, router };
+        const { next: returned_next, final } = await middleware(context);
+        if (final) {
+            return returned_next();
+        }
+        new_next = returned_next;
+    }
+    return new_next();
 });
 
 export default router;

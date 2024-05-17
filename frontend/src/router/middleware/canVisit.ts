@@ -14,8 +14,10 @@ export interface CanVisitCondition {
 
 function useCanVisit(useCondition: CanVisitCondition): Middleware {
     return async (context) => {
-        const { next, router } = context;
-        const queryClient = inject<QueryClient>("queryClient", new QueryClient());
+        const { next } = context;
+        // TODO: Figure out why this doesn't work anymore
+        // const queryClient = inject<QueryClient>("queryClient", new QueryClient());
+        const queryClient = new QueryClient();
         const { condition, isLoading } = useCondition(queryClient, context);
         const awaitLoading = () =>
             new Promise<void>((resolve) => {
@@ -28,9 +30,12 @@ function useCanVisit(useCondition: CanVisitCondition): Middleware {
             });
         await awaitLoading();
         if (!condition.value) {
-            router.replace({ path: "forbidden" });
+            return {
+                next: () => next({ path: "forbidden" }),
+                final: true,
+            };
         }
-        return next();
+        return { next, final: false };
     };
 }
 
@@ -78,7 +83,13 @@ export const useIsPartOfSubjectCondition: CanVisitCondition = (qc, ctx) => {
     const subjectId = Number(ctx.to.params.subjectId);
     const { data: subjects, isLoading } = useSubjectsQuery(qc);
     const condition = computed(() => {
-        return subjects.value?.findIndex((subject) => subject.id === subjectId) !== -1;
+        const student_subjects = subjects.value?.as_student || [];
+        const instructor_subjects = subjects.value?.as_instructor || [];
+        return (
+            [...student_subjects, ...instructor_subjects].findIndex(
+                (subject) => subject.id === subjectId
+            ) !== -1
+        );
     });
     return { condition, isLoading };
 };
