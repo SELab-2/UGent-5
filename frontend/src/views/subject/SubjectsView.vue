@@ -39,7 +39,7 @@
                     </v-row>
                 </BackgroundContainer>
             </v-col>
-            <v-col v-if="isTeacher || isAdmin" cols="2">
+            <v-col v-if="isAdmin || isTeacher" cols="2">
                 <div class="action-btn-container">
                     <router-link to="">
                         <v-btn prepend-icon="mdi-plus-circle">

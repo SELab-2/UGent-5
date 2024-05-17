@@ -1,24 +1,15 @@
 <template>
     <router-link :to="{ name: 'subject', params: { subjectId: subject.id } }" class="router-link">
-        <v-card rounded="xl" class="subject-card">
-            <v-img
-                src="https://cdn.vuetifyjs.com/images/cards/desert.jpg"
-                class="align-end"
-                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                cover
-                aspect-ratio="16/9"
-                height="120px"
-            >
-                <SubjectIcon
-                    :role="role"
-                    size="xx-large"
-                    class="subject-icon"
-                ></SubjectIcon>
-                <v-card-title class="subject-title">
-                    {{ subject?.name }}
-                    <v-icon class="">mdi-chevron-right</v-icon>
-                </v-card-title>
-            </v-img>
+        <v-card rounded="xl" class="subject-card" height="16vh" color="#1D357EFF">
+            <SubjectIcon
+                :role="role"
+                size="xx-large"
+                class="subject-icon"
+            ></SubjectIcon>
+            <v-card-title class="subject-title">
+                {{ subject?.name }}
+                <v-icon class="">mdi-chevron-right</v-icon>
+            </v-card-title>
         </v-card>
     </router-link>
 </template>
@@ -26,7 +17,6 @@
 <script setup lang="ts">
 import Subject, {SubjectRole} from "@/models/Subject";
 import SubjectIcon from "@/components/subject/extra/SubjectIcon.vue";
-import { ref } from "vue";
 
 defineProps<{
     subject: Subject;
@@ -51,6 +41,9 @@ defineProps<{
 
 .subject-title {
     color: white;
+    font-size: 3vh;
+    position: absolute;
+    bottom: 0;
 }
 
 .subject-icon {

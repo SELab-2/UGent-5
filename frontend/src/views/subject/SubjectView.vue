@@ -49,13 +49,12 @@
                             {{ $t("subject.create_project") }}
                         </v-btn>
                     </router-link>
-                    <v-btn
+                    <RegisterLinkButton
                         v-if="isAdmin || isTeacher"
-                        prepend-icon="mdi-content-copy"
-                        @click="copyRegisterLink"
-                    >
-                        {{ $t("subject.register_link_button.title") }}
-                    </v-btn>
+                        :subjectId="subjectId"
+                        @register-link-btn-pressed="snackbar = true"
+                        @is-uuid-error="isUuidError = true"
+                    ></RegisterLinkButton>
                 </div>
             </v-col>
         </v-row>
@@ -67,7 +66,7 @@ import { computed, ref, toRefs } from "vue";
 import {
     useSubjectQuery,
     useSubjectProjectsQuery,
-    useSubjectInstructorsQuery, useUuidSubjectQuery,
+    useSubjectInstructorsQuery,
 } from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectHeaderContainer from "@/components/subject/subjectview/header/SubjectHeaderContainer.vue";
@@ -75,7 +74,7 @@ import SubjectBody from "@/components/subject/subjectview/body/SubjectBody.vue";
 import { useCurrentUserQuery } from "@/queries/User";
 import useIsTeacher from "@/composables/useIsTeacher";
 import useIsAdmin from "@/composables/useIsAdmin";
-import {useRouter} from "vue-router";
+import RegisterLinkButton from "@/components/subject/subjectview/buttons/RegisterLinkButton.vue";
 
 const props = defineProps<{
     subjectId: number;
@@ -83,6 +82,7 @@ const props = defineProps<{
 
 const { subjectId } = toRefs(props);
 const snackbar = ref(false);
+const isUuidError = ref(false);
 
 const {
     data: subject,
@@ -104,19 +104,13 @@ const {
     isLoading: isUserLoading,
     isError: isUserError
 } = useCurrentUserQuery();
-const {
-    data: subjectUuid,
-    isLoading : isUuidLoading,
-    isError : isUuidError,
-} = useUuidSubjectQuery(subjectId);
 
 const isLoading = computed(
     () =>
         isSubjectLoading.value ||
         isProjectsLoading.value ||
         isInstructorsLoading.value ||
-        isUserLoading.value ||
-        isUuidLoading.value
+        isUserLoading.value
 );
 const isError = computed(
     () =>
@@ -133,20 +127,6 @@ const isInstructor = computed(() => {
 const {isAdmin} = useIsAdmin();
 const {isTeacher} = useIsTeacher();
 
-const router = useRouter();
-
-const registerLink = computed(() => {
-    return router.resolve({
-        name: "registerSubject",
-        params: { uuid: subjectUuid.value },
-    }).path;
-});
-
-const copyRegisterLink = () => {
-    const baseAddress = window.location.origin;
-    navigator.clipboard.writeText(`${baseAddress}${registerLink.value}`);
-    snackbar.value = true;
-};
 </script>
 ;
 <style scoped>
