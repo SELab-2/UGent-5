@@ -42,17 +42,22 @@ describe("SubjectRegisterView", () => {
             uuid: "testuuid"
         }
     })
+
     it("render error message", () => {
         expect(wrapper.text()).toContain("test error message")
     });
     it("render register view", async () => {
         testSubjectsUuidQuery.setError(false)
         await wrapper.vm.$nextTick()
+        const registered = (wrapper.vm as any).registered
+        expect(registered).toBe(false)
         expect(wrapper.text()).toContain("Registreer bij vak: testsubject")
     });
     it("render if already registered", async () => {
         testSubjectsUuidQuery.setData(2)
         await wrapper.vm.$nextTick()
+        const registered = (wrapper.vm as any).registered
+        expect(registered).toBe(true)
         expect(wrapper.text()).toContain("Je bent al ingeschreven voor dit vak.")
     })
 });
