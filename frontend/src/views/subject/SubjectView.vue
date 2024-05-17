@@ -73,7 +73,6 @@ import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectHeaderContainer from "@/components/subject/subjectview/header/SubjectHeaderContainer.vue";
 import SubjectBody from "@/components/subject/subjectview/body/SubjectBody.vue";
 import { useCurrentUserQuery } from "@/queries/User";
-import RegisterLinkButton from "@/components/subject/subjectview/buttons/RegisterLinkButton.vue";
 import useIsTeacher from "@/composables/useIsTeacher";
 import useIsAdmin from "@/composables/useIsAdmin";
 import {useRouter} from "vue-router";
@@ -131,7 +130,6 @@ const isError = computed(
 const isInstructor = computed(() => {
     return [...(instructors.value || [])].some((instructor) => instructor?.uid === user.value?.uid);
 });
-
 const {isAdmin} = useIsAdmin();
 const {isTeacher} = useIsTeacher();
 
