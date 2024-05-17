@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import SubjectsHeaderCard from "@/components/subject/subjectsview/SubjectsHeaderCard.vue";
 import SubjectsHeaderImage from "@/components/subject/subjectsview/SubjectsHeaderImage.vue";
-import type {SubjectDetails, SubjectFilter} from "@/models/Subject";
+import type { SubjectDetails, SubjectFilter } from "@/models/Subject";
 
 defineProps<{
     academicYears: number[];

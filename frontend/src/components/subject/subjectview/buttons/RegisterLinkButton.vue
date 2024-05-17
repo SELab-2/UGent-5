@@ -1,17 +1,13 @@
 <template>
-    <v-btn v-if="!isLoading"
-        prepend-icon="mdi-content-copy"
-        @click="copyRegisterLink"
-    >
+    <v-btn v-if="!isLoading" prepend-icon="mdi-content-copy" @click="copyRegisterLink">
         {{ $t("subject.register_link_button.title") }}
     </v-btn>
 </template>
 
 <script setup lang="ts">
-
-import {computed, toRefs, watch} from "vue";
-import {useUuidSubjectQuery} from "@/queries/Subject";
-import {useRouter} from "vue-router";
+import { computed, toRefs, watch } from "vue";
+import { useUuidSubjectQuery } from "@/queries/Subject";
+import { useRouter } from "vue-router";
 
 const props = defineProps<{
     subjectId: number;
@@ -19,11 +15,7 @@ const props = defineProps<{
 
 const { subjectId } = toRefs(props);
 
-const {
-    data: subjectUuid,
-    isLoading,
-    isError,
-} = useUuidSubjectQuery(subjectId);
+const { data: subjectUuid, isLoading, isError } = useUuidSubjectQuery(subjectId);
 
 const router = useRouter();
 
@@ -50,9 +42,6 @@ watch(isError, (newVal: boolean) => {
         emit("is-uuid-error");
     }
 });
-
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

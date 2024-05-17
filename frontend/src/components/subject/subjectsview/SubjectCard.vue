@@ -1,11 +1,7 @@
 <template>
     <router-link :to="{ name: 'subject', params: { subjectId: subject.id } }" class="router-link">
         <v-card class="subject-card" height="16vh" color="#1D357EFF">
-            <SubjectIcon
-                :role="role"
-                size="xx-large"
-                class="subject-icon"
-            ></SubjectIcon>
+            <SubjectIcon :role="role" size="xx-large" class="subject-icon"></SubjectIcon>
             <v-card-title class="subject-title">
                 {{ subject?.name }}
                 <v-icon class="">mdi-chevron-right</v-icon>
@@ -15,14 +11,13 @@
 </template>
 
 <script setup lang="ts">
-import Subject, {SubjectRole} from "@/models/Subject";
+import Subject, { SubjectRole } from "@/models/Subject";
 import SubjectIcon from "@/components/subject/extra/SubjectIcon.vue";
 
 defineProps<{
     subject: Subject;
     role: SubjectRole;
 }>();
-
 </script>
 
 <style scoped>

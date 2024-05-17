@@ -22,7 +22,7 @@
 import SubjectHeaderCard from "@/components/subject/subjectview/header/SubjectHeaderCard.vue";
 import type User from "@/models/User";
 import SubjectHeaderImage from "@/components/subject/subjectview/header/SubjectHeaderImage.vue";
-import {SubjectRole} from "@/models/Subject";
+import { SubjectRole } from "@/models/Subject";
 
 defineProps<{
     title: string;

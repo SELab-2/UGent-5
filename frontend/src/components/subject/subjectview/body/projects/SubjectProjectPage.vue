@@ -7,7 +7,7 @@
             >
                 <div class="colored-zone"></div>
                 <v-card-title class="title">
-                    <v-row >
+                    <v-row>
                         <v-col class="title-col" cols="10">
                             <span>{{ project.name }}</span>
                         </v-col>
@@ -29,15 +29,17 @@
                     v-if="project.description && project.description.length <= assignmentLength"
                     class="project_description"
                     v-html="renderQuillContent(project.description)"
-                >
-                </div>
+                ></div>
                 <!-- Show truncated description if not expanded -->
                 <div
                     v-else-if="project.description && !expanded"
                     class="project_description"
-                    v-html="renderQuillContent(project.description.substring(0, assignmentLength) + '...')"
-                >
-                </div>
+                    v-html="
+                        renderQuillContent(
+                            project.description.substring(0, assignmentLength) + '...'
+                        )
+                    "
+                ></div>
                 <!-- Show full description if expanded -->
                 <v-expand-transition>
                     <div
@@ -74,7 +76,7 @@
 <script setup lang="ts">
 import type Project from "@/models/Project";
 import { ref } from "vue";
-import {Quill} from "@vueup/vue-quill";
+import { Quill } from "@vueup/vue-quill";
 
 defineProps<{
     selectedTab: number;
@@ -169,5 +171,4 @@ const renderQuillContent = (content: string) => {
 .title-col::-webkit-scrollbar {
     width: 0; /* For Chrome, Safari, and Opera */
 }
-
 </style>
