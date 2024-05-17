@@ -59,7 +59,7 @@ async def token(
                 mail=attributes["mail"],
             ),
         )
-    if resolved_user.surname == 'SURNAME_DEFAULT':
+    elif resolved_user.surname == 'SURNAME_DEFAULT':
         resolved_user.surname = attributes["surname"]
 
     # Create JWT token
