@@ -24,7 +24,7 @@
                 </v-card-text>
             </v-col>
             <v-col
-                v-if="isInstructor"
+                v-if="isInstructor && isStudent"
                 cols="6"
             >
                 <v-checkbox
@@ -45,13 +45,13 @@
 <script setup lang="ts">
 import {computed, ref, toRefs, watch} from "vue";
 import useAcademicYear from "@/composables/useAcademicYear";
-import type {SubjectFilter} from "@/models/Subject";
+import {type SubjectDetails, type SubjectFilter, SubjectRole} from "@/models/Subject";
 
 const props = defineProps<{
     academicYears: number[];
-    isInstructor: boolean;
+    subjects: SubjectDetails[];
 }>();
-const { academicYears } = toRefs(props);
+const { academicYears, subjects } = toRefs(props);
 const activeAcademicYear = ref(useAcademicYear());
 const showInstructorSubjects = ref(true);
 const showStudentSubjects = ref(true);
@@ -61,6 +61,14 @@ const activeSubjectFilter = computed(() => {
         showInstructorSubjects: showInstructorSubjects.value,
         showStudentSubjects: showStudentSubjects.value
     };
+});
+
+const isInstructor = computed(() => {
+    return subjects.value.some((subject) => subject.role === SubjectRole.Instructor);
+});
+
+const isStudent = computed(() => {
+    return subjects.value.some((subject) => subject.role === SubjectRole.Student);
 });
 
 

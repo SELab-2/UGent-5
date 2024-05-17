@@ -11,14 +11,21 @@
                         <v-col>
                             <SubjectsHeaderContainer
                                 :academic-years="academicYears"
-                                :is-instructor="isInstructor"
+                                :subjects="subjectsByAcademicYear"
                                 @academic-year-changed="onAcademicYearChanged"
                                 @subjects-filter-changed="onSubjectsFilterChanged"
                             ></SubjectsHeaderContainer>
                         </v-col>
                     </v-row>
                     <v-row>
+                        <div
+                            v-if="filteredSubjectsByAcademicYear.length === 0"
+                            class="no-results"
+                        >
+                            <h1>{{$t('subjects.no_subjects')}}</h1>
+                        </div>
                         <v-col
+                            v-else
                             v-for="(subject, index) in filteredSubjectsByAcademicYear"
                             :key="index"
                             cols="6"
@@ -58,15 +65,16 @@ import {type SubjectFilter, SubjectRole} from "@/models/Subject";
 
 const {data: subjects, error, isLoading, isError} = useSubjectsQuery();
 const subjectsList = computed(() => {
-    const studentSubjects = subjects.value!.as_student.map(subject => ({
-        subjectData: subject,
-        role: SubjectRole.Student
-    }));
     const instructorSubjects = subjects.value!.as_instructor.map(subject => ({
         subjectData: subject,
         role: SubjectRole.Instructor
     }));
-    return [...studentSubjects, ...instructorSubjects];
+    const studentSubjects = subjects.value!.as_student.map(subject => ({
+        subjectData: subject,
+        role: SubjectRole.Student
+    }));
+
+    return [...instructorSubjects, ...studentSubjects];
 });
 const activeAcademicYear = ref<number>(useAcademicYear());
 const activeSubjectsFilter = ref<SubjectFilter>({
@@ -87,10 +95,6 @@ const subjectsByAcademicYear = computed(() => {
     return [...(subjectsList.value || [])].filter(
         (subject) => subject.subjectData.academic_year === activeAcademicYear.value
     );
-});
-
-const isInstructor = computed(() => {
-    return subjectsByAcademicYear.value.some((subject) => subject.role === SubjectRole.Instructor);
 });
 
 const filteredSubjectsByAcademicYear = computed(() => {
@@ -122,5 +126,9 @@ const onAcademicYearChanged = (academicYear: number) => {
 
 .action-btn-container {
     margin-top: 30px;
+}
+
+.no-results {
+    text-align: center;
 }
 </style>

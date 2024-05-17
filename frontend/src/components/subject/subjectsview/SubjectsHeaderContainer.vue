@@ -3,7 +3,7 @@
         <v-col cols="7">
             <SubjectsHeaderCard
                 :academic-years="academicYears"
-                :is-instructor="isInstructor"
+                :subjects="subjects"
                 @academic-year-changed="onAcademicYearChanged"
                 @subjects-filter-changed="onSubjectsFilterChanged"
             ></SubjectsHeaderCard>
@@ -19,11 +19,11 @@
 <script setup lang="ts">
 import SubjectsHeaderCard from "@/components/subject/subjectsview/SubjectsHeaderCard.vue";
 import SubjectsHeaderImage from "@/components/subject/subjectsview/SubjectsHeaderImage.vue";
-import type {SubjectFilter} from "@/models/Subject";
+import type {SubjectDetails, SubjectFilter} from "@/models/Subject";
 
 defineProps<{
     academicYears: number[];
-    isInstructor: boolean;
+    subjects: SubjectDetails[];
 }>();
 
 const emit = defineEmits<{

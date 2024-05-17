@@ -19,3 +19,8 @@ export interface SubjectFilter {
     showInstructorSubjects: boolean;
     showStudentSubjects: boolean;
 }
+
+export interface SubjectDetails {
+    subjectData: Subject;
+    role: SubjectRole;
+}
