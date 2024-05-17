@@ -21,12 +21,12 @@ function SUBMISSIONS_QUERY_KEY(groupId: number): (string | number)[] {
     return ["submissions", "group", groupId];
 }
 
-function PROJECT_SUBMISSIONS_QUERY_KEY(projectId: number): (string | number)[] {
-    return ["submissions", "project", projectId];
+function USER_PROJECT_SUBMISSIONS_QUERY_KEY(projectId: number): (string | number)[] {
+    return ["submissions", "project", "user", projectId];
 }
 
 function PROJECT_SUBMISSIONS_QUERY_KEY(projectId: number): (string | number)[] {
-    return ["submissions_project", projectId];
+    return ["submissions", "project", projectId];
 }
 
 function FILES_QUERY_KEY(submissionId: number): (string | number)[] {
@@ -68,7 +68,7 @@ export function useUserProjectSubmissionsQuery(
 ): UseQueryReturnType<Submission[], Error> {
     const { data: group } = useProjectGroupQuery(projectId);
     return useQuery({
-        queryKey: computed(() => PROJECT_SUBMISSIONS_QUERY_KEY(toValue(projectId)!)),
+        queryKey: computed(() => USER_PROJECT_SUBMISSIONS_QUERY_KEY(toValue(projectId)!)),
         queryFn: async () => {
             // HACK: Without this null-check, queries where there is no group will take a long time to resolve
             // also, this should be `!group.value`, but javascript...
@@ -78,7 +78,6 @@ export function useUserProjectSubmissionsQuery(
         enabled: () => !!toValue(projectId),
     });
 }
-
 
 /**
  * Query composable for fetching all latest submissions of each group from a project.
