@@ -126,8 +126,8 @@ async def test_project_requirements(client: AsyncClient, group_with_reqs_id: int
     response = await client.post("/api/submissions/", params={"group_id": group_with_reqs_id}, files=[optional])
     assert response.status_code == 422
     assert len(response.json()["detail"]) == 1
-    assert response.json()["detail"][0]["value"] == "*.py"
-    assert response.json()["detail"][0]["mandatory"] is True
+    assert response.json()["detail"][0]["requirement"] == "*.py"
+    assert response.json()["detail"][0]["type"] == "mandatory"
 
     # Submit with forbidden
     response = await client.post(
@@ -135,9 +135,9 @@ async def test_project_requirements(client: AsyncClient, group_with_reqs_id: int
     )
     assert response.status_code == 422
     assert len(response.json()["detail"]) == 2
-    reqs = [(req["value"], req["mandatory"]) for req in response.json()["detail"]]
-    assert ("*.py", True) in reqs
-    assert ("*.pdf", False) in reqs
+    reqs = [(req["requirement"], req["type"]) for req in response.json()["detail"]]
+    assert ("*.py", "mandatory") in reqs
+    assert ("*.pdf", "forbidden") in reqs
 
     # Submit with forbidden and mandatory
     response = await client.post(
@@ -145,8 +145,8 @@ async def test_project_requirements(client: AsyncClient, group_with_reqs_id: int
     )
     assert response.status_code == 422
     assert len(response.json()["detail"]) == 1
-    reqs = [(req["value"], req["mandatory"]) for req in response.json()["detail"]]
-    assert ("*.pdf", False) == reqs[0]
+    reqs = [(req["requirement"], req["type"]) for req in response.json()["detail"]]
+    assert ("*.pdf", "forbidden") == reqs[0]
 
     # Submit with mandatory
     response = await client.post(
