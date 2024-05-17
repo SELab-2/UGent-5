@@ -15,7 +15,7 @@
                         <HeaderSubtitleButton
                             v-for="instructor in instructors"
                             :key="instructor.uid"
-                            :title="instructor.given_name"
+                            :title="`${instructor.given_name[0]}. ${instructor.surname}`"
                             :clickable="false"
                             :active="false"
                         ></HeaderSubtitleButton>
