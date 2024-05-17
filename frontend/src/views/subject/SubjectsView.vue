@@ -30,7 +30,7 @@
                     </v-row>
                 </BackgroundContainer>
             </v-col>
-            <v-col v-if="isTeacher" cols="2">
+            <v-col v-if="isTeacher || isAdmin" cols="2">
                 <div class="action-btn-container">
                     <router-link to="">
                         <v-btn prepend-icon="mdi-plus-circle">
@@ -52,6 +52,7 @@ import { computed, ref } from "vue";
 import useAcademicYear from "@/composables/useAcademicYear";
 import useIsTeacher from "@/composables/useIsTeacher";
 import {SubjectRole} from "@/models/Subject";
+import useIsAdmin from "@/composables/useIsAdmin";
 
 const { data: subjects, error, isLoading, isError } = useSubjectsQuery();
 const subjectsList = computed(() => {
@@ -61,6 +62,7 @@ const subjectsList = computed(() => {
 });
 const selectedAcademicYear = ref<number>(useAcademicYear());
 const { isTeacher } = useIsTeacher();
+const { isAdmin } = useIsAdmin();
 
 const academicYears = computed(() => {
     return Array.from(

@@ -8,7 +8,8 @@ import {
     getSubjects,
     getSubjectStudents,
     getSubjectByUuid,
-    registerToSubject, getSubjectUuid,
+    registerToSubject,
+    getSubjectUuid,
 } from "@/services/subject";
 import { getSubjectProjects } from "@/services/project";
 import type User from "@/models/User";
@@ -38,7 +39,6 @@ function SUBJECT_PROJECTS_QUERY_KEY(subjectId: number): (string | number)[] {
 
 function SUBJECT_UUID_QUERY_KEY(subjectId: string): (string | number)[] {
     return ["subject", "uuid", subjectId];
-
 }
 
 /**
@@ -125,7 +125,6 @@ export function useUuidSubjectQuery(
         queryFn: () => getSubjectUuid(toValue(subjectId)!),
         enabled: () => !!toValue(subjectId),
     });
-
 }
 
 /**
