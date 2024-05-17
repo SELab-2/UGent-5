@@ -15,7 +15,7 @@
                     v-for="submission in sorted"
                     :key="submission"
                     :submission="submission"
-                    :project="project"
+                    :project="project!"
                 />
             </v-col>
         </v-skeleton-loader>
@@ -23,7 +23,8 @@
 </template>
 
 <script setup lang="ts">
-import { useSubmissionsQuery, useGroupQuery } from "@/queries/Group";
+import { useGroupQuery } from "@/queries/Group";
+import { useSubmissionsQuery } from "@/queries/Submission";
 import { useProjectQuery } from "@/queries/Project";
 import { computed, toRefs } from "vue";
 import SubmissionCard from "@/components/submission/SubmissionCard.vue";

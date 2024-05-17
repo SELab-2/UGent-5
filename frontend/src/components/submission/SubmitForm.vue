@@ -18,7 +18,7 @@ import { computed, ref, toRefs } from "vue";
 import FilesInput from "@/components/form_elements/FilesInput.vue";
 import { useRouter } from "vue-router";
 import { useCreateSubmissionMutation } from "@/queries/Submission";
-import { useUserGroupQuery } from "@/queries/Group";
+import { useProjectGroupQuery } from "@/queries/Group";
 import { useI18n } from "vue-i18n";
 import RequirementsCard from "@/components/project/RequirementsCard.vue";
 import type Project from "@/models/Project";
@@ -38,7 +38,7 @@ const inputFiles = ref<File[]>([]);
 const remarksInput = ref<string | null>(null);
 const unmetRequirements = ref<UnmetRequirement[]>([]);
 
-const { data: group } = useUserGroupQuery(projectId);
+const { data: group } = useProjectGroupQuery(projectId);
 const groupId = computed(() => group.value?.id);
 const { mutateAsync } = useCreateSubmissionMutation(groupId);
 

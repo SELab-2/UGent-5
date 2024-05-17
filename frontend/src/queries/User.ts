@@ -1,45 +1,69 @@
-import {
-    useQuery,
-    useMutation,
-    useQueryClient,
-    type UseQueryReturnType,
-    type UseMutationReturnType,
-} from "@tanstack/vue-query";
+import { computed, toValue } from "vue";
+import type { MaybeRefOrGetter } from "vue";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/vue-query";
+import type { UseQueryReturnType, UseMutationReturnType } from "@tanstack/vue-query";
 import type User from "@/models/User";
 import {
-    getMySubjects,
+    getCurrentUser,
     getUser,
     getUsers,
     toggleAdmin,
     toggleTeacher,
     deleteUser,
 } from "@/services/user";
-import { type Ref, computed } from "vue";
-import type { UserSubjectList } from "@/models/Subject";
 
-function USER_QUERY_KEY(uid: string | null): string[] {
-    return uid ? ["user", uid] : ["user"];
+export function CURRENT_USER_QUERY_KEY(): string[] {
+    return ["user"];
 }
 
-function USERS_QUERY_KEY(): string[] {
+export function USER_QUERY_KEY(uid: string): string[] {
+    return ["user", uid];
+}
+
+export function USERS_QUERY_KEY(): string[] {
     return ["users"];
 }
 
-export function useUserQuery(uid: Ref<string | undefined> | null): UseQueryReturnType<User, Error> {
+/**
+ * Query composable for fetching the current user
+ */
+export function useCurrentUserQuery(): UseQueryReturnType<User, Error> {
     return useQuery<User, Error>({
-        queryKey: computed(() => USER_QUERY_KEY(uid?.value!)),
-        queryFn: () => getUser(uid?.value!),
-        enabled: uid === null || uid?.value !== undefined,
+        queryKey: CURRENT_USER_QUERY_KEY(),
+        queryFn: () => getCurrentUser(),
     });
 }
 
+/**
+ * Query composable for fetching a user by uid
+ * @param uid Ref to the uid of the user to fetch
+ */
+export function useUserQuery(
+    uid: MaybeRefOrGetter<string | undefined>
+): UseQueryReturnType<User, Error> {
+    return useQuery<User, Error>({
+        queryKey: computed(() => USER_QUERY_KEY(toValue(uid)!)),
+        queryFn: () => getUser(toValue(uid)!),
+        enabled: () => !!toValue(uid),
+    });
+}
+
+/**
+ * Query composable for fetching all users
+ */
 export function useUsersQuery(): UseQueryReturnType<User[], Error> {
     return useQuery<User[], Error>({
         queryKey: USERS_QUERY_KEY(),
-        queryFn: () => getUsers(),
+        queryFn: getUsers,
     });
 }
 
+/**
+ * Generic mutation composable for toggling a boolean field in a user object
+ * @param toggleFn Function that toggles the field in the backend
+ * @param getField Function that gets the field to toggle
+ * @param setField Function that sets the field to toggle
+ */
 // TODO: Use USER_QUERY_KEY(uid) instead of USERS_QUERY_KEY() for invalidation
 function useToggleMutation(
     toggleFn: (uid: string) => Promise<User>,
@@ -71,6 +95,9 @@ function useToggleMutation(
     });
 }
 
+/**
+ * Mutation composable for toggling the admin status of a user
+ */
 export function useToggleAdminMutation(): UseMutationReturnType<
     User,
     Error,
@@ -84,6 +111,9 @@ export function useToggleAdminMutation(): UseMutationReturnType<
     );
 }
 
+/**
+ * Mutation composable for toggling the teacher status of a user
+ */
 export function useToggleTeacherMutation(): UseMutationReturnType<
     User,
     Error,
@@ -95,17 +125,6 @@ export function useToggleTeacherMutation(): UseMutationReturnType<
         (user) => user.is_teacher,
         (user, value) => (user.is_teacher = value)
     );
-}
-
-// Hook for fetching subjects for a user
-export function useMySubjectsQuery(): UseQueryReturnType<UserSubjectList, Error> {
-    return useQuery<UserSubjectList, Error>({
-        queryKey: ["mySubjects"],
-        queryFn: () => {
-            console.log("Fetching subjects with mock data");
-            return getMySubjects();
-        },
-    });
 }
 
 export function useDeleteUserMutation(): UseMutationReturnType<

@@ -1,52 +1,79 @@
+import { computed, toValue } from "vue";
+import type { MaybeRefOrGetter } from "vue";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/vue-query";
+import type { UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-query";
+import { createSubmission, getFiles, getSubmission, getSubmissions } from "@/services/submission";
 import type Submission from "@/models/Submission";
-import { createSubmission, getFiles, getSubmission } from "@/services/submission";
-import { computed, type Ref } from "vue";
-import {
-    useQuery,
-    type UseMutationReturnType,
-    type UseQueryReturnType,
-    useMutation,
-} from "@tanstack/vue-query";
 import type FileInfo from "@/models/File";
 
-// Key generator for submission queries
-function submissionQueryKey(submissionId: number): (string | number)[] {
+function SUBMISSION_QUERY_KEY(submissionId: number): (string | number)[] {
     return ["submission", submissionId];
+}
+
+function SUBMISSIONS_QUERY_KEY(groupId: number): (string | number)[] {
+    return ["submissions", groupId];
 }
 
 function FILES_QUERY_KEY(submissionId: number): (string | number)[] {
     return ["files", submissionId];
 }
 
-// Hook for fetching submission details
+/**
+ * Query composable for fetching a submission by id
+ */
 export function useSubmissionQuery(
-    submissionId: Ref<number | undefined>
+    submissionId: MaybeRefOrGetter<number | undefined>
 ): UseQueryReturnType<Submission, Error> {
     return useQuery<Submission, Error>({
-        queryKey: computed(() => submissionQueryKey(submissionId.value!)),
-        queryFn: () => getSubmission(submissionId.value!),
-        enabled: computed(() => submissionId.value !== undefined),
+        queryKey: computed(() => SUBMISSION_QUERY_KEY(toValue(submissionId)!)),
+        queryFn: () => getSubmission(toValue(submissionId)!),
+        enabled: () => !!toValue(submissionId),
         retry: false,
     });
 }
 
-// Hook for fetching all files of a submission
+/**
+ * Query composable for fetching all submissions for a group
+ */
+export function useSubmissionsQuery(
+    groupId: MaybeRefOrGetter<number | undefined>
+): UseQueryReturnType<Submission[], Error> {
+    return useQuery<Submission[], Error>({
+        queryKey: computed(() => SUBMISSIONS_QUERY_KEY(toValue(groupId)!)),
+        queryFn: () => getSubmissions(toValue(groupId)!),
+        enabled: () => !!toValue(groupId),
+    });
+}
+
+/**
+ * Query composable for fetching files for a submission
+ */
 export function useFilesQuery(
-    submissionId: Ref<number | undefined>
+    submissionId: MaybeRefOrGetter<number | undefined>
 ): UseQueryReturnType<FileInfo[], Error> {
     return useQuery<FileInfo[], Error>({
-        queryKey: FILES_QUERY_KEY(submissionId.value!),
-        queryFn: () => getFiles(submissionId.value!),
-        enabled: computed(() => submissionId.value !== undefined),
+        queryKey: computed(() => FILES_QUERY_KEY(toValue(submissionId)!)),
+        queryFn: () => getFiles(toValue(submissionId)!),
+        enabled: () => !!toValue(submissionId),
         retry: false,
     });
 }
 
-// Hook for creating a new submission
+/**
+ * Mutation composable for creating a submission
+ */
 export function useCreateSubmissionMutation(
-    groupId: Ref<number | undefined>
-): UseMutationReturnType<Object, Error, FormData, void> {
-    return useMutation<Object, Error, FormData, void>({
-        mutationFn: (formData) => createSubmission(groupId.value!, formData),
+    groupId: MaybeRefOrGetter<number | undefined>
+): UseMutationReturnType<Submission, Error, MaybeRefOrGetter<FormData>, void> {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (formData) => createSubmission(toValue(groupId)!, toValue(formData)),
+        onSettled: () => {
+            queryClient.invalidateQueries({ queryKey: SUBMISSIONS_QUERY_KEY(toValue(groupId)!) });
+        },
+        onError: (error) => {
+            console.error("Submission creation failed", error);
+            alert("Could not create submission. Please try again.");
+        },
     });
 }

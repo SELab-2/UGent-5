@@ -1,7 +1,7 @@
 import {mount} from "@vue/test-utils";
 import {expect, describe, it, vi} from "vitest";
 import SubmitInfo from "@/components/submission/SubmitInfo.vue"
-import {computed} from "vue";
+import {computed, ref} from "vue";
 
 const mockGroup = {
     id: 1
@@ -20,6 +20,25 @@ const testSubmissionsQuery = {
 
 vi.mock('@/queries/Group', () => ({
     useSubmissionsQuery: vi.fn(() => testSubmissionsQuery),
+}));
+
+const mockRouter = {
+    push: vi.fn(),
+};
+
+vi.mock("vue-router", () => ({
+    useRouter: () => mockRouter,
+}));
+
+const testAuthStore = {
+    isLoggedIn: ref(true),
+    setLoggedIn(value) {
+        this.isLoggedIn.value = value;
+    },
+};
+
+vi.mock("@/stores/auth-store", () => ({
+    useAuthStore: vi.fn(() => testAuthStore),
 }));
 
 const mockLatestSubmission = computed(() => {
