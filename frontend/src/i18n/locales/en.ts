@@ -126,4 +126,10 @@ export default {
         all_students: "All students",
         all_students_course: "All students in course:",
     },
+    about: {
+        about: "About this project",
+        p_1: "This project was made as part of the course",
+        p_2: "The source code is publicly available at",
+        developers: "Our developers",
+    },
 };
