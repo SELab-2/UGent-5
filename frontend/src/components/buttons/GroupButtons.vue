@@ -18,7 +18,7 @@ import { computed, toRefs } from "vue";
 import {
     useJoinGroupUserMutation,
     useLeaveGroupUserMutation,
-    useRemoveGroupMutation,
+    useDeleteGroupMutation,
     useUserGroupsQuery,
 } from "@/queries/Group";
 import router from "@/router";
@@ -63,20 +63,20 @@ const { mutateAsync: leaveGroup } = useLeaveGroupUserMutation();
 
 const { mutateAsync: joinGroup } = useJoinGroupUserMutation();
 
-const { mutateAsync: removeGroup } = useRemoveGroupMutation();
+const { mutateAsync: removeGroup } = useDeleteGroupMutation();
 
 const joinGroupAndRedirect = async () => {
-    await joinGroup({ groupId: group.value.id });
+    await joinGroup({ groupId: group.value.id, projectId: project.value.id });
     router.push(`/groups/${group.value.id}`);
 };
 
 const leaveGroupAndRedirect = async () => {
-    await leaveGroup({ groupId: group.value.id });
+    await leaveGroup({ groupId: group.value.id, projectId: project.value.id });
     router.push(`/project/${project.value.id}/groups`);
 };
 
 const removeGroupAndRedirect = async () => {
-    await removeGroup({ groupId: group.value.id });
+    await removeGroup({ groupId: group.value.id, projectId: project.value.id });
     router.push(`/project/${project.value.id}/groups`);
 };
 </script>
