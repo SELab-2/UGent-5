@@ -23,7 +23,10 @@
                     </div>
                 </v-card-text>
             </v-col>
-            <v-col cols="6">
+            <v-col
+                v-if="isInstructor"
+                cols="6"
+            >
                 <v-checkbox
                     class="subject-checkbox"
                     v-model="showInstructorSubjects"
@@ -40,24 +43,41 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, watch } from "vue";
+import {computed, ref, toRefs, watch} from "vue";
 import useAcademicYear from "@/composables/useAcademicYear";
+import type {SubjectFilter} from "@/models/Subject";
 
 const props = defineProps<{
     academicYears: number[];
+    isInstructor: boolean;
 }>();
 const { academicYears } = toRefs(props);
 const activeAcademicYear = ref(useAcademicYear());
 const showInstructorSubjects = ref(true);
 const showStudentSubjects = ref(true);
 
+const activeSubjectFilter = computed(() => {
+    return {
+        showInstructorSubjects: showInstructorSubjects.value,
+        showStudentSubjects: showStudentSubjects.value
+    };
+});
+
+
 const emit = defineEmits<{
     (e: "academic-year-changed", academicYear: number): void;
+    (e: "subjects-filter-changed", filter: SubjectFilter): void;
 }>();
 
 watch(activeAcademicYear, (newVal: number | undefined) => {
     if (newVal !== undefined) {
         emit("academic-year-changed", newVal);
+    }
+});
+
+watch(activeSubjectFilter, (newVal: SubjectFilter | undefined) => {
+    if (newVal !== undefined) {
+        emit("subjects-filter-changed", newVal);
     }
 });
 </script>

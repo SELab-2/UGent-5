@@ -10,8 +10,12 @@ export interface UserSubjectList {
     as_instructor: Subject[];
 }
 
-
 export enum SubjectRole {
     Student = "student",
     Instructor = "instructor",
+}
+
+export interface SubjectFilter {
+    showInstructorSubjects: boolean;
+    showStudentSubjects: boolean;
 }

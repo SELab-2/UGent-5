@@ -11,13 +11,15 @@
                         <v-col>
                             <SubjectsHeaderContainer
                                 :academic-years="academicYears"
+                                :is-instructor="isInstructor"
                                 @academic-year-changed="onAcademicYearChanged"
+                                @subjects-filter-changed="onSubjectsFilterChanged"
                             ></SubjectsHeaderContainer>
                         </v-col>
                     </v-row>
                     <v-row>
                         <v-col
-                            v-for="(subject, index) in subjectsByAcademicYear"
+                            v-for="(subject, index) in filteredSubjectsByAcademicYear"
                             :key="index"
                             cols="6"
                         >
@@ -44,25 +46,36 @@
 </template>
 
 <script setup lang="ts">
-import { useSubjectsQuery } from "@/queries/Subject";
+import {useSubjectsQuery} from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectsHeaderContainer from "@/components/subject/subjectsview/SubjectsHeaderContainer.vue";
 import SubjectCard from "@/components/subject/subjectsview/SubjectCard.vue";
-import { computed, ref } from "vue";
+import {computed, ref} from "vue";
 import useAcademicYear from "@/composables/useAcademicYear";
 import useIsTeacher from "@/composables/useIsTeacher";
-import {SubjectRole} from "@/models/Subject";
 import useIsAdmin from "@/composables/useIsAdmin";
+import {type SubjectFilter, SubjectRole} from "@/models/Subject";
 
-const { data: subjects, error, isLoading, isError } = useSubjectsQuery();
+const {data: subjects, error, isLoading, isError} = useSubjectsQuery();
 const subjectsList = computed(() => {
-    const studentSubjects = subjects.value!.as_student.map(subject => ({subjectData: subject, role: SubjectRole.Student}));
-    const instructorSubjects = subjects.value!.as_instructor.map(subject => ({subjectData: subject, role: SubjectRole.Instructor}));
+    const studentSubjects = subjects.value!.as_student.map(subject => ({
+        subjectData: subject,
+        role: SubjectRole.Student
+    }));
+    const instructorSubjects = subjects.value!.as_instructor.map(subject => ({
+        subjectData: subject,
+        role: SubjectRole.Instructor
+    }));
     return [...studentSubjects, ...instructorSubjects];
 });
-const selectedAcademicYear = ref<number>(useAcademicYear());
-const { isTeacher } = useIsTeacher();
-const { isAdmin } = useIsAdmin();
+const activeAcademicYear = ref<number>(useAcademicYear());
+const activeSubjectsFilter = ref<SubjectFilter>({
+    showInstructorSubjects: true,
+    showStudentSubjects: true
+});
+const {isTeacher} = useIsTeacher();
+const {isAdmin} = useIsAdmin();
+
 
 const academicYears = computed(() => {
     return Array.from(
@@ -72,18 +85,33 @@ const academicYears = computed(() => {
 
 const subjectsByAcademicYear = computed(() => {
     return [...(subjectsList.value || [])].filter(
-        (subject) => subject.subjectData.academic_year === selectedAcademicYear.value
+        (subject) => subject.subjectData.academic_year === activeAcademicYear.value
     );
 });
 
-/* will be necessary to show checkboxes in header when queries refactoring returns instructor and student subjects
 const isInstructor = computed(() => {
-    return isTeacher;
+    return subjectsByAcademicYear.value.some((subject) => subject.role === SubjectRole.Instructor);
 });
- */
+
+const filteredSubjectsByAcademicYear = computed(() => {
+    const subjects = [...(subjectsByAcademicYear.value || [])];
+    return subjects.filter((subject) => {
+        if (activeSubjectsFilter.value.showInstructorSubjects && subject.role === SubjectRole.Instructor) {
+            return true;
+        }
+        if (activeSubjectsFilter.value.showStudentSubjects && subject.role === SubjectRole.Student) {
+            return true;
+        }
+        return false;
+    });
+});
+
+const onSubjectsFilterChanged = (filter: SubjectFilter) => {
+    activeSubjectsFilter.value = filter;
+};
 
 const onAcademicYearChanged = (academicYear: number) => {
-    selectedAcademicYear.value = academicYear;
+    activeAcademicYear.value = academicYear;
 };
 </script>
 
