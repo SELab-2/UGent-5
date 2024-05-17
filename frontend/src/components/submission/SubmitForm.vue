@@ -59,7 +59,7 @@ async function formOnSubmit(event: SubmitEvent) {
     } catch (error) {
         if (error instanceof Error) {
             unmetRequirements.value = error.cause.map((r) => {
-                return { requirement: { mandatory: r.mandatory, value: r.value }, files: r.files };
+                return { requirement: { mandatory: r.type === "mandatory", value: r.requirement }, files: r.files };
             });
         }
     }
