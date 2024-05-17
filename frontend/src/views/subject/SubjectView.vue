@@ -42,14 +42,18 @@
                     </v-row>
                 </BackgroundContainer>
             </v-col>
-            <v-col v-if="isInstructor" cols="2">
+            <v-col v-if="isAdmin || isInstructor" cols="2">
                 <div class="action-btn-container">
                     <router-link :to="{ name: 'create-project', params: { subjectId: subjectId } }">
                         <v-btn prepend-icon="mdi-plus-circle">
                             {{ $t("subject.create_project") }}
                         </v-btn>
                     </router-link>
-                    <v-btn prepend-icon="mdi-content-copy" @click="copyRegisterLink">
+                    <v-btn
+                        v-if="isAdmin || isTeacher"
+                        prepend-icon="mdi-content-copy"
+                        @click="copyRegisterLink"
+                    >
                         {{ $t("subject.register_link_button.title") }}
                     </v-btn>
                 </div>
@@ -63,14 +67,16 @@ import { computed, ref, toRefs } from "vue";
 import {
     useSubjectQuery,
     useSubjectProjectsQuery,
-    useSubjectInstructorsQuery,
-    useUuidSubjectQuery,
+    useSubjectInstructorsQuery, useUuidSubjectQuery,
 } from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectHeaderContainer from "@/components/subject/subjectview/header/SubjectHeaderContainer.vue";
 import SubjectBody from "@/components/subject/subjectview/body/SubjectBody.vue";
-import { useRouter } from "vue-router";
 import { useCurrentUserQuery } from "@/queries/User";
+import RegisterLinkButton from "@/components/subject/subjectview/buttons/RegisterLinkButton.vue";
+import useIsTeacher from "@/composables/useIsTeacher";
+import useIsAdmin from "@/composables/useIsAdmin";
+import {useRouter} from "vue-router";
 
 const props = defineProps<{
     subjectId: number;
@@ -94,13 +100,15 @@ const {
     isLoading: isInstructorsLoading,
     isError: isInstructorsError,
 } = useSubjectInstructorsQuery(subjectId);
-
-const { data: user, isLoading: isUserLoading, isError: isUserError } = useCurrentUserQuery();
-
+const {
+    data: user,
+    isLoading: isUserLoading,
+    isError: isUserError
+} = useCurrentUserQuery();
 const {
     data: subjectUuid,
-    isLoading: isSubjectUuidLoading,
-    isError: isSubjectUuidError,
+    isLoading : isUuidLoading,
+    isError : isUuidError,
 } = useUuidSubjectQuery(subjectId);
 
 const isLoading = computed(
@@ -109,7 +117,7 @@ const isLoading = computed(
         isProjectsLoading.value ||
         isInstructorsLoading.value ||
         isUserLoading.value ||
-        isSubjectUuidLoading.value
+        isUuidLoading.value
 );
 const isError = computed(
     () =>
@@ -117,12 +125,15 @@ const isError = computed(
         isProjectsError.value ||
         isInstructorsError.value ||
         isUserError.value ||
-        isSubjectUuidError.value
+        isUuidError.value
 );
 
 const isInstructor = computed(() => {
     return [...(instructors.value || [])].some((instructor) => instructor?.uid === user.value?.uid);
 });
+
+const {isAdmin} = useIsAdmin();
+const {isTeacher} = useIsTeacher();
 
 const router = useRouter();
 
@@ -138,6 +149,8 @@ const copyRegisterLink = () => {
     navigator.clipboard.writeText(`${baseAddress}${registerLink.value}`);
     snackbar.value = true;
 };
+
+
 </script>
 ;
 <style scoped>
