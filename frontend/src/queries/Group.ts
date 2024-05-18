@@ -70,15 +70,23 @@ export function useUserGroupsQuery(): UseQueryReturnType<Group[], Error> {
 
 /**
  * Query composable for fetching the group a user is in for a project
+ *  * @param projectId The id of the project
+ *  * @returns The group the user is in for the project, undefined if the user is not in a group
  */
 export function useProjectGroupQuery(
     projectId: MaybeRefOrGetter<number | undefined>
 ): UseQueryReturnType<Group | null, Error> {
-    const { data: groups } = useUserGroupsQuery();
-    return useQuery<Group | null, Error>({
+    const { data: projectGroups } = useProjectGroupsQuery(projectId);
+    const { data: user } = useCurrentUserQuery();
+    const userGroup = computed(
+        () =>
+            projectGroups.value?.find((group) =>
+                group.members.some((member) => member.uid === user.value?.uid)
+            ) || null
+    );
+    return useQuery({
         queryKey: computed(() => PROJECT_USER_GROUP_QUERY_KEY(toValue(projectId)!)),
-        queryFn: () => getGroupWithProjectId(groups.value!, toValue(projectId)!),
-        enabled: !!toValue(projectId),
+        queryFn: () => userGroup,
     });
 }
 
