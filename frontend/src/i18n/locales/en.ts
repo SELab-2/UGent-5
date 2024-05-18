@@ -131,6 +131,7 @@ export default {
         close: "close",
         all_students: "All students",
         all_students_course: "All students in course:",
+        to_grouppage: "To grouppage",
     },
     about: {
         about: "About this project",

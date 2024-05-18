@@ -132,6 +132,7 @@ export default {
         close: "sluiten",
         all_students: "Alle studenten",
         all_students_course: "Alle studenten in vak:",
+        to_grouppage: "Naar groepspagina",
     },
     about: {
         about: "Over dit project",

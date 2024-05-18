@@ -10,7 +10,6 @@ import {
     deleteGroup,
     getGroup,
     getProjectGroups,
-    getGroupWithProjectId,
     getUserGroups,
     addToGroup,
     joinGroup,
@@ -24,7 +23,7 @@ function GROUP_QUERY_KEY(groupId: number): (string | number)[] {
 }
 
 function PROJECT_GROUPS_QUERY_KEY(projectId: number): (string | number)[] {
-    return ["project", "groups", projectId];
+    return ["groups", "project", projectId];
 }
 
 function USER_GROUPS_QUERY_KEY(): string[] {
@@ -70,8 +69,8 @@ export function useUserGroupsQuery(): UseQueryReturnType<Group[], Error> {
 
 /**
  * Query composable for fetching the group a user is in for a project
- *  * @param projectId The id of the project
- *  * @returns The group the user is in for the project, undefined if the user is not in a group
+ * @param projectId The id of the project
+ * @returns The group the user is in for the project, undefined if the user is not in a group
  */
 export function useProjectGroupQuery(
     projectId: MaybeRefOrGetter<number | undefined>

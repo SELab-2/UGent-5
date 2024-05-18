@@ -1,20 +1,11 @@
 <template>
-    <v-btn v-if="canLeaveGroup" @click="leaveGroupAndRedirect">
+    <v-btn v-if="canLeaveGroup" @click="leaveGroupAndRedirect" variant="flat">
         {{ $t("group.leave_group") }}
     </v-btn>
-    <v-btn v-else-if="canJoinGroup" @click="joinGroupAndRedirect">
+    <v-btn v-else-if="canJoinGroup" @click="joinGroupAndRedirect" variant="flat">
         {{ $t("group.join_group") }}
     </v-btn>
-    <v-btn
-        v-if="isTeacher"
-        @click="
-            () =>
-                removeGroup({
-                    groupId: group.id,
-                    projectId: project.id,
-                })
-        "
-    >
+    <v-btn v-if="isTeacher" @click="removeGroupAndRedirect" variant="flat">
         {{ $t("group.remove_group") }}
     </v-btn>
 </template>
@@ -83,6 +74,17 @@ const leaveGroupAndRedirect = async () => {
     await leaveGroup({ groupId: group.value.id, projectId: project.value.id });
     router.push(`/project/${project.value.id}/groups`);
 };
+
+const removeGroupAndRedirect = async () => {
+    await removeGroup({ groupId: group.value.id, projectId: project.value.id });
+    router.push(`/project/${project.value.id}/groups`);
+};
 </script>
 
-<style scoped></style>
+<style scoped>
+.v-btn {
+    text-decoration: underline;
+    background-color: rgb(var(--v-theme-secondary));
+    padding: 2px;
+}
+</style>
