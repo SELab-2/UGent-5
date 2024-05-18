@@ -104,7 +104,7 @@ export default {
             group: "Groep",
             submissions: "Indieningen",
         },
-        error: "Fout bij het inladen van vakken"
+        error: "Fout bij het inladen van vakken",
     },
 
     subjects: {

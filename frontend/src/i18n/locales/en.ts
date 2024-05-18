@@ -104,7 +104,7 @@ export default {
             group: "Group",
             submissions: "Submissions",
         },
-        error: "Error when loading subjects"
+        error: "Error when loading subjects",
     },
     subjects: {
         title: "My Subjects",
