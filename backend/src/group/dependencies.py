@@ -32,7 +32,8 @@ async def retrieve_groups_by_user(
 async def retrieve_groups_by_project(
     project_id: int, db: AsyncSession = Depends(get_async_db)
 ) -> GroupList:
-    groups = await service.get_groups_by_project(db, project_id)
+    groups = list(await service.get_groups_by_project(db, project_id))
+    groups.sort(key=lambda x: x.num)
     return GroupList(groups=groups)
 
 

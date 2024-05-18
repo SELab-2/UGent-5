@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Table,ForeignKeyConstraint,Integer,event, select, func
+from sqlalchemy import Column, ForeignKey, Table, ForeignKeyConstraint, Integer, event, select, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.database import Base
 from typing import List
@@ -24,8 +24,9 @@ class Group(Base):
     )
     members: Mapped[List["User"]] = relationship(secondary=StudentGroup, lazy="joined")
 
-@event.listens_for(Group,"before_insert")
-def set_id(_,connect,target: Group):
+
+@event.listens_for(Group, "before_insert")
+def set_id(_, connect, target: Group):
     query = select(func.max(Group.num)).where(Group.project_id == target.project_id)
     max_id = connect.execute(query).scalar()
     target.num = (max_id or 0) + 1

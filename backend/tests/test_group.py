@@ -27,7 +27,7 @@ project = {
     "requirements": [],
     "test_files": [],
 }
-group_data = { "project_id": 0}
+group_data = {"project_id": 0}
 
 
 @pytest_asyncio.fixture
@@ -41,7 +41,7 @@ async def group_id(client: AsyncClient, db: AsyncSession, project_id: int):
 
 @pytest.mark.asyncio
 async def test_create_group(client: AsyncClient, db: AsyncSession, project_id: int):
-    group_data = { "project_id": project_id}
+    group_data = {"project_id": project_id}
     response = await client.post("/api/groups/", json=group_data)
     assert response.status_code == 403
 
