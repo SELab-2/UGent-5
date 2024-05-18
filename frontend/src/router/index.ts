@@ -122,6 +122,7 @@ const router = createRouter({
             component: () => import("../views/CreateProjectView.vue"),
             props: (route) => ({ subjectId: Number(route.params.subjectId) }),
             meta: {
+                middleware: useCanVisit(useIsInstructorOfSubjectCondition),
             },
         },
         {
