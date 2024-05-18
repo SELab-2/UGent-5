@@ -17,7 +17,7 @@
 import { computed, ref, toRefs } from "vue";
 import FilesInput from "@/components/form_elements/FilesInput.vue";
 import { useRouter } from "vue-router";
-import { useCreateSubmissionMutation } from "@/queries/Submission";
+import { UnmetRequirementsError, useCreateSubmissionMutation } from "@/queries/Submission";
 import { useProjectGroupQuery } from "@/queries/Group";
 import { useI18n } from "vue-i18n";
 import RequirementsCard from "@/components/project/RequirementsCard.vue";
@@ -57,10 +57,10 @@ async function formOnSubmit(event: SubmitEvent) {
         await mutateAsync(formData);
         await router.push(`/groups/${group.value?.id}/submissions`);
     } catch (error) {
-        if (error instanceof Error) {
-            unmetRequirements.value = error.cause.map((r) => {
-                return { requirement: { mandatory: r.type === "mandatory", value: r.requirement }, files: r.files };
-            });
+        if (error instanceof UnmetRequirementsError) {
+            unmetRequirements.value = error.unmetRequirements;
+        } else {
+            throw error;
         }
     }
 }

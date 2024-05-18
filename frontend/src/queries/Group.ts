@@ -78,7 +78,7 @@ export function useProjectGroupQuery(
     return useQuery<Group | null, Error>({
         queryKey: computed(() => PROJECT_USER_GROUP_QUERY_KEY(toValue(projectId)!)),
         queryFn: () => getGroupWithProjectId(groups.value!, toValue(projectId)!),
-        enabled: !!toValue(projectId) && groups.value !== undefined,
+        enabled: !!toValue(projectId),
     });
 }
 

@@ -14,7 +14,8 @@
                     <v-list-item-title>{{ req.value }}</v-list-item-title>
 
                     <template v-if="unmet_extensions.includes(req.value)" v-slot:append>
-                        <v-tooltip :text="$t('project.unmet_mandatory')">
+                        <v-tooltip>
+                            <p>{{ $t("project.unmet_mandatory") }}</p>
                             <template v-slot:activator="{ props }">
                                 <v-icon
                                     v-bind="props"
@@ -36,10 +37,7 @@
 
                     <template v-if="unmet_extensions.includes(req.value)" v-slot:append>
                         <v-tooltip>
-                            <h3>
-                                {{ $t("project.unmet_forbidden") }}
-                            </h3>
-
+                            <p>{{ $t("project.unmet_forbidden") }}</p>
                             <ul>
                                 <li
                                     v-for="illegal_file in unmetRequirements.find(
@@ -70,7 +68,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, toRefs } from "vue";
+import { computed, ref, toRefs } from "vue";
 import type { Requirement, UnmetRequirement } from "@/models/Project";
 
 const props = defineProps<{
@@ -80,8 +78,8 @@ const props = defineProps<{
 
 const { requirements, unmetRequirements } = toRefs(props);
 
-const mandatory = computed(() => requirements.value.filter((r) => r.mandatory));
-const forbidden = computed(() => requirements.value.filter((r) => !r.mandatory));
+const mandatory = ref<Requirement[]>(requirements.value.filter((r) => r.mandatory));
+const forbidden = ref<Requirement[]>(requirements.value.filter((r) => !r.mandatory));
 
 const unmet_extensions = computed(() => unmetRequirements.value.map((r) => r.requirement.value));
 </script>

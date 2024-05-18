@@ -5,6 +5,8 @@ import type { UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-qu
 import { createSubmission, getFiles, getSubmission, getSubmissions } from "@/services/submission";
 import type Submission from "@/models/Submission";
 import type FileInfo from "@/models/File";
+import { FetchError } from "@/services";
+import type { UnmetRequirement } from "@/models/Project";
 
 function SUBMISSION_QUERY_KEY(submissionId: number): (string | number)[] {
     return ["submission", submissionId];
@@ -59,6 +61,15 @@ export function useFilesQuery(
     });
 }
 
+export class UnmetRequirementsError extends Error {
+    unmetRequirements: UnmetRequirement[];
+
+    constructor(message: string, unmetRequirements: UnmetRequirement[], ...params: any[]) {
+        super(message, ...params);
+        this.unmetRequirements = unmetRequirements;
+    }
+}
+
 /**
  * Mutation composable for creating a submission
  */
@@ -67,13 +78,44 @@ export function useCreateSubmissionMutation(
 ): UseMutationReturnType<Submission, Error, MaybeRefOrGetter<FormData>, void> {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (formData) => createSubmission(toValue(groupId)!, toValue(formData)),
+        mutationFn: async (formData) => {
+            try {
+                return await createSubmission(toValue(groupId)!, toValue(formData));
+            } catch (error) {
+                if (
+                    error instanceof FetchError &&
+                    Array.isArray(error.body?.detail) &&
+                    error.body.detail.length > 0 &&
+                    (error.body.detail[0].type === "mandatory" ||
+                        error.body.detail[0].type === "forbidden")
+                ) {
+                    // file requirements were not met,
+                    // server returned files that did not meet the requirements
+                    const unmetArr = error.body.detail.map((r) => ({
+                        requirement: {
+                            mandatory: r.type === "mandatory",
+                            value: r.requirement,
+                        },
+                        files: r.files,
+                    }));
+                    throw new UnmetRequirementsError(
+                        "Submission did not meet project requirements",
+                        unmetArr
+                    );
+                } else {
+                    throw error;
+                }
+            }
+        },
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: SUBMISSIONS_QUERY_KEY(toValue(groupId)!) });
         },
         onError: (error) => {
             console.error("Submission creation failed", error);
-            alert("Could not create submission. Please try again.");
+
+            if (!(error instanceof UnmetRequirementsError)) {
+                alert("Could not create submission. Please try again.");
+            }
         },
     });
 }

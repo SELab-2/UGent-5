@@ -13,11 +13,20 @@ const defaultOptions: FetchOptions = {
     toJson: true,
 };
 
+export class FetchError extends Error {
+    body: any;
+
+    constructor(message?: string, body?: any, ...params: any[]) {
+        super(message, ...params);
+        this.body = body;
+    }
+}
+
 /**
  * Fetch data from the API
  * @param endpoint API endpoint
  * @param requestOptions Custom request options
- * @param omitContentType Omit the Content-Type header
+ * @param options Custom fetch options
  * @returns Response from the API
  */
 export async function authorized_fetch<T>(
@@ -29,7 +38,7 @@ export async function authorized_fetch<T>(
     const { token, isLoggedIn } = storeToRefs(useAuthStore());
     const { refresh } = useAuthStore();
     if (!isLoggedIn) {
-        throw new Error("User is not logged in");
+        throw new FetchError("User is not logged in");
     }
     const { "Content-Type": contentType, ...strippedHeaders } = {
         Authorization: `${token.value!.token_type} ${token.value!.token}`,
@@ -47,10 +56,10 @@ export async function authorized_fetch<T>(
     });
     if (response.status === 401) {
         await refresh();
-        throw new Error("Not authenticated");
+        throw new FetchError("Not authenticated", response.status);
     } else if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.detail, { cause: error.detail });
+        throw new FetchError(error.detail, error);
     }
     return mergedOptions.toJson ? response.json() : response;
 }
