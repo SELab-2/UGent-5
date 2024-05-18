@@ -2,18 +2,38 @@ import type Submission from "@/models/Submission";
 import { authorized_fetch } from ".";
 import type FileInfo from "@/models/File";
 
+function initSubmissionDate(submission: Submission): Submission {
+    return { ...submission, date: new Date(submission.date) };
+}
+
 /**
  * Fetches the submission with the given ID.
  */
 export async function getSubmission(submissionId: number): Promise<Submission> {
-    return authorized_fetch(`/api/submissions/${submissionId}`, { method: "GET" });
+    const result = await authorized_fetch<Submission>(`/api/submissions/${submissionId}`, {
+        method: "GET",
+    });
+    return initSubmissionDate(result);
 }
 
 /**
  * Fetches all submissions of a group.
  */
 export async function getSubmissions(groupId: number): Promise<Submission[]> {
-    return authorized_fetch(`/api/groups/${groupId}/submissions`, { method: "GET" });
+    const result = await authorized_fetch<Submission[]>(`/api/groups/${groupId}/submissions`, {
+        method: "GET",
+    });
+    return result.map(initSubmissionDate);
+}
+
+/**
+ * Fetches all latest submissions of each group from a project.
+ */
+export async function getProjectSubmissions(projectId: number): Promise<Submission[]> {
+    const result = await authorized_fetch<Submission[]>(`/api/projects/${projectId}/submissions`, {
+        method: "GET",
+    });
+    return result;
 }
 
 /**

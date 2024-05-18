@@ -11,6 +11,11 @@ export default interface Project {
     test_files_uuid: string;
 }
 
+export interface UserProjectList {
+    as_student: Project[];
+    as_instructor: Project[];
+}
+
 export interface ProjectForm {
     name: string;
     deadline: Date;

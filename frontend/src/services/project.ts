@@ -1,5 +1,5 @@
 import type Project from "@/models/Project";
-import type { ProjectForm } from "@/models/Project";
+import type { ProjectForm, UserProjectList } from "@/models/Project";
 import { authorized_fetch } from "@/services";
 
 function initProjectDate(project: Project): Project {
@@ -17,11 +17,14 @@ export async function getProject(projectId: number): Promise<Project> {
 /**
  * Fetches all projects that the current user is a member of.
  */
-export async function getProjects(): Promise<Project[]> {
-    const result = await authorized_fetch<{ projects: Project[] }>(`/api/users/me/projects`, {
+export async function getProjects(): Promise<UserProjectList> {
+    const result = await authorized_fetch<UserProjectList>(`/api/users/me/projects`, {
         method: "GET",
     });
-    return result.projects.map(initProjectDate);
+    return {
+        as_student: result.as_student.map(initProjectDate),
+        as_instructor: result.as_instructor.map(initProjectDate),
+    };
 }
 
 /**

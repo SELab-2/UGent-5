@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <v-alert v-if="isError" title="Error" color="error" :text="error.message"></v-alert>
-        <v-skeleton-loader v-else :loading="isLoading || !projectSuccess" type="card" color="white">
+        <v-skeleton-loader v-else :loading="isLoading || !projectSuccess" type="card">
             <v-col class="mx-auto">
                 <h1>{{ $t("submission.submissions_title", { project: project.name }) }}</h1>
                 <div v-if="sorted.length == 0">
@@ -14,8 +14,8 @@
                     class="ma-3"
                     v-for="submission in sorted"
                     :key="submission"
-                    :submission="submission"
-                    :project="project!"
+                    :submission="submission!"
+                    :deadline="project.deadline!"
                 />
             </v-col>
         </v-skeleton-loader>

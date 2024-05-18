@@ -1,4 +1,4 @@
-import {computed, type Ref, toValue} from "vue";
+import { computed, toValue } from "vue";
 import type { MaybeRefOrGetter } from "vue";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import type { UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-query";
@@ -16,6 +16,7 @@ import {
     deleteProjectFiles,
     fetchProjectFiles,
 } from "@/services/project";
+import type { ProjectForm, UserProjectList } from "@/models/Project";
 
 function PROJECT_QUERY_KEY(projectId: number): (string | number)[] {
     return ["project", projectId];
@@ -50,8 +51,8 @@ export function useProjectQuery(
 /**
  * Query composable for fetching all projects of the current user
  */
-export function useProjectsQuery(): UseQueryReturnType<Project[], Error> {
-    return useQuery<Project[], Error>({
+export function useProjectsQuery(): UseQueryReturnType<UserProjectList, Error> {
+    return useQuery<UserProjectList>({
         queryKey: PROJECTS_QUERY_KEY(),
         queryFn: getProjects,
     });

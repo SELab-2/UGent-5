@@ -43,7 +43,10 @@ export default {
         after_deadline: "Na deadline",
         submissions_title: "Indieningen voor project {project}",
         no_submissions: "Nog geen indieningen",
+        teacher_submissions_info:
+            "Deze pagina bevat een lijst van de laatste indiening van elke groep voor dit project.",
         docker_test: "Testen Output",
+        download_all_files: "Download alle bestanden",
     },
     project: {
         deadline: "Deadline",
@@ -56,6 +59,7 @@ export default {
         capacity_group: "Capaciteit: ",
         edit: "Bewerk project",
         submissions_list: "Alle indieningen",
+        submissions_list_teacher: "Alle indieningen voor dit project",
         not_found: "Geen projecten teruggevonden.",
         finished: "Afgerond",
         not_found2: "Project niet teruggevonden",
@@ -138,5 +142,12 @@ export default {
         close: "sluiten",
         all_students: "Alle studenten",
         all_students_course: "Alle studenten in vak:",
+        to_grouppage: "Naar groepspagina",
+    },
+    about: {
+        about: "Over dit project",
+        p_1: "Dit project is gemaakt in het kader van het vak",
+        p_2: "De broncode is publiek beschikbaar op",
+        developers: "Onze developers",
     },
 };

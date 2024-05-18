@@ -4,13 +4,14 @@
         <h1 v-else-if="isDataError" class="welcome">{{ $t("group.error") }}</h1>
         <div v-else class="projectInfo">
             <h2>{{ "Project: " + project!.name }}</h2>
+            <StudentsDialog :students="allStudents" :title="$t('group.all_students')" />
+            <v-divider class="border-opacity-50"></v-divider>
             <div v-if="groups.length > 0">
                 <v-row>
-                    <v-col cols="8">{{ $t("group.groups") }}</v-col>
+                    <v-col cols="7">{{ $t("group.groups") }}</v-col>
                     <v-col cols="2">{{ $t("group.members") }}</v-col>
-                    <v-col cols="2">{{ $t("group.actions") }}</v-col>
+                    <v-col cols="3">{{ $t("group.actions") }}</v-col>
                 </v-row>
-                <AllstudentsDialog :students="allStudents" />
                 <GroupCard
                     v-for="group in groups"
                     :key="group.id"
@@ -26,7 +27,9 @@
                     <v-col cols="8"> {{ $t("group.not_found2") }}</v-col>
                 </v-row>
             </div>
-            <v-btn v-if="isTeacher" @click="createGroup">{{ $t("group.create_group") }}</v-btn>
+            <v-btn v-if="isTeacher" @click="createGroup" variant="flat">{{
+                $t("group.create_group")
+            }}</v-btn>
         </div>
     </v-container>
 </template>
@@ -35,11 +38,11 @@
 import { useCreateGroupsMutation, useProjectGroupsQuery } from "@/queries/Group";
 import { computed, toRefs } from "vue";
 import { useProjectQuery } from "@/queries/Project";
-import GroupCard from "@/components/home/cards/GroupCard.vue";
+import GroupCard from "@/components/groups/GroupCard.vue";
 import { useCurrentUserQuery } from "@/queries/User";
 import { type GroupForm } from "@/models/Group";
 import { useSubjectInstructorsQuery, useSubjectStudentsQuery } from "@/queries/Subject";
-import AllstudentsDialog from "@/components/AllstudentsDialog.vue";
+import StudentsDialog from "@/components/groups/StudentsDialog.vue";
 
 const props = defineProps<{
     projectId: number;
@@ -116,10 +119,19 @@ async function createGroup() {
 </script>
 
 <style scoped>
+.v-container {
+    padding: 25px;
+}
+
 .group-card {
     height: 50px; /* Adjust the height as needed */
     margin-bottom: 5px; /* Add margin to separate cards */
     display: flex; /* Use flexbox */
     align-items: center; /* Center items vertically */
+}
+
+.v-divider {
+    margin-bottom: 15px;
+    margin-top: 15px;
 }
 </style>

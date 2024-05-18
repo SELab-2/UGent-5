@@ -43,7 +43,10 @@ export default {
         after_deadline: "After deadline",
         submissions_title: "Submissions for project {project}",
         no_submissions: "No submissions yet",
+        teacher_submissions_info:
+            "This page contains a list of the latest submission of each group for this project.",
         docker_test: "Tests Output",
+        download_all_files: "Download all files",
     },
     project: {
         deadline: "Deadline",
@@ -56,6 +59,7 @@ export default {
         capacity_group: "Capacity: ",
         edit: "Edit project",
         submissions_list: "All submissions",
+        submissions_list_teacher: "All submissions for this project",
         not_found: "No projects found.",
         finished: "Finished",
         not_found2: "Project not found",
@@ -137,5 +141,12 @@ export default {
         close: "close",
         all_students: "All students",
         all_students_course: "All students in course:",
+        to_grouppage: "To grouppage",
+    },
+    about: {
+        about: "About this project",
+        p_1: "This project was made as part of the course",
+        p_2: "The source code is publicly available at",
+        developers: "Our developers",
     },
 };

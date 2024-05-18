@@ -1,18 +1,20 @@
 <template>
-    <div>
-        <h1>Over dit project</h1>
-        <p>
-            Dit project is gemaakt in het kader van het vak
-            <a href="https://studiekiezer.ugent.be/2023/studiefiche/nl/C003784">
-                Software Engineering Lab 2 </a
-            >. De broncode is publiek beschikbaar op
-            <a href="https://github.com/SELab-2/UGent-5"> GitHub </a>.
-        </p>
-        <h2>Onze Developers:</h2>
+    <div class="info">
+        <div class="about">
+            <h1>{{ $t("about.about") }}</h1>
+            <p>
+                {{ $t("about.p_1") }}
+                <a href="https://studiekiezer.ugent.be/2023/studiefiche/nl/C003784" class="link">
+                    Software Engineering Lab 2 </a
+                >. {{ $t("about.p_2") }}
+                <a href="https://github.com/SELab-2/UGent-5" class="link"> GitHub </a>.
+            </p>
+        </div>
+        <h2>{{ $t("about.developers") }}:</h2>
         <v-list lines="one">
-            <v-list-item v-for="developer in developers" :key="developer.name">
+            <v-list-item v-for="developer in developers" :key="developer.name" class="developers">
                 <template v-slot:title>
-                    <v-btn :href="developer.githubUrl">{{ developer.name }}</v-btn>
+                    <v-btn :href="developer.githubUrl" variant="flat">{{ developer.name }}</v-btn>
                 </template>
                 <template v-slot:subtitle>
                     {{ developer.role }}
@@ -30,7 +32,7 @@ interface Developer {
 }
 const developers: Developer[] = [
     {
-        role: "Projectleider",
+        role: "Project Lead",
         name: "Marieke Sinnaeve",
         githubUrl: "https://github.com/masinnae",
     },
@@ -66,3 +68,26 @@ const developers: Developer[] = [
     },
 ];
 </script>
+<style scoped>
+.info {
+    padding: 30px;
+}
+
+.link {
+    color: rgb(var(--v-theme-text));
+}
+
+.about {
+    margin-bottom: 25px;
+}
+
+.v-btn {
+    background-color: rgb(var(--v-theme-secondary));
+}
+
+.developers {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+</style>
