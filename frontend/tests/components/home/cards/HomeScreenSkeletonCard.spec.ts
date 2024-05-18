@@ -1,5 +1,5 @@
 import { mount } from "@vue/test-utils";
-import {expect, describe, it, vi} from "vitest";
+import {expect, describe, it} from "vitest";
 import HomeScreenSkeletonCard from "@/components/home/cards/HomeScreenSkeletonCard.vue";
 
 describe("HomeScreenSkeletonCard", () => {

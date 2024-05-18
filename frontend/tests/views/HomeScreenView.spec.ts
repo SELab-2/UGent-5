@@ -2,7 +2,6 @@ import { mount } from "@vue/test-utils";
 import {expect, describe, it, vi} from "vitest";
 import HomeScreenView from "../../src/views/HomeScreenView.vue"
 import {computed, ref} from "vue";
-import {useCurrentUserQuery} from "../../src/queries/User";
 
 const testCurrentUserQuery = {
     data: computed(() => {

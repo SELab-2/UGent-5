@@ -4,7 +4,7 @@
             <h3>{{ subject.name }}</h3>
             <v-skeleton-loader v-if="isInstructorsLoading" type="text" />
             <p v-else-if="instructors!.length > 0" class="teacher">
-                {{ instructors![0].given_name }}
+                {{ instructors![0].given_name + " " + instructors![0].surname }}
             </p>
         </div>
         <v-icon class="chevron" icon="mdi-chevron-right" />
