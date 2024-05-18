@@ -10,6 +10,11 @@ export default interface Project {
     capacity: number;
 }
 
+export interface UserProjectList {
+    as_student: Project[];
+    as_instructor: Project[];
+}
+
 export interface ProjectForm {
     name: string;
     deadline: Date;
