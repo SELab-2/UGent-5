@@ -56,7 +56,7 @@ export async function authorized_fetch<T>(
     });
     if (response.status === 401) {
         await refresh();
-        throw new FetchError("Not authenticated", response.status);
+        throw new FetchError("Not authenticated");
     } else if (!response.ok) {
         const error = await response.json();
         throw new FetchError(error.detail, error);
