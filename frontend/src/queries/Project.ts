@@ -138,8 +138,8 @@ export function useUploadProjectFilesMutation(): UseMutationReturnType<
     return useMutation<void, Error, { projectId: number; formData: FormData }, void>({
         mutationFn: ({ projectId, formData }) => uploadProjectFiles(projectId, formData),
         onSuccess: (_, { projectId }) => {
-                queryClient.invalidateQueries({ queryKey: PROJECT_QUERY_KEY(projectId) });
-                console.log("Files uploaded successfully");
+            queryClient.invalidateQueries({ queryKey: PROJECT_QUERY_KEY(projectId) });
+            console.log("Files uploaded successfully");
         },
         onError: (error) => {
             console.error("File upload failed", error);
@@ -170,7 +170,6 @@ export function useDeleteProjectFilesMutation(): UseMutationReturnType<
         },
     });
 }
-
 
 export function useSubmissionQuery(): UseQueryReturnType<Submission[], Error> {
     return useQuery<Submission[], Error>({

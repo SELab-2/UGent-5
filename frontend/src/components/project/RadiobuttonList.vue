@@ -27,32 +27,32 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from 'vue';
-import DatePicker from './DatePicker.vue';
+import { ref, defineProps, defineEmits } from "vue";
+import DatePicker from "./DatePicker.vue";
 
 const props = defineProps({
     title: String,
     options: Array,
     initialDate: Date,
-    initialCapacity: Number
+    initialCapacity: Number,
 });
 
 const isToggled = ref(true);
-const selectedOption = ref('');
+const selectedOption = ref("");
 const enrollDate = ref(props.initialDate || new Date());
 const capacity = ref(props.initialCapacity);
 
-const emit = defineEmits(['update:date', 'update:capacity', 'update:selectedOption']);
+const emit = defineEmits(["update:date", "update:capacity", "update:selectedOption"]);
 
 function handleDateChange(value) {
-    emit('update:date', value);
+    emit("update:date", value);
 }
 
 function handleCapacityChange(value) {
-    emit('update:capacity', value);
+    emit("update:capacity", value);
 }
 
 function handleOptionChange(value) {
-    emit('update:selectedOption', value);
+    emit("update:selectedOption", value);
 }
 </script>

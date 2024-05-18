@@ -58,7 +58,7 @@ class ProjectUpdate(BaseModel):
     description: Optional[str] = None
     requirements: Optional[List[Requirement]] = None
     is_visible: Optional[bool] = None
-    id:int
+    id: int
 
     @field_validator("deadline")
     def validate_deadline(cls, value: datetime) -> datetime:

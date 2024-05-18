@@ -25,7 +25,7 @@
             </v-col>
             <v-col cols="12" md="6">
                 <v-alert v-if="!isEditMode" dense text class="custom-alert">
-                    {{ $t('project.group_warning') }}
+                    {{ $t("project.group_warning") }}
                 </v-alert>
                 <RadioButtonList
                     v-if="!isEditMode"
@@ -72,7 +72,7 @@
             <v-col cols="12">
                 <div v-if="isEditMode" class="file-upload-disclaimer">
                     <v-alert class="custom-alert" dense text>
-                        {{ $t('project.no_files') }}
+                        {{ $t("project.no_files") }}
                     </v-alert>
                 </div>
                 <FilesInput v-model="files" />
@@ -83,7 +83,7 @@
         </v-row>
         <v-row>
             <v-col cols="12" class="text-right">
-                <v-btn @click="submitForm">{{ $t('submit.submit_button') }}</v-btn>
+                <v-btn @click="submitForm">{{ $t("submit.submit_button") }}</v-btn>
             </v-col>
         </v-row>
         <v-alert v-model="showErrorAlert" type="error" dense dismissible :value="true">
@@ -96,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import {nextTick, toRaw, watch} from "vue";
+import { nextTick, toRaw, watch } from "vue";
 import DatePicker from "@/components/project/DatePicker.vue";
 import RadioButtonList from "@/components/project/RadiobuttonList.vue";
 import FilesInput from "@/components/form_elements/FilesInput.vue";
@@ -122,7 +122,7 @@ import type User from "@/models/User";
 import DisplayTestFiles from "@/components/project/DisplayTestFiles.vue";
 import router from "@/router";
 import RequirementsInput from "@/components/RequirementsInput.vue";
-import {useI18n} from "vue-i18n";
+import { useI18n } from "vue-i18n";
 const route = useRoute();
 const { t } = useI18n();
 
@@ -166,12 +166,12 @@ function htmlDecode(input) {
 watch(
     projectData,
     (project) => {
-        if(project) {
-            console.log("project",project);
+        if (project) {
+            console.log("project", project);
             project_title.value = project.name;
             deadline.value = new Date(project.deadline);
             publishDate.value = new Date(project.publish_date);
-            requirements.value = project.requirements.map(req => ({ ...req }));
+            requirements.value = project.requirements.map((req) => ({ ...req }));
             const description = project.description;
             selectedSubject.value = project.subject_id;
             console.log(selectedSubject);
@@ -235,8 +235,8 @@ const subjects = computed(
 );
 
 const groupProjectOptions = computed(() => [
-    { label: t('project.random'), value: "random" },
-    { label: t('project.student_groups'), value: "student" },
+    { label: t("project.random"), value: "random" },
+    { label: t("project.student_groups"), value: "student" },
 ]);
 
 const createProjectMutation = useCreateProjectMutation();
@@ -249,7 +249,7 @@ function handleRadioDateChange(newDate) {
     enrollDeadline.value = newDate;
 }
 
-function handleOptionChange(newVal){
+function handleOptionChange(newVal) {
     selectedGroupProject.value = newVal;
 }
 

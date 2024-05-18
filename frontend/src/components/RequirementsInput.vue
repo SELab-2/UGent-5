@@ -40,16 +40,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { ref, defineProps, defineEmits } from "vue";
+import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
 const props = defineProps({
-    modelValue: Array
+    modelValue: Array,
 });
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(["update:modelValue"]);
 const internalRequirements = ref([...props.modelValue]);
-const newRequirement = ref('');
+const newRequirement = ref("");
 const errorMessages = ref([]);
 
 const addRequirement = () => {
@@ -61,25 +61,22 @@ const addRequirement = () => {
     }
     const newReq = { value: newRequirement.value, mandatory: true };
     internalRequirements.value.push(newReq);
-    emit('update:modelValue', internalRequirements.value);
-    newRequirement.value = ''; // Clear the input field after adding
+    emit("update:modelValue", internalRequirements.value);
+    newRequirement.value = ""; // Clear the input field after adding
 };
 
 const validateRequirement = (value) => {
     if (!value) {
-        return t('project.required'); // Check if the input is empty
+        return t("project.required"); // Check if the input is empty
     }
     if (!/.+\..+/.test(value)) {
-        return t('project.invalid_format'); // Check if the input matches the expected format
+        return t("project.invalid_format"); // Check if the input matches the expected format
     }
     return true;
 };
 
 const deleteRequirement = (index) => {
     internalRequirements.value.splice(index, 1);
-    emit('update:modelValue', internalRequirements.value);
+    emit("update:modelValue", internalRequirements.value);
 };
 </script>
-
-
-

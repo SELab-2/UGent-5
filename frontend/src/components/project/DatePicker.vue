@@ -50,7 +50,7 @@ function formatTime(date: Date): string {
 watch(
     [date, time],
     () => {
-        console.log("updated time",time);
+        console.log("updated time", time);
         const [hours, minutes] = time.value.split(":").map(Number);
         const updatedDate = new Date(date.value);
         updatedDate.setHours(hours, minutes, 0, 0);

@@ -59,6 +59,7 @@ async def delete_project(db: AsyncSession, project_id: int):
         await db.delete(project)
         await db.commit()
 
+
 async def update_project(db: AsyncSession, project_id: int, project_update: ProjectUpdate) -> Project:
     result = await db.execute(select(Project).filter_by(id=project_id))
     project = result.scalars().first()
@@ -81,7 +82,8 @@ async def update_project(db: AsyncSession, project_id: int, project_update: Proj
             req_dict = req_data.model_dump()  # Verify this method's output
             if 'id' in req_dict and any(req.id == req_dict['id'] for req in project.requirements):
                 # Update existing requirement
-                existing_req = next(req for req in project.requirements if req.id == req_dict['id'])
+                existing_req = next(
+                    req for req in project.requirements if req.id == req_dict['id'])
                 for key, value in req_dict.items():
                     setattr(existing_req, key, value)
             else:
