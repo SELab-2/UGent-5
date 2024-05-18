@@ -50,6 +50,7 @@ function formatTime(date: Date): string {
 watch(
     [date, time],
     () => {
+        console.log("updated time",time);
         const [hours, minutes] = time.value.split(":").map(Number);
         const updatedDate = new Date(date.value);
         updatedDate.setHours(hours, minutes, 0, 0);
@@ -67,7 +68,6 @@ const displayDate = computed(() => {
     }
     return "";
 });
-const displayTime = computed(() => time.value);
 
 function toggleDatePicker() {
     menuVisible.value = !menuVisible.value;
