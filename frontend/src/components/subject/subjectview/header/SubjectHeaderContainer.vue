@@ -3,7 +3,7 @@
         <v-col cols="4">
             <SubjectHeaderImage
                 :imagePath="imagePath"
-                :role="isInstructor ? SubjectRole.Instructor : isStudent ? SubjectRole.Student : SubjectRole.Admin"
+                :role="userRole"
             ></SubjectHeaderImage>
         </v-col>
         <v-col cols="8">
@@ -23,15 +23,27 @@ import SubjectHeaderCard from "@/components/subject/subjectview/header/SubjectHe
 import type User from "@/models/User";
 import SubjectHeaderImage from "@/components/subject/subjectview/header/SubjectHeaderImage.vue";
 import { SubjectRole } from "@/models/Subject";
+import {computed, toRefs} from "vue";
 
-defineProps<{
+const props = defineProps<{
     title: string;
     academicYear: number;
     instructors: User[];
     imagePath: string;
     isInstructor: boolean;
     isStudent: boolean;
+    isAdmin: boolean;
 }>();
+
+const { isInstructor, isStudent, isAdmin } = toRefs(props);
+
+const userRole = computed(() => {
+    if (isInstructor.value) return SubjectRole.Instructor;
+    if (isStudent.value) return SubjectRole.Student;
+    if (isAdmin.value) return SubjectRole.Admin;
+    return SubjectRole.None;
+});
+
 </script>
 
 <style scoped></style>

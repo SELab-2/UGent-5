@@ -32,6 +32,7 @@
                                 :academic-year="subject!.academic_year"
                                 :is-instructor="isInstructor"
                                 :is-student="isStudent"
+                                :is-admin="isAdmin"
                                 image-path="https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png"
                             ></SubjectHeaderContainer>
                         </v-col>

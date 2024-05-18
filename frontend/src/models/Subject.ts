@@ -14,6 +14,7 @@ export enum SubjectRole {
     Student = "student",
     Instructor = "instructor",
     Admin = "admin",
+    None = "none",
 }
 
 export interface SubjectFilter {
