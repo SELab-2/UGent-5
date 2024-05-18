@@ -37,7 +37,7 @@ function SUBJECT_PROJECTS_QUERY_KEY(subjectId: number): (string | number)[] {
     return ["subject", "projects", subjectId];
 }
 
-function SUBJECT_UUID_QUERY_KEY(subjectId: string): (string | number)[] {
+function SUBJECT_UUID_QUERY_KEY(subjectId: number): (string | number)[] {
     return ["subject", "uuid", subjectId];
 }
 

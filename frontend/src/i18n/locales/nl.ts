@@ -2,6 +2,7 @@ export default {
     default: {
         error: {
             "not-found": "Pagina niet gevonden",
+            "something-went-wrong": "Er is iets misgegaan",
         },
         loading: {
             loading_page: "Aan het laden...",
@@ -110,10 +111,10 @@ export default {
         },
         create_project: "Nieuw project",
         register_link_button: {
-            title: "Registreer link",
-            snackbar: "Registreer link gekopieerd naar klembord.",
+            title: "Registratie link",
+            snackbar: "Registratie link gekopieerd naar klembord.",
             tooltip:
-                "Kopieer de registreer link voor dit vak, deze kan gedeeld worden met studenten om zich te registreren voor het vak.",
+                "Kopieer de registratie link voor dit vak, deze kan gedeeld worden met studenten om zich te registreren voor het vak.",
         },
     },
 

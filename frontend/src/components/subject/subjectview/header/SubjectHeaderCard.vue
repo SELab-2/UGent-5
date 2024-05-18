@@ -7,7 +7,7 @@
                 </v-card-title>
                 <v-card-text>
                     <HeaderSubtitleButton
-                        :title="`${$t('subject.academy_year')} ${academicYear - 1}-${academicYear}`"
+                        :title="`${$t('subject.academy_year')} 20${academicYear}-20${academicYear + 1}`"
                         :clickable="false"
                         :active="false"
                     ></HeaderSubtitleButton>

@@ -2,6 +2,7 @@ export default {
     default: {
         error: {
             "not-found": "Page not found",
+            "something-went-wrong": "Something went wrong",
         },
         loading: {
             loading_page: "Loading...",

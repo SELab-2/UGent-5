@@ -17,7 +17,7 @@
                                 class="ma-1"
                                 variant="tonal"
                             >
-                                {{ academicYear - 1 + "-" + academicYear }}
+                                {{ `${academicYear}-${academicYear + 1}` }}
                             </v-chip>
                         </v-chip-group>
                     </div>
