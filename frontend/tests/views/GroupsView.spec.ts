@@ -53,14 +53,14 @@ vi.mock('@/queries/Group', () => ({
     useCreateGroupsMutation: vi.fn(() => testCreateGroupsMutation)
 }))
 
-const testUserQuery ={
+const testCurrentUserQuery ={
     data: ref(mockUser),
     isLoading: ref(false),
     isError: ref(false),
 }
 
 vi.mock('@/queries/User', () => ({
-    useUserQuery: vi.fn(() => testUserQuery),
+    useCurrentUserQuery: vi.fn(() => testCurrentUserQuery),
 }))
 
 const testSubjectStudentsQuery ={
@@ -122,7 +122,7 @@ describe("GroupsView", () => {
     });
 
     it("render if user is teacher", async () => {
-        testUserQuery.data.value.setUid("teacher")
+        testCurrentUserQuery.data.value.setUid("teacher")
         await wrapper.vm.$nextTick();
         const button = wrapper.findComponent({name: "VBtn"})
         expect(button.exists()).toBeTruthy()

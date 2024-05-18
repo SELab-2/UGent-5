@@ -32,7 +32,7 @@ vi.mock('@/queries/Group', () => ({
     useUserGroupsQuery: vi.fn(() => testUserGroupsQuery),
     useLeaveGroupUserMutation: vi.fn(() => vi.fn()),
     useJoinGroupUserMutation: vi.fn(() => vi.fn()),
-    useRemoveGroupMutation: vi.fn(() => vi.fn()),
+    useDeleteGroupMutation: vi.fn(() => vi.fn()),
 }))
 
 
