@@ -3,6 +3,19 @@
         <p>{{ $t("default.something-went-wrong") }}</p>
     </div>
 
+    <v-skeleton-loader :loading="isLoading" type="card">
+        <v-row>
+            <v-col cols="12">
+                <background-container>
+                    <CreateSubjectHeaderContainer
+                        :image-path="`https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png`"
+                    >
+                    </CreateSubjectHeaderContainer>
+                </background-container>
+            </v-col>
+        </v-row>
+
+    </v-skeleton-loader>
     <div>
         <v-form
             ref="form"
@@ -85,6 +98,9 @@ import type SubjectForm from "@/models/Subject";
 import UserSearchList from "@/components/subject/createSubjectView/UserSearchList.vue";
 import type User from "@/models/User";
 import {useCurrentUserQuery} from "@/queries/User";
+import BackgroundContainer from "@/components/BackgroundContainer.vue";
+import CreateSubjectHeaderCard from "@/components/subject/createSubjectView/CreateSubjectHeaderCard.vue";
+import CreateSubjectHeaderContainer from "@/components/subject/createSubjectView/CreateSubjectHeaderContainer.vue";
 
 const form = ref(null);
 const project_name = ref("");

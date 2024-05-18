@@ -64,7 +64,11 @@ const filteredUsers = computed(() => {
     if (!search.value) {
         return [];
     }
-    return [...(users.value || [])].filter((user: User) => {
+    return [...(users.value || [])]
+        .sort((a: User, b: User) => {
+            return a.surname.localeCompare(b.surname);
+        })
+        .filter((user: User) => {
         return (
             user?.uid !== currentUser.value?.uid &&
             `${user?.given_name} ${user.surname}`.toLowerCase().includes(search.value.toLowerCase())
