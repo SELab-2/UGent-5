@@ -12,9 +12,10 @@
             </v-radio-group>
             <DatePicker
                 v-if="selectedOption === 'student'"
-                v-model="radio_date"
-                label="Group Selection Deadline"
-            ></DatePicker>
+                :modelValue="enrollDate"
+                @update:modelValue="handleDateChange"
+                label="Deadline"
+            />
             <v-text-field
                 v-model="capacity"
                 label="Capacity"
@@ -26,55 +27,32 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import DatePicker from "./DatePicker.vue";
+import { ref, defineProps, defineEmits } from 'vue';
+import DatePicker from './DatePicker.vue';
 
-interface RadioButtonOption {
-    label: string;
-    value: string;
-}
-
-const props = defineProps<{
-    title: string;
-    options: RadioButtonOption[];
-}>();
+const props = defineProps({
+    title: String,
+    options: Array,
+    initialDate: Date,
+    initialCapacity: Number
+});
 
 const isToggled = ref(true);
-const selectedOption = ref("");
-const radio_date = ref<Date | null>(null);
-const capacity = ref(1); // Default capacity
+const selectedOption = ref('');
+const enrollDate = ref(props.initialDate || new Date());
+const capacity = ref(props.initialCapacity);
 
-const emit = defineEmits<{
-    (e: "update:radio_date", value: Date | null): void;
-    (e: "update:capacity", value: number): void;
-    (e: "update:selectedOption", value: string): void;
-}>();
+const emit = defineEmits(['update:date', 'update:capacity', 'update:selectedOption']);
 
-watch(selectedOption, (newValue) => {
-    if (newValue === "student") {
-        radio_date.value = new Date();
-    }
-    else{
-        radio_date.value = null;
-    }
-    emit("update:selectedOption", newValue);
-});
+function handleDateChange(value) {
+    emit('update:date', value);
+}
 
-watch(radio_date, (newVal) => {
-    emit("update:radio_date", newVal);
-});
+function handleCapacityChange(value) {
+    emit('update:capacity', value);
+}
 
-watch(isToggled, (newValue) => {
-    if (!newValue) {
-        capacity.value = 1;
-        radio_date.value = null;
-        emit("update:capacity", capacity.value);
-    }
-});
-
-watch(capacity, (newValue) => {
-    if (isToggled.value) {
-        emit("update:capacity", newValue);
-    }
-});
+function handleOptionChange(value) {
+    emit('update:selectedOption', value);
+}
 </script>

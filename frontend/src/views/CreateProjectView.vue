@@ -31,7 +31,9 @@
                     v-if="!isEditMode"
                     :title="'Group Project Options'"
                     :options="groupProjectOptions"
-                    @update:radio_date="handleRadioDateChange"
+                    :initialDate="enrollDeadline"
+                    :initialCapacity="capacity"
+                    @update:date="handleRadioDateChange"
                     @update:capacity="handleCapacityChange"
                     @update:selected-option="handleOptionChange"
                     required
@@ -169,7 +171,8 @@ watch(
             publishDate.value = new Date(project.publish_date);
             requirements.value = project.requirements.map(req => ({ ...req }));
             const description = project.description;
-            console.log(requirements.value);
+            selectedSubject.value = project.subject_id;
+            console.log(selectedSubject);
             nextTick(() => {
                 if (quillEditor.value && quillEditor.value.getQuill) {
                     let quill = quillEditor.value.getQuill();
@@ -263,16 +266,16 @@ function setErrorAlert(message) {
 }
 
 async function submitForm() {
-    // const projectData = formatProjectData();
-    // console.log(projectData);
+    const projectData = formatProjectData();
+    console.log(projectData);
     try {
-    //     if (isEditMode.value) {
-    //         await updateProject(projectData);
-    //     } else {
-    //         await createProject(projectData);
-    //     }
-        handleFiles(80);
-        // navigateToProject(projectData.project_id);
+        if (isEditMode.value) {
+            await updateProject(projectData);
+        } else {
+            await createProject(projectData);
+        }
+        handleFiles(projectData.project_id);
+        navigateToProject(projectData.project_id);
     } catch (error) {
         console.error("Error during project or group creation or file upload:", error);
         setErrorAlert("An unexpected error occurred. Please try again.");
@@ -294,6 +297,7 @@ function formatProjectData() {
 }
 
 async function updateProject(projectData) {
+    projectData.id = projectId.value;
     await updateProjectMutation.mutateAsync({
         projectId: projectId.value,
         projectData,

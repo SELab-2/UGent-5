@@ -50,6 +50,7 @@ export async function updateProject(
     projectId: number,
     projectData: Partial<ProjectForm>
 ): Promise<void> {
+    console.log(projectData);
     const response = await authorized_fetch(`/api/projects/${projectId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -60,12 +61,9 @@ export async function updateProject(
 
 
 
+
 // Function to upload test files to a specific project
 export async function uploadProjectFiles(projectId: number, formData: FormData): Promise<void> {
-    console.log("we geraken hier?");
-    for (let [key, value] of formData.entries()) {
-        console.log(key, value);
-    }
     await authorized_fetch(`/api/projects/${projectId}/test_files`, {
         method: 'PUT',
         body: formData,
