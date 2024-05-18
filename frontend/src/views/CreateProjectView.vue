@@ -4,9 +4,9 @@
             <v-col cols="12" md="6">
                 <v-text-field
                     v-model="project_title"
-                    label="Title"
+                    :label="$t('project.assignment')"
                     required
-                    placeholder="Enter Title"
+                    :placeholder="$t('submit.submit_title')"
                 />
             </v-col>
         </v-row>
@@ -18,18 +18,18 @@
                     :items="subjects"
                     item-value="value"
                     item-title="text"
-                    label="Subject"
+                    :label="$t('project.selected_subject')"
                     required
-                    placeholder="Select Subject"
+                    :placeholder="$t('submit.submit_title')"
                 />
             </v-col>
             <v-col cols="12" md="6">
                 <v-alert v-if="!isEditMode" dense text class="custom-alert">
-                    Please note: Once submitted, group settings cannot be edited.
+                    {{ $t('project.group_warning') }}
                 </v-alert>
                 <RadioButtonList
                     v-if="!isEditMode"
-                    :title="'Group Project Options'"
+                    :title="$t('project.group_toggle')"
                     :options="groupProjectOptions"
                     :initialDate="enrollDeadline"
                     :initialCapacity="capacity"
@@ -45,12 +45,12 @@
                 <DatePicker
                     :modelValue="deadlineModel"
                     @update:modelValue="updateDeadline"
-                    label="Deadline"
+                    :label="$t('project.deadline')"
                 />
                 <DatePicker
                     :modelValue="publishDateModel"
                     @update:modelValue="updatePublishDate"
-                    label="Publish Date"
+                    :label="$t('project.publish_date')"
                     required
                 />
             </v-col>
@@ -72,7 +72,7 @@
             <v-col cols="12">
                 <div v-if="isEditMode" class="file-upload-disclaimer">
                     <v-alert class="custom-alert" dense text>
-                        Note: Uploading new files will overwrite the existing ones.
+                        {{ $t('project.no_files') }}
                     </v-alert>
                 </div>
                 <FilesInput v-model="files" />
@@ -83,7 +83,7 @@
         </v-row>
         <v-row>
             <v-col cols="12" class="text-right">
-                <v-btn @click="submitForm">Submit</v-btn>
+                <v-btn @click="submitForm">{{ $t('submit.submit_button') }}</v-btn>
             </v-col>
         </v-row>
         <v-alert v-model="showErrorAlert" type="error" dense dismissible :value="true">
@@ -122,7 +122,9 @@ import type User from "@/models/User";
 import DisplayTestFiles from "@/components/project/DisplayTestFiles.vue";
 import router from "@/router";
 import RequirementsInput from "@/components/RequirementsInput.vue";
+import {useI18n} from "vue-i18n";
 const route = useRoute();
+const { t } = useI18n();
 
 // Form data
 const project_title = ref("");
@@ -232,10 +234,10 @@ const subjects = computed(
     () => subjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []
 );
 
-const groupProjectOptions = [
-    { label: "Random Groups", value: "random" },
-    { label: "Student Picked Groups", value: "student" },
-];
+const groupProjectOptions = computed(() => [
+    { label: t('project.random'), value: "random" },
+    { label: t('project.student_groups'), value: "student" },
+]);
 
 const createProjectMutation = useCreateProjectMutation();
 const createGroupsMutation = useCreateGroupsMutation();

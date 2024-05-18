@@ -18,7 +18,7 @@
             />
             <v-text-field
                 v-model="capacity"
-                label="Capacity"
+                :label="$t('project.capacity_group')"
                 type="number"
                 min="1"
             ></v-text-field>

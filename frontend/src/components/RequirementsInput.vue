@@ -2,13 +2,14 @@
     <v-container>
         <v-row>
             <v-col cols="12">
-                <v-form @submit.prevent="addRequirement">
+                <!-- Form with manual validation trigger -->
+                <v-form @submit.prevent="addRequirement" ref="form">
                     <v-text-field
                         v-model="newRequirement"
-                        label="Enter requirement"
+                        :label="$t('project.requirement')"
+                        :error-messages="errorMessages"
                         append-icon="mdi-file-plus"
                         @click:append="addRequirement"
-                        :rules="[rules.required]"
                         dense
                         solo
                         autocomplete="off"
@@ -25,7 +26,7 @@
             <v-col cols="2" class="d-flex justify-space-between align-center">
                 <v-switch
                     v-model="req.mandatory"
-                    :label="req.mandatory ? 'Mandatory' : 'Forbidden'"
+                    :label="req.mandatory ? $t('project.mandatory') : $t('project.forbidden')"
                     :color="req.mandatory ? 'green' : 'red'"
                     hide-details
                     inset
@@ -37,50 +38,47 @@
         </v-row>
     </v-container>
 </template>
-<script setup lang="ts">
-import { watch, ref, defineProps, defineEmits } from 'vue';
 
+<script setup lang="ts">
+import { ref, defineProps, defineEmits } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 const props = defineProps({
     modelValue: Array
 });
-
 const emit = defineEmits(['update:modelValue']);
-
-// Reactive internal state based on the initial modelValue
 const internalRequirements = ref([...props.modelValue]);
-
-// Input field model
 const newRequirement = ref('');
+const errorMessages = ref([]);
 
-// Validation rules
-const rules = {
-    required: value => !!value || 'Required.'
-};
-
-// Function to add a new requirement
 const addRequirement = () => {
-    if (newRequirement.value) {
-        const newReq = { value: newRequirement.value, mandatory: true };
-        internalRequirements.value.push(newReq);
-        emit('update:modelValue', internalRequirements.value);
-        newRequirement.value = ''; // Clear the input field
+    errorMessages.value = []; // Clear previous error messages
+    const validationResult = validateRequirement(newRequirement.value);
+    if (validationResult !== true) {
+        errorMessages.value.push(validationResult);
+        return; // Stop further execution if validation fails
     }
+    const newReq = { value: newRequirement.value, mandatory: true };
+    internalRequirements.value.push(newReq);
+    emit('update:modelValue', internalRequirements.value);
+    newRequirement.value = ''; // Clear the input field after adding
 };
 
-// Function to delete a requirement
+const validateRequirement = (value) => {
+    if (!value) {
+        return t('project.required'); // Check if the input is empty
+    }
+    if (!/.+\..+/.test(value)) {
+        return t('project.invalid_format'); // Check if the input matches the expected format
+    }
+    return true;
+};
+
 const deleteRequirement = (index) => {
     internalRequirements.value.splice(index, 1);
     emit('update:modelValue', internalRequirements.value);
 };
-
-// Watching the props.modelValue to update internalRequirements accordingly
-watch(() => props.modelValue, (newVal) => {
-    if (newVal !== internalRequirements.value) {
-        internalRequirements.value = [...newVal];
-    }
-}, { deep: true });
-
-
 </script>
 
 

@@ -61,6 +61,18 @@ export default {
         not_found2: "Project not found",
         to_subject: "To subject",
         to_groups: "To groups",
+        selected_subject: "Selected subject",
+        group_warning: "Once the project has been created groups can no longer be edited",
+        group_toggle:"Group project",
+        random:"Random groups",
+        student_groups:"Student chosen groups",
+        enroll_deadline:"Enroll deadline",
+        publish_date:"Publish date",
+        no_files:"No project files found",
+        requirement: "Add mandatory or forbidden extension (ie: assignment.pdf)",
+        mandatory:"Mandatory",
+        forbidden:"Forbidden",
+        invalid_format:"Please enter a valid file type, including the extension (e.g., 'image.png')"
     },
     navigation: {
         home: "Home",

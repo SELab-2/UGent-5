@@ -61,6 +61,18 @@ export default {
         not_found2: "Project niet teruggevonden",
         to_subject: "Naar vak",
         to_groups: "Naar groepen",
+        selected_subject: "Gekozen vak",
+        group_warning: "Eens het project aangemaakt is is het niet meer mogelijk de groepen aan te passen",
+        group_toggle:"Groepswerk",
+        random:"Willekeurige groepen",
+        student_groups:"Studenten gekozen groepen",
+        enroll_deadline:"Inschrijvingsdeadline",
+        publish_date:"Publiceringsdatum",
+        no_files:"Geen bestanden voor het project teruggevonden",
+        requirement: "Voeg verplichte of verboden extensie toe (bv: verslag.pdf)",
+        mandatory:"Verplicht",
+        forbidden:"Verboden",
+        invalid_format: "Voer een geldig bestandstype in, inclusief de extensie (bv. 'afbeelding.png')"
     },
     navigation: {
         home: "Hoofdscherm",
