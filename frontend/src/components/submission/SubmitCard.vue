@@ -31,7 +31,6 @@ const { data: project, isLoading, isError } = useProjectQuery(projectId);
 <style scoped>
 .mini-card {
     margin: 15px 0 30px 0;
-    width: 500px;
 }
 .submit-form {
     margin-top: 15px;
