@@ -48,9 +48,10 @@ import type User from "@/models/User";
 
 const props = defineProps<{
     instructors: User[];
+    currentUser: User;
 }>();
 
-const { instructors } = toRefs(props);
+const {instructors, currentUser} = toRefs(props);
 
 const {data: users, isLoading, isError} = useUsersQuery();
 
@@ -64,8 +65,10 @@ const filteredUsers = computed(() => {
         return [];
     }
     return [...(users.value || [])].filter((user: User) => {
-        const fullName = `${user?.given_name} ${user.surname}`;
-        return fullName.toLowerCase().includes(search.value.toLowerCase());
+        return (
+            user?.uid !== currentUser.value?.uid &&
+            `${user?.given_name} ${user.surname}`.toLowerCase().includes(search.value.toLowerCase())
+        );
     }).slice(0, 5);
 });
 
@@ -87,7 +90,7 @@ const onAddInstructorButtonClicked = (user: User) => {
 };
 
 const userIsInstructor = (user: User) => {
-    return instructors.value.some((instructor: User) => instructor.id === user.id);
+    return instructors.value.some((instructor: User) => instructor?.uid === user?.uid);
 };
 
 

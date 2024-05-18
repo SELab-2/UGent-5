@@ -1,4 +1,8 @@
 <template>
+    <div v-if="isError" class="v-container">
+        <p>{{ $t("default.something-went-wrong") }}</p>
+    </div>
+
     <div>
         <v-form
             ref="form"
@@ -31,6 +35,26 @@
                 required
             ></v-select>
 
+            <v-checkbox
+                label="Assign myself as instructor"
+                v-model="currentUserAsInstructor"
+            ></v-checkbox>
+
+            <v-chip-group
+                column
+            >
+                <v-chip
+                    v-for="instructor in shownInstructors"
+                    :key="instructor!.uid"
+                    closable
+                    @click:close="onInstructorChipClose(instructor)"
+
+                >
+                    {{ instructor.given_name[0] }}. {{ instructor.surname }}
+                </v-chip>
+
+            </v-chip-group>
+
             <v-btn
                 color="primary"
                 type="submit"
@@ -42,6 +66,7 @@
 
         <UserSearchList
             :instructors="instructors"
+            :current-user="currentUser"
             @add-instructor="addInstructor"
         ></UserSearchList>
     </div>
@@ -51,18 +76,21 @@
 <script setup lang="ts">
 
 
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import useAcademicYear from "@/composables/useAcademicYear";
 import {useCreateSubjectMutation} from "@/queries/Subject";
 import type SubjectForm from "@/models/Subject";
 import UserSearchList from "@/components/subject/createSubjectView/UserSearchList.vue";
 import type User from "@/models/User";
+import {useCurrentUserQuery} from "@/queries/User";
 
 const form = ref(null);
 const project_name = ref("");
 const activeAcademicYear = ref<number>(useAcademicYear());
 const instructors = ref<User[]>([]);
+const currentUserAsInstructor = ref(true);
 
+const {data: currentUser, isLoading, isError} = useCurrentUserQuery();
 const createSubjectMutation = useCreateSubjectMutation();
 
 
@@ -72,9 +100,24 @@ const rules = {
     length: (value: string) => value.length > 2 || "Title must be at least 3 characters long.",
 };
 
+const shownInstructors = computed(() => {
+    if (currentUserAsInstructor.value) {
+        return [currentUser.value, ...instructors.value];
+    }
+    return instructors.value;
+})
+
 const addInstructor = (user: User) => {
     instructors.value.push(user);
     console.log(instructors.value);
+};
+
+const onInstructorChipClose = (instructor: User) => {
+    if (currentUser.value?.uid === instructor?.uid) {
+        currentUserAsInstructor.value = false;
+    } else {
+        instructors.value.splice(instructors.value.indexOf(instructor), 1);
+    }
 };
 
 async function handleSubmit() {
