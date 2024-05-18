@@ -40,20 +40,22 @@
                 v-model="currentUserAsInstructor"
             ></v-checkbox>
 
-            <v-chip-group
-                column
+            <v-chip
+                v-for="instructor in shownInstructors"
+                :key="instructor!.uid"
+                closable
+                variant="elevated"
+                :color="instructor!.is_teacher ? `primary` : `green` "
+                @click:close="onInstructorChipClose(instructor)"
+
             >
-                <v-chip
-                    v-for="instructor in shownInstructors"
-                    :key="instructor!.uid"
-                    closable
-                    @click:close="onInstructorChipClose(instructor)"
+                <v-icon
+                    :icon="instructor!.is_teacher ? `mdi-account-tie-outline` : `mdi-school` "
+                    start
+                ></v-icon>
+                {{ instructor.given_name[0] }}. {{ instructor.surname }}
+            </v-chip>
 
-                >
-                    {{ instructor.given_name[0] }}. {{ instructor.surname }}
-                </v-chip>
-
-            </v-chip-group>
 
             <v-btn
                 color="primary"
@@ -109,7 +111,15 @@ const shownInstructors = computed(() => {
 
 const addInstructor = (user: User) => {
     instructors.value.push(user);
-    console.log(instructors.value);
+    instructors.value.sort((a, b) => {
+        if (a?.is_teacher && !b?.is_teacher) {
+            return -1;
+        } else if (!a?.is_teacher && b?.is_teacher) {
+            return 1;
+        } else {
+            return a?.surname.localeCompare(b?.surname);
+        }
+    });
 };
 
 const onInstructorChipClose = (instructor: User) => {
