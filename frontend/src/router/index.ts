@@ -5,8 +5,11 @@ import loginMiddleware from "./middleware/login";
 import useCanVisit, {
     useIsAdminCondition,
     useIsTeacherCondition,
+    useIsStudentOfSubjectCondition,
+    useIsInstructorOfSubjectCondition,
     useIsPartOfSubjectCondition,
     useAndCondition,
+    useOrCondition,
 } from "./middleware/canVisit";
 import { ref } from "vue";
 
@@ -59,10 +62,6 @@ const router = createRouter({
             component: () => import("../views/ProjectView.vue"),
             props: (route) => ({ projectId: Number(route.params.projectId) }),
             meta: {
-                middleware: useCanVisit((queryClient) => {
-                    // TODO: implement -> check if user is enlroled in subject
-                    return { condition: ref(true), isLoading: ref(false) };
-                }),
             },
         },
         {
@@ -101,7 +100,12 @@ const router = createRouter({
             component: () => import("../views/subject/SubjectView.vue"),
             props: (route) => ({ subjectId: Number(route.params.subjectId) }),
             meta: {
-                middleware: useCanVisit(useIsPartOfSubjectCondition),
+                middleware: useCanVisit(
+                    useOrCondition(
+                        useIsStudentOfSubjectCondition,
+                        useIsInstructorOfSubjectCondition
+                    )
+                ),
             },
         },
         {

@@ -79,6 +79,26 @@ export const useIsTeacherCondition: CanVisitCondition = (qc) => {
     return { condition: isTeacher, isLoading };
 };
 
+export const useIsStudentOfSubjectCondition: CanVisitCondition = (qc, ctx) => {
+    const subjectId = Number(ctx.to.params.subjectId);
+    const { data: subjects, isLoading } = useSubjectsQuery(qc);
+    const condition = computed(() => {
+        return subjects.value?.as_student.findIndex((subject) => subject.id === subjectId) !== -1;
+    });
+    return { condition, isLoading };
+};
+
+export const useIsInstructorOfSubjectCondition: CanVisitCondition = (qc, ctx) => {
+    const subjectId = Number(ctx.to.params.subjectId);
+    const { data: subjects, isLoading } = useSubjectsQuery(qc);
+    const condition = computed(() => {
+        return (
+            subjects.value?.as_instructor.findIndex((subject) => subject.id === subjectId) !== -1
+        );
+    });
+    return { condition, isLoading };
+};
+
 export const useIsPartOfSubjectCondition: CanVisitCondition = (qc, ctx) => {
     const subjectId = Number(ctx.to.params.subjectId);
     const { data: subjects, isLoading } = useSubjectsQuery(qc);
