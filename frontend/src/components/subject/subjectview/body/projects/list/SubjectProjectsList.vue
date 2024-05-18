@@ -1,53 +1,45 @@
 <template>
-    <v-card variant="text" class="projects-card" height="400px">
+    <v-card variant="text" class="projects-card">
         <v-card-title>
             <span class="title">{{ $t("subject.projects") }}</span>
         </v-card-title>
         <v-card-subtitle>
-            <div class="d-flex justify-start filter-btn-container">
-                <HeaderSubtitleButton
-                    :title="$t('subject.projectsPage.all')"
-                    clickable
-                    :active="activeButton === FilterOptions.All"
-                    @click="activeButton = FilterOptions.All"
-                ></HeaderSubtitleButton>
-                <HeaderSubtitleButton
-                    :title="$t('subject.projectsPage.active')"
-                    clickable
-                    :active="activeButton === FilterOptions.Active"
-                    @click="activeButton = FilterOptions.Active"
-                ></HeaderSubtitleButton>
-                <HeaderSubtitleButton
-                    :title="$t('subject.projectsPage.completed')"
-                    clickable
-                    :active="activeButton === FilterOptions.Completed"
-                    @click="activeButton = FilterOptions.Completed"
-                ></HeaderSubtitleButton>
-            </div>
+            <v-chip-group v-model="activeButton" column mandatory>
+                <v-chip
+                    v-for="(filter, index) in filterOptions"
+                    :key="index"
+                    :value="FilterOptions[filter]"
+                    color="primary"
+                    variant="tonal"
+                >
+                    {{ $t(`subject.projectsPage.${filter.toLowerCase()}`) }}
+                </v-chip>
+            </v-chip-group>
         </v-card-subtitle>
-        <v-skeleton-loader type="card" :loading="isLoading" color="white">
-            <v-card-text class="projects-tab">
+        <v-card-text>
+            <div class="scrollable-tabs">
                 <v-tabs
                     v-if="projects!.length > 0"
                     direction="vertical"
                     v-model="selectedTab"
-                    class="projects-tab"
+                    show-arrows
+                    prev-icon="mdi-chevron-up"
+                    next-icon="mdi-chevron-down"
                 >
-                    <v-tab v-for="project in projects" :key="project.id">
+                    <v-tab v-for="project in projects" :key="project.id" :value="project.id">
                         <SubjectTab :projectName="project.name"></SubjectTab>
                     </v-tab>
                 </v-tabs>
                 <div v-else class="placeholder">
-                    <p>No projects available.</p>
+                    <p>{{ $t("subject.projectsPage.no_projects") }}</p>
                 </div>
-            </v-card-text>
-        </v-skeleton-loader>
+            </div>
+        </v-card-text>
     </v-card>
 </template>
 
 <script setup lang="ts">
-import SubjectTab from "@/components/subject/body/projects/list/SubjectTab.vue";
-import HeaderSubtitleButton from "@/components/buttons/HeaderSubtitleButton.vue";
+import SubjectTab from "@/components/subject/subjectview/body/projects/list/SubjectTab.vue";
 import type Project from "@/models/Project";
 import { FilterOptions } from "@/models/Project";
 import { ref, watch } from "vue";
@@ -55,11 +47,11 @@ import { ref, watch } from "vue";
 const props = defineProps<{
     projects: Project[];
     selectedTab: number;
-    isLoading: boolean;
 }>();
 
 const selectedTab = ref(props.selectedTab);
 
+const filterOptions = Object.keys(FilterOptions);
 const activeButton = ref(FilterOptions.All);
 
 const emit = defineEmits<{
@@ -83,9 +75,9 @@ watch(activeButton, (newVal: string) => {
 .projects-card {
     background-color: white;
     padding: 20px;
-    border-radius: 20px;
     display: flex;
     flex-direction: column;
+    max-height: 55vh;
 }
 
 .title {
@@ -96,22 +88,13 @@ watch(activeButton, (newVal: string) => {
     font-family: "Poppins", sans-serif;
 }
 
-.projects-tab {
-    flex-grow: 1;
+.scrollable-tabs {
     overflow-y: auto;
     scrollbar-width: none; /* For Firefox */
+    max-height: 30vh;
 }
 
-.projects-tab::-webkit-scrollbar {
-    width: 0; /* For Chrome, Safari, and Opera */
-}
-
-.filter-btn-container {
-    overflow-x: auto;
-    scrollbar-width: none; /* For Firefox */
-}
-
-.filter-btn-container::-webkit-scrollbar {
+.scrollable-tabs::-webkit-scrollbar {
     width: 0; /* For Chrome, Safari, and Opera */
 }
 
@@ -121,7 +104,6 @@ watch(activeButton, (newVal: string) => {
     align-items: center;
     height: 200px; /* Adjust height as needed */
     border: 1px solid #ccc;
-    border-radius: 8px;
 }
 
 .placeholder p {
