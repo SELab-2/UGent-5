@@ -11,7 +11,8 @@
 </template>
 
 <script setup lang="ts">
-import Subject, { SubjectRole } from "@/models/Subject";
+import type Subject from "@/models/Subject";
+import { SubjectRole } from "@/models/Subject";
 import SubjectIcon from "@/components/subject/extra/SubjectIcon.vue";
 
 defineProps<{

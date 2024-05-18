@@ -4,8 +4,8 @@
             <SubjectsHeaderCard
                 :academic-years="academicYears"
                 :subjects="subjects"
-                @academic-year-changed="onAcademicYearChanged"
-                @subjects-filter-changed="onSubjectsFilterChanged"
+                @academic-year-changed="$emit('academic-year-changed', $event)"
+                @subjects-filter-changed="$emit('subjects-filter-changed', $event)"
             ></SubjectsHeaderCard>
         </v-col>
         <v-col>
@@ -30,14 +30,6 @@ const emit = defineEmits<{
     (e: "academic-year-changed", academicYear: number): void;
     (e: "subjects-filter-changed", filter: SubjectFilter): void;
 }>();
-
-const onAcademicYearChanged = (academicYear: number) => {
-    emit("academic-year-changed", academicYear);
-};
-
-const onSubjectsFilterChanged = (filter: SubjectFilter) => {
-    emit("subjects-filter-changed", filter);
-};
 </script>
 
 <style scoped></style>

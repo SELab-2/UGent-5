@@ -118,6 +118,10 @@ const onSubjectsFilterChanged = (filter: SubjectFilter) => {
 
 const onAcademicYearChanged = (academicYear: number) => {
     activeAcademicYear.value = academicYear;
+    activeSubjectsFilter.value = {
+        showInstructorSubjects: true,
+        showStudentSubjects: true,
+    };
 };
 </script>
 

@@ -76,6 +76,8 @@ const emit = defineEmits<{
 watch(activeAcademicYear, (newVal: number | undefined) => {
     if (newVal !== undefined) {
         emit("academic-year-changed", newVal);
+        showInstructorSubjects.value = true;
+        showStudentSubjects.value = true;
     }
 });
 
