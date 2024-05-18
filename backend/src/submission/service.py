@@ -1,6 +1,7 @@
 from typing import Sequence, List
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy import func
 
 from . import models, schemas
 from .models import Status
@@ -12,9 +13,13 @@ async def get_submissions(db: AsyncSession) -> Sequence[models.Submission]:
 
 async def get_submissions_by_project(db: AsyncSession,
                                      project_id: int) -> Sequence[models.Submission]:
+    # SQL for the win
+    subquery = select(models.Submission.group_id, func.max(models.Submission.date).label(
+        'max_date')).group_by(models.Submission.group_id).subquery()
+    query = select(models.Submission).join(subquery, (models.Submission.group_id == subquery.c.group_id) & (
+        models.Submission.date == subquery.c.max_date) & (models.Submission.project_id == project_id))
 
-    return (await db.execute(select(models.Submission).
-                             filter_by(project_id=project_id))).unique().scalars().all()
+    return (await db.execute(query)).unique().scalars().all()
 
 
 async def get_submissions_by_group(db: AsyncSession,

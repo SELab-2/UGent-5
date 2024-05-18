@@ -55,6 +55,22 @@ const testSubjectInstructorsQuery = {
     }
 };
 
+const testCurrentUserQuery = {
+    isLoading: ref(true),
+    isError: ref(true),
+    setIsError(value){
+        this.isError.value = value;
+    },
+    setIsLoading(value){
+        this.isLoading.value = value;
+    }
+};
+
+
+vi.mock('@/queries/User', () => ({
+    useCurrentUserQuery: vi.fn(() => testCurrentUserQuery),
+}));
+
 vi.mock('@/queries/Subject', () => ({
     useSubjectQuery: vi.fn(() => testSubjectQuery),
     useSubjectInstructorsQuery: vi.fn(() => testSubjectInstructorsQuery)
@@ -105,6 +121,8 @@ describe("ProjectView", async () => {
         testSubjectQuery.setIsLoading(false)
         testProjectGroupsQuery.setIsLoading(false)
         testSubjectInstructorsQuery.setIsLoading(false)
+        testSubjectInstructorsQuery.setIsLoading(false)
+        testCurrentUserQuery.setIsLoading(false)
         await wrapper.vm.$nextTick();
         expect(wrapper.text()).toContain("Project niet teruggevonden")
     })
@@ -113,6 +131,7 @@ describe("ProjectView", async () => {
         testSubjectQuery.setIsError(false)
         testProjectGroupsQuery.setIsError(false)
         testSubjectInstructorsQuery.setIsError(false)
+        testCurrentUserQuery.setIsError(false)
         await wrapper.vm.$nextTick();
         expect(wrapper.findComponent('.projectInfoComponent').exists()).toBeTruthy()
         expect(wrapper.findComponent('.projectSideBar').exists()).toBeTruthy()

@@ -43,6 +43,6 @@ export interface UnmetRequirement {
 
 export enum FilterOptions {
     All = "All",
-    Completed = "Completed",
     Active = "Active",
+    Completed = "Completed",
 }

@@ -2,6 +2,7 @@ export default {
     default: {
         error: {
             "not-found": "Pagina niet gevonden",
+            "something-went-wrong": "Er is iets misgegaan",
         },
         loading: {
             loading_page: "Aan het laden...",
@@ -43,7 +44,10 @@ export default {
         after_deadline: "Na deadline",
         submissions_title: "Indieningen voor project {project}",
         no_submissions: "Nog geen indieningen",
+        teacher_submissions_info:
+            "Deze pagina bevat een lijst van de laatste indiening van elke groep voor dit project.",
         docker_test: "Testen Output",
+        download_all_files: "Download alle bestanden",
     },
     project: {
         deadline: "Deadline",
@@ -56,6 +60,7 @@ export default {
         capacity_group: "Capaciteit: ",
         edit: "Bewerk project",
         submissions_list: "Alle indieningen",
+        submissions_list_teacher: "Alle indieningen voor dit project",
         not_found: "Geen projecten teruggevonden.",
         finished: "Afgerond",
         not_found2: "Project niet teruggevonden",
@@ -104,16 +109,30 @@ export default {
             all: "Alle",
             active: "Actief",
             completed: "Voltooid",
+            no_projects: "Geen projecten gevonden.",
+            show_assignment: "Meer",
+            hide_assignment: "Minder",
         },
         project: {
             assignment: "Opdracht",
             group: "Groep",
             submissions: "Indieningen",
         },
+        create_project: "Nieuw project",
+        register_link_button: {
+            title: "Registratie link",
+            snackbar: "Registratie link gekopieerd naar klembord.",
+            tooltip:
+                "Kopieer de registratie link voor dit vak, deze kan gedeeld worden met studenten om zich te registreren voor het vak.",
+        },
     },
 
     subjects: {
         title: "Mijn vakken",
+        create_subject: "Nieuw vak",
+        instructor_subjects: "Toon lesgever vakken",
+        student_subjects: "Toon student vakken",
+        no_subjects: "Geen vakken gevonden.",
     },
     group: {
         not_found: "Groep niet gevonden",
