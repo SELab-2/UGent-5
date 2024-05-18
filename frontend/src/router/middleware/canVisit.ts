@@ -4,6 +4,7 @@ import { QueryClient } from "@tanstack/vue-query";
 import useIsAdmin from "@/composables/useIsAdmin";
 import useIsTeacher from "@/composables/useIsTeacher";
 import { useSubjectsQuery } from "@/queries/Subject";
+import { useProjectsQuery } from "@/queries/Project";
 
 export interface CanVisitCondition {
     (
@@ -95,6 +96,24 @@ export const useIsInstructorOfSubjectCondition: CanVisitCondition = (qc, ctx) =>
         return (
             subjects.value?.as_instructor.findIndex((subject) => subject.id === subjectId) !== -1
         );
+    });
+    return { condition, isLoading };
+};
+
+export const useIsStudentOfProjectCondition: CanVisitCondition = (qc, ctx) => {
+    const projectId = Number(ctx.to.params.projectId);
+    const { data: projects, isLoading } = useProjectsQuery(qc);
+    const condition = computed(() => {
+        return projects.value?.findIndex((project) => project.id === projectId) !== -1;
+    });
+    return { condition, isLoading };
+};
+
+export const useIsInstructorOfProjectCondition: CanVisitCondition = (qc, ctx) => {
+    const projectId = Number(ctx.to.params.projectId);
+    const { data: projects, isLoading } = useProjectsQuery(qc);
+    const condition = computed(() => {
+        return projects.value?.findIndex((project) => project.id === projectId) !== -1;
     });
     return { condition, isLoading };
 };

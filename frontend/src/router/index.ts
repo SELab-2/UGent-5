@@ -7,6 +7,8 @@ import useCanVisit, {
     useIsTeacherCondition,
     useIsStudentOfSubjectCondition,
     useIsInstructorOfSubjectCondition,
+    useIsStudentOfProjectCondition,
+    useIsInstructorOfProjectCondition,
     useIsPartOfSubjectCondition,
     useAndCondition,
     useOrCondition,
@@ -62,6 +64,12 @@ const router = createRouter({
             component: () => import("../views/ProjectView.vue"),
             props: (route) => ({ projectId: Number(route.params.projectId) }),
             meta: {
+                middleware: useCanVisit(
+                    useOrCondition(
+                        useIsStudentOfProjectCondition,
+                        useIsInstructorOfProjectCondition
+                    )
+                ),
             },
         },
         {
@@ -114,9 +122,6 @@ const router = createRouter({
             component: () => import("../views/CreateProjectView.vue"),
             props: (route) => ({ subjectId: Number(route.params.subjectId) }),
             meta: {
-                middleware: useCanVisit(
-                    useAndCondition(useIsPartOfSubjectCondition, useIsTeacherCondition)
-                ),
             },
         },
         {
