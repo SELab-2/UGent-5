@@ -32,7 +32,7 @@ function useCanVisit(useCondition: CanVisitCondition): Middleware {
         await awaitLoading();
         if (!condition.value) {
             return {
-                next: () => next({ path: "forbidden" }),
+                next: () => next({ path: "not-found" }),
                 final: true,
             };
         }
