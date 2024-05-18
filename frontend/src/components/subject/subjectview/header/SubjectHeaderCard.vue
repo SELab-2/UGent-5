@@ -1,7 +1,7 @@
 <template>
     <v-card variant="text" class="title-card" height="165">
         <v-row>
-            <v-col :cols="isInstructor ? 10 : 12">
+            <v-col :cols="isAdmin || (isInstructor && isTeacher) ? 10 : 12">
                 <v-card-title class="title">
                     {{ title }}
                 </v-card-title>
@@ -22,7 +22,7 @@
                     </div>
                 </v-card-text>
             </v-col>
-            <v-col v-if="isInstructor" cols="2">
+            <v-col v-if="isAdmin || (isInstructor && isTeacher)" cols="2">
                 <router-link to="" class="link">
                     <v-icon size="large">mdi-square-edit-outline</v-icon>
                 </router-link>
@@ -34,6 +34,8 @@
 <script setup lang="ts">
 import type User from "@/models/User";
 import HeaderSubtitleButton from "@/components/buttons/HeaderSubtitleButton.vue";
+import useIsAdmin from "@/composables/useIsAdmin";
+import useIsTeacher from "@/composables/useIsTeacher";
 
 defineProps<{
     title: string;
@@ -41,6 +43,9 @@ defineProps<{
     instructors: User[];
     isInstructor: boolean;
 }>();
+
+const {isAdmin} = useIsAdmin();
+const {isTeacher} = useIsTeacher();
 </script>
 
 <style scoped>

@@ -13,6 +13,7 @@ export interface UserSubjectList {
 export enum SubjectRole {
     Student = "student",
     Instructor = "instructor",
+    Admin = "admin",
 }
 
 export interface SubjectFilter {

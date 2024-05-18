@@ -1,6 +1,6 @@
 <template>
     <v-icon color="white" :size="size">
-        {{ role === "instructor" ? "mdi-account-tie" : "mdi-school" }}
+        {{ role === "instructor" ? "mdi-account-tie" : role === "student" ? "mdi-school" : "mdi-security"}}
     </v-icon>
 </template>
 

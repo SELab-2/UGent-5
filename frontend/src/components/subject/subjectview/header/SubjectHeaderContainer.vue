@@ -3,7 +3,7 @@
         <v-col cols="4">
             <SubjectHeaderImage
                 :imagePath="imagePath"
-                :role="isInstructor ? SubjectRole.Instructor : SubjectRole.Student"
+                :role="isInstructor ? SubjectRole.Instructor : isStudent ? SubjectRole.Student : SubjectRole.Admin"
             ></SubjectHeaderImage>
         </v-col>
         <v-col cols="8">
@@ -11,7 +11,7 @@
                 :title="title"
                 :academic-year="academicYear"
                 :instructors="instructors"
-                :is-instructor="isInstructor"
+                :isInstructor="isInstructor"
             >
             </SubjectHeaderCard>
         </v-col>
@@ -30,6 +30,7 @@ defineProps<{
     instructors: User[];
     imagePath: string;
     isInstructor: boolean;
+    isStudent: boolean;
 }>();
 </script>
 

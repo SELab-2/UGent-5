@@ -31,6 +31,7 @@
                                 :instructors="instructors"
                                 :academic-year="subject!.academic_year"
                                 :is-instructor="isInstructor"
+                                :is-student="isStudent"
                                 image-path="https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png"
                             ></SubjectHeaderContainer>
                         </v-col>
@@ -66,7 +67,7 @@ import { computed, ref, toRefs } from "vue";
 import {
     useSubjectQuery,
     useSubjectProjectsQuery,
-    useSubjectInstructorsQuery,
+    useSubjectInstructorsQuery, useSubjectStudentsQuery,
 } from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectHeaderContainer from "@/components/subject/subjectview/header/SubjectHeaderContainer.vue";
@@ -99,14 +100,24 @@ const {
     isLoading: isInstructorsLoading,
     isError: isInstructorsError,
 } = useSubjectInstructorsQuery(subjectId);
-const { data: user, isLoading: isUserLoading, isError: isUserError } = useCurrentUserQuery();
+const {
+    data: user,
+    isLoading: isUserLoading,
+    isError: isUserError
+} = useCurrentUserQuery();
+const {
+    data: students,
+    isLoading: isStudentsLoading,
+    isError: isStudentsError,
+} = useSubjectStudentsQuery(subjectId);
 
 const isLoading = computed(
     () =>
         isSubjectLoading.value ||
         isProjectsLoading.value ||
         isInstructorsLoading.value ||
-        isUserLoading.value
+        isUserLoading.value ||
+        isStudentsLoading.value
 );
 const isError = computed(
     () =>
@@ -114,11 +125,15 @@ const isError = computed(
         isProjectsError.value ||
         isInstructorsError.value ||
         isUserError.value ||
-        isUuidError.value
+        isUuidError.value ||
+        isStudentsError.value
 );
 
 const isInstructor = computed(() => {
     return [...(instructors.value || [])].some((instructor) => instructor?.uid === user.value?.uid);
+});
+const isStudent = computed(() => {
+    return [...(students.value || [])].some((student) => student?.uid === user.value?.uid);
 });
 const { isAdmin } = useIsAdmin();
 const { isTeacher } = useIsTeacher();
