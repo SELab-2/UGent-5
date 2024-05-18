@@ -1,6 +1,6 @@
 <template>
     <v-skeleton-loader :loading="isLoading" type="article">
-        <v-card>
+        <v-card class="submit-card">
             <v-card-item>
                 <h1>{{ $t("submit.submit_title") }}</h1>
                 <h1 v-if="isError">Error</h1>
@@ -29,6 +29,9 @@ const { data: project, isLoading, isError } = useProjectQuery(projectId);
 </script>
 
 <style scoped>
+.submit-card {
+    width: 100%;
+}
 .mini-card {
     margin: 15px 0 30px 0;
 }
