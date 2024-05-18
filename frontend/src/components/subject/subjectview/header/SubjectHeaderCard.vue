@@ -44,8 +44,8 @@ defineProps<{
     isInstructor: boolean;
 }>();
 
-const {isAdmin} = useIsAdmin();
-const {isTeacher} = useIsTeacher();
+const { isAdmin } = useIsAdmin();
+const { isTeacher } = useIsTeacher();
 </script>
 
 <style scoped>

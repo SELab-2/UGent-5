@@ -1,12 +1,12 @@
 <template>
     <v-icon color="white" :size="size">
-        {{ `mdi-${userRole}`}}
+        {{ `mdi-${userRole}` }}
     </v-icon>
 </template>
 
 <script setup lang="ts">
-import {SubjectRole} from "@/models/Subject";
-import {computed, toRefs} from "vue";
+import { SubjectRole } from "@/models/Subject";
+import { computed, toRefs } from "vue";
 
 const props = defineProps<{
     role: SubjectRole;
@@ -20,8 +20,7 @@ const userRole = computed(() => {
     if (role.value === SubjectRole.Student) return "school";
     if (role.value === SubjectRole.Admin) return "security";
     return "cancel";
-})
-
+});
 </script>
 
 <style scoped></style>

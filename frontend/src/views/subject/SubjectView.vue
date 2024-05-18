@@ -68,7 +68,8 @@ import { computed, ref, toRefs } from "vue";
 import {
     useSubjectQuery,
     useSubjectProjectsQuery,
-    useSubjectInstructorsQuery, useSubjectStudentsQuery,
+    useSubjectInstructorsQuery,
+    useSubjectStudentsQuery,
 } from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectHeaderContainer from "@/components/subject/subjectview/header/SubjectHeaderContainer.vue";
@@ -101,11 +102,7 @@ const {
     isLoading: isInstructorsLoading,
     isError: isInstructorsError,
 } = useSubjectInstructorsQuery(subjectId);
-const {
-    data: user,
-    isLoading: isUserLoading,
-    isError: isUserError
-} = useCurrentUserQuery();
+const { data: user, isLoading: isUserLoading, isError: isUserError } = useCurrentUserQuery();
 const {
     data: students,
     isLoading: isStudentsLoading,

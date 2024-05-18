@@ -1,10 +1,7 @@
 <template>
     <v-row>
         <v-col cols="4">
-            <SubjectHeaderImage
-                :imagePath="imagePath"
-                :role="userRole"
-            ></SubjectHeaderImage>
+            <SubjectHeaderImage :imagePath="imagePath" :role="userRole"></SubjectHeaderImage>
         </v-col>
         <v-col cols="8">
             <SubjectHeaderCard
@@ -23,7 +20,7 @@ import SubjectHeaderCard from "@/components/subject/subjectview/header/SubjectHe
 import type User from "@/models/User";
 import SubjectHeaderImage from "@/components/subject/subjectview/header/SubjectHeaderImage.vue";
 import { SubjectRole } from "@/models/Subject";
-import {computed, toRefs} from "vue";
+import { computed, toRefs } from "vue";
 
 const props = defineProps<{
     title: string;
@@ -43,7 +40,6 @@ const userRole = computed(() => {
     if (isAdmin.value) return SubjectRole.Admin;
     return SubjectRole.None;
 });
-
 </script>
 
 <style scoped></style>
