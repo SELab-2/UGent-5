@@ -11,6 +11,7 @@
                 single-line
                 hide-details
                 @click:prepend-inner="onSearchIconClicked"
+                @keydown.enter="onSearchIconClicked"
             ></v-text-field>
         </v-card-text>
 
@@ -24,6 +25,13 @@
                     <v-list-item-title>
                         {{ user.given_name }} {{ user.surname }}
                     </v-list-item-title>
+                    <v-btn
+                        @click="onAddInstructorButtonClicked(user)"
+                        color="primary"
+                        :disabled="userIsInstructor(user)"
+                    >
+                        Add
+                    </v-btn>
                 </v-list-item>
             </v-list>
         </div>
@@ -35,8 +43,14 @@
 <script setup lang="ts">
 
 import {useUsersQuery} from "@/queries/User";
-import {computed, ref} from "vue";
+import {computed, ref, toRefs} from "vue";
 import type User from "@/models/User";
+
+const props = defineProps<{
+    instructors: User[];
+}>();
+
+const { instructors } = toRefs(props);
 
 const {data: users, isLoading, isError} = useUsersQuery();
 
@@ -55,6 +69,10 @@ const filteredUsers = computed(() => {
     }).slice(0, 5);
 });
 
+const emit = defineEmits<{
+    (e: "add-instructor", user: User): void;
+}>();
+
 const onSearchIconClicked = () => {
     searchLoading.value = true;
     setTimeout(() => {
@@ -62,6 +80,14 @@ const onSearchIconClicked = () => {
         searchLoading.value = false;
         shownUsers.value = filteredUsers.value;
     }, 1000);
+};
+
+const onAddInstructorButtonClicked = (user: User) => {
+    emit("add-instructor", user);
+};
+
+const userIsInstructor = (user: User) => {
+    return instructors.value.some((instructor: User) => instructor.id === user.id);
 };
 
 

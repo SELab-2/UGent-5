@@ -40,7 +40,10 @@
 
         </v-form>
 
-        <UserSearchList></UserSearchList>
+        <UserSearchList
+            :instructors="instructors"
+            @add-instructor="addInstructor"
+        ></UserSearchList>
     </div>
 </template>
 
@@ -53,10 +56,12 @@ import useAcademicYear from "@/composables/useAcademicYear";
 import {useCreateSubjectMutation} from "@/queries/Subject";
 import type SubjectForm from "@/models/Subject";
 import UserSearchList from "@/components/subject/createSubjectView/UserSearchList.vue";
+import type User from "@/models/User";
 
 const form = ref(null);
 const project_name = ref("");
 const activeAcademicYear = ref<number>(useAcademicYear());
+const instructors = ref<User[]>([]);
 
 const createSubjectMutation = useCreateSubjectMutation();
 
@@ -65,6 +70,11 @@ const academicYearItems = [activeAcademicYear.value, activeAcademicYear.value + 
 const rules = {
     required: (value: string) => !!value || "Field is required.",
     length: (value: string) => value.length > 2 || "Title must be at least 3 characters long.",
+};
+
+const addInstructor = (user: User) => {
+    instructors.value.push(user);
+    console.log(instructors.value);
 };
 
 async function handleSubmit() {
