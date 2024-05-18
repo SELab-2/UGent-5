@@ -11,7 +11,11 @@ const mockProject = {
 }
 
 const mockInstructors = [
-    {uid: "1", given_name: "instructor 1", surname: "Doe"}
+    {uid: "1", given_name: "instructor 1", surname: "Doe", is_admin: false, is_teacher: false}
+]
+
+const mockUser = [
+    {uid: "2", given_name: "user 2", surname: "Doe 2", is_admin: false, is_teacher: false}
 ]
 
 const mockSubject = {
@@ -36,7 +40,8 @@ describe("ProjectInfo", async () => {
                 project: mockProject,
                 group: null,
                 instructors: mockInstructors,
-                subject: mockSubject
+                subject: mockSubject,
+                user: mockUser
             }
         });
         expect(wrapper.findComponent({name: 'VCard'}).exists()).toBeTruthy()
@@ -56,7 +61,8 @@ describe("ProjectInfo", async () => {
                 project: mockProject,
                 group: mockGroup,
                 instructors: mockInstructors,
-                subject: mockSubject
+                subject: mockSubject,
+                user: mockUser
             }
         });
         expect(wrapper.findComponent({name: 'VCard'}).exists()).toBeTruthy();

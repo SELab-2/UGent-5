@@ -1,6 +1,8 @@
 import os
 import shutil
 import zipfile
+import pathlib
+import io
 import fnmatch
 from uuid import uuid4
 
@@ -43,6 +45,17 @@ def upload_files(files: list[UploadFile], project: Project) -> str:
         raise UnMetRequirements(errors)
 
     return uuid
+
+
+def zip_stream(path, group_id: int):
+    base_path = pathlib.Path(path)
+    data = io.BytesIO()
+    with zipfile.ZipFile(data, mode='w') as z:
+        for f_name in base_path.iterdir():
+            name = f"group_{group_id}/{str(f_name).replace(path, "")}"
+            z.write(f_name, arcname=name)
+    data.seek(0)
+    yield from data
 
 
 def remove_files(uuid: str):

@@ -27,6 +27,16 @@ export async function getSubmissions(groupId: number): Promise<Submission[]> {
 }
 
 /**
+ * Fetches all latest submissions of each group from a project.
+ */
+export async function getProjectSubmissions(projectId: number): Promise<Submission[]> {
+    const result = await authorized_fetch<Submission[]>(`/api/projects/${projectId}/submissions`, {
+        method: "GET",
+    });
+    return result;
+}
+
+/**
  * Creates a new submission for a group.
  */
 export async function createSubmission(groupId: number, formData: FormData): Promise<Submission> {
