@@ -39,6 +39,8 @@
             </v-btn>
 
         </v-form>
+
+        <UserSearchList></UserSearchList>
     </div>
 </template>
 
@@ -50,6 +52,7 @@ import {ref} from "vue";
 import useAcademicYear from "@/composables/useAcademicYear";
 import {useCreateSubjectMutation} from "@/queries/Subject";
 import type SubjectForm from "@/models/Subject";
+import UserSearchList from "@/components/subject/createSubjectView/UserSearchList.vue";
 
 const form = ref(null);
 const project_name = ref("");

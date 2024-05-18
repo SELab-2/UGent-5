@@ -1,0 +1,72 @@
+<template>
+    <v-card title="Instructors" flat>
+        <v-card-text>
+            <v-text-field
+                :loading="searchLoading"
+                v-model="search"
+                label="Search"
+                placeholder="Search for instructors"
+                prepend-inner-icon="mdi-magnify"
+                clearable
+                single-line
+                hide-details
+                @click:prepend-inner="onSearchIconClicked"
+            ></v-text-field>
+        </v-card-text>
+
+        <div v-show="searchLoaded">
+            <p v-if="shownUsers.length === 0">No results found</p>
+            <v-list v-else>
+                <v-list-item
+                    v-for="(user, index) in shownUsers"
+                    :key="index"
+                >
+                    <v-list-item-title>
+                        {{ user.given_name }} {{ user.surname }}
+                    </v-list-item-title>
+                </v-list-item>
+            </v-list>
+        </div>
+
+
+    </v-card>
+</template>
+
+<script setup lang="ts">
+
+import {useUsersQuery} from "@/queries/User";
+import {computed, ref} from "vue";
+import type User from "@/models/User";
+
+const {data: users, isLoading, isError} = useUsersQuery();
+
+const search = ref("");
+const searchLoading = ref(false);
+const searchLoaded = ref(false);
+const shownUsers = ref([]);
+
+const filteredUsers = computed(() => {
+    if (!search.value) {
+        return [];
+    }
+    return [...(users.value || [])].filter((user: User) => {
+        const fullName = `${user?.given_name} ${user.surname}`;
+        return fullName.toLowerCase().includes(search.value.toLowerCase());
+    }).slice(0, 5);
+});
+
+const onSearchIconClicked = () => {
+    searchLoading.value = true;
+    setTimeout(() => {
+        searchLoaded.value = true;
+        searchLoading.value = false;
+        shownUsers.value = filteredUsers.value;
+    }, 1000);
+};
+
+
+</script>
+
+<style scoped>
+
+</style>
