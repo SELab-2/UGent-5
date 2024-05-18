@@ -26,7 +26,7 @@ defineProps<{
     subjects: SubjectDetails[];
 }>();
 
-const emit = defineEmits<{
+defineEmits<{
     (e: "academic-year-changed", academicYear: number): void;
     (e: "subjects-filter-changed", filter: SubjectFilter): void;
 }>();

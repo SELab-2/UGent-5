@@ -1,6 +1,6 @@
 <template>
     <div v-if="isError" class="v-container">
-        <p>{{$t("default.something-went-wrong")}}</p>
+        <p>{{ $t("default.something-went-wrong") }}</p>
     </div>
 
     <v-skeleton-loader v-else type="card" :loading="isLoading">
