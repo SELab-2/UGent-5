@@ -38,7 +38,7 @@
             </v-col>
             <v-col v-if="isAdmin || isTeacher" cols="2">
                 <div class="action-btn-container">
-                    <router-link to="">
+                    <router-link :to="{ name: 'create-subject'}">
                         <v-btn prepend-icon="mdi-plus-circle">
                             {{ $t("subjects.create_subject") }}
                         </v-btn>
