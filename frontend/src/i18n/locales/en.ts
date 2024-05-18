@@ -41,7 +41,7 @@ export default {
         files: "Files",
         download_info: "Click on filename to download",
         after_deadline: "After deadline",
-        submissions_title: "Submissions for project {project}",
+        submissions_title: "Submissions:",
         no_submissions: "No submissions yet",
         teacher_submissions_info:
             "This page contains a list of the latest submission of each group for this project.",
