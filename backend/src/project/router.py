@@ -105,7 +105,8 @@ async def put_test_files(
 
     if not using_default_docker_image(uuid):
         # build custom docker image if dockerfile is present
-        background_tasks.add_task(build_docker_image, tests_path(uuid), uuid, client)
+        background_tasks.add_task(
+            build_docker_image, tests_path(uuid), uuid, client)
 
     return await update_test_files(db, project.id, uuid)
 

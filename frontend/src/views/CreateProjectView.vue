@@ -144,14 +144,13 @@ const requirements = ref([]);
 
 const projectId = ref(route.params.projectId);
 const isEditMode = computed(() => projectId.value !== undefined);
-console.log("isEditMode:", isEditMode);
 
 const {
     data: projectData,
     isLoading: isProjectLoading,
     isError: isProjectError,
 } = useProjectQuery(projectId);
-console.log(projectId);
+
 const {
     data: filesData,
     isLoading: isFilesLoading,
@@ -167,14 +166,12 @@ watch(
     projectData,
     (project) => {
         if (project) {
-            console.log("project", project);
             project_title.value = project.name;
             deadline.value = new Date(project.deadline);
             publishDate.value = new Date(project.publish_date);
             requirements.value = project.requirements.map((req) => ({ ...req }));
             const description = project.description;
             selectedSubject.value = project.subject_id;
-            console.log(selectedSubject);
             nextTick(() => {
                 if (quillEditor.value && quillEditor.value.getQuill) {
                     let quill = quillEditor.value.getQuill();
@@ -269,7 +266,6 @@ function setErrorAlert(message) {
 
 async function submitForm() {
     const projectData = formatProjectData();
-    console.log(projectData);
     try {
         if (isEditMode.value) {
             await updateProject(projectData);
@@ -315,13 +311,11 @@ async function createProject(projectData) {
 }
 
 async function handleGroupCreation(projectId) {
-    console.log(selectedGroupProject.value);
     if (selectedGroupProject.value === "student" && capacity.value != 1) {
         const emptyGroups = generateEmptyGroups(projectId);
         await createGroupsMutation.mutateAsync({ projectId, groups: emptyGroups });
     } else if (selectedGroupProject.value === "random" || capacity.value === 1) {
         const groups = divideStudentsIntoGroups(studentsData.value || [], capacity.value);
-        console.log(groups);
         const groupsToCreate = groups.map((_, i) => ({
             project_id: projectId,
             score: 0,

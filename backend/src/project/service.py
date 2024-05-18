@@ -17,7 +17,8 @@ async def create_project(db: AsyncSession, project_in: ProjectCreate) -> Project
         description=project_in.description,
         is_visible=project_in.is_visible,
         capacity=project_in.capacity,
-        requirements=[Requirement(**r.model_dump()) for r in project_in.requirements],
+        requirements=[Requirement(**r.model_dump())
+                      for r in project_in.requirements],
     )
     db.add(new_project)
     await db.commit()
