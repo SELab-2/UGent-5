@@ -9,13 +9,14 @@ import {
     getSubjectStudents,
     getSubjectByUuid,
     registerToSubject,
-    getSubjectUuid,
+    getSubjectUuid, createSubject,
 } from "@/services/subject";
 import { getSubjectProjects } from "@/services/project";
 import type User from "@/models/User";
 import type Subject from "@/models/Subject";
 import type { UserSubjectList } from "@/models/Subject";
 import type Project from "@/models/Project";
+import type SubjectForm from "@/models/Subject";
 
 function SUBJECT_QUERY_KEY(subjectId: number | string): (string | number)[] {
     return ["subject", subjectId];
@@ -39,6 +40,10 @@ function SUBJECT_PROJECTS_QUERY_KEY(subjectId: number): (string | number)[] {
 
 function SUBJECT_UUID_QUERY_KEY(subjectId: number): (string | number)[] {
     return ["subject", "uuid", subjectId];
+}
+
+function CREATE_SUBJECT_QUERY_KEY(): string[] {
+    return ["create", "subject"];
 }
 
 /**
@@ -145,6 +150,28 @@ export function useRegisterToSubjectMutation(): UseMutationReturnType<
         onError: (error) => {
             console.error(error);
             alert("Failed to register to subject");
+        },
+    });
+}
+
+/**
+ * Mutation composable for creating a subject
+ */
+export function useCreateSubjectMutation(): UseMutationReturnType<
+    number,
+    Error,
+    SubjectForm,
+    void
+> {
+    const queryClient = useQueryClient();
+    return useMutation<number, Error, SubjectForm, void>({
+        mutationFn: createSubject,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: CREATE_SUBJECT_QUERY_KEY() });
+        },
+        onError: (error) => {
+            console.error("Subject creation failed", error);
+            alert("Could not create subject. Please try again.");
         },
     });
 }

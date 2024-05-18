@@ -1,13 +1,16 @@
 <template>
     <div>
-        <v-form @submit.prevent="handleSubmit">
+        <v-form
+            ref="form"
+            @submit.prevent="handleSubmit"
+        >
             <v-responsive
                 class="mx-auto"
                 max-width="50vw"
             >
                 <v-text-field
-                    v-model="project_title"
-                    :rules="[rules.required]"
+                    v-model="project_name"
+                    :rules="[rules.required, rules.length]"
                     label="Title"
                     required
                     variant="solo-inverted"
@@ -45,20 +48,41 @@
 
 import {ref} from "vue";
 import useAcademicYear from "@/composables/useAcademicYear";
+import {useCreateSubjectMutation} from "@/queries/Subject";
+import type SubjectForm from "@/models/Subject";
 
-const project_title = ref("");
+const form = ref(null);
+const project_name = ref("");
 const activeAcademicYear = ref<number>(useAcademicYear());
+
+const createSubjectMutation = useCreateSubjectMutation();
+
 
 const academicYearItems = [activeAcademicYear.value, activeAcademicYear.value + 1];
 const rules = {
     required: (value: string) => !!value || "Field is required.",
+    length: (value: string) => value.length > 2 || "Title must be at least 3 characters long.",
 };
 
-const handleSubmit = (e: Event) => {
-    console.log(project_title.value);
-    console.log(activeAcademicYear.value);
-};
+async function handleSubmit() {
+    const {valid} = await form.value.validate();
+    if (!valid) {
+        return;
+    }
 
+    const projectName = project_name.value.trim();
+    const subjectData: SubjectForm = {
+        name: projectName.charAt(0).toUpperCase() + projectName.slice(1),
+        academic_year: activeAcademicYear.value,
+    };
+
+    try {
+        const createdSubjectId = await createSubjectMutation.mutateAsync(subjectData);
+        console.log("Created subject with id:", createdSubjectId);
+    } catch (error) {
+        console.error("Error during project or group creation:", error);
+    }
+}
 </script>
 
 <style scoped>
