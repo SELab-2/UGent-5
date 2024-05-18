@@ -51,7 +51,7 @@ describe("SubjectRegisterView", () => {
         await wrapper.vm.$nextTick()
         const registered = (wrapper.vm as any).registered
         expect(registered).toBe(false)
-        expect(wrapper.text()).toContain("Registreer bij vak: testsubject")
+        expect(wrapper.text()).toContain("Inschrijven voor vak: testsubject")
     });
     it("render if already registered", async () => {
         testSubjectsUuidQuery.setData(2)

@@ -6,10 +6,10 @@
                 <h1>{{ $t("subject.register") }} {{ subject!.name }}</h1>
                 <v-row v-if="!registered" justify="center" class="buttons">
                     <v-btn variant="text" class="register" @click="register">
-                        {{ $t("subject.ok") }}
+                        {{ $t("subject.yes") }}
                     </v-btn>
                     <v-btn variant="text" class="cancel" @click="cancel">
-                        {{ $t("subject.cancel") }}
+                        {{ $t("subject.no") }}
                     </v-btn>
                 </v-row>
                 <v-row v-else class="registered" justify="center">

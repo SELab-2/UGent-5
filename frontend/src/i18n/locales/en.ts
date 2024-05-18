@@ -91,8 +91,8 @@ export default {
     },
     subject: {
         register: "Register to subject:",
-        ok: "Ok",
-        cancel: "Cancel",
+        yes: "Yes",
+        no: "No",
         registered: "You are already registered to this course",
         academy_year: "Academic year",
         projects: "Projects",
