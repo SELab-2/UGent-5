@@ -57,8 +57,8 @@ class ProjectUpdate(BaseModel):
     deadline: Optional[datetime] = None
     description: Optional[str] = None
     requirements: Optional[List[Requirement]] = None
-    enroll_deadline: Optional[datetime]
-    publish_date: datetime
+    enroll_deadline: Optional[datetime] = None
+    publish_date: Optional[datetime] = None
 
     @field_validator("deadline")
     def validate_deadline(cls, value: datetime) -> datetime:
