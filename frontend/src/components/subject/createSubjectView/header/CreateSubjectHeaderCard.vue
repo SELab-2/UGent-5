@@ -77,13 +77,12 @@ const rules = {
 
 
 const emit = defineEmits<{
-    (e: "set-current-user-as-instructor", value: boolean): void;
-    (e: "update:currentUserAsInstructor", value: boolean): void;
+    (e: "update:current-user-as-instructor", value: boolean): void;
 }>();
 
 
 watch(checkbox, (newValue) => {
-    emit("update:currentUserAsInstructor", newValue);
+    emit("update:current-user-as-instructor", newValue);
 });
 
 
