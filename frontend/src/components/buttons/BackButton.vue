@@ -7,17 +7,13 @@
 </template>
 
 <script setup lang="ts">
-import Subject from "@/models/Subject";
-import router from "@/router";
-
 const props = defineProps<{
     destination: String;
     title: String;
 }>();
 
-const back = async () => {
-    router.push(props.destination);
-}
+const destination = props.destination
+const title = props.title
 
 </script>
 

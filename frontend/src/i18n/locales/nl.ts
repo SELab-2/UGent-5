@@ -35,7 +35,7 @@ export default {
         no_submission_files: "Geen indieningen gevonden",
     },
     submission: {
-        status: "Indiening status: {status}",
+        status: "Indiening status:",
         datetime: "Indiening tijdstip:",
         remarks: "Opmerkingen",
         remarks_empty: "Geen opmerkingen voor deze indiening",

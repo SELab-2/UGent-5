@@ -41,7 +41,7 @@ vi.mock("@/components/submission/SubmissionCard.vue", () => ({
     }
 }))
 
-describe("SubmissionsView", () => {
+describe("SubmissionsList", () => {
     it("render if error", async () => {
         const wrapper = mount(SubmissionList, {
             props: {
