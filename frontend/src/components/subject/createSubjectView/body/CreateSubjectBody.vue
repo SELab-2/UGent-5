@@ -6,7 +6,11 @@
             ></SubjectInstructorsCard>
         </v-col>
         <v-col cols="8">
-            <UserSearchCard></UserSearchCard>
+            <UserSearchCard
+                :current-user="currentUser"
+                :instructors="instructors"
+                @add-instructor="addInstructor"
+            ></UserSearchCard>
         </v-col>
 
     </v-row>
@@ -18,8 +22,17 @@ import type User from "@/models/User";
 import UserSearchCard from "@/components/subject/createSubjectView/body/UserSearchCard.vue";
 
 defineProps<{
+    currentUser: User;
     instructors: User[];
 }>();
+
+const emit = defineEmits<{
+    (e: "add-instructor", user: User): void;
+}>();
+
+const addInstructor = (user: User) => {
+    emit("add-instructor", user);
+};
 
 </script>
 

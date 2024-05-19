@@ -1,11 +1,14 @@
 <template>
     <v-card variant="text" class="title-card" width="100%">
         <v-card-title class="card-title">
-            Add instructors to subject
+            Search for instructors
         </v-card-title>
         <v-card-text>
-            <UserSearchList current-user="" instructors="">
-
+            <UserSearchList
+                :current-user="currentUser"
+                :instructors="instructors"
+                @add-instructor="addInstructor"
+            >
             </UserSearchList>
         </v-card-text>
     </v-card>
@@ -13,8 +16,22 @@
 
 
 <script setup lang="ts">
-
 import UserSearchList from "@/components/subject/createSubjectView/body/UserSearchList.vue";
+import type User from "@/models/User";
+
+defineProps<{
+    currentUser: User;
+    instructors: User[];
+}>();
+
+const emit = defineEmits<{
+    (e: "add-instructor", user: User): void;
+}>();
+
+const addInstructor = (user: User) => {
+    emit("add-instructor", user);
+};
+
 </script>
 
 

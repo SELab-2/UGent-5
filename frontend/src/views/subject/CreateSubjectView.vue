@@ -13,7 +13,9 @@
                     >
                     </CreateSubjectHeaderContainer>
                     <CreateSubjectBody
+                        :current-user="currentUser"
                         :instructors="shownInstructors"
+                        @add-instructor="addInstructor"
                     >
                     </CreateSubjectBody>
                 </background-container>
