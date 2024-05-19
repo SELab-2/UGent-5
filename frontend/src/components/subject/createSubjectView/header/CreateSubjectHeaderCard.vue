@@ -19,6 +19,7 @@
                     clearable
                     hide-details="auto"
                     @keydown.enter.prevent
+                    :error="isFormError"
                     class="form-elem"
                 ></v-text-field>
 
@@ -55,6 +56,7 @@ import useAcademicYear from "@/composables/useAcademicYear";
 
 const props = defineProps<{
     currentUserAsInstructor: boolean;
+    isFormError: boolean;
 }>();
 
 const {currentUserAsInstructor} = toRefs(props);
@@ -92,7 +94,6 @@ watch(activeAcademicYear, (newValue) => {
 });
 
 watch(checkbox, (newValue) => {
-    console.log(newValue);
     emit("update:current-user-as-instructor", newValue);
 });
 

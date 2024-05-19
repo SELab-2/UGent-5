@@ -3,14 +3,24 @@
         <p>{{ $t("default.something-went-wrong") }}</p>
     </div>
 
-    <v-skeleton-loader :loading="isLoading" type="card">
+    <v-skeleton-loader v-else :loading="isLoading" type="card">
+        <v-snackbar
+            v-model="snackbar"
+            :timeout="3500"
+            color="error"
+            top
+        >
+            There needs to be at least one teacher amongst the instructors for the subject.
+        </v-snackbar>
+
         <v-row>
             <v-col cols="12">
                 <background-container>
                     <CreateSubjectHeaderContainer
                         :image-path="`https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png`"
                         :current-user-as-instructor="currentUserAsInstructor"
-                        @update:subject-name="subjectName = $event"
+                        :is-form-error="isFormError"
+                        @update:subject-name="onSubjectNameUpdated"
                         @update:active-academic-year="activeAcademicYear = $event"
                         @update:current-user-as-instructor="currentUserAsInstructor = $event"
                     >
@@ -49,7 +59,8 @@ import CreateSubjectHeaderContainer
     from "@/components/subject/createSubjectView/header/CreateSubjectHeaderContainer.vue";
 import CreateSubjectBody from "@/components/subject/createSubjectView/body/CreateSubjectBody.vue";
 
-const form = ref(null);
+const snackbar = ref(false);
+const isFormError = ref(false);
 const subjectName = ref("");
 const activeAcademicYear = ref<number>(useAcademicYear());
 const instructors = ref<User[]>([]);
@@ -88,7 +99,36 @@ const removeInstructor = (instructor: User) => {
     }
 };
 
+const onSubjectNameUpdated = (name: string) => {
+    subjectName.value = name;
+    isFormError.value = false;
+};
+
+const validateSubjectName = () => {
+    if (!subjectName.value || subjectName.value.trim().length < 3) {
+        return false;
+    }
+    return true;
+};
+
+const validateInstructors = () => {
+    return (
+        shownInstructors.value.length > 0 &&
+        shownInstructors.value.some((instructor) => instructor.is_teacher)
+    );
+};
+
 async function handleSubmit() {
+
+    if (!validateSubjectName()) {
+        isFormError.value = true;
+        return;
+    }
+
+    if (!validateInstructors()) {
+        snackbar.value = true;
+        return;
+    }
 
     const name = subjectName.value.trim();
     const subjectData: SubjectForm = {
@@ -98,17 +138,11 @@ async function handleSubmit() {
 
     const instructorIds = shownInstructors.value.map((instructor) => instructor.uid);
 
-    console.log("Subject data:", subjectData);
-    console.log("Instructor ids:", instructorIds);
 
     try {
-        const createdSubjectId = await createSubjectMutation.mutateAsync(subjectData);
-        subjectId.value = createdSubjectId;
-        console.log("Created subject with id:", createdSubjectId);
-
+        subjectId.value = await createSubjectMutation.mutateAsync(subjectData);
         for (const instructor of instructorIds) {
             await createSubjectInstructorMutation.mutateAsync(instructor);
-            console.log("Added instructor with id:", instructor.uid);
         }
     } catch (error) {
         console.error("Error during subject creation:", error);

@@ -6,6 +6,7 @@
         <v-col cols="8">
             <CreateSubjectHeaderCard
                 :current-user-as-instructor="currentUserAsInstructor"
+                :is-form-error="isFormError"
                 @update:subject-name="$emit('update:subject-name', $event)"
                 @update:active-academic-year="$emit('update:active-academic-year', $event)"
                 @update:current-user-as-instructor="$emit('update:current-user-as-instructor', $event)"
@@ -25,6 +26,7 @@ import CreateSubjectHeaderImage from "@/components/subject/createSubjectView/hea
 defineProps<{
     imagePath: string;
     currentUserAsInstructor: boolean;
+    isFormError: boolean;
 }>();
 
 const emit = defineEmits<{
