@@ -1,5 +1,5 @@
 <template>
-    <v-card variant="text" class="title-card" width="100%" max-height="35vh">
+    <v-card variant="text" class="title-card" width="100%" height="35vh">
         <v-card-title class="title">
             New Subject
         </v-card-title>

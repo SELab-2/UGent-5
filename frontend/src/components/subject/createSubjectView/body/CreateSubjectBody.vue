@@ -1,5 +1,5 @@
 <template>
-    <v-row>
+    <v-row class="body">
         <v-col cols="4">
             <SubjectInstructorsCard
                 :instructors="instructors"
@@ -13,7 +13,6 @@
                 @add-instructor="$emit('add-instructor', $event)"
             ></UserSearchCard>
         </v-col>
-
     </v-row>
 </template>
 
@@ -36,5 +35,9 @@ const emit = defineEmits<{
 </script>
 
 <style scoped>
+
+.body {
+    height: 53vh;
+}
 
 </style>

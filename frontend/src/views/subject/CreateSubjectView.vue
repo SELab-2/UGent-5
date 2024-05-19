@@ -13,8 +13,45 @@
             There needs to be at least one teacher amongst the instructors for the subject.
         </v-snackbar>
 
+        <v-dialog
+            v-model="dialog"
+            max-width="290"
+            persistent
+        >
+            <v-card>
+                <v-card-title class="headline">
+                    Cancel subject creation?
+                </v-card-title>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        color="blue darken-1"
+                        @click="dialog = false"
+                    >
+                        No
+                    </v-btn>
+                    <v-btn
+                        color="blue darken-1"
+                        @click="router.push({name: 'subjects'})"
+                    >
+                        Yes
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
         <v-row>
-            <v-col cols="12">
+            <v-col cols="1">
+                <v-btn
+                    variant="elevated"
+                    class="back-button"
+                    size="large"
+                    @click="dialog = true"
+                >
+                    <v-icon>mdi-arrow-left</v-icon>
+                </v-btn>
+            </v-col>
+            <v-col cols="11">
                 <background-container>
                     <CreateSubjectHeaderContainer
                         :image-path="`https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png`"
@@ -32,14 +69,27 @@
                         @remove-instructor="removeInstructor"
                     >
                     </CreateSubjectBody>
-                    <v-btn
-                        class="submit-button"
-                        @click="handleSubmit"
-                        color="primary"
-                        type="submit"
+
+                    <div
+                        class="confirm-btn-container"
                     >
-                        Create
-                    </v-btn>
+                        <v-btn
+                            class="ma-2"
+                            color="grey"
+                            @click="dialog = true"
+                        >
+                            Cancel
+                        </v-btn>
+                        <v-btn
+                            class="ma-2"
+                            @click="handleSubmit"
+                            color="primary"
+                            type="submit"
+                        >
+                            Confirm
+                        </v-btn>
+                    </div>
+
                 </background-container>
             </v-col>
         </v-row>
@@ -58,8 +108,10 @@ import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import CreateSubjectHeaderContainer
     from "@/components/subject/createSubjectView/header/CreateSubjectHeaderContainer.vue";
 import CreateSubjectBody from "@/components/subject/createSubjectView/body/CreateSubjectBody.vue";
+import {useRouter} from "vue-router";
 
 const snackbar = ref(false);
+const dialog = ref(false);
 const isFormError = ref(false);
 const subjectName = ref("");
 const activeAcademicYear = ref<number>(useAcademicYear());
@@ -70,6 +122,8 @@ const subjectId = ref<number | undefined>(undefined);
 const {data: currentUser, isLoading, isError} = useCurrentUserQuery();
 const createSubjectMutation = useCreateSubjectMutation();
 const createSubjectInstructorMutation = useCreateSubjectInstructorMutation(computed(() => subjectId.value));
+
+const router = useRouter();
 
 const shownInstructors = computed(() => {
     if (currentUserAsInstructor.value) {
@@ -105,10 +159,8 @@ const onSubjectNameUpdated = (name: string) => {
 };
 
 const validateSubjectName = () => {
-    if (!subjectName.value || subjectName.value.trim().length < 3) {
-        return false;
-    }
-    return true;
+    return !(!subjectName.value || subjectName.value.trim().length < 3);
+
 };
 
 const validateInstructors = () => {
@@ -152,5 +204,17 @@ async function handleSubmit() {
 </script>
 
 <style scoped>
+
+.confirm-btn-container {
+    display: flex;
+    position: absolute;
+    right: 5vw;
+    bottom: 4vw;
+    margin-top: 2vh;
+}
+
+.back-button {
+    margin: 30px;
+}
 
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <v-card variant="text" width="100%" class="title-card">
+    <v-card variant="text" width="100%" class="title-card" height="100%">
         <v-card-title class="card-title">
             Subject instructors
         </v-card-title>
