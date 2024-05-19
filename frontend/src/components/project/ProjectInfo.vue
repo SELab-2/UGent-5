@@ -36,7 +36,7 @@
         </v-card>
         <SubmitInfo
             class="submitInfo"
-            v-if="group && !isTeacher"
+            v-if="group"
             :project="project"
             :group="group"
         />

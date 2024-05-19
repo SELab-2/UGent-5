@@ -3,25 +3,22 @@
         <div class="submissionsview">
             <v-alert v-if="isError" title="Error" color="error" :text="error.message"></v-alert>
             <v-skeleton-loader v-else :loading="isLoading || !projectSuccess" type="card">
-                <v-col class="col-sm-12 col-md-6 col-lg-8">
-                    <h1>{{ $t("submission.submissions_title", { project: project.name }) }}</h1>
+                <v-col>
+                    <h2>{{ $t("submission.submissions_title", { project: project.name }) }}</h2>
                     <v-btn :to="`/project/${project?.id}/submit`" variant="flat" class="submitbutton">
                         {{ $t("submit.new_submission") }}
                     </v-btn>
-                    <v-divider />
-                    <div v-if="sorted.length == 0" class="nosubmissions">
+                    <div v-if="mockSubmissions.length == 0" class="nosubmissions">
                         <p>{{ $t("submission.no_submissions") }}</p>
                     </div>
                     <SubmissionCard
                         class="ma-3"
-                        v-for="submission in sorted"
+                        v-for="submission in mockSubmissions"
                         :key="submission"
                         :submission="submission"
                         :project="project!"
+                        :deadline="project.deadline"
                     />
-                </v-col>
-                <v-col cols="2" class="backbutton">
-                    <BackButton class="back" :destination="`/project/${project.id}`" title="project.to_project"/>
                 </v-col>
             </v-skeleton-loader>
         </div>
@@ -34,7 +31,6 @@ import { useSubmissionsQuery } from "@/queries/Submission";
 import { useProjectQuery } from "@/queries/Project";
 import { computed, toRefs } from "vue";
 import SubmissionCard from "@/components/submission/SubmissionCard.vue";
-import BackButton from "@/components/buttons/BackButton.vue"
 
 const props = defineProps<{
     groupId: number;
@@ -47,6 +43,13 @@ const { data: group } = useGroupQuery(groupId);
 const { data: project, isSuccess: projectSuccess } = useProjectQuery(
     computed(() => group.value?.project_id)
 );
+
+const mockSubmissions = [
+    {status: 1, date: new Date(2024, 5, 16), remarks: "wel een opmerking bij indiening",
+    testresults: [{succeeded: true, value: "succeeded"}]},
+    {status: 2, date: new Date(2024, 4, 15), stdout: "test", stderr: "test2",
+    testrestults: [{succeeded: false, value: "not succeeded"}]},
+]
 
 const sorted = computed(() => {
     return submissions.value?.toSorted((a, b) => new Date(b.date) - new Date(a.date));
@@ -74,10 +77,6 @@ refetch_timer();
     margin-top: 25px;
     margin-bottom: 15px;
     background-color: rgb(var(--v-theme-secondary));
-}
-
-.back{
-    margin: 25px;
-    float: left;
+    border-color: rgb(var(--v-theme-text));
 }
 </style>
