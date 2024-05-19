@@ -53,7 +53,6 @@ export async function updateProject(
     projectId: number,
     projectData: Partial<ProjectForm>
 ): Promise<void> {
-    console.log(projectData);
     const response = await authorized_fetch(`/api/projects/${projectId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },

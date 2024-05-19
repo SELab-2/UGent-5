@@ -169,12 +169,10 @@ watch(
     projectData,
     (project) => {
         if (project) {
-            console.log(project);
             project_title.value = project.name;
             deadline.value = new Date(project.deadline);
             publishDate.value = new Date(project.publish_date);
             requirements.value = project.requirements.map((req) => ({ ...req }));
-            console.log(requirements.value);
             const description = project.description;
             selectedSubject.value = project.subject_id;
             nextTick(() => {
@@ -195,7 +193,7 @@ const deadlineModel = computed({
     get: () => deadline.value,
     set: (newValue) => {
         if (newValue.toISOString() !== deadline.value.toISOString()) {
-            deadline.value = new Date(newValue);
+            deadline.value = new Date(newValue);  // Make sure newValue is correctly formatted
         }
     },
 });
@@ -204,18 +202,10 @@ const publishDateModel = computed({
     get: () => publishDate.value,
     set: (newValue) => {
         if (newValue.toISOString() !== publishDate.value.toISOString()) {
-            publishDate.value = new Date(newValue);
+            publishDate.value = new Date(newValue);  // Make sure newValue is correctly formatted
         }
     },
 });
-
-watch(
-    requirements,
-    (newVal) => {
-        console.log("Updated Requirements in Parent:", newVal);
-    },
-    { deep: true }
-);
 
 function updateDeadline(val) {
     deadlineModel.value = val;
@@ -294,7 +284,6 @@ async function submitForm() {
 }
 
 function formatProjectData() {
-    console.log(toRaw(requirements.value));
     return {
         name: project_title.value,
         deadline: deadline.value.toISOString(),
@@ -318,7 +307,6 @@ async function updateProject(projectData) {
 }
 
 async function createProject(projectData) {
-    console.log(projectData);
     const createdProjectId = await createProjectMutation.mutateAsync(projectData);
     projectData.project_id = createdProjectId;
     await handleGroupCreation(createdProjectId);
