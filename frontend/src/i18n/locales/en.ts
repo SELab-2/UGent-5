@@ -61,6 +61,7 @@ export default {
         not_found2: "Project not found",
         to_subject: "To subject",
         to_groups: "To groups",
+        to_project: "To Project"
     },
     navigation: {
         home: "Home",

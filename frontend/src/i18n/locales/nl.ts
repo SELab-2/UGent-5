@@ -61,6 +61,7 @@ export default {
         not_found2: "Project niet teruggevonden",
         to_subject: "Naar vak",
         to_groups: "Naar groepen",
+        to_project: "Naar project"
     },
     navigation: {
         home: "Hoofdscherm",
