@@ -193,7 +193,7 @@ const deadlineModel = computed({
     get: () => deadline.value,
     set: (newValue) => {
         if (newValue.toISOString() !== deadline.value.toISOString()) {
-            deadline.value = new Date(newValue);  // Make sure newValue is correctly formatted
+            deadline.value = new Date(newValue); // Make sure newValue is correctly formatted
         }
     },
 });
@@ -202,7 +202,7 @@ const publishDateModel = computed({
     get: () => publishDate.value,
     set: (newValue) => {
         if (newValue.toISOString() !== publishDate.value.toISOString()) {
-            publishDate.value = new Date(newValue);  // Make sure newValue is correctly formatted
+            publishDate.value = new Date(newValue); // Make sure newValue is correctly formatted
         }
     },
 });

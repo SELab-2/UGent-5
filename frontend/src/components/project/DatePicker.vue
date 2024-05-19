@@ -26,7 +26,7 @@ import { VTimePicker } from "vuetify/labs/VTimePicker";
 
 // Define props and emits
 const props = defineProps<{
-    modelValue: Date;  // This expects a JavaScript Date object
+    modelValue: Date; // This expects a JavaScript Date object
     label: string;
 }>();
 const emit = defineEmits(["update:modelValue"]);
@@ -36,12 +36,16 @@ const date = ref(new Date(props.modelValue || Date.now())); // Initialize with c
 const time = ref(formatTime(props.modelValue || new Date())); // Initialize with current time or modelValue
 
 // Watcher to sync changes in modelValue to date and time pickers
-watch(() => props.modelValue, (newValue, oldValue) => {
-    if (newValue && newValue !== oldValue) {
-        date.value = new Date(newValue); // Update the date picker
-        time.value = formatTime(new Date(newValue)); // Update the time picker
-    }
-}, { immediate: true, deep: true });
+watch(
+    () => props.modelValue,
+    (newValue, oldValue) => {
+        if (newValue && newValue !== oldValue) {
+            date.value = new Date(newValue); // Update the date picker
+            time.value = formatTime(new Date(newValue)); // Update the time picker
+        }
+    },
+    { immediate: true, deep: true }
+);
 
 // Format time into a string
 function formatTime(date: Date): string {
@@ -49,12 +53,16 @@ function formatTime(date: Date): string {
 }
 
 // Watcher to emit updates when date or time changes
-watch([date, time], () => {
-    const [hours, minutes] = time.value.split(":").map(Number);
-    const updatedDate = new Date(date.value);
-    updatedDate.setHours(hours, minutes, 0, 0); // Apply time changes to the date
-    emit("update:modelValue", new Date(updatedDate)); // Emit the updated Date object
-}, { deep: true });
+watch(
+    [date, time],
+    () => {
+        const [hours, minutes] = time.value.split(":").map(Number);
+        const updatedDate = new Date(date.value);
+        updatedDate.setHours(hours, minutes, 0, 0); // Apply time changes to the date
+        emit("update:modelValue", new Date(updatedDate)); // Emit the updated Date object
+    },
+    { deep: true }
+);
 
 // Computed property to display date and time in text field
 const displayDate = computed(() => {
