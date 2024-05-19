@@ -1,9 +1,11 @@
 <template>
     <v-container v-if="smAndDown">
         <h1 v-if="isLoading">Loading...</h1>
-        <h1 v-else class="title">
-            {{ $t("home.welcome", { name: user!.given_name, surname: user!.surname }) }}
-        </h1>
+        <v-card v-else variant="flat">
+            <v-card-title class="title">
+                {{ $t("home.welcome", { name: user!.given_name, surname: user!.surname }) }}
+            </v-card-title>
+        </v-card>
         <div class="mobileCard">
             <DeadlinesCard />
         </div>
@@ -50,8 +52,9 @@ const { smAndDown } = useDisplay();
     color: rgb(var(--v-theme-text));
     margin-bottom: 15px;
     margin-top: 15px;
-    padding: 10px;
+    padding: 20px;
     border-radius: 2px;
+    font-size: 32px;
 }
 
 .mobileCard {
