@@ -5,7 +5,11 @@
             <v-skeleton-loader v-else :loading="isLoading || !projectSuccess" type="card">
                 <v-col>
                     <h2>{{ $t("submission.submissions_title") }}</h2>
-                    <v-btn :to="`/project/${project?.id}/submit`" variant="flat" class="submitbutton">
+                    <v-btn
+                        :to="`/project/${project?.id}/submit`"
+                        variant="flat"
+                        class="submitbutton"
+                    >
                         {{ $t("submit.new_submission") }}
                     </v-btn>
                     <div v-if="sorted.length == 0" class="nosubmissions">
@@ -62,7 +66,6 @@ const refetch_timer = () => {
 refetch_timer();
 </script>
 <style scoped>
-
 .nosubmissions {
     margin-top: 15px;
 }

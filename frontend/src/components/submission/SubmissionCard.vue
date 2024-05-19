@@ -5,7 +5,10 @@
             <v-col>
                 <v-card-title>
                     {{ $t("submission.status") }}
-                    <p v-if="new Date(submission.date) <= deadline" :class="Status[submission.status]">
+                    <p
+                        v-if="new Date(submission.date) <= deadline"
+                        :class="Status[submission.status]"
+                    >
                         {{ Status[submission.status] }}
                     </p>
                     <p v-else class="Deadline">{{ $t("submission.after_deadline") }}</p>
@@ -24,7 +27,9 @@
                         {{ $t("submission.remarks_empty") }}
                     </v-card-subtitle>
                 </v-card-item>
-                <v-card-item v-if="submission.stderr || submission.stdout || submission.testresults.length">
+                <v-card-item
+                    v-if="submission.stderr || submission.stdout || submission.testresults.length"
+                >
                     <v-card-title>{{ $t("submission.docker_test") }}</v-card-title>
                     <v-card-text>
                         <p v-if="submission.stdout">Stdout: {{ submission.stdout }}</p>
@@ -142,6 +147,6 @@ const downloadAll = () => {
     border-color: rgb(var(--v-theme-text));
     background-color: rgb(var(--v-theme-background));
     margin-top: 10px;
-    margin-bottom: 10px
+    margin-bottom: 10px;
 }
 </style>

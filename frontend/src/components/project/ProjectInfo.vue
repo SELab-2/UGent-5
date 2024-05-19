@@ -34,12 +34,7 @@
                 </v-btn>
             </v-card-actions>
         </v-card>
-        <SubmitInfo
-            class="submitInfo"
-            v-if="group"
-            :project="project"
-            :group="group"
-        />
+        <SubmitInfo class="submitInfo" v-if="group" :project="project" :group="group" />
     </v-container>
 </template>
 

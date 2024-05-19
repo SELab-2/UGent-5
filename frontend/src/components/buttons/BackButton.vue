@@ -12,13 +12,11 @@ const props = defineProps<{
     title: String;
 }>();
 
-const destination = props.destination
-const title = props.title
-
+const destination = props.destination;
+const title = props.title;
 </script>
 
 <style scoped>
-
 .v-btn {
     margin-bottom: 5px;
     min-width: 150px;

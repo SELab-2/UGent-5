@@ -24,8 +24,12 @@
                                         color="red"
                                         variant="flat"
                                         @click="
-                                        () => removeStudent({ groupId: group!.id, uid: member.uid })
-                                    "
+                                            () =>
+                                                removeStudent({
+                                                    groupId: group!.id,
+                                                    uid: member.uid,
+                                                })
+                                        "
                                     >
                                         {{ $t("group.remove") }}</v-btn
                                     >
@@ -51,7 +55,10 @@
                 </v-card>
             </v-col>
             <v-col cols="2" class="backbutton">
-                <BackButton title="project.to_project" :destination="`/project/${group.project_id}`"/>
+                <BackButton
+                    title="project.to_project"
+                    :destination="`/project/${group.project_id}`"
+                />
             </v-col>
         </v-row>
     </v-container>
@@ -64,7 +71,7 @@ import { useProjectQuery } from "@/queries/Project";
 import { useCurrentUserQuery } from "@/queries/User";
 import GroupButtons from "@/components/buttons/GroupButtons.vue";
 import SubmissionList from "@/components/submission/SubmissionList.vue";
-import BackButton from "@/components/buttons/BackButton.vue"
+import BackButton from "@/components/buttons/BackButton.vue";
 import { useSubjectInstructorsQuery } from "@/queries/Subject";
 
 const props = defineProps<{
