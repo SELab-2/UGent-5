@@ -12,6 +12,7 @@ import useCanVisit, {
     useIsPartOfSubjectCondition,
     useAndCondition,
     useOrCondition,
+    useIsInGroupOfProjectCondition,
 } from "./middleware/canVisit";
 import { ref } from "vue";
 
@@ -78,10 +79,7 @@ const router = createRouter({
             component: () => import("../views/SubmitView.vue"),
             props: (route) => ({ projectId: Number(route.params.projectId) }),
             meta: {
-                middleware: useCanVisit((queryClient) => {
-                    // TODO: implement -> check if user is enlroled in subject and in a group for project
-                    return { condition: ref(true), isLoading: ref(false) };
-                }),
+                middleware: useCanVisit(useIsInGroupOfProjectCondition),
             },
         },
         {

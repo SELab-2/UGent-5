@@ -5,6 +5,7 @@ import useIsAdmin from "@/composables/useIsAdmin";
 import useIsTeacher from "@/composables/useIsTeacher";
 import { useSubjectsQuery } from "@/queries/Subject";
 import { useProjectsQuery } from "@/queries/Project";
+import { useProjectGroupQuery } from "@/queries/Group";
 
 export interface CanVisitCondition {
     (
@@ -116,6 +117,15 @@ export const useIsInstructorOfProjectCondition: CanVisitCondition = (qc, ctx) =>
         return (
             projects.value?.as_instructor.findIndex((project) => project.id === projectId) !== -1
         );
+    });
+    return { condition, isLoading };
+};
+
+export const useIsInGroupOfProjectCondition: CanVisitCondition = (qc, ctx) => {
+    const projectId = Number(ctx.to.params.projectId);
+    const { data: group, isLoading } = useProjectGroupQuery(projectId, qc);
+    const condition = computed(() => {
+        return group.value !== null;
     });
     return { condition, isLoading };
 };
