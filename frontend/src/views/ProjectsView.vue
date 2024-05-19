@@ -5,12 +5,12 @@
             {{ $t("project.not_found") }}
         </h1>
         <div v-else class="projectInfo">
-            <div class="rowheader">
+            <v-card class="title-card" variant="flat" color="primary">
                 <v-card-title class="title">{{ $t("project.myProject") }}</v-card-title>
                 <v-btn-toggle v-model="activeButton" class="button">
                     <v-btn value="finished">{{ $t("project.finished") }}</v-btn>
                 </v-btn-toggle>
-            </div>
+            </v-card>
             <v-divider class="divider" />
             <ProjectMiniCard
                 v-for="project in filteredProjects"
@@ -64,25 +64,35 @@ const filteredProjects = computed(() => {
     margin: 25px;
 }
 
-.rowheader {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
+.title-card{
+    padding: 30px;
+    color: white;
+}
+.title-card:after {
+    content:'';
+    background: url('@/assets/ugent_background.png') no-repeat center center;
+    position: absolute;
+    top:0;
+    left: 0;
+    width:100%;
+    height:100%;
+    z-index:-1;
+    opacity: 0.4;
+}
+
+.title {
+    font-size: 32px;
+    margin-bottom: 12px;
 }
 
 .button {
     height: 30px;
     margin-top: 10px;
-    margin-left: 75px;
-    border: 1px solid rgb(var(--v-theme-text));
-}
-
-.title {
-    font-size: 32px;
+    margin-left: 30px;
 }
 
 .projects {
-    margin: 30px;
+    margin: 40px;
 }
 
 .divider {
