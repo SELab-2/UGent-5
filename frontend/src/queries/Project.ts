@@ -104,7 +104,8 @@ export function useUpdateProjectMutation(): UseMutationReturnType<
             mutationFn: ({ projectId, projectData }) => updateProject(projectId, projectData),
 
             onSuccess: (_, variables) => {
-                queryClient.invalidateQueries(PROJECT_QUERY_KEY(projectId));
+                console.log(variables.projectId);
+                queryClient.invalidateQueries(PROJECT_QUERY_KEY(variables.projectId));
                 console.log("Project updated successfully.");
             },
 

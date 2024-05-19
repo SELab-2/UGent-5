@@ -38,13 +38,16 @@ watch(
     () => props.modelValue,
     (newValue) => {
         if (newValue) {
-            date.value = new Date(newValue);
+            if (new Date(newValue).getTime() !== date.value.getTime()) {
+                date.value = new Date(newValue);
+            }
         }
     },
     { immediate: true }
 );
 function formatTime(date: Date): string {
-    return `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
+    const formattedTime = `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
+    return formattedTime;
 }
 
 watch(
@@ -53,7 +56,11 @@ watch(
         const [hours, minutes] = time.value.split(":").map(Number);
         const updatedDate = new Date(date.value);
         updatedDate.setHours(hours, minutes, 0, 0);
-        emit("update:modelValue", new Date(updatedDate));
+        if (hours === 0 && minutes === 0) {
+            emit("update:modelValue", new Date(updatedDate));
+        } else {
+            emit("update:modelValue", new Date(updatedDate));
+        }
     },
     { deep: true }
 );

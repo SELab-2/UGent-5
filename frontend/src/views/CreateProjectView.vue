@@ -78,7 +78,10 @@
                 <FilesInput v-model="files" />
             </v-col>
             <v-col cols="12">
-                <RequirementsInput v-model="requirements" />
+                <RequirementsInput
+                    :model-value="requirements"
+                    @update:modelValue="requirements = $event"
+                />
             </v-col>
         </v-row>
         <v-row>
@@ -166,10 +169,12 @@ watch(
     projectData,
     (project) => {
         if (project) {
+            console.log(project);
             project_title.value = project.name;
             deadline.value = new Date(project.deadline);
             publishDate.value = new Date(project.publish_date);
             requirements.value = project.requirements.map((req) => ({ ...req }));
+            console.log(requirements.value);
             const description = project.description;
             selectedSubject.value = project.subject_id;
             nextTick(() => {
@@ -203,6 +208,14 @@ const publishDateModel = computed({
         }
     },
 });
+
+watch(
+    requirements,
+    (newVal) => {
+        console.log("Updated Requirements in Parent:", newVal);
+    },
+    { deep: true }
+);
 
 function updateDeadline(val) {
     deadlineModel.value = val;
@@ -281,6 +294,7 @@ async function submitForm() {
 }
 
 function formatProjectData() {
+    console.log(toRaw(requirements.value));
     return {
         name: project_title.value,
         deadline: deadline.value.toISOString(),
@@ -304,6 +318,7 @@ async function updateProject(projectData) {
 }
 
 async function createProject(projectData) {
+    console.log(projectData);
     const createdProjectId = await createProjectMutation.mutateAsync(projectData);
     projectData.project_id = createdProjectId;
     await handleGroupCreation(createdProjectId);
