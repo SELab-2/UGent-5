@@ -13,23 +13,31 @@
             @keydown.enter="onSearchIconClicked"
         ></v-text-field>
 
-    <div v-show="searchLoaded">
+    <div v-show="searchLoaded" class="scrollable-list">
         <p v-if="shownUsers.length === 0">No results found</p>
         <v-list v-else>
             <v-list-item
                 v-for="(user, index) in shownUsers"
                 :key="index"
             >
-                <v-list-item-title>
-                    {{ user.given_name }} {{ user.surname }}
-                </v-list-item-title>
-                <v-btn
-                    @click="$emit('add-instructor', user)"
-                    color="primary"
-                    :disabled="userIsInstructor(user)"
-                >
-                    {{ $t('default.add') }}
-                </v-btn>
+                <v-row>
+                    <v-col>
+                        <v-list-item-title>
+                            {{ user.given_name }} {{ user.surname }}
+                        </v-list-item-title>
+                    </v-col>
+                    <v-col>
+                        <v-btn
+                            @click="$emit('add-instructor', user)"
+                            color="primary"
+                            :disabled="userIsInstructor(user)"
+                        >
+                            {{ $t('default.add') }}
+                        </v-btn>
+                    </v-col>
+                </v-row>
+
+
             </v-list-item>
         </v-list>
     </div>
@@ -85,17 +93,24 @@ const onSearchIconClicked = () => {
     }, 1000);
 };
 
-const onAddInstructorButtonClicked = (user: User) => {
-    emit("add-instructor", user);
-};
-
 const userIsInstructor = (user: User) => {
     return instructors.value.some((instructor: User) => instructor?.uid === user?.uid);
 };
 
-
 </script>
 
 <style scoped>
+
+.scrollable-list {
+    overflow-y: auto;
+    max-height: 30vh;
+    scrollbar-width: none;
+}
+
+.scrollable-list::-webkit-scrollbar {
+    width: 0; /* For Chrome, Safari, and Opera */
+}
+
+
 
 </style>

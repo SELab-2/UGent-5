@@ -208,7 +208,7 @@ async function handleSubmit() {
 .confirm-btn-container {
     display: flex;
     position: absolute;
-    right: 5vw;
+    right: 4vw;
     bottom: 4vw;
     margin-top: 2vh;
 }
