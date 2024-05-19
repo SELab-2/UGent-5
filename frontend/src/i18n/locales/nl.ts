@@ -148,8 +148,8 @@ export default {
         assign_self: "Wijs mezelf toe als lesgever",
         field_required: "Dit veld is verplicht",
         field_length: "Titel moet minstens 3 tekens lang zijn",
-        subject_instructors: "Vakverantwoordelijken",
-        search_for_instructors: "Zoek naar vakverantwoordelijken",
+        subject_instructors: "Vak verantwoordelijken",
+        search_for_instructors: "Zoek naar vak verantwoordelijken",
     },
 
     group: {

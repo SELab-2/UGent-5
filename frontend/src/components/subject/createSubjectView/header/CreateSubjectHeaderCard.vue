@@ -29,7 +29,7 @@
                         :items="academicYearItems"
                         :item-title="item => `20${item}-20${item + 1}`"
                         :item-value="item => item"
-                        label="Academic Year"
+                        :label="$t('subject.academy_year')"
                         required
                         class="form-elem-academic"
                     ></v-select>

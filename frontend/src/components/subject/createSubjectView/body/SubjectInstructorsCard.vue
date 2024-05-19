@@ -52,6 +52,9 @@ const emit = defineEmits<{
     line-height: 1.2;
     font-weight: 500;
     color: black;
+    word-wrap: break-word;
+    white-space: normal;
+    overflow: hidden;
 }
 
 
