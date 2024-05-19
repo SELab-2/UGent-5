@@ -43,16 +43,16 @@ const enrollDate = ref(props.initialDate || new Date());
 const capacity = ref(props.initialCapacity);
 
 const emit = defineEmits(["update:date", "update:capacity", "update:selectedOption"]);
-
-function handleDateChange(value) {
+//
+function handleDateChange(value: Date) {
     emit("update:date", value);
 }
 
-function handleCapacityChange(value) {
+function handleCapacityChange(value: Number) {
     emit("update:capacity", value);
 }
 
-function handleOptionChange(value) {
+function handleOptionChange(value: string) {
     emit("update:selectedOption", value);
 }
 </script>

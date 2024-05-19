@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from "vue";
+import { ref, defineProps, defineEmits, watch, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
@@ -65,6 +65,14 @@ const addRequirement = () => {
     newRequirement.value = ""; // Clear the input field after adding
 };
 
+watchEffect(() => {
+    console.log("Current props value:", props.modelValue);
+    internalRequirements.value = [...props.modelValue];
+});
+
+const updateRequirements = () => {
+    emit("update:modelValue", [...internalRequirements.value]);
+};
 const validateRequirement = (value) => {
     if (!value) {
         return t("project.required"); // Check if the input is empty
