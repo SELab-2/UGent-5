@@ -48,9 +48,12 @@ export default {
         files: "Files",
         download_info: "Click on filename to download",
         after_deadline: "After deadline",
-        submissions_title: "Submissions for project {project}",
+        submissions_title: "Submissions:",
         no_submissions: "No submissions yet",
+        teacher_submissions_info:
+            "This page contains a list of the latest submission of each group for this project.",
         docker_test: "Tests Output",
+        download_all_files: "Download all files",
     },
     project: {
         deadline: "Deadline",
@@ -63,6 +66,7 @@ export default {
         capacity_group: "Capacity: ",
         edit: "Edit project",
         submissions_list: "All submissions",
+        submissions_list_teacher: "All submissions for this project",
         not_found: "No projects found.",
         finished: "Finished",
         not_found2: "Project not found",
@@ -97,6 +101,9 @@ export default {
     },
     subject: {
         register: "Register to subject:",
+        yes: "Yes",
+        no: "No",
+        registered: "You are already registered to this course",
         academy_year: "Academic year",
         projects: "Projects",
         announcements: "Announcements",

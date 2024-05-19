@@ -48,9 +48,12 @@ export default {
         files: "Bestanden",
         download_info: "Klik op bestandsnaam om te downloaden",
         after_deadline: "Na deadline",
-        submissions_title: "Indieningen voor project {project}",
+        submissions_title: "Indieningen:",
         no_submissions: "Nog geen indieningen",
+        teacher_submissions_info:
+            "Deze pagina bevat een lijst van de laatste indiening van elke groep voor dit project.",
         docker_test: "Testen Output",
+        download_all_files: "Download alle bestanden",
     },
     project: {
         deadline: "Deadline",
@@ -63,6 +66,7 @@ export default {
         capacity_group: "Capaciteit: ",
         edit: "Bewerk project",
         submissions_list: "Alle indieningen",
+        submissions_list_teacher: "Alle indieningen voor dit project",
         not_found: "Geen projecten teruggevonden.",
         finished: "Afgerond",
         not_found2: "Project niet teruggevonden",
@@ -96,7 +100,10 @@ export default {
         },
     },
     subject: {
-        register: "Registreer bij vak:",
+        register: "Inschrijven voor vak:",
+        yes: "Ja",
+        no: "Nee",
+        registered: "Je bent al ingeschreven voor dit vak",
         academy_year: "Academiejaar",
         projects: "Projecten",
         announcements: "Meldingen",

@@ -77,10 +77,11 @@ async def list_groups(groups: GroupList = Depends(retrieve_groups_by_project)):
 
 
 @router.get("/{project_id}/submissions", dependencies=[Depends(patch_permission_validation)])
-async def list_submissions(group_id: int,
+async def list_submissions(project_id: int,
                            db: AsyncSession = Depends(get_async_db)
                            ) -> Sequence[Submission]:
-    return await get_submissions_by_project(db, group_id)
+    """Return a list of the latest submission of each group of this project"""
+    return await get_submissions_by_project(db, project_id)
 
 
 @router.get("/{project_id}/test_files")

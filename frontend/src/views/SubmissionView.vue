@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <v-alert v-if="isError" title="Error" color="error" :text="error.message"></v-alert>
-        <v-skeleton-loader v-else :loading="isLoading" type="card" color="white">
+        <v-skeleton-loader v-else :loading="isLoading" type="card">
             <SubmissionCard :submission="submission" />
         </v-skeleton-loader>
     </v-container>
