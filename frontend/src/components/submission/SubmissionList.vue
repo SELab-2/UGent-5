@@ -8,12 +8,13 @@
                     <v-btn :to="`/project/${project?.id}/submit`" variant="flat" class="submitbutton">
                         {{ $t("submit.new_submission") }}
                     </v-btn>
-                    <div v-if="mockSubmissions.length == 0" class="nosubmissions">
+                    <div v-if="sorted.length == 0" class="nosubmissions">
+                        <v-divider class="divider"></v-divider>
                         <p>{{ $t("submission.no_submissions") }}</p>
                     </div>
                     <SubmissionCard
                         class="ma-3"
-                        v-for="submission in mockSubmissions"
+                        v-for="submission in sorted"
                         :key="submission"
                         :submission="submission"
                         :project="project!"
@@ -44,13 +45,6 @@ const { data: project, isSuccess: projectSuccess } = useProjectQuery(
     computed(() => group.value?.project_id)
 );
 
-const mockSubmissions = [
-    {status: 1, date: new Date(2024, 5, 16), remarks: "wel een opmerking bij indiening",
-    testresults: [{succeeded: true, value: "succeeded"}]},
-    {status: 2, date: new Date(2024, 4, 15), stdout: "test", stderr: "test2",
-    testrestults: [{succeeded: false, value: "not succeeded"}]},
-]
-
 const sorted = computed(() => {
     return submissions.value?.toSorted((a, b) => new Date(b.date) - new Date(a.date));
 });
@@ -78,5 +72,9 @@ refetch_timer();
     margin-bottom: 15px;
     background-color: rgb(var(--v-theme-secondary));
     border-color: rgb(var(--v-theme-text));
+}
+
+.divider {
+    margin-bottom: 15px;
 }
 </style>
