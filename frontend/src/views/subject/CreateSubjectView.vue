@@ -196,10 +196,11 @@ async function handleSubmit() {
         for (const instructor of instructorIds) {
             await createSubjectInstructorMutation.mutateAsync(instructor);
         }
+
+        await router.push({name: 'subject', params: {subjectId: subjectId.value}});
     } catch (error) {
         console.error("Error during subject creation:", error);
     }
-
 }
 </script>
 
