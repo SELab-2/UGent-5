@@ -16,7 +16,6 @@ project = {
     "deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
     "description": "test",
     "enroll_deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
-    "is_visible": True,
     "capacity": 1,
     "requirements": [{"mandatory": "false", "value": "*.pdf"}],
     "publish_date": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
