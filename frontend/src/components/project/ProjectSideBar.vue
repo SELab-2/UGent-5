@@ -6,7 +6,7 @@
     </router-link>
     <router-link v-if="group && !isSoloProject && !isTeacher" :to="`/groups/${group!.id}`">
         <v-btn class="group-button" prepend-icon="mdi-account-group">
-            {{ $t("project.group", { number: group!.id }) }}
+            {{ $t("project.group", { number: group!.num }) }}
         </v-btn>
     </router-link>
     <router-link v-else-if="!isSoloProject && !isTeacher" :to="`/project/${project!.id}/groups`">

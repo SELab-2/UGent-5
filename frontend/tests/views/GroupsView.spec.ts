@@ -8,7 +8,7 @@ const mockProject = {
 }
 
 const mockGroups = [
-    {id: 1, team_name: "Group 1"}
+    {id: 1}
 ]
 
 const mockUser = {

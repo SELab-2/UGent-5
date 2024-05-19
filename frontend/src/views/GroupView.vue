@@ -5,7 +5,7 @@
             {{ $t("group.not_found") }}
         </h1>
         <div v-else>
-            <h1>{{ group!.team_name }}</h1>
+            <h1>{{ $t("project.group", { number: group!.num }) }}</h1>
             <h2>{{ "Project: " + project!.name }}</h2>
             <v-card>
                 <v-card-item :title="$t('group.members')">

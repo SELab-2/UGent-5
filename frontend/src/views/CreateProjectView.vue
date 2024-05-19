@@ -163,7 +163,6 @@ async function submitForm() {
             const emptyGroup: GroupForm = {
                 project_id: createdProjectId,
                 score: 0,
-                team_name: "Group 1",
             };
             await createGroupsMutation.mutateAsync({
                 projectId: createdProjectId,
@@ -171,10 +170,9 @@ async function submitForm() {
             });
         } else if (selectedGroupProject.value === "random") {
             const groups = divideStudentsIntoGroups(studentsData.value || [], capacity.value);
-            const groupsToCreate = groups.map((_, i) => ({
+            const groupsToCreate = groups.map((_) => ({
                 project_id: createdProjectId,
                 score: 0,
-                team_name: "Group " + (i + 1),
             }));
             const createdGroups = await createGroupsMutation.mutateAsync({
                 projectId: createdProjectId,

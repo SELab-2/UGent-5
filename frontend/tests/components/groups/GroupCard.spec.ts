@@ -17,8 +17,7 @@ vi.mock("@/components/buttons/GroupButtons.vue", () => ({
 const mockGroup = {
     members: [
         {uid: "student1"}
-    ],
-    team_name: "testgroep"
+    ]
 }
 
 const mockProject = {

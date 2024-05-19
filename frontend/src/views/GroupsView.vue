@@ -98,7 +98,11 @@ const isTeacher = computed(() => {
     if (!user.value || !instructors.value) {
         return false;
     }
-    return instructors.value.some((instructor) => instructor.uid === user.value.uid);
+    return (
+        user.value.is_teacher ||
+        user.value.is_admin ||
+        instructors.value.some((instructor) => instructor.uid === user.value.uid)
+    );
 });
 
 const { mutateAsync: createGroupMutate } = useCreateGroupsMutation();
@@ -107,7 +111,6 @@ async function createGroup() {
     const groupForm: GroupForm = {
         project_id: project.value!.id,
         score: 0,
-        team_name: "Group " + groups.value!.length, // Set the default team name or prompt the user for input
     };
 
     try {
