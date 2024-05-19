@@ -1,7 +1,7 @@
 <template>
     <v-row>
         <v-col cols="4">
-            <SubjectsHeaderImage :imagePath="imagePath"></SubjectsHeaderImage>
+            <CreateSubjectHeaderImage :imagePath="imagePath"></CreateSubjectHeaderImage>
         </v-col>
         <v-col cols="8">
             <CreateSubjectHeaderCard>
@@ -15,8 +15,8 @@
 
 <script setup lang="ts">
 
-import SubjectsHeaderImage from "@/components/subject/extra/SubjectsHeaderImage.vue";
-import CreateSubjectHeaderCard from "@/components/subject/createSubjectView/CreateSubjectHeaderCard.vue";
+import CreateSubjectHeaderCard from "@/components/subject/createSubjectView/header/CreateSubjectHeaderCard.vue";
+import CreateSubjectHeaderImage from "@/components/subject/createSubjectView/header/CreateSubjectHeaderImage.vue";
 
 defineProps<{
     imagePath: string;

@@ -1,43 +1,39 @@
 <template>
-    <v-card title="Instructors" flat>
-        <v-card-text>
-            <v-text-field
-                :loading="searchLoading"
-                v-model="search"
-                label="Search"
-                placeholder="Search for instructors"
-                prepend-inner-icon="mdi-magnify"
-                clearable
-                single-line
-                hide-details
-                @click:prepend-inner="onSearchIconClicked"
-                @keydown.enter="onSearchIconClicked"
-            ></v-text-field>
-        </v-card-text>
+        <v-text-field
+            :loading="searchLoading"
+            v-model="search"
+            label="Search"
+            placeholder="Search for instructors"
+            prepend-inner-icon="mdi-magnify"
+            clearable
+            single-line
+            hide-details
+            variant="outlined"
+            @click:prepend-inner="onSearchIconClicked"
+            @keydown.enter="onSearchIconClicked"
+        ></v-text-field>
 
-        <div v-show="searchLoaded">
-            <p v-if="shownUsers.length === 0">No results found</p>
-            <v-list v-else>
-                <v-list-item
-                    v-for="(user, index) in shownUsers"
-                    :key="index"
+    <div v-show="searchLoaded">
+        <p v-if="shownUsers.length === 0">No results found</p>
+        <v-list v-else>
+            <v-list-item
+                v-for="(user, index) in shownUsers"
+                :key="index"
+            >
+                <v-list-item-title>
+                    {{ user.given_name }} {{ user.surname }}
+                </v-list-item-title>
+                <v-btn
+                    @click="onAddInstructorButtonClicked(user)"
+                    color="primary"
+                    :disabled="userIsInstructor(user)"
                 >
-                    <v-list-item-title>
-                        {{ user.given_name }} {{ user.surname }}
-                    </v-list-item-title>
-                    <v-btn
-                        @click="onAddInstructorButtonClicked(user)"
-                        color="primary"
-                        :disabled="userIsInstructor(user)"
-                    >
-                        Add
-                    </v-btn>
-                </v-list-item>
-            </v-list>
-        </div>
+                    Add
+                </v-btn>
+            </v-list-item>
+        </v-list>
+    </div>
 
-
-    </v-card>
 </template>
 
 <script setup lang="ts">

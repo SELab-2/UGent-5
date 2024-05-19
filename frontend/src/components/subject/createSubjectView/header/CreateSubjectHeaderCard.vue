@@ -39,6 +39,7 @@
                         <v-checkbox
                             label="Assign myself as instructor"
                             v-model="currentUserAsInstructor"
+                            color="primary"
                         ></v-checkbox>
                     </v-col>
                 </v-row>
