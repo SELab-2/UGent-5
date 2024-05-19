@@ -72,7 +72,8 @@ const developers: Developer[] = [
 .info {
     padding: 30px;
     margin-left: 25px;
-    margin-top: 25px;
+    margin-top: 10px;
+    margin-right: 25px;
 }
 
 .link {

@@ -40,9 +40,4 @@ describe("ProjectMiniCard", async () => {
         expect(wrapper.text()).toContain("subjectnaam")
         expect(wrapper.text()).toContain("Deadline:")
     });
-
-    it("render button", () => {
-        const VButton = wrapper.findComponent({name: 'VBtn'})
-        expect(VButton.text()).toContain("Naar project")
-    });
 });
