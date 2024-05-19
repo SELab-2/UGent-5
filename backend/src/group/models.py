@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Table
+from sqlalchemy import Column, ForeignKey, Table, ForeignKeyConstraint, Integer, event, select, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.database import Base
 from typing import List
@@ -17,9 +17,16 @@ class Group(Base):
     __tablename__ = "team"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    team_name: Mapped[str] = mapped_column(nullable=False)
+    num: Mapped[int] = mapped_column(nullable=False)
     score: Mapped[int] = mapped_column(nullable=False)
     project_id: Mapped[int] = mapped_column(
         ForeignKey("project.id", ondelete="CASCADE"), nullable=False
     )
     members: Mapped[List["User"]] = relationship(secondary=StudentGroup, lazy="joined")
+
+
+@event.listens_for(Group, "before_insert")
+def set_id(_, connect, target: Group):
+    query = select(func.max(Group.num)).where(Group.project_id == target.project_id)
+    max_id = connect.execute(query).scalar()
+    target.num = (max_id or 0) + 1

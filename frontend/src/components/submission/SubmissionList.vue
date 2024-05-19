@@ -3,7 +3,7 @@
         <v-alert v-if="isError" title="Error" color="error" :text="error.message"></v-alert>
         <v-skeleton-loader v-else :loading="isLoading || !projectSuccess" type="card">
             <v-col class="mx-auto">
-                <h1>{{ $t("submission.submissions_title", { project: project.name }) }}</h1>
+                <h2>{{ $t("submission.submissions_title") }}</h2>
                 <div v-if="sorted.length == 0">
                     <p>{{ $t("submission.no_submissions") }}</p>
                     <v-btn :to="`/project/${project?.id}/submit`">

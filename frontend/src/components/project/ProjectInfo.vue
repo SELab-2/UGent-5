@@ -29,7 +29,7 @@
                 <div v-html="renderQuillContent(project.description)"></div>
             </v-card-item>
             <v-card-actions>
-                <v-btn color="blue" v-if="isTeacher" :to="`/project/${project.id}/submissions`">
+                <v-btn v-if="isTeacher" :to="`/project/${project.id}/submissions`">
                     {{ $t("project.submissions_list_teacher") }}
                 </v-btn>
             </v-card-actions>
