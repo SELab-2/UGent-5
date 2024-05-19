@@ -64,19 +64,19 @@ const filteredProjects = computed(() => {
     margin: 25px;
 }
 
-.title-card{
+.title-card {
     padding: 30px;
     color: white;
 }
 .title-card:after {
-    content:'';
-    background: url('@/assets/ugent_background.png') no-repeat center center;
+    content: "";
+    background: url("@/assets/ugent_background.png") no-repeat center center;
     position: absolute;
-    top:0;
+    top: 0;
     left: 0;
-    width:100%;
-    height:100%;
-    z-index:-1;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
     opacity: 0.4;
 }
 

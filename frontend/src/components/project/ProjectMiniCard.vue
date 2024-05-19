@@ -34,7 +34,7 @@ const { data: subject, isLoading: isSubjectLoading } = useSubjectQuery(
 );
 
 const toProject = async () => {
-    await router.push({ name: "project", params: { projectId: project.value.id }});
+    await router.push({ name: "project", params: { projectId: project.value.id } });
 };
 </script>
 
@@ -43,6 +43,5 @@ const toProject = async () => {
 .v-skeleton-loader {
     width: 100%;
     background-color: rgb(var(--v-theme-secondary));
-;
 }
 </style>

@@ -86,22 +86,21 @@ watch(activeSubjectFilter, (newVal: SubjectFilter | undefined) => {
 </script>
 
 <style scoped>
-
-.title-card{
+.title-card {
     position: relative;
     display: flex;
     padding: 20px;
     color: white;
 }
 .title-card:after {
-    content:'';
-    background: url('@/assets/ugent_background.png') no-repeat center center;
+    content: "";
+    background: url("@/assets/ugent_background.png") no-repeat center center;
     position: absolute;
-    top:0;
+    top: 0;
     left: 0;
-    width:100%;
-    height:100%;
-    z-index:-1;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
     opacity: 0.4;
 }
 
@@ -117,7 +116,6 @@ watch(activeSubjectFilter, (newVal: SubjectFilter | undefined) => {
 .subject-checkbox {
     margin-top: -15px;
 }
-
 
 .chip {
     color: rgb(var(--v-theme-text));

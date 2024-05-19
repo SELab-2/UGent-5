@@ -99,5 +99,4 @@ const developers: Developer[] = [
 .title {
     font-size: 32px;
 }
-
 </style>
