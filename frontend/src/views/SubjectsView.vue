@@ -2,44 +2,42 @@
     <div v-if="isError" class="v-container">
         <p>Error: {{ error }}</p>
     </div>
-
     <v-skeleton-loader v-else type="card" :loading="isLoading">
-        <v-row>
+        <v-row class="subjectsview">
             <v-col :cols="isAdmin || isTeacher ? 10 : 12">
-                <BackgroundContainer>
-                    <v-row>
-                        <v-col>
-                            <SubjectsHeaderContainer
-                                :academic-years="academicYears"
-                                :subjects="subjectsByAcademicYear"
-                                @academic-year-changed="onAcademicYearChanged"
-                                @subjects-filter-changed="onSubjectsFilterChanged"
-                            ></SubjectsHeaderContainer>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <div v-if="filteredSubjectsByAcademicYear.length === 0" class="no-results">
-                            <h1>{{ $t("subjects.no_subjects") }}</h1>
-                        </div>
-                        <v-col
-                            v-else
-                            v-for="(subject, index) in filteredSubjectsByAcademicYear"
-                            :key="index"
-                            cols="6"
-                        >
-                            <SubjectCard
-                                :subject="subject.subjectData"
-                                :role="subject.role"
-                                class="subject-card"
-                            ></SubjectCard>
-                        </v-col>
-                    </v-row>
-                </BackgroundContainer>
+                <v-row>
+                    <v-col>
+                        <SubjectsHeaderContainer
+                            :academic-years="academicYears"
+                            :subjects="subjectsByAcademicYear"
+                            @academic-year-changed="onAcademicYearChanged"
+                            @subjects-filter-changed="onSubjectsFilterChanged"
+                            class="headercontainer"
+                        ></SubjectsHeaderContainer>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <div v-if="filteredSubjectsByAcademicYear.length === 0" class="no-results">
+                        <h1>{{ $t("subjects.no_subjects") }}</h1>
+                    </div>
+                    <v-col
+                        v-else
+                        v-for="(subject, index) in filteredSubjectsByAcademicYear"
+                        :key="index"
+                        cols="6"
+                    >
+                        <SubjectCard
+                            :subject="subject.subjectData"
+                            :role="subject.role"
+                            class="subject-card"
+                        ></SubjectCard>
+                    </v-col>
+                </v-row>
             </v-col>
             <v-col v-if="isAdmin || isTeacher" cols="2">
                 <div class="action-btn-container">
                     <router-link to="">
-                        <v-btn prepend-icon="mdi-plus-circle">
+                        <v-btn prepend-icon="mdi-plus-circle" class="button">
                             {{ $t("subjects.create_subject") }}
                         </v-btn>
                     </router-link>
@@ -136,5 +134,19 @@ const onAcademicYearChanged = (academicYear: number) => {
 
 .no-results {
     text-align: center;
+}
+
+.subjectsview {
+    padding: 50px;
+}
+
+.headercontainer {
+    border-color: rgb(var(--v-theme-text));
+    border-radius: 3px;
+}
+
+.button {
+    background-color: rgb(var(--v-theme-primary));
+    color: white;
 }
 </style>
