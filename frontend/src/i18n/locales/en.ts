@@ -2,6 +2,7 @@ export default {
     default: {
         error: {
             "not-found": "Page not found",
+            "something-went-wrong": "Something went wrong",
         },
         loading: {
             loading_page: "Loading...",
@@ -41,7 +42,7 @@ export default {
         files: "Files",
         download_info: "Click on filename to download",
         after_deadline: "After deadline",
-        submissions_title: "Submissions for project {project}",
+        submissions_title: "Submissions:",
         no_submissions: "No submissions yet",
         teacher_submissions_info:
             "This page contains a list of the latest submission of each group for this project.",
@@ -107,6 +108,9 @@ export default {
     },
     subject: {
         register: "Register to subject:",
+        yes: "Yes",
+        no: "No",
+        registered: "You are already registered to this course",
         academy_year: "Academic year",
         projects: "Projects",
         announcements: "Announcements",
@@ -115,15 +119,29 @@ export default {
             all: "All",
             active: "Active",
             completed: "Completed",
+            no_projects: "No projects found.",
+            show_assignment: "Show more",
+            hide_assignment: "Hide less",
         },
         project: {
             assignment: "Assignment",
             group: "Group",
             submissions: "Submissions",
         },
+        create_project: "Create project",
+        register_link_button: {
+            title: "Register link",
+            snackbar: "Register link copied to clipboard.",
+            tooltip:
+                "Copy register link for this subject, this can be shared with students to register for the subject.",
+        },
     },
     subjects: {
         title: "My Subjects",
+        create_subject: "Create subject",
+        instructor_subjects: "Show instructor subjects",
+        student_subjects: "Show student subjects",
+        no_subjects: "No subjects found.",
     },
     group: {
         not_found: "Group not found",
