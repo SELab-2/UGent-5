@@ -38,7 +38,7 @@
                     <v-col>
                         <v-checkbox
                             label="Assign myself as instructor"
-                            v-model="currentUserAsInstructor"
+                            v-model="checkbox"
                             color="primary"
                         ></v-checkbox>
                     </v-col>
@@ -50,12 +50,23 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
+import {computed, ref, toRef, toRefs, watch} from "vue";
 import useAcademicYear from "@/composables/useAcademicYear";
+
+const props = defineProps<{
+    currentUserAsInstructor: boolean;
+}>();
+
+const {currentUserAsInstructor} = toRefs(props);
+
+const checkbox = ref(currentUserAsInstructor.value);
+
+watch(currentUserAsInstructor, (newValue) => {
+    checkbox.value = newValue;
+});
 
 const form = ref(null);
 const project_name = ref("");
-const currentUserAsInstructor = ref(true);
 const activeAcademicYear = ref<number>(useAcademicYear());
 
 const academicYearItems = [activeAcademicYear.value, activeAcademicYear.value + 1];
@@ -63,6 +74,19 @@ const rules = {
     required: (value: string) => !!value || "Field is required.",
     length: (value: string) => value.length > 2 || "Title must be at least 3 characters long.",
 };
+
+
+const emit = defineEmits<{
+    (e: "set-current-user-as-instructor", value: boolean): void;
+    (e: "update:currentUserAsInstructor", value: boolean): void;
+}>();
+
+
+watch(checkbox, (newValue) => {
+    emit("update:currentUserAsInstructor", newValue);
+});
+
+
 
 </script>
 

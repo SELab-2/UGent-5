@@ -10,6 +10,8 @@
                 <background-container>
                     <CreateSubjectHeaderContainer
                         :image-path="`https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png`"
+                        :current-user-as-instructor="currentUserAsInstructor"
+                        @update:current-user-as-instructor="currentUserAsInstructor = $event"
                     >
                     </CreateSubjectHeaderContainer>
                     <CreateSubjectBody

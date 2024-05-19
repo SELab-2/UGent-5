@@ -4,8 +4,10 @@
             <CreateSubjectHeaderImage :imagePath="imagePath"></CreateSubjectHeaderImage>
         </v-col>
         <v-col cols="8">
-            <CreateSubjectHeaderCard>
-
+            <CreateSubjectHeaderCard
+                :current-user-as-instructor="currentUserAsInstructor"
+                @update:current-user-as-instructor="$emit('update:currentUserAsInstructor', $event)"
+            >
             </CreateSubjectHeaderCard>
         </v-col>
     </v-row>
@@ -20,7 +22,14 @@ import CreateSubjectHeaderImage from "@/components/subject/createSubjectView/hea
 
 defineProps<{
     imagePath: string;
+    currentUserAsInstructor: boolean;
 }>();
+
+const emit = defineEmits<{
+    (e: "set-current-user-as-instructor", value: boolean): void;
+    (e: "update:currentUserAsInstructor", value: boolean): void;
+}>();
+
 </script>
 
 <style scoped>
