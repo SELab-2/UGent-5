@@ -6,6 +6,8 @@
         <v-col cols="8">
             <CreateSubjectHeaderCard
                 :current-user-as-instructor="currentUserAsInstructor"
+                @update:subject-name="$emit('update:subject-name', $event)"
+                @update:active-academic-year="$emit('update:active-academic-year', $event)"
                 @update:current-user-as-instructor="$emit('update:current-user-as-instructor', $event)"
             >
             </CreateSubjectHeaderCard>
@@ -27,6 +29,8 @@ defineProps<{
 
 const emit = defineEmits<{
     (e: "update:current-user-as-instructor", value: boolean): void;
+    (e: "update:subject-name", value: string): void;
+    (e: "update:active-academic-year", value: number): void;
 }>();
 
 </script>

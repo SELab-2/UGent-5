@@ -1,7 +1,7 @@
-import { computed, toValue } from "vue";
-import type { MaybeRefOrGetter } from "vue";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import type { UseQueryReturnType, UseMutationReturnType } from "@tanstack/vue-query";
+import {computed, toValue} from "vue";
+import type {MaybeRefOrGetter} from "vue";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/vue-query";
+import type {UseQueryReturnType, UseMutationReturnType} from "@tanstack/vue-query";
 import {
     getSubject,
     getSubjectInstructors,
@@ -9,12 +9,12 @@ import {
     getSubjectStudents,
     getSubjectByUuid,
     registerToSubject,
-    getSubjectUuid, createSubject,
+    getSubjectUuid, createSubject, createSubjectInstructor,
 } from "@/services/subject";
-import { getSubjectProjects } from "@/services/project";
+import {getSubjectProjects} from "@/services/project";
 import type User from "@/models/User";
 import type Subject from "@/models/Subject";
-import type { UserSubjectList } from "@/models/Subject";
+import type {UserSubjectList} from "@/models/Subject";
 import type Project from "@/models/Project";
 import type SubjectForm from "@/models/Subject";
 
@@ -44,6 +44,10 @@ function SUBJECT_UUID_QUERY_KEY(subjectId: number): (string | number)[] {
 
 function CREATE_SUBJECT_QUERY_KEY(): string[] {
     return ["create", "subject"];
+}
+
+function CREATE_SUBJECT_INSTRUCTOR_QUERY_KEY(subjectId: number): (string | number)[] {
+    return ["create", "subject", "instructor", subjectId];
 }
 
 /**
@@ -145,7 +149,7 @@ export function useRegisterToSubjectMutation(): UseMutationReturnType<
     return useMutation({
         mutationFn: async (uuid) => await registerToSubject(toValue(uuid)),
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: SUBJECTS_QUERY_KEY() });
+            queryClient.invalidateQueries({queryKey: SUBJECTS_QUERY_KEY()});
         },
         onError: (error) => {
             console.error(error);
@@ -167,7 +171,7 @@ export function useCreateSubjectMutation(): UseMutationReturnType<
     return useMutation<number, Error, SubjectForm, void>({
         mutationFn: createSubject,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: CREATE_SUBJECT_QUERY_KEY() });
+            queryClient.invalidateQueries({queryKey: CREATE_SUBJECT_QUERY_KEY()});
         },
         onError: (error) => {
             console.error("Subject creation failed", error);
@@ -175,3 +179,29 @@ export function useCreateSubjectMutation(): UseMutationReturnType<
         },
     });
 }
+
+/**
+ * Mutation composable for creating subject instructor
+ */
+
+export function useCreateSubjectInstructorMutation(
+    subjectId: MaybeRefOrGetter<number | undefined>
+): UseMutationReturnType<
+    void,
+    Error,
+    { user_id: string },
+    void
+> {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: ({user_id}) => createSubjectInstructor(toValue(subjectId)!, {user_id}),
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: CREATE_SUBJECT_INSTRUCTOR_QUERY_KEY(toValue(subjectId)!)});
+        },
+        onError: (error) => {
+            console.error("Subject instructor creation failed", error);
+            alert("Could not create subject instructor. Please try again.");
+        },
+    });
+}
+

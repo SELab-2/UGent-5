@@ -9,7 +9,7 @@
                 ref="form"
             >
                 <v-text-field
-                    v-model="project_name"
+                    v-model="subjectName"
                     :rules="[rules.required, rules.length]"
                     label="Title"
                     required
@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref, toRef, toRefs, watch} from "vue";
+import {ref, toRefs, watch} from "vue";
 import useAcademicYear from "@/composables/useAcademicYear";
 
 const props = defineProps<{
@@ -66,7 +66,7 @@ watch(currentUserAsInstructor, (newValue) => {
 });
 
 const form = ref(null);
-const project_name = ref("");
+const subjectName = ref("");
 const activeAcademicYear = ref<number>(useAcademicYear());
 
 const academicYearItems = [activeAcademicYear.value, activeAcademicYear.value + 1];
@@ -78,12 +78,25 @@ const rules = {
 
 const emit = defineEmits<{
     (e: "update:current-user-as-instructor", value: boolean): void;
+    (e: "update:subject-name", value: string): void;
+    (e: "update:active-academic-year", value: number): void;
 }>();
 
 
+watch(subjectName, (newValue) => {
+    emit("update:subject-name", newValue);
+});
+
+watch(activeAcademicYear, (newValue) => {
+    emit("update:active-academic-year", newValue);
+});
+
 watch(checkbox, (newValue) => {
+    console.log(newValue);
     emit("update:current-user-as-instructor", newValue);
 });
+
+
 
 
 

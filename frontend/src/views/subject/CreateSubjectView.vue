@@ -10,6 +10,8 @@
                     <CreateSubjectHeaderContainer
                         :image-path="`https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png`"
                         :current-user-as-instructor="currentUserAsInstructor"
+                        @update:subject-name="subjectName = $event"
+                        @update:active-academic-year="activeAcademicYear = $event"
                         @update:current-user-as-instructor="currentUserAsInstructor = $event"
                     >
                     </CreateSubjectHeaderContainer>
@@ -20,6 +22,14 @@
                         @remove-instructor="removeInstructor"
                     >
                     </CreateSubjectBody>
+                    <v-btn
+                        class="submit-button"
+                        @click="handleSubmit"
+                        color="primary"
+                        type="submit"
+                    >
+                        Create
+                    </v-btn>
                 </background-container>
             </v-col>
         </v-row>
@@ -30,7 +40,7 @@
 <script setup lang="ts">
 import {computed, ref} from "vue";
 import useAcademicYear from "@/composables/useAcademicYear";
-import {useCreateSubjectMutation} from "@/queries/Subject";
+import {useCreateSubjectInstructorMutation, useCreateSubjectMutation} from "@/queries/Subject";
 import type SubjectForm from "@/models/Subject";
 import type User from "@/models/User";
 import {useCurrentUserQuery} from "@/queries/User";
@@ -39,13 +49,15 @@ import CreateSubjectHeaderContainer from "@/components/subject/createSubjectView
 import CreateSubjectBody from "@/components/subject/createSubjectView/body/CreateSubjectBody.vue";
 
 const form = ref(null);
-const project_name = ref("");
+const subjectName = ref("");
 const activeAcademicYear = ref<number>(useAcademicYear());
 const instructors = ref<User[]>([]);
 const currentUserAsInstructor = ref(true);
+const subjectId = ref<number | undefined>(undefined);
 
 const {data: currentUser, isLoading, isError} = useCurrentUserQuery();
 const createSubjectMutation = useCreateSubjectMutation();
+const createSubjectInstructorMutation = useCreateSubjectInstructorMutation(computed(() => subjectId.value));
 
 const shownInstructors = computed(() => {
     if (currentUserAsInstructor.value) {
@@ -76,23 +88,35 @@ const removeInstructor = (instructor: User) => {
 };
 
 async function handleSubmit() {
-    const {valid} = await form.value.validate();
-    if (!valid) {
-        return;
-    }
 
-    const projectName = project_name.value.trim();
+    const name = subjectName.value.trim();
     const subjectData: SubjectForm = {
-        name: projectName.charAt(0).toUpperCase() + projectName.slice(1),
+        name: name.charAt(0).toUpperCase() + name.slice(1),
         academic_year: activeAcademicYear.value,
     };
 
+    const instructorIds = shownInstructors.value.map((instructor) => ({
+        user_id: instructor.uid
+    }));
+
+    console.log("Subject data:", subjectData);
+    console.log("Instructor ids:", instructorIds);
+
+    /*
     try {
         const createdSubjectId = await createSubjectMutation.mutateAsync(subjectData);
+        subjectId.value = createdSubjectId;
         console.log("Created subject with id:", createdSubjectId);
+
+        for (const instructor of instructorIds) {
+            await createSubjectInstructorMutation.mutateAsync(instructor);
+            console.log("Added instructor with id:", instructor.user_id);
+        }
     } catch (error) {
-        console.error("Error during project or group creation:", error);
+        console.error("Error during subject creation:", error);
     }
+
+     */
 }
 </script>
 
