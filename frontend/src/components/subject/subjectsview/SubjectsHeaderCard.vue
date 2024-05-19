@@ -116,4 +116,8 @@ watch(activeSubjectFilter, (newVal: SubjectFilter | undefined) => {
     margin-top: -15px;
 }
 
+.chip {
+    color: rgb(var(--v-theme-text));
+    background-color: rgb(var(--v-theme-secondary));
+}
 </style>
