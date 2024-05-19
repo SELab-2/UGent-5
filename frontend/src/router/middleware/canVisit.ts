@@ -104,7 +104,7 @@ export const useIsStudentOfProjectCondition: CanVisitCondition = (qc, ctx) => {
     const projectId = Number(ctx.to.params.projectId);
     const { data: projects, isLoading } = useProjectsQuery(qc);
     const condition = computed(() => {
-        return projects.value?.findIndex((project) => project.id === projectId) !== -1;
+        return projects.value?.as_student.findIndex((project) => project.id === projectId) !== -1;
     });
     return { condition, isLoading };
 };
@@ -113,7 +113,9 @@ export const useIsInstructorOfProjectCondition: CanVisitCondition = (qc, ctx) =>
     const projectId = Number(ctx.to.params.projectId);
     const { data: projects, isLoading } = useProjectsQuery(qc);
     const condition = computed(() => {
-        return projects.value?.findIndex((project) => project.id === projectId) !== -1;
+        return (
+            projects.value?.as_instructor.findIndex((project) => project.id === projectId) !== -1
+        );
     });
     return { condition, isLoading };
 };

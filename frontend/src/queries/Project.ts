@@ -30,7 +30,9 @@ export function useProjectQuery(
 /**
  * Query composable for fetching all projects of the current user
  */
-export function useProjectsQuery(queryClient?: QueryClient): UseQueryReturnType<UserProjectList, Error> {
+export function useProjectsQuery(
+    queryClient?: QueryClient
+): UseQueryReturnType<UserProjectList, Error> {
     return useQuery<UserProjectList>(
         {
             queryKey: PROJECTS_QUERY_KEY(),
