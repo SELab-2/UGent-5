@@ -4,7 +4,7 @@
             <v-alert v-if="isError" title="Error" color="error" :text="error.message"></v-alert>
             <v-skeleton-loader v-else :loading="isLoading || !projectSuccess" type="card">
                 <v-col>
-                    <h2>{{ $t("submission.submissions_title", { project: project.name }) }}</h2>
+                    <h2>{{ $t("submission.submissions_title") }}</h2>
                     <v-btn :to="`/project/${project?.id}/submit`" variant="flat" class="submitbutton">
                         {{ $t("submit.new_submission") }}
                     </v-btn>
