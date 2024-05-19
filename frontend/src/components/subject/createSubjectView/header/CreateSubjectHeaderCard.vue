@@ -1,50 +1,47 @@
 <template>
     <v-card variant="text" class="title-card" width="100%" height="35vh">
         <v-card-title class="title">
-            New Subject
+            {{ $t("create_subject.new_subject")}}
         </v-card-title>
 
         <v-card-text>
-            <v-form
-                ref="form"
-            >
-                <v-text-field
-                    v-model="subjectName"
-                    :rules="[rules.required, rules.length]"
-                    label="Title"
-                    required
-                    variant="outlined"
-                    placeholder="Enter Title"
-                    hint="Enter your password to access this website"
-                    clearable
-                    hide-details="auto"
-                    @keydown.enter.prevent
-                    :error="isFormError"
-                    class="form-elem"
-                ></v-text-field>
 
-                <v-row>
-                    <v-col>
-                        <v-select
-                            v-model="activeAcademicYear"
-                            variant="outlined"
-                            :items="academicYearItems"
-                            :item-title="item => `20${item}-20${item + 1}`"
-                            :item-value="item => item"
-                            label="Academic Year"
-                            required
-                            class="form-elem-academic"
-                        ></v-select>
-                    </v-col>
-                    <v-col>
-                        <v-checkbox
-                            label="Assign myself as instructor"
-                            v-model="checkbox"
-                            color="primary"
-                        ></v-checkbox>
-                    </v-col>
-                </v-row>
-            </v-form>
+            <v-text-field
+                v-model="subjectName"
+                :rules="[rules.required, rules.length]"
+                :label="$t('create_subject.title')"
+                required
+                variant="outlined"
+                :placeholder="$t('create_subject.enter_title')"
+                :hint="$t('create_subject.enter_title_hint')"
+                clearable
+                hide-details="auto"
+                @keydown.enter.prevent
+                :error="isFormError"
+                class="form-elem"
+            ></v-text-field>
+
+            <v-row>
+                <v-col>
+                    <v-select
+                        v-model="activeAcademicYear"
+                        variant="outlined"
+                        :items="academicYearItems"
+                        :item-title="item => `20${item}-20${item + 1}`"
+                        :item-value="item => item"
+                        label="Academic Year"
+                        required
+                        class="form-elem-academic"
+                    ></v-select>
+                </v-col>
+                <v-col>
+                    <v-checkbox
+                        :label="$t('create_subject.assign_self')"
+                        v-model="checkbox"
+                        color="primary"
+                    ></v-checkbox>
+                </v-col>
+            </v-row>
         </v-card-text>
 
     </v-card>
@@ -53,6 +50,9 @@
 <script setup lang="ts">
 import {ref, toRefs, watch} from "vue";
 import useAcademicYear from "@/composables/useAcademicYear";
+import {useI18n} from "vue-i18n";
+
+const { t } = useI18n();
 
 const props = defineProps<{
     currentUserAsInstructor: boolean;
@@ -67,14 +67,13 @@ watch(currentUserAsInstructor, (newValue) => {
     checkbox.value = newValue;
 });
 
-const form = ref(null);
 const subjectName = ref("");
 const activeAcademicYear = ref<number>(useAcademicYear());
 
 const academicYearItems = [activeAcademicYear.value, activeAcademicYear.value + 1];
 const rules = {
-    required: (value: string) => !!value || "Field is required.",
-    length: (value: string) => value.length > 2 || "Title must be at least 3 characters long.",
+    required: (value: string) => !!value || t("create_subject.field_required"),
+    length: (value: string) => value.length > 2 || t("create_subject.field_length"),
 };
 
 

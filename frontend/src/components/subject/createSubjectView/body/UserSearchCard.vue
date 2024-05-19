@@ -1,7 +1,7 @@
 <template>
     <v-card variant="text" class="title-card" width="100%" height="100%">
         <v-card-title class="card-title">
-            Search for instructors
+            {{ $t(create_subject.search_for_instructors) }}
         </v-card-title>
         <v-card-text>
             <UserSearchList

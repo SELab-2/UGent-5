@@ -2,8 +2,8 @@
         <v-text-field
             :loading="searchLoading"
             v-model="search"
-            label="Search"
-            placeholder="Search for instructors"
+            :label="$t('default.search')"
+            :placeholder="$t('create_subject.search_for_instructors')"
             prepend-inner-icon="mdi-magnify"
             clearable
             single-line
@@ -28,7 +28,7 @@
                     color="primary"
                     :disabled="userIsInstructor(user)"
                 >
-                    Add
+                    {{ $t('default.add') }}
                 </v-btn>
             </v-list-item>
         </v-list>

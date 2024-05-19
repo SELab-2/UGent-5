@@ -10,7 +10,7 @@
             color="error"
             top
         >
-            There needs to be at least one teacher amongst the instructors for the subject.
+            {{ $t("create_subject.error_snackbar") }}
         </v-snackbar>
 
         <v-dialog
@@ -20,7 +20,7 @@
         >
             <v-card>
                 <v-card-title class="headline">
-                    Cancel subject creation?
+                    {{ $t("create_subject.cancel_dialog") }}
                 </v-card-title>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -28,13 +28,13 @@
                         color="blue darken-1"
                         @click="dialog = false"
                     >
-                        No
+                        {{ $t("default.no_capital")}}
                     </v-btn>
                     <v-btn
                         color="blue darken-1"
                         @click="router.push({name: 'subjects'})"
                     >
-                        Yes
+                        {{ $t("default.yes_capital")}}
                     </v-btn>
                 </v-card-actions>
             </v-card>
@@ -78,7 +78,7 @@
                             color="grey"
                             @click="dialog = true"
                         >
-                            Cancel
+                            {{ $t("default.cancel")}}
                         </v-btn>
                         <v-btn
                             class="ma-2"
@@ -86,7 +86,7 @@
                             color="primary"
                             type="submit"
                         >
-                            Confirm
+                            {{ $t("default.confirm")}}
                         </v-btn>
                     </div>
 
