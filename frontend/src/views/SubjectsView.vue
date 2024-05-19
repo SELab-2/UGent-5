@@ -51,7 +51,6 @@
 
 <script setup lang="ts">
 import { useSubjectsQuery } from "@/queries/Subject";
-import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectsHeaderContainer from "@/components/subject/subjectsview/SubjectsHeaderContainer.vue";
 import SubjectCard from "@/components/subject/subjectsview/SubjectCard.vue";
 import { computed, ref } from "vue";
