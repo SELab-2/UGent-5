@@ -2,16 +2,31 @@ import { computed, toValue } from "vue";
 import type { MaybeRefOrGetter } from "vue";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/vue-query";
 import type { UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-query";
-import { createSubmission, getFiles, getSubmission, getSubmissions } from "@/services/submission";
+import {
+    createSubmission,
+    getFiles,
+    getProjectSubmissions,
+    getSubmission,
+    getSubmissions,
+} from "@/services/submission";
 import type Submission from "@/models/Submission";
 import type FileInfo from "@/models/File";
+import { useProjectGroupQuery } from "./Group";
 
 function SUBMISSION_QUERY_KEY(submissionId: number): (string | number)[] {
     return ["submission", submissionId];
 }
 
 function SUBMISSIONS_QUERY_KEY(groupId: number): (string | number)[] {
-    return ["submissions", groupId];
+    return ["submissions", "group", groupId];
+}
+
+function USER_PROJECT_SUBMISSIONS_QUERY_KEY(projectId: number): (string | number)[] {
+    return ["submissions", "project", "user", projectId];
+}
+
+function PROJECT_SUBMISSIONS_QUERY_KEY(projectId: number): (string | number)[] {
+    return ["submissions", "project", projectId];
 }
 
 function FILES_QUERY_KEY(submissionId: number): (string | number)[] {
@@ -28,7 +43,6 @@ export function useSubmissionQuery(
         queryKey: computed(() => SUBMISSION_QUERY_KEY(toValue(submissionId)!)),
         queryFn: () => getSubmission(toValue(submissionId)!),
         enabled: () => !!toValue(submissionId),
-        retry: false,
     });
 }
 
@@ -46,6 +60,39 @@ export function useSubmissionsQuery(
 }
 
 /**
+ * Query composable for fetching all submissions of the group of the current user
+ * in the project with the given id
+ */
+export function useUserProjectSubmissionsQuery(
+    projectId: MaybeRefOrGetter<number | undefined>
+): UseQueryReturnType<Submission[], Error> {
+    const { data: group } = useProjectGroupQuery(projectId);
+    return useQuery({
+        queryKey: computed(() => USER_PROJECT_SUBMISSIONS_QUERY_KEY(toValue(projectId)!)),
+        queryFn: async () => {
+            // HACK: Without this null-check, queries where there is no group will take a long time to resolve
+            // also, this should be `!group.value`, but javascript...
+            if (group.value === null) return [];
+            return await getSubmissions(group.value!.id);
+        },
+        enabled: () => !!toValue(projectId),
+    });
+}
+
+/**
+ * Query composable for fetching all latest submissions of each group from a project.
+ */
+export function useProjectSubmissionsQuery(
+    projectId: MaybeRefOrGetter<number | undefined>
+): UseQueryReturnType<Submission[], Error> {
+    return useQuery<Submission[], Error>({
+        queryKey: computed(() => PROJECT_SUBMISSIONS_QUERY_KEY(toValue(projectId)!)),
+        queryFn: () => getProjectSubmissions(toValue(projectId)!),
+        enabled: () => !!toValue(projectId),
+    });
+}
+
+/**
  * Query composable for fetching files for a submission
  */
 export function useFilesQuery(
@@ -55,7 +102,6 @@ export function useFilesQuery(
         queryKey: computed(() => FILES_QUERY_KEY(toValue(submissionId)!)),
         queryFn: () => getFiles(toValue(submissionId)!),
         enabled: () => !!toValue(submissionId),
-        retry: false,
     });
 }
 

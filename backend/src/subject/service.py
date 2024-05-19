@@ -35,11 +35,11 @@ async def get_subjects_by_user(
     db: AsyncSession, user_id: str
 ) -> tuple[Sequence[Subject], Sequence[Subject]]:
     instructors_subjects = await db.execute(
-        select(Subject).join(InstructorSubject).filter(
+        select(Subject).join(InstructorSubject).where(
             InstructorSubject.c.uid == user_id)
     )
     students_subjects = await db.execute(
-        select(Subject).join(StudentSubject).filter(
+        select(Subject).join(StudentSubject).where(
             StudentSubject.c.uid == user_id)
 
     )

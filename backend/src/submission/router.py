@@ -2,7 +2,7 @@ import os
 from typing import Sequence
 
 from fastapi import APIRouter, Depends, BackgroundTasks
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.dependencies import get_async_db
@@ -15,7 +15,7 @@ from src.submission.dependencies import (
 )
 from src.submission.exceptions import FileNotFound
 from src.submission.exceptions import FilesNotFound
-from src.submission.utils import upload_files, remove_files
+from src.submission.utils import upload_files, remove_files, zip_stream
 from src.user.dependencies import admin_user_validation, get_authenticated_user
 from src.user.schemas import User
 from . import service
@@ -92,6 +92,12 @@ async def get_file(path: str, submission: Submission = Depends(retrieve_submissi
         raise FileNotFound
 
     return FileResponse(path=path)
+
+
+@router.get("/{submission_id}/zip", response_class=StreamingResponse)
+async def get_all_files(submission: Submission = Depends(retrieve_submission)):
+    path = submission_path(submission.files_uuid, "")
+    return StreamingResponse(zip_stream(path, submission.group_id), media_type="application/zip")
 
 
 @router.get("/{submission_id}/artifacts", response_model=list[File])

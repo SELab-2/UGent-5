@@ -39,7 +39,7 @@ async function formOnSubmit(event: SubmitEvent) {
     }
     await mutateAsync(formData);
 
-    await router.push(`/groups/${group.value?.id}/submissions`);
+    await router.push(`/groups/${group.value?.id}`);
 }
 </script>
 

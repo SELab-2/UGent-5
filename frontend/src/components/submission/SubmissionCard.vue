@@ -1,8 +1,8 @@
 <template>
-    <v-card color="white">
+    <v-card variant="outlined">
         <v-card-title>
             {{ $t("submission.status") }}
-            <p v-if="submission.date <= project.deadline" :class="Status[submission.status]">
+            <p v-if="new Date(submission.date) <= deadline" :class="Status[submission.status]">
                 {{ Status[submission.status] }}
             </p>
             <p v-else class="Deadline">{{ $t("submission.after_deadline") }}</p>
@@ -25,9 +25,7 @@
             <v-card-title>{{ $t("submission.docker_test") }}</v-card-title>
             <v-card-text>
                 <p v-if="submission.stdout">Stdout: {{ submission.stdout }}</p>
-                <p v-else>{{ $t("default.no") }} stdout</p>
                 <p v-if="submission.stderr">Sterr: {{ submission.stderr }}</p>
-                <p v-else>{{ $t("default.no") }} stderr</p>
                 <ul>
                     <li v-for="result in submission.testresults" :key="result">
                         <p v-if="result.succeeded" class="text-green">{{ result.value }}</p>
@@ -50,14 +48,14 @@
                     color="error"
                     :text="error!.message"
                 ></v-alert>
-                <v-skeleton-loader v-else :loading="isLoading" type="card" color="white">
+                <v-skeleton-loader v-else :loading="isLoading" type="card">
                     <v-col>
                         <v-chip
                             class="ma-2"
                             v-for="(item, index) in files"
                             label
                             color="blue"
-                            :key="item.filename"
+                            :key="item.filesortedname"
                             @click="() => downloadFile(index)"
                         >
                             {{ item.filename }}
@@ -65,21 +63,25 @@
                     </v-col>
                 </v-skeleton-loader>
             </v-container>
+            <v-card-actions>
+                <v-btn @click="downloadAll">
+                    {{ $t("submission.download_all_files") }}
+                </v-btn>
+            </v-card-actions>
         </v-card-item>
     </v-card>
 </template>
 
 <script setup lang="ts">
-import type { Status } from "@/models/Submission";
+import { Status } from "@/models/Submission";
 import { useFilesQuery } from "@/queries/Submission";
 import { toRefs, computed } from "vue";
 import { download_file } from "@/utils";
-import type Project from "@/models/Project";
 import type Submission from "@/models/Submission";
 
 const props = defineProps<{
     submission: Submission;
-    project: Project;
+    deadline: Date;
 }>();
 
 const { submission } = toRefs(props);
@@ -94,6 +96,13 @@ const {
 const downloadFile = (index: number) => {
     const file = files.value![index];
     download_file(`/api/submissions/${submission.value!.id}/files/${file.filename}`, file.filename);
+};
+
+const downloadAll = () => {
+    download_file(
+        `/api/submissions/${submission.value!.id}/zip`,
+        `submission_group_${submission.value?.group_id}`
+    );
 };
 </script>
 
@@ -116,5 +125,14 @@ const downloadFile = (index: number) => {
 
 .Deadline {
     color: red;
+}
+
+.v-btn {
+    background-color: rgb(var(--v-theme-secondary));
+}
+
+.v-card {
+    border-color: rgb(var(--v-theme-text));
+    background-color: rgb(var(--v-theme-background));
 }
 </style>

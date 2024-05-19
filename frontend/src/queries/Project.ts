@@ -3,7 +3,7 @@ import type { MaybeRefOrGetter } from "vue";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import type { QueryClient, UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-query";
 import type Project from "@/models/Project";
-import type { ProjectForm } from "@/models/Project";
+import type { ProjectForm, UserProjectList } from "@/models/Project";
 import { getProject, createProject, getProjects } from "@/services/project";
 
 function PROJECT_QUERY_KEY(projectId: number): (string | number)[] {
@@ -30,8 +30,8 @@ export function useProjectQuery(
 /**
  * Query composable for fetching all projects of the current user
  */
-export function useProjectsQuery(queryClient?: QueryClient): UseQueryReturnType<Project[], Error> {
-    return useQuery<Project[], Error>(
+export function useProjectsQuery(queryClient?: QueryClient): UseQueryReturnType<UserProjectList, Error> {
+    return useQuery<UserProjectList>(
         {
             queryKey: PROJECTS_QUERY_KEY(),
             queryFn: getProjects,

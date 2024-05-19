@@ -9,7 +9,7 @@
             <h2>{{ "Project: " + project!.name }}</h2>
             <v-card>
                 <v-card-item :title="$t('group.members')">
-                    <div v-if="group!.members.length">
+                    <div v-if="group!.members.length" class="members">
                         <v-row
                             v-for="(member, index) in group!.members"
                             :key="index"
@@ -21,6 +21,7 @@
                                     v-if="isTeacher"
                                     prepend-icon="mdi-close"
                                     color="red"
+                                    variant="flat"
                                     @click="
                                         () => removeStudent({ groupId: group!.id, uid: member.uid })
                                     "
@@ -30,7 +31,7 @@
                             </v-col>
                         </v-row>
                     </div>
-                    <div v-else>
+                    <div v-else class="members">
                         {{ $t("group.no_members_found") }}
                     </div>
                 </v-card-item>
@@ -44,6 +45,7 @@
                     />
                 </v-card-actions>
             </v-card>
+            <SubmissionList :groupId="groupId" />
         </div>
     </v-container>
 </template>
@@ -54,6 +56,7 @@ import { useGroupQuery, useRemoveUserFromGroupMutation } from "@/queries/Group";
 import { useProjectQuery } from "@/queries/Project";
 import { useCurrentUserQuery } from "@/queries/User";
 import GroupButtons from "@/components/buttons/GroupButtons.vue";
+import SubmissionList from "@/components/submission/SubmissionList.vue";
 import { useSubjectInstructorsQuery } from "@/queries/Subject";
 
 const props = defineProps<{
@@ -104,4 +107,13 @@ const amountOfMembers = computed(() => {
 const { mutateAsync: removeStudent } = useRemoveUserFromGroupMutation();
 </script>
 
-<style scoped></style>
+<style scoped>
+.v-card {
+    margin-top: 15px;
+    background-color: rgb(var(--v-theme-secondary));
+}
+
+.members {
+    margin-top: 15px;
+}
+</style>

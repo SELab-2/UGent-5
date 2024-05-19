@@ -1,8 +1,10 @@
-from sqlalchemy import null
+from typing import Sequence
+
+from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from src.subject.models import InstructorSubject, StudentSubject, Subject
 
-from src.subject.models import StudentSubject, Subject
 from .exceptions import ProjectNotFound
 from .models import Project, Requirement
 from .schemas import ProjectCreate, ProjectList, ProjectUpdate
@@ -29,15 +31,20 @@ async def get_project(db: AsyncSession, project_id: int) -> Project:
     return result.scalars().first()
 
 
-async def get_projects_by_user(db: AsyncSession, user_id: str) -> ProjectList:
-    result = await db.execute(
+async def get_projects_by_user(db: AsyncSession, user_id: str) -> tuple[Sequence[Project], Sequence[Project]]:
+    student_result = await db.execute(
         select(Project)
         .join(Subject, Project.subject_id == Subject.id)
         .join(StudentSubject, StudentSubject.c.subject_id == Subject.id)
         .where(StudentSubject.c.uid == user_id)
     )
-    projects = result.scalars().unique().all()
-    return ProjectList(projects=projects)
+    instructor_result = await db.execute(
+        select(Project)
+        .join(Subject, Project.subject_id == Subject.id)
+        .join(InstructorSubject, InstructorSubject.c.subject_id == Subject.id)
+        .where(InstructorSubject.c.uid == user_id)
+    )
+    return student_result.scalars().unique().all(), instructor_result.scalars().unique().all()
 
 
 async def get_projects_for_subject(db: AsyncSession, subject_id: int) -> ProjectList:
@@ -52,6 +59,10 @@ async def delete_project(db: AsyncSession, project_id: int):
     if project:
         await db.delete(project)
         await db.commit()
+
+
+async def delete_requirements_for_project(db: AsyncSession, project_id: int):
+    await db.execute(delete(Requirement).where(Requirement.project_id == project_id))
 
 
 async def update_project(
@@ -71,6 +82,7 @@ async def update_project(
     if project_update.is_visible is not None:
         project.is_visible = project_update.is_visible
     if project_update.requirements is not None:
+        await delete_requirements_for_project(db, project_id)
         project.requirements = [Requirement(**r.model_dump())
                                 for r in project_update.requirements]
 

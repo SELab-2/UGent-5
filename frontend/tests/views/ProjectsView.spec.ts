@@ -3,9 +3,10 @@ import {expect, describe, it, vi} from "vitest";
 import ProjectsView from "@/views/ProjectsView.vue"
 import {ref} from "vue";
 
-const mockProjects = [
-    {id: 1}
-]
+const mockProjects = {
+    as_student: [{id: 1}],
+    as_instructor: [{id: 2}],
+};
 
 const testProjectsQuery = {
     data: ref(mockProjects),
