@@ -189,12 +189,12 @@ export function useCreateSubjectInstructorMutation(
 ): UseMutationReturnType<
     void,
     Error,
-    { user_id: string },
+    string,
     void
 > {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({user_id}) => createSubjectInstructor(toValue(subjectId)!, {user_id}),
+        mutationFn: (user_id) => createSubjectInstructor(toValue(subjectId)!, user_id),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: CREATE_SUBJECT_INSTRUCTOR_QUERY_KEY(toValue(subjectId)!)});
         },

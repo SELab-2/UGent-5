@@ -66,9 +66,8 @@ export async function createSubject(projectData: SubjectForm): Promise<number> {
     return response.id;
 }
 
-export async function createSubjectInstructor(subjectId: number, uidData: { user_id: string }): Promise<void> {
-    return authorized_fetch(`/api/subjects/${subjectId}/instructors`, {
+export async function createSubjectInstructor(subjectId: number, uid: string): Promise<void> {
+    return authorized_fetch(`/api/subjects/${subjectId}/instructors?user_id=${uid}`, {
         method: "POST",
-        body: JSON.stringify(uidData),
     });
 }

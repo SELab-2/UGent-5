@@ -45,7 +45,8 @@ import type SubjectForm from "@/models/Subject";
 import type User from "@/models/User";
 import {useCurrentUserQuery} from "@/queries/User";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
-import CreateSubjectHeaderContainer from "@/components/subject/createSubjectView/header/CreateSubjectHeaderContainer.vue";
+import CreateSubjectHeaderContainer
+    from "@/components/subject/createSubjectView/header/CreateSubjectHeaderContainer.vue";
 import CreateSubjectBody from "@/components/subject/createSubjectView/body/CreateSubjectBody.vue";
 
 const form = ref(null);
@@ -95,14 +96,11 @@ async function handleSubmit() {
         academic_year: activeAcademicYear.value,
     };
 
-    const instructorIds = shownInstructors.value.map((instructor) => ({
-        user_id: instructor.uid
-    }));
+    const instructorIds = shownInstructors.value.map((instructor) => instructor.uid);
 
     console.log("Subject data:", subjectData);
     console.log("Instructor ids:", instructorIds);
 
-    /*
     try {
         const createdSubjectId = await createSubjectMutation.mutateAsync(subjectData);
         subjectId.value = createdSubjectId;
@@ -110,13 +108,12 @@ async function handleSubmit() {
 
         for (const instructor of instructorIds) {
             await createSubjectInstructorMutation.mutateAsync(instructor);
-            console.log("Added instructor with id:", instructor.user_id);
+            console.log("Added instructor with id:", instructor.uid);
         }
     } catch (error) {
         console.error("Error during subject creation:", error);
     }
 
-     */
 }
 </script>
 
