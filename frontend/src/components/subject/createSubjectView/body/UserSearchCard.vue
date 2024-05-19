@@ -7,7 +7,7 @@
             <UserSearchList
                 :current-user="currentUser"
                 :instructors="instructors"
-                @add-instructor="addInstructor"
+                @add-instructor="$emit('add-instructor', $event)"
             >
             </UserSearchList>
         </v-card-text>
@@ -28,9 +28,6 @@ const emit = defineEmits<{
     (e: "add-instructor", user: User): void;
 }>();
 
-const addInstructor = (user: User) => {
-    emit("add-instructor", user);
-};
 
 </script>
 

@@ -3,13 +3,14 @@
         <v-col cols="4">
             <SubjectInstructorsCard
                 :instructors="instructors"
+                @remove-instructor="$emit('remove-instructor', $event)"
             ></SubjectInstructorsCard>
         </v-col>
         <v-col cols="8">
             <UserSearchCard
                 :current-user="currentUser"
                 :instructors="instructors"
-                @add-instructor="addInstructor"
+                @add-instructor="$emit('add-instructor', $event)"
             ></UserSearchCard>
         </v-col>
 
@@ -28,11 +29,9 @@ defineProps<{
 
 const emit = defineEmits<{
     (e: "add-instructor", user: User): void;
+    (e: "remove-instructor", user: User): void;
 }>();
 
-const addInstructor = (user: User) => {
-    emit("add-instructor", user);
-};
 
 </script>
 

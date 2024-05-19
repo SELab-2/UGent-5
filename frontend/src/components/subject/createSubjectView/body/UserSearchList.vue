@@ -24,7 +24,7 @@
                     {{ user.given_name }} {{ user.surname }}
                 </v-list-item-title>
                 <v-btn
-                    @click="onAddInstructorButtonClicked(user)"
+                    @click="$emit('add-instructor', user)"
                     color="primary"
                     :disabled="userIsInstructor(user)"
                 >

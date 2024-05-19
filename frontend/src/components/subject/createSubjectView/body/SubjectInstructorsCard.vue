@@ -10,6 +10,7 @@
                 closable
                 variant="elevated"
                 :color="instructor!.is_teacher ? `primary` : `green` "
+                @click:close="onInstructorChipClose(instructor)"
             >
                 <v-icon
                     :icon="instructor!.is_teacher ? `mdi-account-tie-outline` : `mdi-school` "
@@ -28,6 +29,14 @@ import type User from "@/models/User";
 defineProps<{
     instructors: User[];
 }>();
+
+const emit = defineEmits<{
+    (e: "remove-instructor", user: User): void;
+}>();
+
+const onInstructorChipClose = (instructor: User) => {
+    emit("remove-instructor", instructor);
+};
 
 </script>
 

@@ -16,6 +16,7 @@
                         :current-user="currentUser"
                         :instructors="shownInstructors"
                         @add-instructor="addInstructor"
+                        @remove-instructor="onInstructorChipClose"
                     >
                     </CreateSubjectBody>
                 </background-container>
