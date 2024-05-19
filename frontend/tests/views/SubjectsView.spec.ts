@@ -1,8 +1,19 @@
 import { mount } from "@vue/test-utils";
 import {expect, describe, it, vi} from "vitest";
 import SubjectsView from "../../src/views/SubjectsView.vue"
-import {useSubjectsQuery} from "../../src/queries/Subject";
 import {ref} from "vue";
+
+const testAuthStore = {
+    isLoggedIn: ref(true),
+    setLoggedIn(value) {
+        this.isLoggedIn.value = value;
+    },
+};
+
+vi.mock("@/stores/auth-store", () => ({
+    useAuthStore: vi.fn(() => testAuthStore),
+}));
+
 
 vi.mock("@/components/subject/subjectsview/SubjectsHeaderContainer.vue", () => ({
     default: {
@@ -20,7 +31,10 @@ const testSubjectsQuery = {
     data: ref(),
     isLoading: ref(true),
     isError: ref(true),
-    error: ref({as_student: [{}]})
+    error: ref({as_student: [{}]}),
+    setError(value){
+        this.isError.value = value
+    }
 }
 
 vi.mock("@/queries/Subject", () => ({
@@ -29,12 +43,13 @@ vi.mock("@/queries/Subject", () => ({
 
 describe("SubjectsView", () => {
     const wrapper = mount(SubjectsView, {
-        default: {
+        global: {
             stubs: ['router-link']
         }
     })
-    it("render if error", () => {
+    it("render if error", async () => {
         expect(wrapper.text()).toContain("Error:")
+        testSubjectsQuery.setError(false)
+        await wrapper.vm.$nextTick()
     })
-
 })
