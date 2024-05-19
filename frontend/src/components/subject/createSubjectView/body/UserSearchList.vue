@@ -1,25 +1,22 @@
 <template>
-        <v-text-field
-            :loading="searchLoading"
-            v-model="search"
-            :label="$t('default.search')"
-            :placeholder="$t('create_subject.search_for_instructors')"
-            prepend-inner-icon="mdi-magnify"
-            clearable
-            single-line
-            hide-details
-            variant="outlined"
-            @click:prepend-inner="onSearchIconClicked"
-            @keydown.enter="onSearchIconClicked"
-        ></v-text-field>
+    <v-text-field
+        :loading="searchLoading"
+        v-model="search"
+        :label="$t('default.search')"
+        :placeholder="$t('create_subject.search_for_instructors')"
+        prepend-inner-icon="mdi-magnify"
+        clearable
+        single-line
+        hide-details
+        variant="outlined"
+        @click:prepend-inner="onSearchIconClicked"
+        @keydown.enter="onSearchIconClicked"
+    ></v-text-field>
 
     <div v-show="searchLoaded" class="scrollable-list">
         <p v-if="shownUsers.length === 0">No results found</p>
         <v-list v-else>
-            <v-list-item
-                v-for="(user, index) in shownUsers"
-                :key="index"
-            >
+            <v-list-item v-for="(user, index) in shownUsers" :key="index">
                 <v-row>
                     <v-col>
                         <v-list-item-title>
@@ -32,22 +29,18 @@
                             color="primary"
                             :disabled="userIsInstructor(user)"
                         >
-                            {{ $t('default.add') }}
+                            {{ $t("default.add") }}
                         </v-btn>
                     </v-col>
                 </v-row>
-
-
             </v-list-item>
         </v-list>
     </div>
-
 </template>
 
 <script setup lang="ts">
-
-import {useUsersQuery} from "@/queries/User";
-import {computed, ref, toRefs} from "vue";
+import { useUsersQuery } from "@/queries/User";
+import { computed, ref, toRefs } from "vue";
 import type User from "@/models/User";
 
 const props = defineProps<{
@@ -55,9 +48,9 @@ const props = defineProps<{
     currentUser: User;
 }>();
 
-const {instructors, currentUser} = toRefs(props);
+const { instructors, currentUser } = toRefs(props);
 
-const {data: users, isLoading, isError} = useUsersQuery();
+const { data: users } = useUsersQuery();
 
 const search = ref("");
 const searchLoading = ref(false);
@@ -73,14 +66,17 @@ const filteredUsers = computed(() => {
             return a.surname.localeCompare(b.surname);
         })
         .filter((user: User) => {
-        return (
-            user?.uid !== currentUser.value?.uid &&
-            `${user?.given_name} ${user.surname}`.toLowerCase().includes(search.value.toLowerCase())
-        );
-    }).slice(0, 5);
+            return (
+                user?.uid !== currentUser.value?.uid &&
+                `${user?.given_name} ${user.surname}`
+                    .toLowerCase()
+                    .includes(search.value.toLowerCase())
+            );
+        })
+        .slice(0, 5);
 });
 
-const emit = defineEmits<{
+defineEmits<{
     (e: "add-instructor", user: User): void;
 }>();
 
@@ -96,11 +92,9 @@ const onSearchIconClicked = () => {
 const userIsInstructor = (user: User) => {
     return instructors.value.some((instructor: User) => instructor?.uid === user?.uid);
 };
-
 </script>
 
 <style scoped>
-
 .scrollable-list {
     overflow-y: auto;
     max-height: 30vh;
@@ -110,7 +104,4 @@ const userIsInstructor = (user: User) => {
 .scrollable-list::-webkit-scrollbar {
     width: 0; /* For Chrome, Safari, and Opera */
 }
-
-
-
 </style>

@@ -139,7 +139,8 @@ export default {
     },
 
     create_subject: {
-        error_snackbar: "Er moet minstens één lesgever bij de geselecteerde vakverantwoordelijken aanwezig zijn.",
+        error_snackbar:
+            "Er moet minstens één lesgever bij de geselecteerde vakverantwoordelijken aanwezig zijn.",
         cancel_dialog: "Vak aanmaken annuleren?",
         new_subject: "Nieuw vak",
         title: "Titel",

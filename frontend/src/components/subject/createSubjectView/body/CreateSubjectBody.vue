@@ -26,18 +26,14 @@ defineProps<{
     instructors: User[];
 }>();
 
-const emit = defineEmits<{
+defineEmits<{
     (e: "add-instructor", user: User): void;
     (e: "remove-instructor", user: User): void;
 }>();
-
-
 </script>
 
 <style scoped>
-
 .body {
     height: 53vh;
 }
-
 </style>

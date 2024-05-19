@@ -4,37 +4,22 @@
     </div>
 
     <v-skeleton-loader v-else :loading="isLoading" type="card">
-        <v-snackbar
-            v-model="snackbar"
-            :timeout="3500"
-            color="error"
-            top
-        >
+        <v-snackbar v-model="snackbar" :timeout="3500" color="error" top>
             {{ $t("create_subject.error_snackbar") }}
         </v-snackbar>
 
-        <v-dialog
-            v-model="dialog"
-            max-width="290"
-            persistent
-        >
+        <v-dialog v-model="dialog" max-width="290" persistent>
             <v-card>
                 <v-card-title class="headline">
                     {{ $t("create_subject.cancel_dialog") }}
                 </v-card-title>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn
-                        color="blue darken-1"
-                        @click="dialog = false"
-                    >
-                        {{ $t("default.no_capital")}}
+                    <v-btn color="blue darken-1" @click="dialog = false">
+                        {{ $t("default.no_capital") }}
                     </v-btn>
-                    <v-btn
-                        color="blue darken-1"
-                        @click="router.push({name: 'subjects'})"
-                    >
-                        {{ $t("default.yes_capital")}}
+                    <v-btn color="blue darken-1" @click="router.push({ name: 'subjects' })">
+                        {{ $t("default.yes_capital") }}
                     </v-btn>
                 </v-card-actions>
             </v-card>
@@ -42,12 +27,7 @@
 
         <v-row>
             <v-col cols="1">
-                <v-btn
-                    variant="elevated"
-                    class="back-button"
-                    size="large"
-                    @click="dialog = true"
-                >
+                <v-btn variant="elevated" class="back-button" size="large" @click="dialog = true">
                     <v-icon>mdi-arrow-left</v-icon>
                 </v-btn>
             </v-col>
@@ -70,45 +50,31 @@
                     >
                     </CreateSubjectBody>
 
-                    <div
-                        class="confirm-btn-container"
-                    >
-                        <v-btn
-                            class="ma-2"
-                            color="grey"
-                            @click="dialog = true"
-                        >
-                            {{ $t("default.cancel")}}
+                    <div class="confirm-btn-container">
+                        <v-btn class="ma-2" color="grey" @click="dialog = true">
+                            {{ $t("default.cancel") }}
                         </v-btn>
-                        <v-btn
-                            class="ma-2"
-                            @click="handleSubmit"
-                            color="primary"
-                            type="submit"
-                        >
-                            {{ $t("default.confirm")}}
+                        <v-btn class="ma-2" @click="handleSubmit" color="primary" type="submit">
+                            {{ $t("default.confirm") }}
                         </v-btn>
                     </div>
-
                 </background-container>
             </v-col>
         </v-row>
     </v-skeleton-loader>
 </template>
 
-
 <script setup lang="ts">
-import {computed, ref} from "vue";
+import { computed, ref } from "vue";
 import useAcademicYear from "@/composables/useAcademicYear";
-import {useCreateSubjectInstructorMutation, useCreateSubjectMutation} from "@/queries/Subject";
+import { useCreateSubjectInstructorMutation, useCreateSubjectMutation } from "@/queries/Subject";
 import type SubjectForm from "@/models/Subject";
 import type User from "@/models/User";
-import {useCurrentUserQuery} from "@/queries/User";
+import { useCurrentUserQuery } from "@/queries/User";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
-import CreateSubjectHeaderContainer
-    from "@/components/subject/createSubjectView/header/CreateSubjectHeaderContainer.vue";
+import CreateSubjectHeaderContainer from "@/components/subject/createSubjectView/header/CreateSubjectHeaderContainer.vue";
 import CreateSubjectBody from "@/components/subject/createSubjectView/body/CreateSubjectBody.vue";
-import {useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 
 const snackbar = ref(false);
 const dialog = ref(false);
@@ -119,9 +85,11 @@ const instructors = ref<User[]>([]);
 const currentUserAsInstructor = ref(true);
 const subjectId = ref<number | undefined>(undefined);
 
-const {data: currentUser, isLoading, isError} = useCurrentUserQuery();
+const { data: currentUser, isLoading, isError } = useCurrentUserQuery();
 const createSubjectMutation = useCreateSubjectMutation();
-const createSubjectInstructorMutation = useCreateSubjectInstructorMutation(computed(() => subjectId.value));
+const createSubjectInstructorMutation = useCreateSubjectInstructorMutation(
+    computed(() => subjectId.value)
+);
 
 const router = useRouter();
 
@@ -130,7 +98,7 @@ const shownInstructors = computed(() => {
         return [currentUser.value, ...instructors.value];
     }
     return instructors.value;
-})
+});
 
 const addInstructor = (user: User) => {
     instructors.value.push(user);
@@ -160,7 +128,6 @@ const onSubjectNameUpdated = (name: string) => {
 
 const validateSubjectName = () => {
     return !(!subjectName.value || subjectName.value.trim().length < 3);
-
 };
 
 const validateInstructors = () => {
@@ -171,7 +138,6 @@ const validateInstructors = () => {
 };
 
 async function handleSubmit() {
-
     if (!validateSubjectName()) {
         isFormError.value = true;
         return;
@@ -190,14 +156,13 @@ async function handleSubmit() {
 
     const instructorIds = shownInstructors.value.map((instructor) => instructor.uid);
 
-
     try {
         subjectId.value = await createSubjectMutation.mutateAsync(subjectData);
         for (const instructor of instructorIds) {
             await createSubjectInstructorMutation.mutateAsync(instructor);
         }
 
-        await router.push({name: 'subject', params: {subjectId: subjectId.value}});
+        await router.push({ name: "subject", params: { subjectId: subjectId.value } });
     } catch (error) {
         console.error("Error during subject creation:", error);
     }
@@ -205,7 +170,6 @@ async function handleSubmit() {
 </script>
 
 <style scoped>
-
 .confirm-btn-container {
     display: flex;
     position: absolute;
@@ -217,5 +181,4 @@ async function handleSubmit() {
 .back-button {
     margin: 30px;
 }
-
 </style>

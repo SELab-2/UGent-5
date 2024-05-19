@@ -1,7 +1,7 @@
 <template>
     <v-card variant="text" class="title-card" width="100%" height="50vh">
         <v-card-title class="card-title">
-            {{ $t('create_subject.search_for_instructors') }}
+            {{ $t("create_subject.search_for_instructors") }}
         </v-card-title>
         <v-card-text>
             <UserSearchList
@@ -14,7 +14,6 @@
     </v-card>
 </template>
 
-
 <script setup lang="ts">
 import UserSearchList from "@/components/subject/createSubjectView/body/UserSearchList.vue";
 import type User from "@/models/User";
@@ -24,17 +23,12 @@ defineProps<{
     instructors: User[];
 }>();
 
-const emit = defineEmits<{
+defineEmits<{
     (e: "add-instructor", user: User): void;
 }>();
-
-
 </script>
 
-
-
 <style scoped>
-
 .title-card {
     background-color: white;
     padding: 20px;
@@ -48,7 +42,4 @@ const emit = defineEmits<{
     font-weight: 500;
     color: black;
 }
-
-
-
 </style>
