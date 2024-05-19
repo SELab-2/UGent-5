@@ -1,11 +1,10 @@
 <template>
-    <v-card variant="text" class="title-card" width="100%">
+    <v-card variant="outlined" class="title-card">
         <v-row>
             <v-col>
                 <v-card-title class="title">
                     {{ $t("subjects.title") }}
                 </v-card-title>
-
                 <v-card-text>
                     <div class="chip_container">
                         <v-chip-group mandatory v-model="activeAcademicYear" column>
@@ -13,9 +12,9 @@
                                 v-for="(academicYear, index) in academicYears"
                                 :key="index"
                                 :value="academicYear"
+                                class="ma-1 chip"
                                 color="primary"
-                                class="ma-1"
-                                variant="tonal"
+                                variant="flat"
                             >
                                 {{ `${academicYear}-${academicYear + 1}` }}
                             </v-chip>
@@ -90,8 +89,9 @@ watch(activeSubjectFilter, (newVal: SubjectFilter | undefined) => {
 
 <style scoped>
 .title-card {
-    background-color: white;
+    background-color: rgb(var(--v-theme-background));
     padding: 20px;
+    border-color: rgb(var(--v-theme-text));
 }
 
 .title {
@@ -115,4 +115,5 @@ watch(activeSubjectFilter, (newVal: SubjectFilter | undefined) => {
 .subject-checkbox {
     margin-top: -15px;
 }
+
 </style>

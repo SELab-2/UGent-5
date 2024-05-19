@@ -1,6 +1,6 @@
 <template>
     <router-link :to="{ name: 'subject', params: { subjectId: subject.id } }" class="router-link">
-        <v-card class="subject-card" height="16vh" color="#1D357EFF">
+        <v-card class="subject-card" height="16vh" variant="flat">
             <SubjectIcon :role="role" size="xx-large" class="subject-icon"></SubjectIcon>
             <v-card-title class="subject-title">
                 {{ subject?.name }}
@@ -33,10 +33,12 @@ defineProps<{
     justify-content: space-between;
     position: relative;
     width: 100%;
+    background-color: rgb(var(--v-theme-secondary));
+    border-radius: 3px;
 }
 
 .subject-title {
-    color: white;
+    color: rgb(var(--v-theme-text));
     font-size: 3vh;
     position: absolute;
     bottom: 0;
@@ -46,5 +48,6 @@ defineProps<{
     position: absolute;
     top: 10px;
     right: 15px;
+    color: rgb(var(--v-theme-text));
 }
 </style>
