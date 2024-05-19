@@ -42,7 +42,7 @@ export default {
         files: "Bestanden",
         download_info: "Klik op bestandsnaam om te downloaden",
         after_deadline: "Na deadline",
-        submissions_title: "Indieningen voor project {project}",
+        submissions_title: "Indieningen:",
         no_submissions: "Nog geen indieningen",
         teacher_submissions_info:
             "Deze pagina bevat een lijst van de laatste indiening van elke groep voor dit project.",

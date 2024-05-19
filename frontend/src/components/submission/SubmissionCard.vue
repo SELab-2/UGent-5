@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card variant="outlined">
         <v-card-title>
             {{ $t("submission.status") }}
             <p v-if="new Date(submission.date) <= deadline" :class="Status[submission.status]">
@@ -25,9 +25,7 @@
             <v-card-title>{{ $t("submission.docker_test") }}</v-card-title>
             <v-card-text>
                 <p v-if="submission.stdout">Stdout: {{ submission.stdout }}</p>
-                <p v-else>{{ $t("default.no") }} stdout</p>
                 <p v-if="submission.stderr">Sterr: {{ submission.stderr }}</p>
-                <p v-else>{{ $t("default.no") }} stderr</p>
                 <ul>
                     <li v-for="result in submission.testresults" :key="result">
                         <p v-if="result.succeeded" class="text-green">{{ result.value }}</p>
@@ -127,5 +125,14 @@ const downloadAll = () => {
 
 .Deadline {
     color: red;
+}
+
+.v-btn {
+    background-color: rgb(var(--v-theme-secondary));
+}
+
+.v-card {
+    border-color: rgb(var(--v-theme-text));
+    background-color: rgb(var(--v-theme-background));
 }
 </style>
