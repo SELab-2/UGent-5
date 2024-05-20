@@ -112,12 +112,14 @@ const router = createRouter({
             name: "projectSubmissions",
             component: () => import("../views/SubmissionsTeacherView.vue"),
             props: (route) => ({ projectId: Number(route.params.projectId) }),
+            meta: {
+                middleware: useCanVisit(useIsInstructorOfProjectCondition),
+            },
         },
         {
             path: "/subjects",
             name: "subjects",
             component: () => import("../views/subject/SubjectsView.vue"),
-            children: [],
         },
         {
             path: "/subjects/:subjectId(\\d+)",
