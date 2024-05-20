@@ -3,8 +3,8 @@
         <div>
             <h3>{{ subject.name }}</h3>
             <v-skeleton-loader v-if="isInstructorsLoading" type="text" />
-            <p v-else-if="instructors!.length > 0" class="teacher">
-                {{ instructors![0].given_name }}
+            <p v-else-if="sortedInstructors.length > 0" class="teacher">
+                {{ sortedInstructors[0].given_name + " " + sortedInstructors[0].surname }}
             </p>
         </div>
         <v-icon class="chevron" icon="mdi-chevron-right" />
@@ -23,9 +23,17 @@ const props = defineProps<{
 
 const { subject } = toRefs(props);
 
-const { data: instructors, isLoading: isInstructorsLoading } = useSubjectInstructorsQuery(
+const { data: instructorsData, isLoading: isInstructorsLoading } = useSubjectInstructorsQuery(
     computed(() => subject.value.id)
 );
+
+//sorteer zodat teachers voor assistenten tevoorschijn komen
+const sortedInstructors = computed(() => {
+    if (!instructorsData.value) return [];
+    return instructorsData.value.slice().sort((a, b) => {
+        return b.is_teacher - a.is_teacher;
+    });
+});
 
 const navigateToCourse = () => {
     router.push(`/subjects/${subject.value.id}`);
