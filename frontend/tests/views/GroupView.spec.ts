@@ -4,7 +4,7 @@ import GroupView from "@/views/GroupView.vue"
 import {ref} from "vue";
 
 const testGroupQuery = {
-    data: ref({project_id: 1, id: 1, team_name: "testgroup", members: [{given_name: "test", surname: "member"}]}),
+    data: ref({project_id: 1, id: 1, num: 1, members: [{given_name: "test", surname: "member"}]}),
     isLoading: ref(true),
     isError: ref(true),
     setLoading(value){
@@ -100,7 +100,7 @@ describe("GroupView", () => {
     });
     it("render if student", () => {
         const text = wrapper.text()
-        expect(text).toContain("testgroup")
+        expect(text).toContain("Groep 1")
         expect(text).toContain("Project: testproject")
         expect(text).toContain("test member")
         expect(wrapper.findComponent(".groupButtons").exists()).toBeTruthy()
