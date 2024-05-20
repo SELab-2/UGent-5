@@ -56,18 +56,40 @@ export async function getSubjectUuid(subjectId: number): Promise<string> {
 }
 
 /**
- * Creates a new project.
+ * Creates a new subject.
  */
-export async function createSubject(projectData: SubjectForm): Promise<number> {
+export async function createSubject(subjectData: SubjectForm): Promise<number> {
     const response = await authorized_fetch<Subject>(`/api/subjects/`, {
         method: "POST",
-        body: JSON.stringify(projectData),
+        body: JSON.stringify(subjectData),
     });
     return response.id;
 }
 
+/**
+ * Updates the subject with the given ID.
+ */
+export async function updateSubject(subjectId: number, subjectData: SubjectForm): Promise<void> {
+    return await authorized_fetch(`/api/subjects/${subjectId}`, {
+        method: "PATCH",
+        body: JSON.stringify(subjectData),
+    });
+}
+
+
+/**
+ * Creates a new subject instructor.
+ */
 export async function createSubjectInstructor(subjectId: number, uid: string): Promise<void> {
     return authorized_fetch(`/api/subjects/${subjectId}/instructors?user_id=${uid}`, {
         method: "POST",
     });
 }
+
+export async function deleteSubjectInstructor(subjectId: number, uid: string): Promise<void> {
+    return authorized_fetch(`/api/subjects/${subjectId}/instructors/${uid}`, {
+        method: "DELETE",
+    });
+}
+
+

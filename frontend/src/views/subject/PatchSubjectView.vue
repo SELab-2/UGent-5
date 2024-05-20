@@ -91,8 +91,8 @@ const {subjectId} = toRefs(props);
 const snackbar = ref(false);
 const dialog = ref(false);
 const isFormError = ref(false);
-const subjectName = ref(computed(() => subject.value?.name));
-const activeAcademicYear = ref<number>(computed(() => subject.value?.academic_year));
+const subjectName = ref(null);
+const activeAcademicYear = ref<number>(null);
 const currentUserAsInstructor = ref(computed(() => isInstructor.value));
 const addedInstructors = ref<Set<User>>(new Set());
 const removedInstructors = ref<Set<User>>(new Set());
@@ -193,6 +193,7 @@ const validateInstructors = () => {
 };
 
 async function handleSubmit() {
+    /*
     if (!validateSubjectName()) {
         isFormError.value = true;
         return;
@@ -203,14 +204,19 @@ async function handleSubmit() {
         return;
     }
 
-    const name = subjectName.value.trim();
+     */
+
+
+    const name = subjectName.value || subject.value?.name;
     const subjectData: SubjectForm = {
-        name: name.charAt(0).toUpperCase() + name.slice(1),
-        academic_year: activeAcademicYear.value,
+        name: name.trim().charAt(0).toUpperCase() + name.trim().slice(1),
+        academic_year: activeAcademicYear.value || subject.value?.academic_year,
     };
 
+    console.log(subjectData)
     const instructorIds = shownInstructors.value.map((instructor) => instructor.uid);
-
+    console.log(instructorIds)
+    /*
     try {
         subjectId.value = await createSubjectMutation.mutateAsync(subjectData);
         for (const instructor of instructorIds) {
@@ -221,6 +227,7 @@ async function handleSubmit() {
     } catch (error) {
         console.error("Error during subject creation:", error);
     }
+    */
 }
 </script>
 

@@ -11,7 +11,7 @@ import {
     registerToSubject,
     getSubjectUuid,
     createSubject,
-    createSubjectInstructor,
+    createSubjectInstructor, updateSubject, deleteSubjectInstructor,
 } from "@/services/subject";
 import { getSubjectProjects } from "@/services/project";
 import type User from "@/models/User";
@@ -19,6 +19,7 @@ import type Subject from "@/models/Subject";
 import type { UserSubjectList } from "@/models/Subject";
 import type Project from "@/models/Project";
 import type SubjectForm from "@/models/Subject";
+import type Group from "@/models/Group";
 
 function SUBJECT_QUERY_KEY(subjectId: number | string): (string | number)[] {
     return ["subject", subjectId];
@@ -50,6 +51,10 @@ function CREATE_SUBJECT_QUERY_KEY(): string[] {
 
 function CREATE_SUBJECT_INSTRUCTOR_QUERY_KEY(subjectId: number): (string | number)[] {
     return ["create", "subject", "instructor", subjectId];
+}
+
+function UPDATE_SUBJECT_QUERY_KEY(subjectId: number): (string | number)[] {
+    return ["update", "subject", subjectId];
 }
 
 /**
@@ -203,3 +208,51 @@ export function useCreateSubjectInstructorMutation(
         },
     });
 }
+
+export function useUpdateSubjectMutation(): UseMutationReturnType<
+    void,
+    Error,
+    {subjectId: number, name: string, academicYear: number},
+    { previousSubject: Subject }
+> {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: ({subjectId, name, academicYear}) => updateSubject(toValue(subjectId)!, {name, academicYear}),
+        onMutate: ({subjectId, name, academicYear}) => {
+            const previousSubject = queryClient.getQueryData<Subject>(SUBJECT_QUERY_KEY(toValue(subjectId)!));
+            queryClient.setQueryData<Subject>(SUBJECT_QUERY_KEY(toValue(subjectId)!), {name, academicYear});
+            return { previousSubject: previousSubject! };
+        },
+        onSuccess: (_, {subjectId}) => {
+            queryClient.invalidateQueries({ queryKey: UPDATE_SUBJECT_QUERY_KEY(toValue(subjectId)!) });
+        },
+        onError: (_, { subjectId }, ctx) => {
+            queryClient.setQueryData<Subject>(SUBJECT_QUERY_KEY(subjectId), ctx!.previousSubject);
+            alert("Could not update subject. Please try again.");
+        },
+    });
+}
+
+
+/*
+export function useDeleteSubjectInstructorMutation(): UseMutationReturnType<
+    void,
+    Error,
+    {subjectId: number, userId: string},
+    void
+> {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: ({subjectId, userId}) => deleteSubjectInstructor(subjectId, userId),
+        onSuccess: (_, {}) => {
+            queryClient.invalidateQueries({ queryKey: SUBJECT_INSTRUCTORS_QUERY_KEY(subjectId) });
+        },
+        onError: (error) => {
+            console.error(error);
+            alert("Failed to delete subject instructor");
+        },
+    });
+}
+ */
+
+
