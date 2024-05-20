@@ -42,13 +42,13 @@ import { ref, defineEmits, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
-const props = defineProps({
-    modelValue: Array,
-});
+const props = defineProps<{
+    modelValue: Array<Requirement>;
+}>();
 const emit = defineEmits(["update:modelValue"]);
-const internalRequirements = ref([...props.modelValue]);
-const newRequirement = ref("");
-const errorMessages = ref([]);
+const internalRequirements = ref<Requirement[]>([...props.modelValue]);
+const newRequirement = ref<string>("");
+const errorMessages = ref<string[]>([]);
 
 const addRequirement = () => {
     errorMessages.value = []; // Clear previous error messages
