@@ -11,7 +11,8 @@ const testProjectQuery = {
     },
     setIsLoading(value){
         this.isLoading.value = value;
-    }
+    },
+    data: ref({id: 1})
 };
 
 vi.mock('@/queries/Project', () => ({
@@ -52,10 +53,15 @@ const testSubjectInstructorsQuery = {
     },
     setIsLoading(value){
         this.isLoading.value = value;
-    }
+    },
+    data: ref([{uid: "instructor"}])
 };
 
 const testCurrentUserQuery = {
+    data: ref({id: 1, is_teacher: false, is_admin: false, uid: "student"}),
+    setTeacher(value){
+        this.data.value.is_teacher = value
+    },
     isLoading: ref(true),
     isError: ref(true),
     setIsError(value){
@@ -65,7 +71,6 @@ const testCurrentUserQuery = {
         this.isLoading.value = value;
     }
 };
-
 
 vi.mock('@/queries/User', () => ({
     useCurrentUserQuery: vi.fn(() => testCurrentUserQuery),
@@ -135,5 +140,10 @@ describe("ProjectView", async () => {
         await wrapper.vm.$nextTick();
         expect(wrapper.findComponent('.projectInfoComponent').exists()).toBeTruthy()
         expect(wrapper.findComponent('.projectSideBar').exists()).toBeTruthy()
+    })
+    it("render if teacher", async () => {
+        testCurrentUserQuery.setTeacher(true)
+        await wrapper.vm.$nextTick()
+        expect(wrapper.text()).toContain("Alle indieningen voor dit project")
     })
 });
