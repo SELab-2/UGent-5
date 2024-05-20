@@ -5,6 +5,7 @@
         </v-col>
         <v-col cols="8">
             <CreateSubjectHeaderCard
+                :title="title"
                 :subject-name="subjectName"
                 :academic-year="academicYear"
                 :current-user-as-instructor="currentUserAsInstructor"
@@ -25,6 +26,7 @@ import CreateSubjectHeaderCard from "@/components/subject/modify/create/header/C
 import CreateSubjectHeaderImage from "@/components/subject/modify/create/header/CreateSubjectHeaderImage.vue";
 
 defineProps<{
+    title: string;
     imagePath: string;
     subjectName: string,
     academicYear: number,

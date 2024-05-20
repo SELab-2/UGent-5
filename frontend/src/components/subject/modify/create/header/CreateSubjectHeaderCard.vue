@@ -1,7 +1,7 @@
 <template>
     <v-card variant="text" class="title-card" width="100%" height="35vh">
         <v-card-title class="title">
-            {{ $t("create_subject.new_subject") }}
+            {{ title }}
         </v-card-title>
 
         <v-card-text>
@@ -53,6 +53,7 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 
 const props = defineProps<{
+    title: string;
     subjectName: string;
     academicYear: number;
     currentUserAsInstructor: boolean;

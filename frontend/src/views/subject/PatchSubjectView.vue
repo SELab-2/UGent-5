@@ -33,9 +33,10 @@
                 </v-dialog>
                 <div class="flex-container">
                     <CreateSubjectHeaderContainer
+                        title="Edit Subject"
                         :image-path="`https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png`"
-                        :subject-name="subjectName"
-                        :academic-year="activeAcademicYear"
+                        :subject-name="subject!.name"
+                        :academic-year="subject!.academic_year"
                         :current-user-as-instructor="currentUserAsInstructor"
                         :is-form-error="isFormError"
                         @update:subject-name="onSubjectNameUpdated"
@@ -90,8 +91,8 @@ const {subjectId} = toRefs(props);
 const snackbar = ref(false);
 const dialog = ref(false);
 const isFormError = ref(false);
-const subjectName = ref("");
-const activeAcademicYear = ref<number>(useAcademicYear());
+const subjectName = ref(computed(() => subject.value?.name));
+const activeAcademicYear = ref<number>(computed(() => subject.value?.academic_year));
 const currentUserAsInstructor = ref(true);
 
 const {

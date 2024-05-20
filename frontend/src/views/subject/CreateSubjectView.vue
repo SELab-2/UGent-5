@@ -33,6 +33,7 @@
                 </v-dialog>
                 <div class="flex-container">
                     <CreateSubjectHeaderContainer
+                        :title="$t('create_subject.new_subject')"
                         :image-path="`https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png`"
                         :subject-name="subjectName"
                         :academic-year="activeAcademicYear"
