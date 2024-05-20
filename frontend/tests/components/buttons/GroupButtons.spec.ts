@@ -6,8 +6,7 @@ import {ref} from "vue";
 const mockGroup = {
     members: [
         {uid: "student1"}
-    ],
-    team_name: "testgroep"
+    ]
 }
 
 const mockMembers = [
