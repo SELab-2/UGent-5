@@ -1,0 +1,6 @@
+#!/bin/sh
+cp -R "$SUBMISSION_DIR" "$PWD"
+chmod a+wx "$ARTIFACT_DIR"
+chmod a+wx "$CORRECT"
+chmod a+wx "$FAILED"
+su runner -c 'python test.py'
