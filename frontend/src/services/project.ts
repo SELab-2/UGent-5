@@ -52,13 +52,12 @@ export async function createProject(projectData: ProjectForm): Promise<number> {
 export async function updateProject(
     projectId: number,
     projectData: Partial<ProjectForm>
-): Promise<void> {
-    const response = await authorized_fetch(`/api/projects/${projectId}`, {
+): Promise<Project> {
+    return await authorized_fetch(`/api/projects/${projectId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(projectData),
     });
-    return;
 }
 
 // Function to upload test files to a specific project
