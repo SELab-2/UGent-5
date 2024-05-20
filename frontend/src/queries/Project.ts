@@ -116,14 +116,11 @@ export function useUpdateProjectMutation(): UseMutationReturnType<
     );
 }
 
-export function useProjectFilesQuery(projectId: number): UseQueryReturnType<File[], Error> {
+export function useProjectFilesQuery(projectId: MaybeRefOrGetter<number | undefined>): UseQueryReturnType<File[], Error> {
     return useQuery<File[], Error>({
-        queryKey: projectFilesQueryKey(projectId),
-        queryFn: () => fetchProjectFiles(projectId),
-        enabled: !!projectId, // Only fetch when a projectId is provided
-        onError: (error) => {
-            console.error("Error fetching project files:", error);
-        },
+        queryKey: TEST_FILES_QUERY_KEY(toValue(projectId)!),
+        queryFn: () => fetchProjectFiles(toValue(projectId)!),
+        enabled: () => !!toValue(projectId), // Only fetch when a projectId is provided
     });
 }
 // Hook for uploading files to a project
