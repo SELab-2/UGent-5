@@ -43,6 +43,12 @@ describe("SubmissionsTeacherView", () => {
         expect(wrapper.text()).toContain("error message")
         testProjectSubmissionsQuery.setError(false)
         await wrapper.vm.$nextTick()
-    })
-    it("render if submissions")
+    });
+    it("render if submissions", async () => {
+        const text = wrapper.text()
+        expect(text).toContain("Indieningen voor project testproject")
+        expect(text).toContain("Deze pagina bevat een lijst van de laatste indiening van elke groep voor dit project.")
+        expect(wrapper.findComponent({name: "SubmissionTeacherCard"}).exists()).toBeTruthy()
+        expect(wrapper.findComponent({name: "BackButton"}).exists()).toBeTruthy()
+    });
 })
