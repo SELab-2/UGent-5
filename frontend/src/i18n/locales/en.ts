@@ -73,6 +73,7 @@ export default {
         unmet_reqs_warning: "Your submission did not satisfy all file requirements.",
         to_subject: "To subject",
         to_groups: "To groups",
+        to_project: "To Project",
     },
     navigation: {
         home: "Home",
