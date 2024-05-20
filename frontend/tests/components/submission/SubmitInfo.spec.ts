@@ -1,6 +1,6 @@
 import {mount} from "@vue/test-utils";
 import {expect, describe, it, vi} from "vitest";
-import SubmitInfo from "@/components/project/submit/SubmitInfo.vue"
+import SubmitInfo from "@/components/submission/SubmitInfo.vue"
 import {computed, ref} from "vue";
 
 const mockGroup = {

@@ -9,6 +9,9 @@
                         {{ $t("submission.no_submissions") }}</v-card-subtitle
                     >
                     <v-card-subtitle v-else icon="$info">{{ $t("submission.teacher_submissions_info") }}</v-card-subtitle>
+                    <v-btn class="primary-button" @click="downloadAll" prepend-icon="mdi-download">
+                        {{ $t("project.submissions_zip") }}
+                    </v-btn>
                     <SubmissionTeacherCard
                         class="ma-3"
                         v-for="submission in submissions"
@@ -34,6 +37,7 @@ import { useProjectSubmissionsQuery } from "@/queries/Submission";
 import { toRefs } from "vue";
 import SubmissionTeacherCard from "@/components/submission/SubmissionTeacherCard.vue";
 import BackButton from "@/components/buttons/BackButton.vue"
+import { download_file } from "@/utils";
 
 const props = defineProps<{
     projectId: number;
@@ -48,9 +52,20 @@ const {
     error,
 } = useProjectSubmissionsQuery(projectId);
 const { data: project, isLoading: projectLoading } = useProjectQuery(projectId);
+
+const downloadAll = () => {
+    download_file(`/api/projects/${projectId.value}/zip`, `project_${projectId.value}`);
+};
 </script>
 
 <style scoped>
+.primary-button {
+    margin-bottom: 5px;
+    min-width: 150px;
+    background-color: rgb(var(--v-theme-primary));
+    color: rgb(var(--v-theme-navtext));
+}
+
 .card {
     background-color: rgb(var(--v-theme-secondary));
     margin-top: 25px;

@@ -3,8 +3,10 @@ import {expect, describe, it, vi} from "vitest";
 import SubjectsCard from "@/components/home/cards/SubjectsCard.vue"
 import {ref} from "vue";
 
+const academicYear = 23;
+
 const testSubjectsQuery = {
-    data: ref({as_student: [{id: 1}], as_instructor: []}),
+    data: ref({as_student: [{id: 1, academic_year: academicYear}], as_instructor: []}),
     isLoading: ref(true),
     isError: ref(true),
     setLoading(value){
@@ -23,6 +25,10 @@ vi.mock("@/components/home/listcontent/SubjectItem.vue", () => ({
     default : {
         template: "<div class='subjectItem'></div>",
     }
+}))
+
+vi.mock("@/composables/useAcademicYear", () => ({
+    default: vi.fn(() => academicYear)
 }))
 
 describe("SubjectsCard", () => {
