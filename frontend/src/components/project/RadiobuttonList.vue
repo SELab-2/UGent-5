@@ -72,6 +72,4 @@ function handleCapacityInput(event: Event) {
     }
     emit("update:capacity", capacity.value);
 }
-
 </script>
-
