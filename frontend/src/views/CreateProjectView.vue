@@ -138,7 +138,7 @@ import { useRoute } from "vue-router";
 import { useSubjectsQuery, useSubjectStudentsQuery } from "@/queries/Subject";
 
 import { useCreateGroupsMutation, useAddToGroupMutation } from "@/queries/Group";
-import { ref, reactive, computed } from "vue";
+import { ref, computed } from "vue";
 import {
     useCreateProjectMutation,
     useTestFilesQuery,
@@ -151,6 +151,7 @@ import DisplayTestFiles from "@/components/project/DisplayTestFiles.vue";
 import router from "@/router";
 import RequirementsInput from "@/components/project/RequirementsInput.vue";
 import { useI18n } from "vue-i18n";
+import type Project from "@/models/Project";
 const route = useRoute();
 const { t } = useI18n();
 
@@ -168,9 +169,9 @@ const showErrorAlert = ref(false);
 const showSuccessAlert = ref(false);
 const errorMessage = ref("");
 const successMessage = ref("");
-const requirements = ref([]);
+const requirements = ref<{ mandatory: boolean; value: string }[]>([]);
 
-const projectId = ref(route.params.projectId);
+const projectId = ref(Number(route.params.projectId));
 const isEditMode = computed(() => projectId.value !== undefined);
 
 //mutations
@@ -185,7 +186,7 @@ const {
     data: filesData,
     isError: filesError,
     isLoading: filesLoading,
-} = useTestFilesQuery(projectId.value);
+} = useTestFilesQuery(projectId);
 
 // Query to fetch and handle project details
 const {
@@ -236,24 +237,21 @@ const groupProjectOptions = computed(() => [
 
 // Watching projectData for changes to update the form data
 watch(
-    projectData,
-    (project) => {
-        if (project) {
-            project_title.value = project.name;
-            deadline.value = new Date(project.deadline);
-            publishDate.value = new Date(project.publish_date);
-            requirements.value = project.requirements.map((req) => ({ ...req }));
-            const description = project.description;
-            selectedSubject.value = project.subject_id;
-            nextTick(() => {
-                if (quillEditor.value && quillEditor.value.getQuill) {
-                    let quill = quillEditor.value.getQuill();
-                    quill.root.innerHTML = description;
-                } else {
-                    console.error("Quill Editor is not initialized");
-                }
-            });
-        }
+    [projectData, quillEditor],
+    (/* project: Project | undefined */) => {
+        if (!projectData.value) return;
+        const project: Project = projectData.value;
+        project_title.value = project.name;
+        deadline.value = new Date(project.deadline);
+        publishDate.value = new Date(project.publish_date);
+        requirements.value = project.requirements.map((req) => ({ ...req }));
+        selectedSubject.value = project.subject_id;
+        nextTick(() => {
+            if (quillEditor.value && quillEditor.value.getQuill) {
+                let quill = quillEditor.value.getQuill();
+                quill.root.innerHTML = project.description;
+            }
+        });
     },
     { deep: true }
 );
@@ -317,12 +315,12 @@ async function submitForm() {
         } else {
             await createProject(projectData);
         }
-        handleFiles(projectData.project_id);
+        handleFiles(projectId.value);
     } catch (error) {
         console.error("Error during project or group creation or file upload:", error);
         setErrorAlert("An unexpected error occurred. Please try again.");
     }
-    navigateToProject(projectData.project_id);
+    navigateToProject(projectId.value);
 }
 
 function formatProjectData() {
@@ -387,8 +385,8 @@ async function joinStudentsToGroups(createdGroups, studentGroups) {
     }
 }
 // Function to generate empty groups for a project
-function generateEmptyGroups(projectId) {
-    const numberOfGroups = Math.ceil(studentsData.value.length / capacity.value);
+function generateEmptyGroups(projectId: number) {
+    const numberOfGroups = Math.ceil(studentsData.value!.length / capacity.value);
     const emptyGroups = [];
     for (let i = 0; i < numberOfGroups; i++) {
         emptyGroups.push({
@@ -400,7 +398,7 @@ function generateEmptyGroups(projectId) {
     return emptyGroups;
 }
 // Function to handle file uploads for a project
-async function handleFiles(projectId) {
+async function handleFiles(projectId: number) {
     if (files.value.length > 0) {
         const formData = new FormData();
         files.value.forEach((file) => {
@@ -413,7 +411,7 @@ async function handleFiles(projectId) {
     }
 }
 //navigate to project after creation/editing
-function navigateToProject(projectId) {
+function navigateToProject(projectId: number) {
     router.push({ name: "project", params: { projectId } });
 }
 
