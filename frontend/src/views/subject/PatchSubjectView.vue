@@ -93,7 +93,9 @@ const dialog = ref(false);
 const isFormError = ref(false);
 const subjectName = ref(computed(() => subject.value?.name));
 const activeAcademicYear = ref<number>(computed(() => subject.value?.academic_year));
-const currentUserAsInstructor = ref(true);
+const currentUserAsInstructor = ref(computed(() => isInstructor.value));
+const addedInstructors = ref<Set<User>>(new Set());
+const removedInstructors = ref<Set<User>>(new Set());
 
 const {
     data: currentUser,
@@ -132,20 +134,24 @@ const isError = computed(
         isInstructorsError.value
 );
 
+const isInstructor = computed(() => {
+    return shownInstructors.value.some((instructor) => instructor?.uid === currentUser.value?.uid);
+});
+
 const createSubjectInstructorMutation = useCreateSubjectInstructorMutation(subjectId);
 
 const router = useRouter();
 
 const shownInstructors = computed(() => {
-    if (currentUserAsInstructor.value) {
-        return [currentUser.value, ...instructors.value];
-    }
-    return instructors.value;
+    return Array.from(new Set([...(instructors.value || []), ...addedInstructors.value].filter((instructor) => {
+        return !removedInstructors.value.has(instructor);
+    })))
 });
 
 const addInstructor = (user: User) => {
-    instructors.value.push(user);
-    instructors.value.sort((a, b) => {
+    addedInstructors.value.add(user);
+    removedInstructors.value.delete(user);
+    shownInstructors.value.sort((a, b) => {
         if (a?.is_teacher && !b?.is_teacher) {
             return -1;
         } else if (!a?.is_teacher && b?.is_teacher) {
@@ -153,15 +159,14 @@ const addInstructor = (user: User) => {
         } else {
             return a?.surname.localeCompare(b?.surname);
         }
-    });
+    })
 };
 
 const removeInstructor = (instructor: User) => {
     if (currentUser.value?.uid === instructor?.uid) {
         currentUserAsInstructor.value = false;
-    } else {
-        instructors.value.splice(instructors.value.indexOf(instructor), 1);
     }
+    shownInstructors.value.splice(shownInstructors.value.indexOf(instructor), 1);
 };
 
 const onSubjectNameUpdated = (name: string) => {
