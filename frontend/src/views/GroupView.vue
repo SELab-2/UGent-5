@@ -24,7 +24,11 @@
                                         color="red"
                                         variant="flat"
                                         @click="
-                                            () => removeStudent({ groupId: group!.id, uid: member.uid })
+                                            () =>
+                                                removeStudent({
+                                                    groupId: group!.id,
+                                                    uid: member.uid,
+                                                })
                                         "
                                     >
                                         {{ $t("group.remove") }}</v-btn
