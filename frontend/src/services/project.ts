@@ -62,7 +62,7 @@ export async function updateProject(
 }
 
 // Function to upload test files to a specific project
-export async function uploadProjectFiles(projectId: number, formData: FormData): Promise<void> {
+export async function uploadTestFiles(projectId: number, formData: FormData): Promise<void> {
     await authorized_fetch(
         `/api/projects/${projectId}/test_files`,
         {
@@ -73,7 +73,7 @@ export async function uploadProjectFiles(projectId: number, formData: FormData):
     );
 }
 
-export async function fetchProjectFiles(projectId: number): Promise<any> {
+export async function fetchTestFiles(projectId: number): Promise<any> {
     return authorized_fetch(`/api/projects/${projectId}/test_files`, {
         method: "GET",
     });

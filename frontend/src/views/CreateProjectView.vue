@@ -141,10 +141,10 @@ import { useCreateGroupsMutation, useAddToGroupMutation } from "@/queries/Group"
 import { ref, reactive, computed } from "vue";
 import {
     useCreateProjectMutation,
-    useProjectFilesQuery,
+    useTestFilesQuery,
     useProjectQuery,
     useUpdateProjectMutation,
-    useUploadProjectFilesMutation,
+    useUploadTestFilesMutation,
 } from "@/queries/Project";
 import type User from "@/models/User";
 import DisplayTestFiles from "@/components/project/DisplayTestFiles.vue";
@@ -177,7 +177,7 @@ const isEditMode = computed(() => projectId.value !== undefined);
 const createProjectMutation = useCreateProjectMutation();
 const createGroupsMutation = useCreateGroupsMutation();
 const joinGroupMutation = useAddToGroupMutation();
-const uploadProjectFilesMutation = useUploadProjectFilesMutation();
+const uploadProjectFilesMutation = useUploadTestFilesMutation();
 const updateProjectMutation = useUpdateProjectMutation();
 
 // Query to fetch and handle files associated with a project
@@ -185,7 +185,7 @@ const {
     data: filesData,
     isError: filesError,
     isLoading: filesLoading,
-} = useProjectFilesQuery(projectId.value);
+} = useTestFilesQuery(projectId.value);
 
 // Query to fetch and handle project details
 const {

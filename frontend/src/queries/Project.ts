@@ -9,9 +9,9 @@ import {
     getProject,
     createProject,
     getProjects,
-    uploadProjectFiles,
+    uploadTestFiles,
     updateProject,
-    fetchProjectFiles,
+    fetchTestFiles,
 } from "@/services/project";
 
 function PROJECT_QUERY_KEY(projectId: number): (string | number)[] {
@@ -27,7 +27,7 @@ function PROJECTS_QUERY_KEY(): string[] {
  */
 
 function TEST_FILES_QUERY_KEY(projectId: number): (string | number)[] {
-    return ["projectFiles", projectId];
+    return ["testFiles", projectId];
 }
 
 // Hook for fetching project details
@@ -51,18 +51,6 @@ export function useProjectsQuery(): UseQueryReturnType<UserProjectList, Error> {
     });
 }
 
-// Hook for creating a new submission
-export function useCreateSubmissionMutation(
-    groupId: Ref<number | undefined>
-): UseMutationReturnType<Submission, Error, FormData, void> {
-    return useMutation<Submission, Error, FormData, void>({
-        mutationFn: (formData) => createSubmission(groupId.value!, formData),
-        onError: (error) => {
-            console.error("Submission creation failed", error);
-            alert("Could not create submission. Please try again.");
-        },
-    });
-}
 /**
  * Mutation composable for creating a project
  */
@@ -112,17 +100,17 @@ export function useUpdateProjectMutation(): UseMutationReturnType<
     });
 }
 
-export function useProjectFilesQuery(
+export function useTestFilesQuery(
     projectId: MaybeRefOrGetter<number | undefined>
 ): UseQueryReturnType<File[], Error> {
     return useQuery<File[], Error>({
         queryKey: TEST_FILES_QUERY_KEY(toValue(projectId)!),
-        queryFn: () => fetchProjectFiles(toValue(projectId)!),
+        queryFn: () => fetchTestFiles(toValue(projectId)!),
         enabled: () => !!toValue(projectId), // Only fetch when a projectId is provided
     });
 }
 // Hook for uploading files to a project
-export function useUploadProjectFilesMutation(): UseMutationReturnType<
+export function useUploadTestFilesMutation(): UseMutationReturnType<
     void, // Type of data returned on success
     Error, // Type of error
     { projectId: number; formData: FormData },
@@ -130,7 +118,7 @@ export function useUploadProjectFilesMutation(): UseMutationReturnType<
 > {
     const queryClient = useQueryClient();
     return useMutation<void, Error, { projectId: number; formData: FormData }, void>({
-        mutationFn: ({ projectId, formData }) => uploadProjectFiles(projectId, formData),
+        mutationFn: ({ projectId, formData }) => uploadTestFiles(projectId, formData),
         onSuccess: (_, { projectId }) => {
             queryClient.invalidateQueries({ queryKey: PROJECT_QUERY_KEY(projectId) });
             console.log("Files uploaded successfully");
