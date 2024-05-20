@@ -17,7 +17,7 @@
                             ></SubjectsHeaderContainer>
                         </v-col>
                     </v-row>
-                    <v-row>
+                    <v-row class="body">
                         <div v-if="filteredSubjectsByAcademicYear.length === 0" class="no-results">
                             <h1>{{ $t("subjects.no_subjects") }}</h1>
                         </div>
@@ -136,5 +136,15 @@ const onAcademicYearChanged = (academicYear: number) => {
 
 .no-results {
     text-align: center;
+}
+
+.body {
+    max-height: 62vh;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.body::-webkit-scrollbar {
+    width: 0;
 }
 </style>

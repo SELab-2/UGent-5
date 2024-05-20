@@ -28,11 +28,13 @@
                     class="subject-checkbox"
                     v-model="showInstructorSubjects"
                     :label="$t('subjects.instructor_subjects')"
+                    color="primary"
                 ></v-checkbox>
                 <v-checkbox
                     class="subject-checkbox"
                     v-model="showStudentSubjects"
                     :label="$t('subjects.student_subjects')"
+                    color="primary"
                 ></v-checkbox>
             </v-col>
         </v-row>

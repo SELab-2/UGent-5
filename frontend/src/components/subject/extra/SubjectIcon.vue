@@ -11,6 +11,7 @@ import { computed, toRefs } from "vue";
 const props = defineProps<{
     role: SubjectRole;
     size: string;
+    color: string;
 }>();
 
 const { role } = toRefs(props);

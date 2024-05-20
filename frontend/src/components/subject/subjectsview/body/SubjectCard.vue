@@ -1,6 +1,6 @@
 <template>
     <router-link :to="{ name: 'subject', params: { subjectId: subject.id } }" class="router-link">
-        <v-card class="subject-card" height="16vh" color="#1D357EFF">
+        <v-card class="subject-card" height="12vh" color="primary">
             <SubjectIcon :role="role" size="xx-large" class="subject-icon"></SubjectIcon>
             <v-card-title class="subject-title">
                 {{ subject?.name }}
