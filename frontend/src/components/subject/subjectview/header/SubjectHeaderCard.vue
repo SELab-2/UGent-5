@@ -1,9 +1,11 @@
 <template>
-    <v-card variant="text" class="title-card" height="165" max-width="50vw">
+    <v-card variant="text" class="title-card" height="165">
         <v-row>
-            <v-col :cols="isAdmin || (isInstructor && isTeacher) ? 10 : 12" class="scrollable-col">
+            <v-col :cols="isAdmin || (isInstructor && isTeacher) ? 11 : 12" class="scrollable-col">
                 <v-card-title class="title">
-                    {{ title }}
+                    <div class="scrollable">
+                        {{ title }}
+                    </div>
                 </v-card-title>
                 <v-card-text>
                     <HeaderSubtitleButton
@@ -22,7 +24,7 @@
                     </div>
                 </v-card-text>
             </v-col>
-            <v-col v-if="isAdmin || (isInstructor && isTeacher)" cols="2">
+            <v-col v-if="isAdmin || (isInstructor && isTeacher)" cols="1">
                 <router-link to="" class="link">
                     <v-icon size="large">mdi-square-edit-outline</v-icon>
                 </router-link>
@@ -52,22 +54,22 @@ const { isTeacher } = useIsTeacher();
 .title-card {
     background-color: white;
     padding: 20px;
-    overflow: auto;
-    scrollbar-width: none;
 }
 
-.title-card::-webkit-scrollbar {
-    display: none;
-}
-
-.title {
+.scrollable {
     font-size: 32px;
     letter-spacing: -0.5px;
     text-transform: capitalize;
     font-weight: bold;
     margin-bottom: 12px;
     font-family: "Poppins", sans-serif;
-    white-space: normal;
+    max-width: 49vw;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.scrollable::-webkit-scrollbar {
+    display: none;
 }
 
 .instr-container {
