@@ -66,13 +66,9 @@ const addRequirement = () => {
 };
 
 watchEffect(() => {
-    console.log("Current props value:", props.modelValue);
     internalRequirements.value = [...props.modelValue];
 });
 
-const updateRequirements = () => {
-    emit("update:modelValue", [...internalRequirements.value]);
-};
 const validateRequirement = (value) => {
     if (!value) {
         return t("project.required"); // Check if the input is empty

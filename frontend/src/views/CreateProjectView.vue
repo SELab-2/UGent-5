@@ -71,10 +71,19 @@
         <v-row>
             <v-col cols="12">
                 <div v-if="isEditMode" class="file-upload-disclaimer">
-                    <v-alert class="custom-alert" dense text>
+                    <v-alert
+                        v-if="filesData && filesData.length > 0"
+                        class="custom-alert"
+                        dense
+                        text
+                    >
+                        {{ $t("project.files_will_be_overwritten") }}
+                    </v-alert>
+                    <v-alert v-else class="custom-alert" dense text>
                         {{ $t("project.no_files") }}
                     </v-alert>
                 </div>
+
                 <FilesInput v-model="files" />
             </v-col>
             <v-col cols="12">
@@ -275,7 +284,6 @@ async function submitForm() {
         } else {
             await createProject(projectData);
         }
-        handleFiles(projectData.project_id);
         navigateToProject(projectData.project_id);
     } catch (error) {
         console.error("Error during project or group creation or file upload:", error);
@@ -303,6 +311,7 @@ async function updateProject(projectData) {
         projectId: projectId.value,
         projectData,
     });
+    handleFiles(projectId.value);
     setSuccessAlert("Project updated successfully.");
 }
 
@@ -310,6 +319,7 @@ async function createProject(projectData) {
     const createdProjectId = await createProjectMutation.mutateAsync(projectData);
     projectData.project_id = createdProjectId;
     await handleGroupCreation(createdProjectId);
+    handleFiles(projectData.project_id);
     setSuccessAlert("Project created successfully.");
 }
 

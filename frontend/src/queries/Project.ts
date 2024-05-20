@@ -117,7 +117,6 @@ export function useUpdateProjectMutation(): UseMutationReturnType<
 }
 
 export function useProjectFilesQuery(projectId: number): UseQueryReturnType<File[], Error> {
-    console.log("projectid" + projectId);
     return useQuery<File[], Error>({
         queryKey: projectFilesQueryKey(projectId),
         queryFn: () => fetchProjectFiles(projectId),

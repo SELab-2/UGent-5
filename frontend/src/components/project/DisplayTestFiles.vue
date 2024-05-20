@@ -1,6 +1,6 @@
 <template>
     <v-card class="file-display-container" outlined>
-        <v-card-title> Project Files </v-card-title>
+        <v-card-title>{{ $t("project.testfiles") }}</v-card-title>
         <v-card-text>
             <v-treeview v-model="tree" :items="treeItems" activatable hoverable open-on-click>
                 <template v-slot:prepend="{ item }">

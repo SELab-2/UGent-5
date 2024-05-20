@@ -33,6 +33,7 @@ export default {
         new_submission: "Submit new",
         status_submission: "Submission is: {status}",
         no_submission_files: "No submissions found",
+        files_disclaimer: "For info on the usage of testfiles please visit our",
     },
     submission: {
         status: "Submission status:",
@@ -79,6 +80,8 @@ export default {
         forbidden: "Forbidden",
         invalid_format:
             "Please enter a valid file type, including the extension (e.g., 'image.png')",
+        files_will_be_overwritten: "By uploading another file current files will be overwritten.",
+        testfiles: "Testfiles",
     },
     navigation: {
         home: "Home",
