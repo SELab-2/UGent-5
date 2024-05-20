@@ -68,7 +68,7 @@ describe("SubmissionsList", () => {
                 }
             }
         })
-        expect(wrapper.text()).toContain("Indieningen:")
+        expect(wrapper.text()).toContain("Indieningen voor project")
         const VBtn = wrapper.findComponent({name:"VBtn"})
         expect(VBtn.text()).toContain("Nieuwe indiening")
     });
