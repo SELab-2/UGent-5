@@ -4,8 +4,9 @@ import { QueryClient } from "@tanstack/vue-query";
 import useIsAdmin from "@/composables/useIsAdmin";
 import useIsTeacher from "@/composables/useIsTeacher";
 import { useSubjectsQuery } from "@/queries/Subject";
-import { useProjectsQuery } from "@/queries/Project";
-import { useProjectGroupQuery } from "@/queries/Group";
+import { useProjectQuery, useProjectsQuery } from "@/queries/Project";
+import { useGroupQuery, useProjectGroupQuery } from "@/queries/Group";
+import { useCurrentUserQuery } from "@/queries/User";
 
 export interface CanVisitCondition {
     (
@@ -128,4 +129,31 @@ export const useIsInGroupOfProjectCondition: CanVisitCondition = (qc, ctx) => {
         return group.value !== null;
     });
     return { condition, isLoading };
+};
+
+export const useIsInGroupCondition: CanVisitCondition = (qc, ctx) => {
+    const groupId = Number(ctx.to.params.groupId);
+    const { data: group, isLoading: isGroupLoading } = useGroupQuery(groupId, qc);
+    const { data: user, isLoading: isUserLoading } = useCurrentUserQuery(qc);
+    const condition = computed(() => {
+        return group.value?.members.findIndex((member) => member.uid === user.value?.uid) !== -1;
+    });
+    return { condition, isLoading: computed(() => isGroupLoading.value || isUserLoading.value) };
+};
+
+export const useIsInstructorOfGroupCondition: CanVisitCondition = (qc, ctx) => {
+    const groupId = Number(ctx.to.params.groupId);
+    const { data: group, isLoading: isGroupLoading } = useGroupQuery(groupId, qc);
+    const { data: projects, isLoading: isProjectsLoading } = useProjectsQuery(qc);
+    const condition = computed(() => {
+        return (
+            projects.value?.as_instructor.findIndex(
+                (project) => project.id === group.value?.project_id
+            ) !== -1
+        );
+    });
+    return {
+        condition,
+        isLoading: computed(() => isGroupLoading.value || isProjectsLoading.value),
+    };
 };

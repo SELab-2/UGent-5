@@ -38,13 +38,17 @@ function PROJECT_USER_GROUP_QUERY_KEY(projectId: number): (string | number)[] {
  * Query composable for fetching a group by id
  */
 export function useGroupQuery(
-    groupId: MaybeRefOrGetter<number | undefined>
+    groupId: MaybeRefOrGetter<number | undefined>,
+    queryClient?: QueryClient
 ): UseQueryReturnType<Group, Error> {
-    return useQuery<Group, Error>({
-        queryKey: GROUP_QUERY_KEY(toValue(groupId)!),
-        queryFn: () => getGroup(toValue(groupId)!),
-        enabled: () => !!toValue(groupId),
-    });
+    return useQuery<Group, Error>(
+        {
+            queryKey: GROUP_QUERY_KEY(toValue(groupId)!),
+            queryFn: () => getGroup(toValue(groupId)!),
+            enabled: () => !!toValue(groupId),
+        },
+        queryClient
+    );
 }
 
 /**

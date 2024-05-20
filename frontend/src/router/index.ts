@@ -9,6 +9,8 @@ import useCanVisit, {
     useIsInstructorOfSubjectCondition,
     useIsStudentOfProjectCondition,
     useIsInstructorOfProjectCondition,
+    useIsInGroupCondition,
+    useIsInstructorOfGroupCondition,
     useAndCondition,
     useOrCondition,
     useIsInGroupOfProjectCondition,
@@ -99,6 +101,11 @@ const router = createRouter({
             name: "group",
             component: () => import("../views/GroupView.vue"),
             props: (route) => ({ groupId: Number(route.params.groupId) }),
+            meta: {
+                middleware: useCanVisit(
+                    useOrCondition(useIsInGroupCondition, useIsInstructorOfGroupCondition)
+                ),
+            },
         },
         {
             path: "/project/:projectId(\\d+)/submissions",

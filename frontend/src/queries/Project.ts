@@ -18,13 +18,17 @@ function PROJECTS_QUERY_KEY(): string[] {
  * Query composable for fetching a project by id
  */
 export function useProjectQuery(
-    projectId: MaybeRefOrGetter<number | undefined>
+    projectId: MaybeRefOrGetter<number | undefined>,
+    queryClient?: QueryClient
 ): UseQueryReturnType<Project, Error> {
-    return useQuery<Project, Error>({
-        queryKey: computed(() => PROJECT_QUERY_KEY(toValue(projectId)!)),
-        queryFn: () => getProject(toValue(projectId)!),
-        enabled: () => !!toValue(projectId),
-    });
+    return useQuery<Project, Error>(
+        {
+            queryKey: computed(() => PROJECT_QUERY_KEY(toValue(projectId)!)),
+            queryFn: () => getProject(toValue(projectId)!),
+            enabled: () => !!toValue(projectId),
+        },
+        queryClient
+    );
 }
 
 /**
