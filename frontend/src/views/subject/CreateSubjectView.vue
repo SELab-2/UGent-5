@@ -121,8 +121,8 @@ const removeInstructor = (instructor: User) => {
     }
 };
 
-const onSubjectNameUpdated = (name: string) => {
-    subjectName.value = name;
+const onSubjectNameUpdated = (name: string | null) => {
+    subjectName.value = name ? name : "";
     isFormError.value = false;
 };
 
