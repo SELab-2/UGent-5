@@ -1,13 +1,10 @@
 <template>
     <router-link :to="{ name: 'subject', params: { subjectId: subject.id } }" class="router-link">
-        <v-card class="subject-card" height="12vh" color="primary">
+        <v-card class="subject-card" height="16vh" color="primary">
             <SubjectIcon :role="role" size="xx-large" class="subject-icon"></SubjectIcon>
-
             <v-card-title class="subject-title">
-                <div class="scrollable">
-                    {{ subject?.name }}
-                    <v-icon class="">mdi-chevron-right</v-icon>
-                </div>
+                {{ subject?.name }}
+                <v-icon class="">mdi-chevron-right</v-icon>
             </v-card-title>
         </v-card>
     </router-link>
@@ -43,16 +40,6 @@ defineProps<{
     font-size: 3vh;
     position: absolute;
     bottom: 0;
-}
-
-.scrollable {
-    max-width: 25vw;
-    overflow: auto;
-    scrollbar-width: none;
-}
-
-.scrollable::-webkit-scrollbar {
-    display: none;
 }
 
 .subject-icon {
