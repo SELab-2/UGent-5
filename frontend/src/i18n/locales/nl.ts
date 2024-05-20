@@ -35,7 +35,7 @@ export default {
         no_submission_files: "Geen indieningen gevonden",
     },
     submission: {
-        status: "Indiening status: {status}",
+        status: "Indiening status:",
         datetime: "Indiening tijdstip:",
         remarks: "Opmerkingen",
         remarks_empty: "Geen opmerkingen voor deze indiening",
@@ -66,6 +66,7 @@ export default {
         not_found2: "Project niet teruggevonden",
         to_subject: "Naar vak",
         to_groups: "Naar groepen",
+        to_project: "Naar project",
     },
     navigation: {
         home: "Hoofdscherm",

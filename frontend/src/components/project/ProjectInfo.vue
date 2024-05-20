@@ -29,12 +29,7 @@
                 <div v-html="renderQuillContent(project.description)"></div>
             </v-card-item>
         </v-card>
-        <SubmitInfo
-            class="submitInfo"
-            v-if="group && !isTeacher"
-            :project="project"
-            :group="group"
-        />
+        <SubmitInfo class="submitInfo" v-if="group" :project="project" :group="group" />
     </v-container>
 </template>
 
