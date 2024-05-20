@@ -61,6 +61,7 @@ export default {
         edit: "Edit project",
         submissions_list: "All submissions",
         submissions_list_teacher: "All submissions for this project",
+        submissions_zip: "Download all submissions",
         not_found: "No projects found.",
         finished: "Finished",
         not_found2: "Project not found",

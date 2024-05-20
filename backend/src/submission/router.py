@@ -97,9 +97,9 @@ async def get_file(path: str, submission: Submission = Depends(retrieve_submissi
 
 
 @router.get("/{submission_id}/zip", response_class=StreamingResponse)
-async def get_all_files(submission: Submission = Depends(retrieve_submission)):
-    path = submission_path(submission.files_uuid, "")
-    return StreamingResponse(zip_stream(path, submission.group_id), media_type="application/zip")
+async def get_all_files(submission: Submission = Depends(retrieve_submission), db: AsyncSession = Depends(get_async_db)):
+    data = await zip_stream(db, submission)
+    return StreamingResponse(data, media_type="application/zip")
 
 
 @router.get("/{submission_id}/artifacts", response_model=list[File])

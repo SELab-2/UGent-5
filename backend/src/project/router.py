@@ -2,12 +2,15 @@ from typing import Sequence, List
 
 from docker import DockerClient
 from fastapi import APIRouter, Depends, UploadFile, BackgroundTasks
+from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src import dependencies
 from src.auth.dependencies import authentication_validation
 from src.dependencies import get_async_db
 from src.group.dependencies import retrieve_groups_by_project
 from src.group.schemas import GroupList
+from src.project.utils import project_zip_stream
 from src.submission.schemas import Submission
 from src.submission.service import get_submissions_by_project
 from . import service
@@ -82,6 +85,14 @@ async def list_submissions(project_id: int,
                            ) -> Sequence[Submission]:
     """Return a list of the latest submission of each group of this project"""
     return await get_submissions_by_project(db, project_id)
+
+
+@router.get("/{project_id}/zip", response_class=StreamingResponse, dependencies=[Depends(patch_permission_validation)])
+async def get_submissions_dump(project_id: int, db: AsyncSession = Depends(get_async_db)):
+    """Return zip file containing all submission files and csv"""
+    submissions = await get_submissions_by_project(db, project_id)
+    data = await project_zip_stream(db, submissions, project_id)
+    return StreamingResponse(data, media_type="application/zip")
 
 
 @router.get("/{project_id}/test_files")
