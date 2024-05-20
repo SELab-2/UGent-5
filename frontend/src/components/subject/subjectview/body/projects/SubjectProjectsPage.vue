@@ -4,7 +4,6 @@
             <SubjectProjectsList
                 :projects="filteredProjects"
                 :selected-tab="selectedTab"
-                :is-loading="isLoading"
                 @tab-changed="updateSelectedTab"
                 @filter-changed="updateFilterOption"
             ></SubjectProjectsList>
@@ -12,20 +11,19 @@
         <v-col cols="7">
             <v-window v-model="selectedTab" direction="vertical">
                 <v-window-item
-                    v-for="(project, index) in filteredProjects"
-                    :key="index"
-                    :value="index"
+                    v-for="project in filteredProjects"
+                    :key="project.id"
+                    :value="project.id"
                 >
                     <SubjectProjectPage
                         :selected-tab="selectedTab"
                         :project="project"
-                        :is-loading="isLoading"
                     ></SubjectProjectPage>
                 </v-window-item>
 
                 <v-window-item v-if="filteredProjects.length === 0" :key="'placeholder'">
                     <div class="placeholder">
-                        <p>No projects available.</p>
+                        <p>{{ $t("subject.projectsPage.no_projects") }}</p>
                     </div>
                 </v-window-item>
             </v-window>
@@ -34,15 +32,14 @@
 </template>
 
 <script setup lang="ts">
-import SubjectProjectsList from "@/components/subject/body/projects/list/SubjectProjectsList.vue";
+import SubjectProjectsList from "@/components/subject/subjectview/body/projects/list/SubjectProjectsList.vue";
 import type Project from "@/models/Project";
 import { FilterOptions } from "@/models/Project";
 import { computed, ref, toRefs } from "vue";
-import SubjectProjectPage from "@/components/subject/body/projects/SubjectProjectPage.vue";
+import SubjectProjectPage from "@/components/subject/subjectview/body/projects/SubjectProjectPage.vue";
 
 const props = defineProps<{
     projects: Project[];
-    isLoading: boolean;
 }>();
 
 const { projects } = toRefs(props);
@@ -60,7 +57,6 @@ const filteredProjects = computed(() => {
     } else if (filterOption.value === FilterOptions.Completed) {
         return sortedProjects.filter((project) => new Date(project.deadline) <= currentDate);
     }
-    console.error("Invalid filter option");
     return sortedProjects;
 });
 
@@ -70,7 +66,9 @@ const updateSelectedTab = (tabIndex: number) => {
 
 const updateFilterOption = (option: FilterOptions) => {
     filterOption.value = option;
-    updateSelectedTab(0);
+    if (filteredProjects.value.length > 0) {
+        updateSelectedTab(filteredProjects.value[0].id);
+    }
 };
 </script>
 
@@ -81,7 +79,6 @@ const updateFilterOption = (option: FilterOptions) => {
     align-items: center;
     height: 400px; /* Adjust height as needed */
     border: 1px solid #ccc;
-    border-radius: 8px;
 }
 
 .placeholder p {

@@ -28,15 +28,16 @@ import { computed, ref } from "vue";
 import type Project from "@/models/Project";
 
 const { data: projects, isLoading, isError } = useProjectsQuery();
-const noProjectsFound = computed(() => projects.value?.length === 0);
+const allProjects = computed(() =>
+    isLoading.value ? [] : [...projects.value!.as_student, ...projects.value!.as_instructor]
+);
+const noProjectsFound = computed(() => allProjects.value.length === 0);
 
 const activeButton = ref("notFinished");
 
 const filteredProjects = computed(() => {
-    if (!projects.value) return [];
-
     const now = new Date();
-    const sortedProjects = projects.value
+    const sortedProjects = allProjects.value
         .slice()
         .sort(
             (a: Project, b: Project) =>

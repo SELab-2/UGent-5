@@ -33,6 +33,6 @@ export interface Deadline {
 
 export enum FilterOptions {
     All = "All",
-    Completed = "Completed",
     Active = "Active",
+    Completed = "Completed",
 }

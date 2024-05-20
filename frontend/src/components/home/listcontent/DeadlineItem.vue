@@ -18,7 +18,7 @@ import type Project from "@/models/Project";
 import type Submission from "@/models/Submission";
 import { Status } from "@/models/Submission";
 import { useSubjectQuery } from "@/queries/Subject";
-import { useProjectSubmissionsQuery } from "@/queries/Submission";
+import { useUserProjectSubmissionsQuery } from "@/queries/Submission";
 
 const props = defineProps<{
     project: Project;
@@ -26,7 +26,7 @@ const props = defineProps<{
 
 const { project } = toRefs(props);
 
-const { data: submissions } = useProjectSubmissionsQuery(project.value.id);
+const { data: submissions } = useUserProjectSubmissionsQuery(project.value.id);
 
 const latestSubmissionStatus = computed(() => {
     if (!submissions.value || submissions.value.length === 0) return null;

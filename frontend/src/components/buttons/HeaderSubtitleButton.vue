@@ -25,8 +25,17 @@ defineProps<{
 </script>
 
 <style scoped>
+.not-clickable {
+    cursor: default;
+    pointer-events: none;
+}
+
 .subtitle-button {
     margin-right: 10px;
+}
+
+.subtitle-button-active {
+    background-color: #9fb6ff;
 }
 
 .button-text {

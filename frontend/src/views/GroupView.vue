@@ -5,7 +5,7 @@
             {{ $t("group.not_found") }}
         </h1>
         <div v-else>
-            <h1>{{ group!.team_name }}</h1>
+            <h1>{{ $t("project.group", { number: group!.num }) }}</h1>
             <h2>{{ "Project: " + project!.name }}</h2>
             <v-card>
                 <v-card-item :title="$t('group.members')">
@@ -45,6 +45,7 @@
                     />
                 </v-card-actions>
             </v-card>
+            <SubmissionList :groupId="groupId" />
         </div>
     </v-container>
 </template>
@@ -55,6 +56,7 @@ import { useGroupQuery, useRemoveUserFromGroupMutation } from "@/queries/Group";
 import { useProjectQuery } from "@/queries/Project";
 import { useCurrentUserQuery } from "@/queries/User";
 import GroupButtons from "@/components/buttons/GroupButtons.vue";
+import SubmissionList from "@/components/submission/SubmissionList.vue";
 import { useSubjectInstructorsQuery } from "@/queries/Subject";
 
 const props = defineProps<{

@@ -48,3 +48,8 @@ export async function registerToSubject(subjectUuid: string): Promise<Subject> {
         method: "POST",
     });
 }
+
+export async function getSubjectUuid(subjectId: number): Promise<string> {
+    const result = await authorized_fetch(`/api/subjects/${subjectId}/uuid`, { method: "GET" });
+    return result.subject_uuid;
+}

@@ -1,5 +1,6 @@
 from typing import Sequence
 
+from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from src.subject.models import InstructorSubject, StudentSubject, Subject
@@ -60,6 +61,10 @@ async def delete_project(db: AsyncSession, project_id: int):
         await db.commit()
 
 
+async def delete_requirements_for_project(db: AsyncSession, project_id: int):
+    await db.execute(delete(Requirement).where(Requirement.project_id == project_id))
+
+
 async def update_project(
     db: AsyncSession, project_id: int, project_update: ProjectUpdate
 ) -> Project:
@@ -77,6 +82,7 @@ async def update_project(
     if project_update.is_visible is not None:
         project.is_visible = project_update.is_visible
     if project_update.requirements is not None:
+        await delete_requirements_for_project(db, project_id)
         project.requirements = [Requirement(**r.model_dump())
                                 for r in project_update.requirements]
 
