@@ -3,14 +3,14 @@ import {expect, describe, it, vi} from "vitest";
 import DeadlineItem from "@/components/home/listcontent/DeadlineItem.vue"
 import {ref} from "vue";
 
-const testProjectSubmissionsQuery = {
+const testUserProjectSubmissionsQuery = {
     data: ref([
         {date: new Date(2024, 5,17), status: 1}
     ])
 }
 
 vi.mock("@/queries/Submission", () => ({
-    useProjectSubmissionsQuery: vi.fn(() => testProjectSubmissionsQuery)
+    useUserProjectSubmissionsQuery: vi.fn(() => testUserProjectSubmissionsQuery)
 }))
 
 const testSubjectQuery = {
