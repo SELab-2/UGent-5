@@ -1,4 +1,4 @@
-from typing import Sequence, List
+from typing import Sequence, List, Optional
 
 from docker import DockerClient
 from fastapi import APIRouter, Depends, UploadFile, BackgroundTasks
@@ -85,7 +85,9 @@ async def list_submissions(project_id: int,
 
 
 @router.get("/{project_id}/test_files")
-async def get_test_files(test_files_uuid: str = Depends(retrieve_test_files_uuid)):
+async def get_test_files(test_files_uuid: Optional[str] = Depends(retrieve_test_files_uuid)):
+    if not test_files_uuid:
+        return []
     return get_files_from_dir(tests_path(test_files_uuid))
 
 
