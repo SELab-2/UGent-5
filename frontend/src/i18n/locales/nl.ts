@@ -61,6 +61,7 @@ export default {
         edit: "Bewerk project",
         submissions_list: "Alle indieningen",
         submissions_list_teacher: "Alle indieningen voor dit project",
+        submissions_zip: "Download alle indieningen",
         not_found: "Geen projecten teruggevonden.",
         finished: "Afgerond",
         not_found2: "Project niet teruggevonden",
