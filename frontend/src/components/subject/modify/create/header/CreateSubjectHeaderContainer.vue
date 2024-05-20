@@ -19,8 +19,8 @@
 </template>
 
 <script setup lang="ts">
-import CreateSubjectHeaderCard from "@/components/subject/createSubjectView/header/CreateSubjectHeaderCard.vue";
-import CreateSubjectHeaderImage from "@/components/subject/createSubjectView/header/CreateSubjectHeaderImage.vue";
+import CreateSubjectHeaderCard from "@/components/subject/modify/create/header/CreateSubjectHeaderCard.vue";
+import CreateSubjectHeaderImage from "@/components/subject/modify/create/header/CreateSubjectHeaderImage.vue";
 
 defineProps<{
     imagePath: string;

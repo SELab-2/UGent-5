@@ -23,8 +23,8 @@
 </template>
 
 <script setup lang="ts">
-import SubjectProjectsPage from "@/components/subject/subjectview/body/projects/SubjectProjectsPage.vue";
-import SubjectGroupsPage from "@/components/subject/subjectview/body/groups/SubjectGroupsPage.vue";
+import SubjectProjectsPage from "@/components/subject/subject/body/projects/SubjectProjectsPage.vue";
+import SubjectGroupsPage from "@/components/subject/subject/body/groups/SubjectGroupsPage.vue";
 
 import { ref } from "vue";
 import type Project from "@/models/Project";

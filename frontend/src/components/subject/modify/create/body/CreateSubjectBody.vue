@@ -17,9 +17,9 @@
 </template>
 
 <script setup lang="ts">
-import SubjectInstructorsCard from "@/components/subject/createSubjectView/body/SubjectInstructorsCard.vue";
+import SubjectInstructorsCard from "@/components/subject/modify/create/body/SubjectInstructorsCard.vue";
 import type User from "@/models/User";
-import UserSearchCard from "@/components/subject/createSubjectView/body/UserSearchCard.vue";
+import UserSearchCard from "@/components/subject/modify/create/body/UserSearchCard.vue";
 
 defineProps<{
     currentUser: User;

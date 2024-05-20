@@ -87,6 +87,11 @@ const router = createRouter({
             component: () => import("../views/subject/CreateSubjectView.vue"),
         },
         {
+          path: "/subjects/:subjectId(\\d+)/edit",
+            name: "edit-subject",
+            component: () => import("../views/subject/PatchSubjectView.vue"),
+        },
+        {
             path: "/subjects/:subjectId(\\d+)",
             name: "subject",
             component: () => import("../views/subject/SubjectView.vue"),

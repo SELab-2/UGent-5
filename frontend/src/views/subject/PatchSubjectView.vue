@@ -64,30 +64,70 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import {computed, ref, toRefs} from "vue";
 import useAcademicYear from "@/composables/useAcademicYear";
-import { useCreateSubjectInstructorMutation, useCreateSubjectMutation } from "@/queries/Subject";
+import {
+    useCreateSubjectInstructorMutation,
+    useCreateSubjectMutation, useSubjectInstructorsQuery,
+    useSubjectProjectsQuery,
+    useSubjectQuery
+} from "@/queries/Subject";
 import type SubjectForm from "@/models/Subject";
 import type User from "@/models/User";
-import { useCurrentUserQuery } from "@/queries/User";
+import {useCurrentUserQuery} from "@/queries/User";
+import {useRouter} from "vue-router";
 import CreateSubjectHeaderContainer from "@/components/subject/modify/create/header/CreateSubjectHeaderContainer.vue";
 import CreateSubjectBody from "@/components/subject/modify/create/body/CreateSubjectBody.vue";
-import { useRouter } from "vue-router";
+
+defineProps<{
+    subjectId: number;
+}>();
 
 const snackbar = ref(false);
 const dialog = ref(false);
 const isFormError = ref(false);
 const subjectName = ref("");
 const activeAcademicYear = ref<number>(useAcademicYear());
-const instructors = ref<User[]>([]);
 const currentUserAsInstructor = ref(true);
-const subjectId = ref<number | undefined>(undefined);
 
-const { data: currentUser, isLoading, isError } = useCurrentUserQuery();
-const createSubjectMutation = useCreateSubjectMutation();
-const createSubjectInstructorMutation = useCreateSubjectInstructorMutation(
-    computed(() => subjectId.value)
+const {
+    data: currentUser,
+    isLoading: isCurrentUserLoading,
+    isError: isCurrentUserError
+} = useCurrentUserQuery();
+const {
+    data: subject,
+    isLoading: isSubjectLoading,
+    isError: isSubjectError
+} = useSubjectQuery(subjectId);
+const {
+    data: projects,
+    isLoading: isProjectsLoading,
+    isError: isProjectsError,
+} = useSubjectProjectsQuery(subjectId);
+const {
+    data: instructors,
+    isLoading: isInstructorsLoading,
+    isError: isInstructorsError,
+} = useSubjectInstructorsQuery(subjectId);
+
+const isLoading = computed(
+    () =>
+    isCurrentUserLoading.value ||
+    isSubjectLoading.value ||
+    isProjectsLoading.value ||
+    isInstructorsLoading.value
 );
+
+const isError = computed(
+    () =>
+    isCurrentUserError.value ||
+    isSubjectError.value ||
+    isProjectsError.value ||
+    isInstructorsError.value
+);
+
+const createSubjectInstructorMutation = useCreateSubjectInstructorMutation(subjectId);
 
 const router = useRouter();
 
@@ -160,7 +200,7 @@ async function handleSubmit() {
             await createSubjectInstructorMutation.mutateAsync(instructor);
         }
 
-        await router.push({ name: "subject", params: { subjectId: subjectId.value } });
+        await router.push({name: "subject", params: {subjectId: subjectId.value}});
     } catch (error) {
         console.error("Error during subject creation:", error);
     }

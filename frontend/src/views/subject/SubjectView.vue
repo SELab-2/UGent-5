@@ -72,12 +72,12 @@ import {
     useSubjectStudentsQuery,
 } from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
-import SubjectHeaderContainer from "@/components/subject/subjectview/header/SubjectHeaderContainer.vue";
-import SubjectBody from "@/components/subject/subjectview/body/SubjectBody.vue";
+import SubjectHeaderContainer from "@/components/subject/subject/header/SubjectHeaderContainer.vue";
+import SubjectBody from "@/components/subject/subject/body/SubjectBody.vue";
 import { useCurrentUserQuery } from "@/queries/User";
 import useIsTeacher from "@/composables/useIsTeacher";
 import useIsAdmin from "@/composables/useIsAdmin";
-import RegisterLinkButton from "@/components/subject/subjectview/buttons/RegisterLinkButton.vue";
+import RegisterLinkButton from "@/components/subject/subject/buttons/RegisterLinkButton.vue";
 
 const props = defineProps<{
     subjectId: number;
