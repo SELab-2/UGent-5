@@ -31,9 +31,9 @@ const props = defineProps<{
 }>();
 const emit = defineEmits(["update:modelValue"]);
 
-const menuVisible = ref(false);
-const date = ref(new Date(props.modelValue || Date.now())); // Initialize with current date or modelValue
-const time = ref(formatTime(props.modelValue || new Date())); // Initialize with current time or modelValue
+const menuVisible = ref<boolean>(false);
+const date = ref<Date>(new Date(props.modelValue || Date.now())); // Initialize with current date or modelValue
+const time = ref<string>(formatTime(props.modelValue || new Date())); // Initialize with current time or modelValue
 
 // Watcher to sync changes in modelValue to date and time pickers
 watch(
