@@ -21,13 +21,14 @@
                 :label="$t('project.capacity_group')"
                 type="number"
                 min="1"
+                @input="handleCapacityInput"
             ></v-text-field>
         </v-container>
     </v-card>
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from "vue";
+import { ref, defineProps, defineEmits, watch } from "vue";
 import DatePicker from "./DatePicker.vue";
 
 const props = defineProps({
@@ -37,22 +38,40 @@ const props = defineProps({
     initialCapacity: Number,
 });
 
-const isToggled = ref(true);
+const isToggled = ref(false);
 const selectedOption = ref("");
 const enrollDate = ref(props.initialDate || new Date());
 const capacity = ref(props.initialCapacity);
 
 const emit = defineEmits(["update:date", "update:capacity", "update:selectedOption"]);
-//
+
+// Reset capacity to 1 when toggle is deactivated, and reset to 2 and change selection when activated
+watch(isToggled, (newVal) => {
+    if (!newVal) {
+        capacity.value = 1;
+        emit("update:capacity", capacity.value);
+    } else {
+        selectedOption.value = "random";
+        capacity.value = 2;
+        emit("update:selectedOption", selectedOption.value);
+        emit("update:capacity", capacity.value);
+    }
+});
+
 function handleDateChange(value: Date) {
     emit("update:date", value);
 }
 
-function handleCapacityChange(value: Number) {
-    emit("update:capacity", value);
+function handleCapacityInput(event: Event) {
+    const newCapacity = Number((event.target as HTMLInputElement).value);
+    if (newCapacity < 2) {
+        event.preventDefault(); // Prevent the field from updating
+        capacity.value = 2; // Enforce minimum capacity of 2 when manually changed
+    } else {
+        capacity.value = newCapacity; // Allow the update if it's 2 or greater
+    }
+    emit("update:capacity", capacity.value);
 }
 
-function handleOptionChange(value: string) {
-    emit("update:selectedOption", value);
-}
 </script>
+
