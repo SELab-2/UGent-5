@@ -41,7 +41,7 @@
                         :is-form-error="isFormError"
                         @update:subject-name="onSubjectNameUpdated"
                         @update:active-academic-year="activeAcademicYear = $event"
-                        @update:current-user-as-instructor="currentUserAsInstructor = $event"
+                        @update:current-user-as-instructor="onCurrentUserAsInstructorChanged"
                     >
                     </CreateSubjectHeaderContainer>
                     <CreateSubjectBody
@@ -145,13 +145,7 @@ const router = useRouter();
 const shownInstructors = computed(() => {
     return Array.from(new Set([...(instructors.value || []), ...addedInstructors.value].filter((instructor) => {
         return !removedInstructors.value.has(instructor);
-    })))
-});
-
-const addInstructor = (user: User) => {
-    addedInstructors.value.add(user);
-    removedInstructors.value.delete(user);
-    shownInstructors.value.sort((a, b) => {
+    }))).sort((a, b) => {
         if (a?.is_teacher && !b?.is_teacher) {
             return -1;
         } else if (!a?.is_teacher && b?.is_teacher) {
@@ -160,13 +154,26 @@ const addInstructor = (user: User) => {
             return a?.surname.localeCompare(b?.surname);
         }
     })
+});
+
+const addInstructor = (user: User) => {
+    addedInstructors.value.add(user);
+    removedInstructors.value.delete(user);
 };
 
 const removeInstructor = (instructor: User) => {
-    if (currentUser.value?.uid === instructor?.uid) {
-        currentUserAsInstructor.value = false;
+    removedInstructors.value.add(instructor);
+    addedInstructors.value.delete(instructor);
+};
+
+const onCurrentUserAsInstructorChanged = (isInstructor: boolean) => {
+    if (isInstructor) {
+        addedInstructors.value.add(currentUser.value);
+        removedInstructors.value.delete(currentUser.value);
+    } else {
+        addedInstructors.value.delete(currentUser.value);
+        removedInstructors.value.add(currentUser.value);
     }
-    shownInstructors.value.splice(shownInstructors.value.indexOf(instructor), 1);
 };
 
 const onSubjectNameUpdated = (name: string) => {
