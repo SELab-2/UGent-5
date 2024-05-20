@@ -91,7 +91,18 @@
                             {{ $t("project.no_files") }}
                         </v-alert>
                     </div>
-
+                    <v-alert class="custom-alert alert-bottom-margin" dense text>
+                        <span class="alert-text">
+                            {{ $t("submit.files_disclaimer") }}
+                            <a
+                                href="https://github.com/SELab-2/UGent-5/wiki/Automatische-testen"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                wiki </a
+                            >.
+                        </span>
+                    </v-alert>
                     <FilesInput v-model="files" />
                 </v-col>
                 <v-col cols="12">
@@ -461,5 +472,9 @@ function divideStudentsIntoGroups(students: User[], capacity: number) {
     background-color: #eef1f5;
     color: #000000;
     border-left: 4px solid #1d357eff;
+}
+
+.alert-bottom-margin {
+    margin-bottom: 15px;
 }
 </style>

@@ -1,17 +1,5 @@
 <template>
     <input @change="updateFiles" ref="fileInput" type="file" multiple hidden />
-    <v-alert class="custom-alert" dense text>
-        <span class="alert-text">
-            {{ $t("submit.files_disclaimer") }}
-            <a
-                href="https://github.com/SELab-2/UGent-5/wiki/Automatische-testen"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                wiki </a
-            >.
-        </span>
-    </v-alert>
     <v-btn variant="flat" class="mb-0" @click="onAddFilesClick">{{
         $t("submit.add_files_button")
     }}</v-btn>

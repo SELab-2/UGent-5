@@ -78,34 +78,3 @@ export async function fetchProjectFiles(projectId: number): Promise<any> {
         method: "GET",
     });
 }
-
-export async function deleteProjectFiles(
-    projectId: number,
-    filesToDelete: string[]
-): Promise<void> {
-    return authorized_fetch(
-        `/api/projects/${projectId}/test_files`,
-        {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ files: filesToDelete }),
-        },
-        true
-    );
-}
-
-// Function to create a new submission for a specific group
-export async function createSubmission(groupId: number, formData: FormData): Promise<Submission> {
-    return authorized_fetch(
-        `/api/submissions/?group_id=${groupId}`,
-        {
-            method: "POST",
-            body: formData,
-        },
-        true
-    );
-}
-
-export async function getSubmissions(): Promise<Submission[]> {
-    return authorized_fetch(`/api/submissions/`, { method: "GET" });
-}
