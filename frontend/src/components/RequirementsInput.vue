@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, watch, watchEffect } from "vue";
+import { ref, defineEmits, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
