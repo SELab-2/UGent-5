@@ -91,7 +91,7 @@ async def list_submissions(project_id: int,
 async def get_submissions_dump(project_id: int, db: AsyncSession = Depends(get_async_db)):
     """Return zip file containing all submission files and csv"""
     submissions = await get_submissions_by_project(db, project_id)
-    data = await project_zip_stream(db, submissions)
+    data = await project_zip_stream(db, submissions, project_id)
     return StreamingResponse(data, media_type="application/zip")
 
 
