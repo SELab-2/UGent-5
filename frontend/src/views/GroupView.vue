@@ -6,7 +6,7 @@
         </h1>
         <v-row v-else>
             <v-col class="col-sm-12 col-md-6 col-lg-8">
-                <h1>{{ group!.team_name }}</h1>
+                <h1>{{ $t("project.group", { number: group!.num }) }}</h1>
                 <h2>{{ "Project: " + project!.name }}</h2>
                 <v-card variant="flat">
                     <v-card-item :title="$t('group.members')">
@@ -24,11 +24,7 @@
                                         color="red"
                                         variant="flat"
                                         @click="
-                                            () =>
-                                                removeStudent({
-                                                    groupId: group!.id,
-                                                    uid: member.uid,
-                                                })
+                                            () => removeStudent({ groupId: group!.id, uid: member.uid })
                                         "
                                     >
                                         {{ $t("group.remove") }}</v-btn
