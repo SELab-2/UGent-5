@@ -3,13 +3,12 @@
         <v-card class="subject-card" height="12vh" color="primary">
             <SubjectIcon :role="role" size="xx-large" class="subject-icon"></SubjectIcon>
 
-                <v-card-title class="subject-title">
-                    <div class="scrollable">
-                        {{ subject?.name }}
-                        <v-icon class="">mdi-chevron-right</v-icon>
-                    </div>
-                </v-card-title>
-
+            <v-card-title class="subject-title">
+                <div class="scrollable">
+                    {{ subject?.name }}
+                    <v-icon class="">mdi-chevron-right</v-icon>
+                </div>
+            </v-card-title>
         </v-card>
     </router-link>
 </template>

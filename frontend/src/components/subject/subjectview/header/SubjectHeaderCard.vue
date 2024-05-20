@@ -8,12 +8,10 @@
                     </div>
                 </v-card-title>
                 <v-card-text>
-                    <v-chip
-                        color="primary"
-                        variant="flat"
-                        label
-                    >
-                        {{`${$t('subject.academy_year')} 20${academicYear}-20${academicYear + 1}`}}
+                    <v-chip color="primary" variant="flat" label>
+                        {{
+                            `${$t("subject.academy_year")} 20${academicYear}-20${academicYear + 1}`
+                        }}
                     </v-chip>
                     <v-row class="instr-container">
                         <v-chip
@@ -25,13 +23,16 @@
                             exact
                         >
                             <v-icon
-                                :icon="instructor!.is_teacher ? `mdi-account-tie-outline` : `mdi-school`"
+                                :icon="
+                                    instructor!.is_teacher
+                                        ? `mdi-account-tie-outline`
+                                        : `mdi-school`
+                                "
                                 start
                             ></v-icon>
                             {{ instructor.given_name[0] }}. {{ instructor.surname }}
                         </v-chip>
                     </v-row>
-
                 </v-card-text>
             </v-col>
             <v-col v-if="isAdmin || (isInstructor && isTeacher)" cols="1">
@@ -45,10 +46,8 @@
 
 <script setup lang="ts">
 import type User from "@/models/User";
-import HeaderSubtitleButton from "@/components/buttons/HeaderSubtitleButton.vue";
 import useIsAdmin from "@/composables/useIsAdmin";
 import useIsTeacher from "@/composables/useIsTeacher";
-import InstructorChip from "@/components/subject/extra/InstructorChip.vue";
 
 defineProps<{
     title: string;

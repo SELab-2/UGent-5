@@ -16,18 +16,13 @@
     </v-chip>
 </template>
 
-
 <script setup lang="ts">
-
 import type User from "@/models/User";
 
 defineProps<{
     instructors: User[];
     closable: boolean;
 }>();
-
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
