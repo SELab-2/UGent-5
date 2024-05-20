@@ -4,14 +4,12 @@ import isAuthenticated from "./middleware/isAuthenticated";
 import loginMiddleware from "./middleware/login";
 import useCanVisit, {
     useIsAdminCondition,
-    useIsTeacherCondition,
     useIsStudentOfSubjectCondition,
     useIsInstructorOfSubjectCondition,
     useIsStudentOfProjectCondition,
     useIsInstructorOfProjectCondition,
     useIsInGroupCondition,
     useIsInstructorOfGroupCondition,
-    useAndCondition,
     useOrCondition,
     useIsInGroupOfProjectCondition,
 } from "./middleware/canVisit";
