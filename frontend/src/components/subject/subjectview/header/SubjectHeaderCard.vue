@@ -1,7 +1,7 @@
 <template>
-    <v-card variant="text" class="title-card" height="165">
+    <v-card variant="text" class="title-card" height="165" max-width="50vw">
         <v-row>
-            <v-col :cols="isAdmin || (isInstructor && isTeacher) ? 10 : 12">
+            <v-col :cols="isAdmin || (isInstructor && isTeacher) ? 10 : 12" class="scrollable-col">
                 <v-card-title class="title">
                     {{ title }}
                 </v-card-title>
@@ -52,6 +52,12 @@ const { isTeacher } = useIsTeacher();
 .title-card {
     background-color: white;
     padding: 20px;
+    overflow: auto;
+    scrollbar-width: none;
+}
+
+.title-card::-webkit-scrollbar {
+    display: none;
 }
 
 .title {
@@ -61,6 +67,7 @@ const { isTeacher } = useIsTeacher();
     font-weight: bold;
     margin-bottom: 12px;
     font-family: "Poppins", sans-serif;
+    white-space: normal;
 }
 
 .instr-container {
