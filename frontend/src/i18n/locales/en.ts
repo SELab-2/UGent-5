@@ -59,7 +59,7 @@ export default {
         myProject: "My projects",
         capacity_group: "Capacity: ",
         edit: "Edit project",
-        submissions_list: "All submissions",
+        submissions_list: "All submissions from this group",
         submissions_list_teacher: "All submissions for this project",
         not_found: "No projects found.",
         finished: "Finished",
