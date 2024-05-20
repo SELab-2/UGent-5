@@ -4,7 +4,7 @@ import ProjectInfo from "@/components/project/ProjectInfo.vue"
 
 const mockProject = {
     name: "projectname",
-    deadline: new Date(),
+    deadline: new Date(2024, 5, 31),
     id: 1,
     description: "this is a testassignment",
     capacity: 2
@@ -14,9 +14,8 @@ const mockInstructors = [
     {uid: "1", given_name: "instructor 1", surname: "Doe", is_admin: false, is_teacher: false}
 ]
 
-const mockUser = [
-    {uid: "2", given_name: "user 2", surname: "Doe 2", is_admin: false, is_teacher: false}
-]
+const mockUser = {uid: "2", given_name: "user 2", surname: "Doe 2", is_admin: false, is_teacher: false}
+
 
 const mockSubject = {
     name: "subjectname"
