@@ -42,7 +42,7 @@ export default {
         files: "Files",
         download_info: "Click on filename to download",
         after_deadline: "After deadline",
-        submissions_title: "Submissions:",
+        submissions_title: "Submissions for project {project}",
         no_submissions: "No submissions yet",
         teacher_submissions_info:
             "This page contains a list of the latest submission of each group for this project.",
@@ -116,6 +116,7 @@ export default {
             group: "Group",
             submissions: "Submissions",
         },
+        error: "Error when loading subjects",
         create_project: "Create project",
         register_link_button: {
             title: "Register link",

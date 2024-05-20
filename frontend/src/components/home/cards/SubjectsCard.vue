@@ -1,7 +1,7 @@
 <template>
     <HomeScreenSkeletonCard v-if="isSubjectsLoading" />
     <!-- TODO: Add error handling -->
-    <h1 v-else-if="isSubjectsError">Error loading subjects</h1>
+    <h1 v-else-if="isSubjectsError">{{ $t("subject.error") }}</h1>
     <HomeScreenCard v-else :title="'homescreen.subjects'">
         <SubjectItem
             v-for="subject in [...subjects!.as_student, ...subjects!.as_instructor]"

@@ -2,7 +2,6 @@ export default {
     default: {
         error: {
             "not-found": "Pagina niet gevonden",
-            "something-went-wrong": "Er is iets misgegaan",
         },
         loading: {
             loading_page: "Aan het laden...",
@@ -42,7 +41,7 @@ export default {
         files: "Bestanden",
         download_info: "Klik op bestandsnaam om te downloaden",
         after_deadline: "Na deadline",
-        submissions_title: "Indieningen:",
+        submissions_title: "Indieningen voor project {project}",
         no_submissions: "Nog geen indieningen",
         teacher_submissions_info:
             "Deze pagina bevat een lijst van de laatste indiening van elke groep voor dit project.",
@@ -123,6 +122,7 @@ export default {
             tooltip:
                 "Kopieer de registratie link voor dit vak, deze kan gedeeld worden met studenten om zich te registreren voor het vak.",
         },
+        error: "Fout bij het inladen van vakken",
     },
 
     subjects: {
