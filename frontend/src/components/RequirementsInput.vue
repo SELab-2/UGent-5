@@ -31,9 +31,7 @@
                     hide-details
                     inset
                 ></v-switch>
-                <v-btn icon @click="deleteRequirement(index)">
-                    <v-icon>mdi-delete</v-icon>
-                </v-btn>
+                <v-btn icon="mdi-delete" @click="deleteRequirement(index)"/>
             </v-col>
         </v-row>
     </v-container>
