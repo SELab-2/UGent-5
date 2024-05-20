@@ -4,7 +4,7 @@ import { QueryClient } from "@tanstack/vue-query";
 import useIsAdmin from "@/composables/useIsAdmin";
 import useIsTeacher from "@/composables/useIsTeacher";
 import { useSubjectsQuery } from "@/queries/Subject";
-import { useProjectQuery, useProjectsQuery } from "@/queries/Project";
+import { useProjectsQuery } from "@/queries/Project";
 import { useGroupQuery, useProjectGroupQuery } from "@/queries/Group";
 import { useCurrentUserQuery } from "@/queries/User";
 
