@@ -93,18 +93,18 @@ export function useCreateProjectMutation(): UseMutationReturnType<
 }
 
 export function useUpdateProjectMutation(): UseMutationReturnType<
-    void,
+    Project,
     Error,
     { projectId: number; projectData: Partial<ProjectForm> },
     void
 > {
     const queryClient = useQueryClient();
-    return useMutation<void, Error, { projectId: number; projectData: Partial<ProjectForm> }, void>(
+    return useMutation<Project, Error, { projectId: number; projectData: Partial<ProjectForm> }, void>(
         {
             mutationFn: ({ projectId, projectData }) => updateProject(projectId, projectData),
 
             onSuccess: (_, variables) => {
-                queryClient.invalidateQueries(PROJECT_QUERY_KEY(variables.projectId));
+                queryClient.invalidateQueries({ queryKey: PROJECT_QUERY_KEY(variables.projectId) });
                 console.log("Project updated successfully.");
             },
 
