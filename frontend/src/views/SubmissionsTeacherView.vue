@@ -5,13 +5,13 @@
             <v-col class="col-sm-12 col-md-6 col-lg-8">
                 <v-skeleton-loader :loading="projectLoading || submissionsLoading" type="card" class="card">
                     <v-card-title class="title">{{ $t("submission.submissions_title", { project: project.name }) }}</v-card-title>
-                    <v-card-subtitle v-if="submissions.length == 0" icon="$warning" color="warning">
-                        {{ $t("submission.no_submissions") }}</v-card-subtitle
-                    >
-                    <v-card-subtitle v-else icon="$info">{{ $t("submission.teacher_submissions_info") }}</v-card-subtitle>
-                    <v-btn class="primary-button" @click="downloadAll" prepend-icon="mdi-download">
-                        {{ $t("project.submissions_zip") }}
-                    </v-btn>
+                    <v-card-subtitle v-if="submissions.length == 0" class="subtitle">{{ $t("submission.no_submissions") }}</v-card-subtitle>
+                    <div v-else>
+                        <v-card-subtitle class="subtitle">{{ $t("submission.teacher_submissions_info") }}</v-card-subtitle>
+                        <v-btn class="primary-button" @click="downloadAll" prepend-icon="mdi-download">
+                            {{ $t("project.submissions_zip") }}
+                        </v-btn>
+                    </div>
                     <SubmissionTeacherCard
                         class="ma-3"
                         v-for="submission in submissions"
@@ -72,11 +72,15 @@ const downloadAll = () => {
     padding: 15px;
 }
 
-.title{
+.title, .subtitle{
     width: 100%;
 }
 
 .backbutton{
     margin-top: 30px;
+}
+
+.primary-button {
+    margin: 15px;
 }
 </style>

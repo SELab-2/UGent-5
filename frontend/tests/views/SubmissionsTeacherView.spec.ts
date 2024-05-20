@@ -21,7 +21,7 @@ vi.mock("@/queries/Submission", () => ({
 }))
 
 const testProjectQuery = {
-    data: ref({id: 1, name: "testproject"}),
+    data: ref({id: 1, name: "testproject", deadline: new Date(2025, 5, 31)}),
     isLoading: ref(false)
 }
 
@@ -48,7 +48,13 @@ describe("SubmissionsTeacherView", () => {
         const text = wrapper.text()
         expect(text).toContain("Indieningen voor project testproject")
         expect(text).toContain("Deze pagina bevat een lijst van de laatste indiening van elke groep voor dit project.")
+        expect(text).toContain("Download alle indieningen")
         expect(wrapper.findComponent({name: "SubmissionTeacherCard"}).exists()).toBeTruthy()
         expect(wrapper.findComponent({name: "BackButton"}).exists()).toBeTruthy()
+        testProjectSubmissionsQuery.setData([])
+        await wrapper.vm.$nextTick()
+    });
+    it("render if no submissions", () => {
+        expect(wrapper.text()).toContain("Nog geen indieningen")
     });
 })

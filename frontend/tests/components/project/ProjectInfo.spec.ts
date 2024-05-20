@@ -1,6 +1,26 @@
 import {mount} from "@vue/test-utils";
 import {expect, describe, it, vi} from "vitest";
 import ProjectInfo from "@/components/project/ProjectInfo.vue"
+import {ref} from "vue";
+
+const mockRouter = {
+    push: vi.fn(),
+};
+
+vi.mock("vue-router", () => ({
+    useRouter: () => mockRouter,
+}));
+
+const testAuthStore = {
+    isLoggedIn: ref(true),
+    setLoggedIn(value) {
+        this.isLoggedIn.value = value;
+    },
+};
+
+vi.mock("@/stores/auth-store", () => ({
+    useAuthStore: vi.fn(() => testAuthStore),
+}));
 
 const mockProject = {
     name: "projectname",
