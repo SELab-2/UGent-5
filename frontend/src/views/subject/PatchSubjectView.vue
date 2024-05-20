@@ -34,6 +34,8 @@
                 <div class="flex-container">
                     <CreateSubjectHeaderContainer
                         :image-path="`https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png`"
+                        :subject-name="subjectName"
+                        :academic-year="activeAcademicYear"
                         :current-user-as-instructor="currentUserAsInstructor"
                         :is-form-error="isFormError"
                         @update:subject-name="onSubjectNameUpdated"

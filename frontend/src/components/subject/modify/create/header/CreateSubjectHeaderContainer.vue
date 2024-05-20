@@ -5,6 +5,8 @@
         </v-col>
         <v-col cols="8">
             <CreateSubjectHeaderCard
+                :subject-name="subjectName"
+                :academic-year="academicYear"
                 :current-user-as-instructor="currentUserAsInstructor"
                 :is-form-error="isFormError"
                 @update:subject-name="$emit('update:subject-name', $event)"
@@ -24,6 +26,8 @@ import CreateSubjectHeaderImage from "@/components/subject/modify/create/header/
 
 defineProps<{
     imagePath: string;
+    subjectName: string,
+    academicYear: number,
     currentUserAsInstructor: boolean;
     isFormError: boolean;
 }>();

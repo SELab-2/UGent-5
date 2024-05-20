@@ -53,11 +53,13 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 
 const props = defineProps<{
+    subjectName: string;
+    academicYear: number;
     currentUserAsInstructor: boolean;
     isFormError: boolean;
 }>();
 
-const { currentUserAsInstructor } = toRefs(props);
+const { currentUserAsInstructor} = toRefs(props);
 
 const checkbox = ref(currentUserAsInstructor.value);
 
@@ -65,8 +67,8 @@ watch(currentUserAsInstructor, (newValue) => {
     checkbox.value = newValue;
 });
 
-const subjectName = ref("");
-const activeAcademicYear = ref<number>(useAcademicYear());
+const subjectName = ref(props.subjectName);
+const activeAcademicYear = ref<number>(props.academicYear);
 
 const academicYearItems = [activeAcademicYear.value, activeAcademicYear.value + 1];
 const rules = {
