@@ -32,8 +32,4 @@ defineEmits<{
 }>();
 </script>
 
-<style scoped>
-.body {
-    height: 53vh;
-}
-</style>
+<style scoped></style>

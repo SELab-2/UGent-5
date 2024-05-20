@@ -31,22 +31,24 @@
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
-                <CreateSubjectHeaderContainer
-                    :image-path="`https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png`"
-                    :current-user-as-instructor="currentUserAsInstructor"
-                    :is-form-error="isFormError"
-                    @update:subject-name="onSubjectNameUpdated"
-                    @update:active-academic-year="activeAcademicYear = $event"
-                    @update:current-user-as-instructor="currentUserAsInstructor = $event"
-                >
-                </CreateSubjectHeaderContainer>
-                <CreateSubjectBody
-                    :current-user="currentUser"
-                    :instructors="shownInstructors"
-                    @add-instructor="addInstructor"
-                    @remove-instructor="removeInstructor"
-                >
-                </CreateSubjectBody>
+                <div class="flex-container">
+                    <CreateSubjectHeaderContainer
+                        :image-path="`https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png`"
+                        :current-user-as-instructor="currentUserAsInstructor"
+                        :is-form-error="isFormError"
+                        @update:subject-name="onSubjectNameUpdated"
+                        @update:active-academic-year="activeAcademicYear = $event"
+                        @update:current-user-as-instructor="currentUserAsInstructor = $event"
+                    >
+                    </CreateSubjectHeaderContainer>
+                    <CreateSubjectBody
+                        :current-user="currentUser"
+                        :instructors="shownInstructors"
+                        @add-instructor="addInstructor"
+                        @remove-instructor="removeInstructor"
+                    >
+                    </CreateSubjectBody>
+                </div>
 
                 <div class="confirm-btn-container">
                     <v-btn class="ma-2" color="grey" @click="dialog = true">
@@ -176,5 +178,12 @@ async function handleSubmit() {
 
 .back-button {
     margin: 30px;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
 }
 </style>
