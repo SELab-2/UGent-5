@@ -1,109 +1,118 @@
 <template>
     <v-container>
-        <v-row>
-            <v-col cols="12" md="6">
-                <v-text-field
-                    v-model="project_title"
-                    :label="$t('project.assignment')"
-                    required
-                    :placeholder="$t('submit.submit_title')"
-                />
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col cols="12" md="6">
-                <v-select
-                    v-if="!isEditMode"
-                    v-model="selectedSubject"
-                    :items="subjects"
-                    item-value="value"
-                    item-title="text"
-                    :label="$t('project.selected_subject')"
-                    required
-                    :placeholder="$t('submit.submit_title')"
-                />
-            </v-col>
-            <v-col cols="12" md="6">
-                <v-alert v-if="!isEditMode" dense text class="custom-alert">
-                    {{ $t("project.group_warning") }}
-                </v-alert>
-                <RadioButtonList
-                    v-if="!isEditMode"
-                    :title="$t('project.group_toggle')"
-                    :options="groupProjectOptions"
-                    :initialDate="enrollDeadline"
-                    :initialCapacity="capacity"
-                    @update:date="handleRadioDateChange"
-                    @update:capacity="handleCapacityChange"
-                    @update:selected-option="handleOptionChange"
-                    required
-                />
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col cols="12" md="6">
-                <DatePicker
-                    :modelValue="deadlineModel"
-                    @update:modelValue="updateDeadline"
-                    :label="$t('project.deadline')"
-                />
-                <DatePicker
-                    :modelValue="publishDateModel"
-                    @update:modelValue="updatePublishDate"
-                    :label="$t('project.publish_date')"
-                    required
-                />
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col cols="12">
-                <QuillEditor ref="quillEditor" theme="snow" class="quill-editor" />
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col cols="12" style="margin-top: 2rem">
-                <DisplayTestFiles
-                    v-if="filesData && filesData.length && isEditMode"
-                    :files="filesData"
-                />
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col cols="12">
-                <div v-if="isEditMode" class="file-upload-disclaimer">
-                    <v-alert
-                        v-if="filesData && filesData.length > 0"
-                        class="custom-alert"
-                        dense
-                        text
-                    >
-                        {{ $t("project.files_will_be_overwritten") }}
+        <h1 v-if="isDataLoading" class="welcome">
+            {{ $t("default.loading.loading_page") }}
+        </h1>
+        <!-- Display error message if there is a problem fetching the data -->
+        <h1 v-else-if="isDataError" class="welcome error">
+            {{ $t("project.not_found") }}
+        </h1>
+        <div v-else class="projectInfo">
+            <v-row>
+                <v-col cols="12" md="6">
+                    <v-text-field
+                        v-model="project_title"
+                        :label="$t('project.assignment')"
+                        required
+                        :placeholder="$t('submit.submit_title')"
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" md="6">
+                    <v-select
+                        v-if="!isEditMode"
+                        v-model="selectedSubject"
+                        :items="subjects"
+                        item-value="value"
+                        item-title="text"
+                        :label="$t('project.selected_subject')"
+                        required
+                        :placeholder="$t('submit.submit_title')"
+                    />
+                </v-col>
+                <v-col cols="12" md="6">
+                    <v-alert v-if="!isEditMode" dense text class="custom-alert">
+                        {{ $t("project.group_warning") }}
                     </v-alert>
-                    <v-alert v-else class="custom-alert" dense text>
-                        {{ $t("project.no_files") }}
-                    </v-alert>
-                </div>
+                    <RadioButtonList
+                        v-if="!isEditMode"
+                        :title="$t('project.group_toggle')"
+                        :options="groupProjectOptions"
+                        :initialDate="enrollDeadline"
+                        :initialCapacity="capacity"
+                        @update:date="handleRadioDateChange"
+                        @update:capacity="handleCapacityChange"
+                        @update:selected-option="handleOptionChange"
+                        required
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" md="6">
+                    <DatePicker
+                        :modelValue="deadlineModel"
+                        @update:modelValue="updateDeadline"
+                        :label="$t('project.deadline')"
+                    />
+                    <DatePicker
+                        :modelValue="publishDateModel"
+                        @update:modelValue="updatePublishDate"
+                        :label="$t('project.publish_date')"
+                        required
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12">
+                    <QuillEditor ref="quillEditor" theme="snow" class="quill-editor" />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" style="margin-top: 2rem">
+                    <DisplayTestFiles
+                        v-if="filesData && filesData.length && isEditMode"
+                        :files="filesData"
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12">
+                    <div v-if="isEditMode" class="file-upload-disclaimer">
+                        <v-alert
+                            v-if="filesData && filesData.length > 0"
+                            class="custom-alert"
+                            dense
+                            text
+                        >
+                            {{ $t("project.files_will_be_overwritten") }}
+                        </v-alert>
+                        <v-alert v-else class="custom-alert" dense text>
+                            {{ $t("project.no_files") }}
+                        </v-alert>
+                    </div>
 
-                <FilesInput v-model="files" />
-            </v-col>
-            <v-col cols="12">
-                <RequirementsInput
-                    :model-value="requirements"
-                    @update:modelValue="requirements = $event"
-                />
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col cols="12" class="text-right">
-                <v-btn @click="submitForm">{{ $t("submit.submit_button") }}</v-btn>
-            </v-col>
-        </v-row>
-        <v-alert v-model="showErrorAlert" type="error" dense dismissible :value="true">
-            {{ errorMessage }}
-        </v-alert>
-        <v-alert v-model="showSuccessAlert" type="success" dense dismissible :value="true">
-            {{ successMessage }}
-        </v-alert>
+                    <FilesInput v-model="files" />
+                </v-col>
+                <v-col cols="12">
+                    <RequirementsInput
+                        :model-value="requirements"
+                        @update:modelValue="requirements = $event"
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="text-right">
+                    <v-btn @click="submitForm">{{ $t("submit.submit_button") }}</v-btn>
+                </v-col>
+            </v-row>
+            <v-alert v-model="showErrorAlert" type="error" dense dismissible :value="true">
+                {{ errorMessage }}
+            </v-alert>
+            <v-alert v-model="showSuccessAlert" type="success" dense dismissible :value="true">
+                {{ successMessage }}
+            </v-alert>
+        </div>
     </v-container>
 </template>
 
@@ -153,6 +162,13 @@ const requirements = ref([]);
 const projectId = ref(route.params.projectId);
 const isEditMode = computed(() => projectId.value !== undefined);
 
+//mutations
+const createProjectMutation = useCreateProjectMutation();
+const createGroupsMutation = useCreateGroupsMutation();
+const joinGroupMutation = useAddToGroupMutation();
+const uploadProjectFilesMutation = useUploadProjectFilesMutation();
+const updateProjectMutation = useUpdateProjectMutation();
+
 // Query to fetch and handle files associated with a project
 const {
     data: filesData,
@@ -166,6 +182,46 @@ const {
     isLoading: isProjectLoading,
     isError: isProjectError,
 } = useProjectQuery(projectId);
+
+const {
+    data: subjectsData,
+    isLoading: subjectsLoading,
+    isError: subjectsError,
+} = useSubjectsQuery();
+
+const selectedSubject = ref<number>(
+    isEditMode.value
+        ? projectSubjectId.value ?? Number(route.params.subjectId)
+        : Number(route.params.subjectId)
+);
+
+const {
+    data: studentsData,
+    isLoading: studentsLoading,
+    isError: studentsError,
+} = useSubjectStudentsQuery(selectedSubject);
+
+const isDataLoading = computed(() => {
+    return isEditMode.value
+        ? isProjectLoading.value || filesLoading.value || studentsLoading.value
+        : subjectsLoading.value || studentsLoading.value;
+});
+
+const isDataError = computed(() => {
+    return isEditMode.value
+        ? isProjectError.value || filesError.value || studentsError.value
+        : subjectsError.value || studentsError.value;
+});
+
+const subjects = computed(
+    () => subjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []
+);
+
+//Option that are passed to radiobuttonlist (selection for group creation)
+const groupProjectOptions = computed(() => [
+    { label: t("project.random"), value: "random" },
+    { label: t("project.student_groups"), value: "student" },
+]);
 
 // Watching projectData for changes to update the form data
 watch(
@@ -218,41 +274,6 @@ function updateDeadline(val) {
 function updatePublishDate(val) {
     publishDateModel.value = val;
 }
-
-// Setting up reactive properties for selected subject, subject options, and group project options
-const selectedSubject = ref<number>(
-    isEditMode.value
-        ? projectSubjectId.value ?? Number(route.params.subjectId)
-        : Number(route.params.subjectId)
-);
-
-const {
-    data: subjectsData,
-    isLoading: subjectsLoading,
-    isError: subjectsError,
-} = useSubjectsQuery();
-
-const {
-    data: studentsData,
-    isLoading: studentsLoading,
-    isError: studentsError,
-} = useSubjectStudentsQuery(selectedSubject);
-
-const subjects = computed(
-    () => subjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []
-);
-
-//Option that are passed to radiobuttonlist (selection for group creation)
-const groupProjectOptions = computed(() => [
-    { label: t("project.random"), value: "random" },
-    { label: t("project.student_groups"), value: "student" },
-]);
-
-const createProjectMutation = useCreateProjectMutation();
-const createGroupsMutation = useCreateGroupsMutation();
-const joinGroupMutation = useAddToGroupMutation();
-const uploadProjectFilesMutation = useUploadProjectFilesMutation();
-const updateProjectMutation = useUpdateProjectMutation();
 
 function handleRadioDateChange(newDate) {
     enrollDeadline.value = newDate;
