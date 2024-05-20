@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, defineProps, defineEmits } from "vue";
+import { ref, watch, computed, defineEmits } from "vue";
 import { VTimePicker } from "vuetify/labs/VTimePicker";
 
 // Define props and emits
