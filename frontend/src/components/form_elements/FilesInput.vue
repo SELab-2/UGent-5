@@ -1,5 +1,17 @@
 <template>
     <input @change="updateFiles" ref="fileInput" type="file" multiple hidden />
+    <v-alert class="custom-alert" dense text>
+        <span class="alert-text">
+            {{ $t("submit.files_disclaimer") }}
+            <a
+                href="https://github.com/SELab-2/UGent-5/wiki/Automatische-testen"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                wiki </a
+            >.
+        </span>
+    </v-alert>
     <v-btn variant="flat" class="mb-0" @click="onAddFilesClick">{{
         $t("submit.add_files_button")
     }}</v-btn>
@@ -61,5 +73,19 @@ function onDeleteClick(index: number) {
 
 .files {
     margin-top: 15px;
+}
+.custom-alert .alert-text {
+    white-space: nowrap; /* Prevents the text from wrapping */
+    overflow: hidden; /* Prevents overflow of text outside the alert box */
+    text-overflow: ellipsis; /* Adds an ellipsis if the text overflows */
+}
+
+.custom-alert a {
+    display: inline; /* Ensures the link is in line with other text */
+    white-space: normal; /* Allows normal wrapping inside the link if needed */
+}
+
+.custom-alert {
+    margin-bottom: 15px; /* Added spacing between the alert and the button */
 }
 </style>

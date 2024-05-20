@@ -33,6 +33,8 @@ export default {
         new_submission: "Nieuwe indiening",
         status_submission: "Indiening is: {status}",
         no_submission_files: "Geen indieningen gevonden",
+        files_usage_note: "Info voor het gebruik van testbestanden",
+        files_disclaimer: "Voor info over het gebruik van testbestanden, bezoek onze  ",
     },
     submission: {
         status: "Indiening status: {status}",
@@ -80,6 +82,9 @@ export default {
         forbidden: "Verboden",
         invalid_format:
             "Voer een geldig bestandstype in, inclusief de extensie (bv. 'afbeelding.png')",
+        files_will_be_overwritten:
+            "Bij het uploaden van een nieuw testbestand zullen alle huidige testbestanden verwijderd worden.",
+        testfiles: "Testbestanden",
     },
     navigation: {
         home: "Hoofdscherm",
