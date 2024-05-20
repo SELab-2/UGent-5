@@ -28,7 +28,7 @@
                             <SubjectHeaderContainer
                                 v-if="subject"
                                 :title="subject!.name"
-                                :instructors="instructors"
+                                :instructors="sortedInstructors"
                                 :academic-year="subject!.academic_year"
                                 :is-instructor="isInstructor"
                                 :is-student="isStudent"
@@ -133,6 +133,19 @@ const isInstructor = computed(() => {
 const isStudent = computed(() => {
     return [...(students.value || [])].some((student) => student?.uid === user.value?.uid);
 });
+
+const sortedInstructors = computed(() => {
+    return [...(instructors.value || [])].sort((a, b) => {
+        if (a?.is_teacher && !b?.is_teacher) {
+            return -1;
+        } else if (!a?.is_teacher && b?.is_teacher) {
+            return 1;
+        } else {
+            return a?.surname.localeCompare(b?.surname);
+        }
+    });
+});
+
 const { isAdmin } = useIsAdmin();
 const { isTeacher } = useIsTeacher();
 </script>

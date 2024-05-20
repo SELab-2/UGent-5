@@ -8,20 +8,30 @@
                     </div>
                 </v-card-title>
                 <v-card-text>
-                    <HeaderSubtitleButton
-                        :title="`${$t('subject.academy_year')} 20${academicYear}-20${academicYear + 1}`"
-                        :clickable="false"
-                        :active="false"
-                    ></HeaderSubtitleButton>
-                    <div class="d-flex justify-start instr-container">
-                        <HeaderSubtitleButton
+                    <v-chip
+                        color="primary"
+                        variant="flat"
+                        label
+                    >
+                        {{`${$t('subject.academy_year')} 20${academicYear}-20${academicYear + 1}`}}
+                    </v-chip>
+                    <v-row class="instr-container">
+                        <v-chip
                             v-for="instructor in instructors"
-                            :key="instructor.uid"
-                            :title="`${instructor.given_name[0]}. ${instructor.surname}`"
-                            :clickable="false"
-                            :active="false"
-                        ></HeaderSubtitleButton>
-                    </div>
+                            :key="instructor!.uid"
+                            variant="outlined"
+                            :color="instructor!.is_teacher ? `primary` : `green`"
+                            class="ma-1 instr-chip"
+                            exact
+                        >
+                            <v-icon
+                                :icon="instructor!.is_teacher ? `mdi-account-tie-outline` : `mdi-school`"
+                                start
+                            ></v-icon>
+                            {{ instructor.given_name[0] }}. {{ instructor.surname }}
+                        </v-chip>
+                    </v-row>
+
                 </v-card-text>
             </v-col>
             <v-col v-if="isAdmin || (isInstructor && isTeacher)" cols="1">
@@ -38,6 +48,7 @@ import type User from "@/models/User";
 import HeaderSubtitleButton from "@/components/buttons/HeaderSubtitleButton.vue";
 import useIsAdmin from "@/composables/useIsAdmin";
 import useIsTeacher from "@/composables/useIsTeacher";
+import InstructorChip from "@/components/subject/extra/InstructorChip.vue";
 
 defineProps<{
     title: string;
@@ -54,6 +65,12 @@ const { isTeacher } = useIsTeacher();
 .title-card {
     background-color: white;
     padding: 20px;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.title-card::-webkit-scrollbar {
+    display: none;
 }
 
 .scrollable {
@@ -73,8 +90,7 @@ const { isTeacher } = useIsTeacher();
 }
 
 .instr-container {
-    margin-top: 10px;
-    margin-bottom: 5px;
+    margin-top: 1vh;
 }
 
 .link {
