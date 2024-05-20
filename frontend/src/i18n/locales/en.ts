@@ -82,6 +82,7 @@ export default {
             "Please enter a valid file type, including the extension (e.g., 'image.png')",
         files_will_be_overwritten: "By uploading another file current files will be overwritten.",
         testfiles: "Testfiles",
+        requirements_disclaimer: "For info on the usage of requirements please visit our",
     },
     navigation: {
         home: "Home",

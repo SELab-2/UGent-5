@@ -115,11 +115,7 @@ import FilesInput from "@/components/form_elements/FilesInput.vue";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import { useRoute } from "vue-router";
-import {
-    useSubjectsQuery,
-    useSubjectInstructorsQuery,
-    useSubjectStudentsQuery,
-} from "@/queries/Subject";
+import { useSubjectsQuery, useSubjectStudentsQuery } from "@/queries/Subject";
 
 import { useCreateGroupsMutation, useAddToGroupMutation } from "@/queries/Group";
 import { ref, reactive, computed } from "vue";
@@ -133,7 +129,7 @@ import {
 import type User from "@/models/User";
 import DisplayTestFiles from "@/components/project/DisplayTestFiles.vue";
 import router from "@/router";
-import RequirementsInput from "@/components/RequirementsInput.vue";
+import RequirementsInput from "@/components/project/RequirementsInput.vue";
 import { useI18n } from "vue-i18n";
 const route = useRoute();
 const { t } = useI18n();
@@ -157,23 +153,21 @@ const requirements = ref([]);
 const projectId = ref(route.params.projectId);
 const isEditMode = computed(() => projectId.value !== undefined);
 
+// Query to fetch and handle files associated with a project
+const {
+    data: filesData,
+    isError: filesError,
+    isLoading: filesLoading,
+} = useProjectFilesQuery(projectId.value);
+
+// Query to fetch and handle project details
 const {
     data: projectData,
     isLoading: isProjectLoading,
     isError: isProjectError,
 } = useProjectQuery(projectId);
 
-const {
-    data: filesData,
-    isLoading: isFilesLoading,
-    isError: isFilesError,
-} = useProjectFilesQuery(projectId.value);
-
-function htmlDecode(input) {
-    const doc = new DOMParser().parseFromString(input, "text/html");
-    return doc.documentElement.textContent;
-}
-
+// Watching projectData for changes to update the form data
 watch(
     projectData,
     (project) => {
@@ -187,8 +181,7 @@ watch(
             nextTick(() => {
                 if (quillEditor.value && quillEditor.value.getQuill) {
                     let quill = quillEditor.value.getQuill();
-                    quill.root.innerHTML = "";
-                    quill.clipboard.dangerouslyPasteHTML(description);
+                    quill.root.innerHTML = description;
                 } else {
                     console.error("Quill Editor is not initialized");
                 }
@@ -198,11 +191,12 @@ watch(
     { deep: true }
 );
 
+// Computed properties for deadline and publish date to handle their updates
 const deadlineModel = computed({
     get: () => deadline.value,
     set: (newValue) => {
         if (newValue.toISOString() !== deadline.value.toISOString()) {
-            deadline.value = new Date(newValue); // Make sure newValue is correctly formatted
+            deadline.value = new Date(newValue);
         }
     },
 });
@@ -211,11 +205,12 @@ const publishDateModel = computed({
     get: () => publishDate.value,
     set: (newValue) => {
         if (newValue.toISOString() !== publishDate.value.toISOString()) {
-            publishDate.value = new Date(newValue); // Make sure newValue is correctly formatted
+            publishDate.value = new Date(newValue);
         }
     },
 });
 
+// Functions to update deadline and publish date based on user interaction
 function updateDeadline(val) {
     deadlineModel.value = val;
 }
@@ -224,6 +219,7 @@ function updatePublishDate(val) {
     publishDateModel.value = val;
 }
 
+// Setting up reactive properties for selected subject, subject options, and group project options
 const selectedSubject = ref<number>(
     isEditMode.value
         ? projectSubjectId.value ?? Number(route.params.subjectId)
@@ -232,17 +228,21 @@ const selectedSubject = ref<number>(
 
 const {
     data: subjectsData,
-    isLoading: isSubjectsLoading,
-    isError: isSubjectsError,
-    error: subjectsError,
+    isLoading: subjectsLoading,
+    isError: subjectsError,
 } = useSubjectsQuery();
-const { data: instructorsData } = useSubjectInstructorsQuery(selectedSubject);
-const { data: studentsData } = useSubjectStudentsQuery(selectedSubject);
+
+const {
+    data: studentsData,
+    isLoading: studentsLoading,
+    isError: studentsError,
+} = useSubjectStudentsQuery(selectedSubject);
 
 const subjects = computed(
     () => subjectsData.value?.as_instructor.map(({ name, id }) => ({ text: name, value: id })) || []
 );
 
+//Option that are passed to radiobuttonlist (selection for group creation)
 const groupProjectOptions = computed(() => [
     { label: t("project.random"), value: "random" },
     { label: t("project.student_groups"), value: "student" },
@@ -266,14 +266,15 @@ const handleCapacityChange = (newCapacity: number) => {
     capacity.value = newCapacity;
 };
 
+// Functions to display success and error messages
 function setSuccessAlert(message) {
     successMessage.value = message;
     showSuccessAlert.value = true;
 }
 
 function setErrorAlert(message) {
-    errorMessage.value = message; // Set the error message
-    showErrorAlert.value = true; // Show the error alert
+    errorMessage.value = message;
+    showErrorAlert.value = true;
 }
 
 async function submitForm() {
@@ -284,11 +285,12 @@ async function submitForm() {
         } else {
             await createProject(projectData);
         }
-        navigateToProject(projectData.project_id);
+        handleFiles(projectData.project_id);
     } catch (error) {
         console.error("Error during project or group creation or file upload:", error);
         setErrorAlert("An unexpected error occurred. Please try again.");
     }
+    navigateToProject(projectData.project_id);
 }
 
 function formatProjectData() {
@@ -306,12 +308,11 @@ function formatProjectData() {
 }
 
 async function updateProject(projectData) {
-    projectData.id = projectId.value;
+    projectData.project_id = projectId.value;
     await updateProjectMutation.mutateAsync({
         projectId: projectId.value,
         projectData,
     });
-    handleFiles(projectId.value);
     setSuccessAlert("Project updated successfully.");
 }
 
@@ -319,10 +320,9 @@ async function createProject(projectData) {
     const createdProjectId = await createProjectMutation.mutateAsync(projectData);
     projectData.project_id = createdProjectId;
     await handleGroupCreation(createdProjectId);
-    handleFiles(projectData.project_id);
     setSuccessAlert("Project created successfully.");
 }
-
+// Group creation and management functions
 async function handleGroupCreation(projectId) {
     if (selectedGroupProject.value === "student" && capacity.value != 1) {
         const emptyGroups = generateEmptyGroups(projectId);
@@ -341,7 +341,7 @@ async function handleGroupCreation(projectId) {
         joinStudentsToGroups(createdGroups, groups);
     }
 }
-
+// Function to join students to groups
 async function joinStudentsToGroups(createdGroups, studentGroups) {
     for (let i = 0; i < createdGroups.length; i++) {
         const group = createdGroups[i];
@@ -354,7 +354,7 @@ async function joinStudentsToGroups(createdGroups, studentGroups) {
         }
     }
 }
-
+// Function to generate empty groups for a project
 function generateEmptyGroups(projectId) {
     const numberOfGroups = Math.ceil(studentsData.value.length / capacity.value);
     const emptyGroups = [];
@@ -367,7 +367,7 @@ function generateEmptyGroups(projectId) {
     }
     return emptyGroups;
 }
-
+// Function to handle file uploads for a project
 async function handleFiles(projectId) {
     if (files.value.length > 0) {
         const formData = new FormData();
@@ -380,11 +380,12 @@ async function handleFiles(projectId) {
         });
     }
 }
-
+//navigate to project after creation/editing
 function navigateToProject(projectId) {
     router.push({ name: "project", params: { projectId } });
 }
 
+//shuffle function (used for randomization in groups)
 function shuffle(array: any[]) {
     let shuffledArray = [...array];
     let currentIndex = shuffledArray.length,

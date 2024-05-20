@@ -1,4 +1,4 @@
-import { computed, toValue } from "vue";
+import { computed, type Ref, toValue } from "vue";
 import type { MaybeRefOrGetter } from "vue";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import type { UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-query";
@@ -33,7 +33,7 @@ function SUBMISSIONS_QUERY_KEY(): string[] {
     return ["submissions"];
 }
 
-function projectFilesQueryKey(projectId: number): (string | number)[] {
+function TEST_FILES_QUERY_KEY(projectId: number): (string | number)[] {
     return ["projectFiles", projectId];
 }
 
@@ -99,24 +99,29 @@ export function useUpdateProjectMutation(): UseMutationReturnType<
     void
 > {
     const queryClient = useQueryClient();
-    return useMutation<Project, Error, { projectId: number; projectData: Partial<ProjectForm> }, void>(
-        {
-            mutationFn: ({ projectId, projectData }) => updateProject(projectId, projectData),
+    return useMutation<
+        Project,
+        Error,
+        { projectId: number; projectData: Partial<ProjectForm> },
+        void
+    >({
+        mutationFn: ({ projectId, projectData }) => updateProject(projectId, projectData),
 
-            onSuccess: (_, variables) => {
-                queryClient.invalidateQueries({ queryKey: PROJECT_QUERY_KEY(variables.projectId) });
-                console.log("Project updated successfully.");
-            },
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: PROJECT_QUERY_KEY(variables.projectId) });
+            console.log("Project updated successfully.");
+        },
 
-            onError: (error) => {
-                console.error("Project update failed", error);
-                alert("Failed to update project. Please try again.");
-            },
-        }
-    );
+        onError: (error) => {
+            console.error("Project update failed", error);
+            alert("Failed to update project. Please try again.");
+        },
+    });
 }
 
-export function useProjectFilesQuery(projectId: MaybeRefOrGetter<number | undefined>): UseQueryReturnType<File[], Error> {
+export function useProjectFilesQuery(
+    projectId: MaybeRefOrGetter<number | undefined>
+): UseQueryReturnType<File[], Error> {
     return useQuery<File[], Error>({
         queryKey: TEST_FILES_QUERY_KEY(toValue(projectId)!),
         queryFn: () => fetchProjectFiles(toValue(projectId)!),

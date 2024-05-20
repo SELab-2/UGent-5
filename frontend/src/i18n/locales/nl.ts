@@ -85,6 +85,7 @@ export default {
         files_will_be_overwritten:
             "Bij het uploaden van een nieuw testbestand zullen alle huidige testbestanden verwijderd worden.",
         testfiles: "Testbestanden",
+        requirements_disclaimer: "Voor info over het gebruik van bestandsvereisten, bezoek onze ",
     },
     navigation: {
         home: "Hoofdscherm",
