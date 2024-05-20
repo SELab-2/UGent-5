@@ -81,9 +81,11 @@ import {useRouter} from "vue-router";
 import CreateSubjectHeaderContainer from "@/components/subject/modify/create/header/CreateSubjectHeaderContainer.vue";
 import CreateSubjectBody from "@/components/subject/modify/create/body/CreateSubjectBody.vue";
 
-defineProps<{
+const props = defineProps<{
     subjectId: number;
 }>();
+
+const {subjectId} = toRefs(props);
 
 const snackbar = ref(false);
 const dialog = ref(false);
@@ -115,18 +117,18 @@ const {
 
 const isLoading = computed(
     () =>
-    isCurrentUserLoading.value ||
-    isSubjectLoading.value ||
-    isProjectsLoading.value ||
-    isInstructorsLoading.value
+        isCurrentUserLoading.value ||
+        isSubjectLoading.value ||
+        isProjectsLoading.value ||
+        isInstructorsLoading.value
 );
 
 const isError = computed(
     () =>
-    isCurrentUserError.value ||
-    isSubjectError.value ||
-    isProjectsError.value ||
-    isInstructorsError.value
+        isCurrentUserError.value ||
+        isSubjectError.value ||
+        isProjectsError.value ||
+        isInstructorsError.value
 );
 
 const createSubjectInstructorMutation = useCreateSubjectInstructorMutation(subjectId);

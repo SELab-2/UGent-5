@@ -5,6 +5,7 @@
         </v-col>
         <v-col cols="8">
             <SubjectHeaderCard
+                :subject-id="subjectId"
                 :title="title"
                 :academic-year="academicYear"
                 :instructors="instructors"
@@ -23,6 +24,7 @@ import { SubjectRole } from "@/models/Subject";
 import { computed, toRefs } from "vue";
 
 const props = defineProps<{
+    subjectId: number;
     title: string;
     academicYear: number;
     instructors: User[];

@@ -27,6 +27,7 @@
                         <v-col>
                             <SubjectHeaderContainer
                                 v-if="subject"
+                                :subject-id="subjectId"
                                 :title="subject!.name"
                                 :instructors="sortedInstructors"
                                 :academic-year="subject!.academic_year"
