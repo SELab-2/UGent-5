@@ -3,65 +3,62 @@
         <p>{{ $t("default.something-went-wrong") }}</p>
     </div>
 
-    <v-skeleton-loader v-else :loading="isLoading" type="card">
-        <v-snackbar v-model="snackbar" :timeout="3500" color="error" top>
-            {{ $t("create_subject.error_snackbar") }}
-        </v-snackbar>
+    <v-row v-else>
+        <v-col cols="1">
+            <v-btn variant="elevated" class="back-button" size="large" @click="dialog = true">
+                <v-icon>mdi-arrow-left</v-icon>
+            </v-btn>
+        </v-col>
+        <v-col cols="11">
+            <v-skeleton-loader :loading="isLoading" type="card" class="ma-8">
+                <v-snackbar v-model="snackbar" :timeout="3500" color="error" top>
+                    {{ $t("create_subject.error_snackbar") }}
+                </v-snackbar>
 
-        <v-dialog v-model="dialog" max-width="290" persistent>
-            <v-card>
-                <v-card-title class="headline">
-                    {{ $t("create_subject.cancel_dialog") }}
-                </v-card-title>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" @click="dialog = false">
-                        {{ $t("default.no_capital") }}
+                <v-dialog v-model="dialog" max-width="290" persistent>
+                    <v-card>
+                        <v-card-title class="headline">
+                            {{ $t("create_subject.cancel_dialog") }}
+                        </v-card-title>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" @click="dialog = false">
+                                {{ $t("default.no_capital") }}
+                            </v-btn>
+                            <v-btn color="blue darken-1" @click="router.push({ name: 'subjects' })">
+                                {{ $t("default.yes_capital") }}
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <CreateSubjectHeaderContainer
+                    :image-path="`https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png`"
+                    :current-user-as-instructor="currentUserAsInstructor"
+                    :is-form-error="isFormError"
+                    @update:subject-name="onSubjectNameUpdated"
+                    @update:active-academic-year="activeAcademicYear = $event"
+                    @update:current-user-as-instructor="currentUserAsInstructor = $event"
+                >
+                </CreateSubjectHeaderContainer>
+                <CreateSubjectBody
+                    :current-user="currentUser"
+                    :instructors="shownInstructors"
+                    @add-instructor="addInstructor"
+                    @remove-instructor="removeInstructor"
+                >
+                </CreateSubjectBody>
+
+                <div class="confirm-btn-container">
+                    <v-btn class="ma-2" color="grey" @click="dialog = true">
+                        {{ $t("default.cancel") }}
                     </v-btn>
-                    <v-btn color="blue darken-1" @click="router.push({ name: 'subjects' })">
-                        {{ $t("default.yes_capital") }}
+                    <v-btn class="ma-2" @click="handleSubmit" color="primary" type="submit">
+                        {{ $t("default.confirm") }}
                     </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-
-        <v-row>
-            <v-col cols="1">
-                <v-btn variant="elevated" class="back-button" size="large" @click="dialog = true">
-                    <v-icon>mdi-arrow-left</v-icon>
-                </v-btn>
-            </v-col>
-            <v-col cols="11">
-                <background-container>
-                    <CreateSubjectHeaderContainer
-                        :image-path="`https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png`"
-                        :current-user-as-instructor="currentUserAsInstructor"
-                        :is-form-error="isFormError"
-                        @update:subject-name="onSubjectNameUpdated"
-                        @update:active-academic-year="activeAcademicYear = $event"
-                        @update:current-user-as-instructor="currentUserAsInstructor = $event"
-                    >
-                    </CreateSubjectHeaderContainer>
-                    <CreateSubjectBody
-                        :current-user="currentUser"
-                        :instructors="shownInstructors"
-                        @add-instructor="addInstructor"
-                        @remove-instructor="removeInstructor"
-                    >
-                    </CreateSubjectBody>
-
-                    <div class="confirm-btn-container">
-                        <v-btn class="ma-2" color="grey" @click="dialog = true">
-                            {{ $t("default.cancel") }}
-                        </v-btn>
-                        <v-btn class="ma-2" @click="handleSubmit" color="primary" type="submit">
-                            {{ $t("default.confirm") }}
-                        </v-btn>
-                    </div>
-                </background-container>
-            </v-col>
-        </v-row>
-    </v-skeleton-loader>
+                </div>
+            </v-skeleton-loader>
+        </v-col>
+    </v-row>
 </template>
 
 <script setup lang="ts">
@@ -71,7 +68,6 @@ import { useCreateSubjectInstructorMutation, useCreateSubjectMutation } from "@/
 import type SubjectForm from "@/models/Subject";
 import type User from "@/models/User";
 import { useCurrentUserQuery } from "@/queries/User";
-import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import CreateSubjectHeaderContainer from "@/components/subject/createSubjectView/header/CreateSubjectHeaderContainer.vue";
 import CreateSubjectBody from "@/components/subject/createSubjectView/body/CreateSubjectBody.vue";
 import { useRouter } from "vue-router";

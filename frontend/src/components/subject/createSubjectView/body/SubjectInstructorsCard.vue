@@ -37,7 +37,7 @@ defineEmits<{
 
 <style scoped>
 .title-card {
-    background-color: white;
+    background-color: var(--color-secondary);
     padding: 20px;
 }
 
