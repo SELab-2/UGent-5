@@ -10,9 +10,6 @@
         <div class="mobileCard">
             <SubjectsCard />
         </div>
-        <div class="mobileCard">
-            <AnnouncementsCard />
-        </div>
     </v-container>
     <v-container v-else>
         <h1 v-if="isLoading">Loading...</h1>
@@ -26,9 +23,6 @@
             <v-col>
                 <SubjectsCard />
             </v-col>
-            <v-col>
-                <AnnouncementsCard />
-            </v-col>
         </v-row>
     </v-container>
 </template>
@@ -36,7 +30,6 @@
 <script setup lang="ts">
 import SubjectsCard from "@/components/home/cards/SubjectsCard.vue";
 import DeadlinesCard from "@/components/home/cards/DeadlinesCard.vue";
-import AnnouncementsCard from "@/components/home/cards/AnnouncementsCard.vue";
 import { useCurrentUserQuery } from "@/queries/User";
 import { useDisplay } from "vuetify";
 

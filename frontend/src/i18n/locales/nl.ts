@@ -2,7 +2,6 @@ export default {
     default: {
         error: {
             "not-found": "Pagina niet gevonden",
-            "something-went-wrong": "Er is iets misgegaan",
         },
         loading: {
             loading_page: "Aan het laden...",
@@ -37,14 +36,14 @@ export default {
         files_disclaimer: "Voor info over het gebruik van testbestanden, bezoek onze  ",
     },
     submission: {
-        status: "Indiening status: {status}",
+        status: "Status indiening:",
         datetime: "Indiening tijdstip:",
         remarks: "Opmerkingen",
         remarks_empty: "Geen opmerkingen voor deze indiening",
         files: "Bestanden",
         download_info: "Klik op bestandsnaam om te downloaden",
         after_deadline: "Na deadline",
-        submissions_title: "Indieningen:",
+        submissions_title: "Indieningen voor project {project}",
         no_submissions: "Nog geen indieningen",
         teacher_submissions_info:
             "Deze pagina bevat een lijst van de laatste indiening van elke groep voor dit project.",
@@ -63,9 +62,16 @@ export default {
         edit: "Bewerk project",
         submissions_list: "Alle indieningen",
         submissions_list_teacher: "Alle indieningen voor dit project",
+        submissions_zip: "Download alle indieningen",
         not_found: "Geen projecten teruggevonden.",
         finished: "Afgerond",
         not_found2: "Project niet teruggevonden",
+        requirements: "Bestandsvereisten",
+        mandatory: "Verplicht",
+        forbidden: "Verboden",
+        unmet_mandatory: "Dit verplichte bestand is niet aanwezig in je indiening.",
+        unmet_forbidden: "Deze ingediende bestanden zijn verboden:",
+        unmet_reqs_warning: "Opgelet: je indiening voldoet niet aan alle bestandsvereisten.",
         to_subject: "Naar vak",
         to_groups: "Naar groepen",
         selected_subject: "Gekozen vak",
@@ -86,6 +92,7 @@ export default {
             "Bij het uploaden van een nieuw testbestand zullen alle huidige testbestanden verwijderd worden.",
         testfiles: "Testbestanden",
         requirements_disclaimer: "Voor info over het gebruik van bestandsvereisten, bezoek onze ",
+        to_project: "Naar project",
     },
     navigation: {
         home: "Hoofdscherm",
@@ -142,6 +149,7 @@ export default {
             tooltip:
                 "Kopieer de registratie link voor dit vak, deze kan gedeeld worden met studenten om zich te registreren voor het vak.",
         },
+        error: "Fout bij het inladen van vakken",
     },
 
     subjects: {

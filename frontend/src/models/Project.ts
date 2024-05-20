@@ -33,6 +33,16 @@ export interface Deadline {
     status: string;
 }
 
+export interface Requirement {
+    mandatory: boolean;
+    value: string;
+}
+
+export interface UnmetRequirement {
+    requirement: Requirement;
+    files: string[] | undefined;
+}
+
 export enum FilterOptions {
     All = "All",
     Active = "Active",
