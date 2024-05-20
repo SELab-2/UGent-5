@@ -3,9 +3,7 @@
         <v-card-title>
             {{ $t("project.group", { number: submission.group_id }) }}
         </v-card-title>
-
         <SubmissionCard class="ma-3" :submission="submission" :deadline="deadline" />
-
         <v-card-actions>
             <v-btn :to="`/groups/${submission.group_id}`">
                 {{ $t("project.submissions_list") }}

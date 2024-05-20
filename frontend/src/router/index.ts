@@ -101,12 +101,6 @@ const router = createRouter({
             props: (route) => ({ uuid: String(route.params.uuid) }),
         },
         {
-            path: "/submissions/:submissionId(\\d+)",
-            name: "submission",
-            component: () => import("../views/SubmissionView.vue"),
-            props: (route) => ({ submissionId: Number(route.params.submissionId) }),
-        },
-        {
             path: "/settings",
             name: "settings",
             component: () => import("../views/SettingsView.vue"),

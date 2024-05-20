@@ -7,6 +7,9 @@
         <div v-else class="projectInfo">
             <v-row>
                 <v-col class="col-sm-12 col-md-6 col-lg-8">
+                    <v-btn v-if="isTeacher" :to="`/project/${project.id}/submissions`" class="allsubmissions" variant="flat">
+                        {{ $t("project.submissions_list_teacher") }}
+                    </v-btn>
                     <ProjectInfo
                         :project="project!"
                         :group="group!"
@@ -86,11 +89,24 @@ const isDataError = computed(
         isSubjectError.value ||
         isUserError.value
 );
+
+const isTeacher = computed(
+    () =>
+        user.value.is_teacher ||
+        user.value.is_admin ||
+        instructors.value?.some((element) => element.uid == user.value.uid)
+);
 </script>
 
 <style scoped>
 .button-container {
     margin-top: 20px;
     min-width: 170px;
+}
+
+.allsubmissions {
+    margin: 15px;
+    background-color: rgb(var(--v-theme-primary));
+    color: rgb(var(--v-theme-navtext))
 }
 </style>

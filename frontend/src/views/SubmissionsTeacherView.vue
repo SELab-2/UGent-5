@@ -7,9 +7,8 @@
                 <v-alert v-if="submissions.length == 0" icon="$warning" color="warning">
                     {{ $t("submission.no_submissions") }}</v-alert
                 >
-                <v-alert v-else icon="$info" color="info" closable>
-                    {{ $t("submission.teacher_submissions_info") }}</v-alert
-                >
+                <p v-else icon="$info">
+                    {{ $t("submission.teacher_submissions_info") }}</p>
 
                 <SubmissionTeacherCard
                     class="ma-3"
