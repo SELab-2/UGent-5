@@ -129,18 +129,3 @@ export const useIsInGroupOfProjectCondition: CanVisitCondition = (qc, ctx) => {
     });
     return { condition, isLoading };
 };
-
-export const useIsPartOfSubjectCondition: CanVisitCondition = (qc, ctx) => {
-    const subjectId = Number(ctx.to.params.subjectId);
-    const { data: subjects, isLoading } = useSubjectsQuery(qc);
-    const condition = computed(() => {
-        const student_subjects = subjects.value?.as_student || [];
-        const instructor_subjects = subjects.value?.as_instructor || [];
-        return (
-            [...student_subjects, ...instructor_subjects].findIndex(
-                (subject) => subject.id === subjectId
-            ) !== -1
-        );
-    });
-    return { condition, isLoading };
-};

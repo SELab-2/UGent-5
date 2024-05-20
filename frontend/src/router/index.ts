@@ -9,12 +9,10 @@ import useCanVisit, {
     useIsInstructorOfSubjectCondition,
     useIsStudentOfProjectCondition,
     useIsInstructorOfProjectCondition,
-    useIsPartOfSubjectCondition,
     useAndCondition,
     useOrCondition,
     useIsInGroupOfProjectCondition,
 } from "./middleware/canVisit";
-import { ref } from "vue";
 
 declare module "vue-router" {
     interface RouteMeta {
@@ -87,6 +85,14 @@ const router = createRouter({
             name: "groups",
             component: () => import("../views/GroupsView.vue"),
             props: (route) => ({ projectId: Number(route.params.projectId) }),
+            meta: {
+                middleware: useCanVisit(
+                    useOrCondition(
+                        useIsStudentOfProjectCondition,
+                        useIsInstructorOfProjectCondition
+                    )
+                ),
+            },
         },
         {
             path: "/groups/:groupId(\\d+)",
