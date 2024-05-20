@@ -12,6 +12,7 @@ from .dependencies import (
     retrieve_subjects,
     retrieve_user,
     admin_user_validation,
+    teacher_or_admin_user_validation,
 )
 from .schemas import User, UserSimple, UserSubjectList
 from .service import set_admin, set_teacher, get_all_users
@@ -25,7 +26,7 @@ router = APIRouter(
 )
 
 
-@router.get("/", dependencies=[Depends(admin_user_validation)])
+@router.get("/", dependencies=[Depends(teacher_or_admin_user_validation)])
 async def get_users(
     db: AsyncSession = Depends(get_async_db),
 ) -> list[User]:
