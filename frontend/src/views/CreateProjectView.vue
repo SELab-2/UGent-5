@@ -170,7 +170,7 @@ async function submitForm() {
             });
         } else if (selectedGroupProject.value === "random") {
             const groups = divideStudentsIntoGroups(studentsData.value || [], capacity.value);
-            const groupsToCreate = groups.map((_) => ({
+            const groupsToCreate = groups.map(() => ({
                 project_id: createdProjectId,
                 score: 0,
             }));

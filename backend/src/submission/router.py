@@ -59,7 +59,8 @@ async def create_submission(background_tasks: BackgroundTasks,
     status = Status.InProgress if docker_tests_present else Status.Accepted
 
     submission = await service.create_submission(
-        db, uuid=submission_uuid, remarks=submission_in.remarks, status=status, group_id=group.id, project_id=group.project_id
+        db, uuid=submission_uuid, remarks=submission_in.remarks, status=status, group_id=group.id,
+        project_id=group.project_id
     )
 
     # launch docker tests
@@ -73,7 +74,8 @@ async def create_submission(background_tasks: BackgroundTasks,
 @router.delete("/{submission_id}",
                dependencies=[Depends(admin_user_validation)],
                status_code=200)
-async def delete_submision(submission: Submission = Depends(retrieve_submission), db: AsyncSession = Depends(get_async_db)):
+async def delete_submission(submission: Submission = Depends(retrieve_submission),
+                            db: AsyncSession = Depends(get_async_db)):
     remove_files(submission.files_uuid)
     await service.delete_submission(db, submission.id)
 
@@ -95,9 +97,9 @@ async def get_file(path: str, submission: Submission = Depends(retrieve_submissi
 
 
 @router.get("/{submission_id}/zip", response_class=StreamingResponse)
-async def get_all_files(submission: Submission = Depends(retrieve_submission)):
-    path = submission_path(submission.files_uuid, "")
-    return StreamingResponse(zip_stream(path, submission.group_id), media_type="application/zip")
+async def get_all_files(submission: Submission = Depends(retrieve_submission), db: AsyncSession = Depends(get_async_db)):
+    data = await zip_stream(db, submission)
+    return StreamingResponse(data, media_type="application/zip")
 
 
 @router.get("/{submission_id}/artifacts", response_model=list[File])

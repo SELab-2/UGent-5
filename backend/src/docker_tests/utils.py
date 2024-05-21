@@ -59,6 +59,7 @@ def write_and_unpack_files(files: list[UploadFile], uuid: str | None) -> str:
 
             if upload_file.content_type == "application/zip":
                 shutil.unpack_archive(path, files_path)
+                os.remove(path)  # don't store zip file
 
     return uuid
 

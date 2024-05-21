@@ -1,6 +1,6 @@
 import {mount} from "@vue/test-utils";
 import {expect, describe, it, vi} from "vitest";
-import SubmitForm from "@/components/project/submit/SubmitForm.vue"
+import SubmitForm from "@/components/submission/SubmitForm.vue"
 import {ref} from "vue";
 
 const mockRouter = {
@@ -32,7 +32,7 @@ vi.mock("@/components/form_elements/FilesInput.vue", () => ({
 describe("SubmitForm", async () => {
     const wrapper = mount(SubmitForm, {
         props: {
-            projectId: 1,
+            project: { id: 1, requirements: [] },
         }
     });
 
