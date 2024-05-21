@@ -36,7 +36,6 @@ defineEmits<{
     (e: "update:subject-name", value: string): void;
     (e: "update:subject-mail", value: string): void;
     (e: "update:active-academic-year", value: number): void;
-
 }>();
 </script>
 

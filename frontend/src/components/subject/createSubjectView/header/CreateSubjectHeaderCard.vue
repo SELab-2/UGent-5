@@ -89,7 +89,8 @@ const academicYearItems = [activeAcademicYear.value, activeAcademicYear.value + 
 const rules = {
     required: (value: string) => !!value || t("create_subject.field_required"),
     length: (value: string) => value.length > 2 || t("create_subject.field_length"),
-    email: (value: string) => !value || /.+@.+\..+/.test(value) || t("create_subject.email_invalid"),
+    email: (value: string) =>
+        !value || /.+@.+\..+/.test(value) || t("create_subject.email_invalid"),
 };
 
 const emit = defineEmits<{

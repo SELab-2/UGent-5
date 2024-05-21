@@ -153,7 +153,6 @@ export default {
         enter_email: "Enter email",
         email_hint: "Field is optional",
         email_invalid: "Provided email is invalid",
-
     },
 
     group: {
