@@ -68,7 +68,7 @@ DATABASE_URI="postgresql://username:password@localhost:5432/dbname"
 
 #### Run alembic to initialize the database
 ```sh
-alembic upgrade head
+alembic upgrade header
 ```
 
 You can find more info about alembic [here](alembic/README.md).

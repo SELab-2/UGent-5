@@ -59,7 +59,6 @@ const { project, group, instructors, subject, user } = toRefs(props);
 
 const isTeacher = computed(
     () =>
-        user.value.is_teacher ||
         user.value.is_admin ||
         instructors.value?.some((element) => element.uid == user.value.uid)
 );

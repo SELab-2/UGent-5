@@ -1,6 +1,6 @@
 import { mount } from "@vue/test-utils";
 import {expect, describe, it} from "vitest";
-import SubjectsHeaderContainer from "@/components/subject/subjectsview/SubjectsHeaderContainer.vue"
+import SubjectsHeaderContainer from "@/components/subject/subjectsview/header/SubjectsHeaderContainer.vue"
 
 describe("SubjectsHeaderContainer", () => {
     const wrapper = mount(SubjectsHeaderContainer, {

@@ -99,7 +99,6 @@ const isTeacher = computed(() => {
         return false;
     }
     return (
-        user.value.is_teacher ||
         user.value.is_admin ||
         instructors.value.some((instructor) => instructor.uid === user.value.uid)
     );

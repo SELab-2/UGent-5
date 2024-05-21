@@ -25,7 +25,7 @@ and make adjustments if needed.
 #### Run a migration: this will upgrade the database schema to the most recent revision.
 
 ```sh
-alembic upgrade head
+alembic upgrade header
 ```
 
 #### Undo the most recent revision:

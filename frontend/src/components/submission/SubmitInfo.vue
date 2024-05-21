@@ -18,7 +18,7 @@
             <v-btn :to="`/project/${project?.id}/submit`">
                 {{ $t("submit.new_submission") }}
             </v-btn>
-            <v-btn :to="`/groups/${group?.id}`">
+            <v-btn :to="`/submissions/${group?.id}`">
                 {{ $t("project.submissions_list") }}
             </v-btn>
         </v-card-actions>
