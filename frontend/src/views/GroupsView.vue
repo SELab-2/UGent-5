@@ -29,11 +29,15 @@
                     </v-row>
                 </div>
                 <v-btn v-if="isTeacher" @click="createGroup" variant="flat">{{
-                        $t("group.create_group")
-                    }}</v-btn>
+                    $t("group.create_group")
+                }}</v-btn>
             </v-col>
             <v-col cols="2">
-                <BackButton title="project.to_project" :destination="`/project/${projectId}`" class="backbutton"/>
+                <BackButton
+                    title="project.to_project"
+                    :destination="`/project/${projectId}`"
+                    class="backbutton"
+                />
             </v-col>
         </v-row>
     </v-container>
@@ -48,7 +52,7 @@ import { useCurrentUserQuery } from "@/queries/User";
 import { type GroupForm } from "@/models/Group";
 import { useSubjectInstructorsQuery, useSubjectStudentsQuery } from "@/queries/Subject";
 import StudentsDialog from "@/components/groups/StudentsDialog.vue";
-import BackButton from "@/components/buttons/BackButton.vue"
+import BackButton from "@/components/buttons/BackButton.vue";
 
 const props = defineProps<{
     projectId: number;

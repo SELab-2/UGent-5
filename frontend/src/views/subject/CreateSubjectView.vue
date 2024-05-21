@@ -4,7 +4,13 @@
     </div>
     <v-row v-else>
         <v-col cols="1">
-            <v-btn color="primary" variant="elevated" class="back-button" size="large" @click="dialog = true">
+            <v-btn
+                color="primary"
+                variant="elevated"
+                class="back-button"
+                size="large"
+                @click="dialog = true"
+            >
                 <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
         </v-col>

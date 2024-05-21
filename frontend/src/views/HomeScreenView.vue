@@ -1,7 +1,10 @@
 <template>
     <v-container v-if="smAndDown">
         <h1 v-if="isLoading">Loading...</h1>
-        <TitleContainer v-else :title="$t('home.welcome', { name: user!.given_name, surname: user!.surname })"></TitleContainer>
+        <TitleContainer
+            v-else
+            :title="$t('home.welcome', { name: user!.given_name, surname: user!.surname })"
+        ></TitleContainer>
         <div class="mobileCard">
             <DeadlinesCard />
         </div>
@@ -11,7 +14,11 @@
     </v-container>
     <v-container v-else>
         <h1 v-if="isLoading">Loading...</h1>
-        <TitleContainer v-else :title="$t('home.welcome', { name: user!.given_name, surname: user!.surname })" class="title"></TitleContainer>
+        <TitleContainer
+            v-else
+            :title="$t('home.welcome', { name: user!.given_name, surname: user!.surname })"
+            class="title"
+        ></TitleContainer>
         <v-row>
             <v-col>
                 <DeadlinesCard />

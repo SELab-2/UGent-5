@@ -117,7 +117,6 @@ const isTeacher = computed(() => {
     );
 });
 
-
 const amountOfMembers = computed(() => {
     if (!group.value) return 0;
     return group.value.members.length;

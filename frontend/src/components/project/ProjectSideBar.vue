@@ -61,7 +61,6 @@ const isTeacher = computed(() => {
     );
 });
 
-
 const isSoloProject = computed(() => project.value.capacity === 1);
 </script>
 

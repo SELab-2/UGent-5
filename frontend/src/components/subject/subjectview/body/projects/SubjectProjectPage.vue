@@ -67,9 +67,9 @@
 
 <script setup lang="ts">
 import type Project from "@/models/Project";
-import {computed, ref} from "vue";
+import { computed, ref } from "vue";
 import { Quill } from "@vueup/vue-quill";
-import {getUserGroups} from "@/services/group";
+import { getUserGroups } from "@/services/group";
 
 defineProps<{
     selectedTab: number;
@@ -100,7 +100,6 @@ const isInGroup = computed(() => {
     });
 });
 */
-
 </script>
 
 <style scoped>

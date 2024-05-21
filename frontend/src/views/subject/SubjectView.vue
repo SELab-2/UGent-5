@@ -2,7 +2,7 @@
     <div v-if="isError" class="v-container">
         <p>{{ $t("default.something-went-wrong") }}</p>
     </div>
-    <v-skeleton-loader v-else type="card" :loading="isLoading"  >
+    <v-skeleton-loader v-else type="card" :loading="isLoading">
         <v-row>
             <v-snackbar v-model="snackbar" timeout="3000" color="primary">
                 {{ $t("subject.register_link_button.snackbar") }}
@@ -29,7 +29,10 @@
                 </v-row>
                 <v-row>
                     <v-col>
-                        <SubjectProjectsPage v-if="subject" :projects="projects"></SubjectProjectsPage>
+                        <SubjectProjectsPage
+                            v-if="subject"
+                            :projects="projects"
+                        ></SubjectProjectsPage>
                     </v-col>
                 </v-row>
             </v-col>
@@ -140,7 +143,6 @@ const { isTeacher } = useIsTeacher();
 </script>
 ;
 <style scoped>
-
 .action-btn-container {
     margin-top: 50px;
     margin-right: 25px;
@@ -162,6 +164,4 @@ const { isTeacher } = useIsTeacher();
     margin-bottom: 10px;
     width: 175px;
 }
-
-
 </style>

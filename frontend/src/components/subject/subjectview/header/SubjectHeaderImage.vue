@@ -15,7 +15,6 @@ defineProps<{
 </script>
 
 <style scoped>
-
 .subject-icon {
     position: absolute;
     top: 10px;

@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import TitleContainer from "@/components/TitleContainer.vue"
+import TitleContainer from "@/components/TitleContainer.vue";
 interface Developer {
     role: string;
     name: string;

@@ -78,7 +78,7 @@ const updateFilterOption = (option: FilterOptions) => {
     align-items: center;
     height: 400px; /* Adjust height as needed */
     border-radius: 3px;
-    background-color: rgb(var(--v-theme-background))
+    background-color: rgb(var(--v-theme-background));
 }
 
 .placeholder p {

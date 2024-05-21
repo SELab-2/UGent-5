@@ -125,7 +125,6 @@ const onAcademicYearChanged = (academicYear: number) => {
 </script>
 
 <style scoped>
-
 .action-btn-container {
     margin-top: 30px;
 }

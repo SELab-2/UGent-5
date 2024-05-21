@@ -6,15 +6,12 @@
 </template>
 
 <script setup lang="ts">
-
 const props = defineProps<{
     title: string;
 }>();
-
 </script>
 
 <style scoped>
-
 .title-card {
     padding: 30px;
     color: white;
@@ -35,5 +32,4 @@ const props = defineProps<{
     font-size: 32px;
     margin-bottom: 12px;
 }
-
 </style>
