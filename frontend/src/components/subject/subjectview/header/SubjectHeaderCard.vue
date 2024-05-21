@@ -22,7 +22,11 @@
                             :key="instructor!.uid"
                             variant="outlined"
                             :color="instructor!.is_teacher ? `primary` : `green`"
-                            :class="instructor!.is_teacher ? `ma-1 instr-chip-instructor` : `ma-1 instr-chip-assistent`"
+                            :class="
+                                instructor!.is_teacher
+                                    ? `ma-1 instr-chip-instructor`
+                                    : `ma-1 instr-chip-assistent`
+                            "
                             exact
                         >
                             <v-icon
@@ -52,14 +56,14 @@ import type User from "@/models/User";
 import useIsAdmin from "@/composables/useIsAdmin";
 import useIsTeacher from "@/composables/useIsTeacher";
 import SubjectIcon from "@/components/subject/extra/SubjectIcon.vue";
-import {SubjectRole} from "@/models/Subject";
+import { SubjectRole } from "@/models/Subject";
 
 defineProps<{
     title: string;
     academicYear: number;
     instructors: User[];
     isInstructor: boolean;
-    role: SubjectRole
+    role: SubjectRole;
 }>();
 
 const { isAdmin } = useIsAdmin();
@@ -101,14 +105,14 @@ const { isTeacher } = useIsTeacher();
 }
 
 .instr-chip-instructor {
-    background-color: #DFE5F7;
+    background-color: #dfe5f7;
 }
 
 .instr-chip-assistent {
     background-color: #d0efd1;
 }
 
-.academyyear{
+.academyyear {
     border-radius: 50px;
     border: 1px solid rgb(var(--v-theme-text));
 }

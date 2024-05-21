@@ -38,9 +38,7 @@ const userRole = computed(() => {
 </script>
 
 <style scoped>
-
 .header {
     display: flex;
 }
-
 </style>
