@@ -94,6 +94,7 @@ const emit = defineEmits<{
     (e: "update:current-user-as-instructor", value: boolean): void;
     (e: "update:subject-name", value: string): void;
     (e: "update:active-academic-year", value: number): void;
+    (e: "update:subject-mail", value: string): void;
 }>();
 
 watch(subjectName, (newValue) => {
@@ -106,6 +107,10 @@ watch(activeAcademicYear, (newValue) => {
 
 watch(checkbox, (newValue) => {
     emit("update:current-user-as-instructor", newValue);
+});
+
+watch(subjectMail, (newValue) => {
+    emit("update:subject-mail", newValue);
 });
 </script>
 
