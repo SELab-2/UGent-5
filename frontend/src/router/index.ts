@@ -87,7 +87,7 @@ const router = createRouter({
             component: () => import("../views/subject/modify/CreateSubjectView.vue"),
         },
         {
-          path: "/subjects/:subjectId(\\d+)/edit",
+            path: "/subjects/:subjectId(\\d+)/edit",
             name: "edit-subject",
             component: () => import("../views/subject/modify/PatchSubjectView.vue"),
             props: (route) => ({ subjectId: Number(route.params.subjectId) }),

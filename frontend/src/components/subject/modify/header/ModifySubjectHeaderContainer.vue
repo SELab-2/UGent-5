@@ -31,9 +31,9 @@ import ModifySubjectHeaderImage from "@/components/subject/modify/header/ModifyS
 defineProps<{
     title: string;
     imagePath: string;
-    subjectName: string,
-    academicYear: number,
-    subjectMail: string,
+    subjectName: string;
+    academicYear: number;
+    subjectMail: string;
     currentUserAsInstructor: boolean;
     isSubjectNameError: boolean;
     isSubjectMailError: boolean;

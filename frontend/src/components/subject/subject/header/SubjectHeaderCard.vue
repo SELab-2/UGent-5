@@ -36,7 +36,10 @@
                 </v-card-text>
             </v-col>
             <v-col v-if="isAdmin || (isInstructor && isTeacher)" cols="1">
-                <router-link :to="{ name: 'edit-subject', params: { subjectId: subjectId } }" class="link">
+                <router-link
+                    :to="{ name: 'edit-subject', params: { subjectId: subjectId } }"
+                    class="link"
+                >
                     <v-icon size="large">mdi-square-edit-outline</v-icon>
                 </router-link>
             </v-col>
@@ -50,7 +53,7 @@ import useIsAdmin from "@/composables/useIsAdmin";
 import useIsTeacher from "@/composables/useIsTeacher";
 
 defineProps<{
-    subjectId: number
+    subjectId: number;
     title: string;
     academicYear: number;
     instructors: User[];

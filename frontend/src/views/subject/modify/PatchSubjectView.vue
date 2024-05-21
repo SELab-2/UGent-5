@@ -25,7 +25,15 @@
                             <v-btn color="blue darken-1" @click="dialog = false">
                                 {{ $t("default.no_capital") }}
                             </v-btn>
-                            <v-btn color="blue darken-1" @click="router.push({ name: 'subject' , params: {subjectId: subjectId}})">
+                            <v-btn
+                                color="blue darken-1"
+                                @click="
+                                    router.push({
+                                        name: 'subject',
+                                        params: { subjectId: subjectId },
+                                    })
+                                "
+                            >
                                 {{ $t("default.yes_capital") }}
                             </v-btn>
                         </v-card-actions>
@@ -70,15 +78,12 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref, toRefs} from "vue";
-import {
-    useSubjectInstructorsQuery,
-    useSubjectQuery,
-} from "@/queries/Subject";
+import { computed, ref, toRefs } from "vue";
+import { useSubjectInstructorsQuery, useSubjectQuery } from "@/queries/Subject";
 import type SubjectForm from "@/models/Subject";
 import type User from "@/models/User";
-import {useCurrentUserQuery} from "@/queries/User";
-import {useRouter} from "vue-router";
+import { useCurrentUserQuery } from "@/queries/User";
+import { useRouter } from "vue-router";
 import ModifySubjectHeaderContainer from "@/components/subject/modify/header/ModifySubjectHeaderContainer.vue";
 import ModifySubjectBody from "@/components/subject/modify/body/ModifySubjectBody.vue";
 
@@ -86,7 +91,7 @@ const props = defineProps<{
     subjectId: number;
 }>();
 
-const {subjectId} = toRefs(props);
+const { subjectId } = toRefs(props);
 
 const snackbar = ref(false);
 const dialog = ref(false);
@@ -104,12 +109,12 @@ const subjectMailChanged = ref(false);
 const {
     data: currentUser,
     isLoading: isCurrentUserLoading,
-    isError: isCurrentUserError
+    isError: isCurrentUserError,
 } = useCurrentUserQuery();
 const {
     data: subject,
     isLoading: isSubjectLoading,
-    isError: isSubjectError
+    isError: isSubjectError,
 } = useSubjectQuery(subjectId);
 const {
     data: instructors,
@@ -118,38 +123,43 @@ const {
 } = useSubjectInstructorsQuery(subjectId);
 
 const isLoading = computed(
-    () =>
-        isCurrentUserLoading.value ||
-        isSubjectLoading.value ||
-        isInstructorsLoading.value
+    () => isCurrentUserLoading.value || isSubjectLoading.value || isInstructorsLoading.value
 );
 
 const isError = computed(
-    () =>
-        isCurrentUserError.value ||
-        isSubjectError.value ||
-        isInstructorsError.value
+    () => isCurrentUserError.value || isSubjectError.value || isInstructorsError.value
 );
-
 
 const isInstructor = computed(() => {
     return shownInstructors.value.some((instructor) => instructor?.uid === currentUser.value?.uid);
 });
 
 const isCurrentInstructor = (user: User) => {
-    return new Set([...(instructors.value || [])].map((instructor) => instructor.uid)).has(user.uid)
-}
+    return new Set([...(instructors.value || [])].map((instructor) => instructor.uid)).has(
+        user.uid
+    );
+};
 
-const name = computed<string | null>(() => subjectNameChanged.value ? subjectName.value : subject.value?.name);
-const academicYear = computed<number | null>(() => activeAcademicYear.value || subject.value?.academic_year);
-const mail = computed<string | null>(() => subjectMailChanged.value ? subjectMail.value : subject.value?.email);
+const name = computed<string | null>(() =>
+    subjectNameChanged.value ? subjectName.value : subject.value?.name
+);
+const academicYear = computed<number | null>(
+    () => activeAcademicYear.value || subject.value?.academic_year
+);
+const mail = computed<string | null>(() =>
+    subjectMailChanged.value ? subjectMail.value : subject.value?.email
+);
 
 const router = useRouter();
 
 const shownInstructors = computed(() => {
-    return Array.from(new Set([...(instructors.value || []), ...addedInstructors.value].filter((instructor: User) => {
-        return !removedInstructorUIDs.value.has(instructor.uid);
-    }))).sort((a, b) => {
+    return Array.from(
+        new Set(
+            [...(instructors.value || []), ...addedInstructors.value].filter((instructor: User) => {
+                return !removedInstructorUIDs.value.has(instructor.uid);
+            })
+        )
+    ).sort((a, b) => {
         if (a?.is_teacher && !b?.is_teacher) {
             return -1;
         } else if (!a?.is_teacher && b?.is_teacher) {
@@ -157,7 +167,7 @@ const shownInstructors = computed(() => {
         } else {
             return a?.surname.localeCompare(b?.surname);
         }
-    })
+    });
 });
 
 const addInstructor = (instructor: User) => {
@@ -166,7 +176,6 @@ const addInstructor = (instructor: User) => {
     } else {
         addedInstructors.value.add(instructor);
     }
-
 };
 
 const removeInstructor = (instructor: User) => {
@@ -218,7 +227,6 @@ const validateInstructors = () => {
 };
 
 async function handleSubmit() {
-
     if (!validateSubjectName()) {
         isSubjectNameError.value = true;
         return;
@@ -237,14 +245,16 @@ async function handleSubmit() {
     const subjectData: SubjectForm = {
         name: name.value.trim().charAt(0).toUpperCase() + name.value.trim().slice(1),
         email: mail.value,
-        academic_year: academicYear.value
+        academic_year: academicYear.value,
     };
 
-    const addedInstructorUIDs = Array.from(addedInstructors.value).map((instructor) => instructor.uid);
+    const addedInstructorUIDs = Array.from(addedInstructors.value).map(
+        (instructor) => instructor.uid
+    );
 
-    console.log(subjectData)
-    console.log(addedInstructorUIDs)
-    console.log(removedInstructorUIDs.value)
+    console.log(subjectData);
+    console.log(addedInstructorUIDs);
+    console.log(removedInstructorUIDs.value);
 
     /*
     try {

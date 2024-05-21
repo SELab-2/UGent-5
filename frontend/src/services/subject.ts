@@ -90,5 +90,3 @@ export async function deleteSubjectInstructor(subjectId: number, uid: string): P
         method: "DELETE",
     });
 }
-
-

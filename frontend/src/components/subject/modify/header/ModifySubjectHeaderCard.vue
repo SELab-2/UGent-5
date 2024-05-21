@@ -75,7 +75,7 @@ const props = defineProps<{
     isSubjectMailError: boolean;
 }>();
 
-const { currentUserAsInstructor} = toRefs(props);
+const { currentUserAsInstructor } = toRefs(props);
 
 const checkbox = ref(currentUserAsInstructor.value);
 
