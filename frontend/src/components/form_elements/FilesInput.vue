@@ -62,4 +62,18 @@ function onDeleteClick(index: number) {
 .files {
     margin-top: 15px;
 }
+.custom-alert .alert-text {
+    white-space: nowrap; /* Prevents the text from wrapping */
+    overflow: hidden; /* Prevents overflow of text outside the alert box */
+    text-overflow: ellipsis; /* Adds an ellipsis if the text overflows */
+}
+
+.custom-alert a {
+    display: inline; /* Ensures the link is in line with other text */
+    white-space: normal; /* Allows normal wrapping inside the link if needed */
+}
+
+.custom-alert {
+    margin-bottom: 15px; /* Added spacing between the alert and the button */
+}
 </style>

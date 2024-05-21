@@ -40,7 +40,7 @@ describe("SubmissionCard", () => {
             }
         })
         const text = wrapper.text()
-        expect(text).toContain("Indiening status: Accepted")
+        expect(text).toContain("Status indiening: Accepted")
         expect(text).toContain("testremarks")
         expect(text).toContain("testfile")
     });

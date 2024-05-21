@@ -95,6 +95,12 @@ const router = createRouter({
             props: (route) => ({ subjectId: Number(route.params.subjectId) }),
         },
         {
+            path: "/project/:projectId(\\d+)/edit",
+            name: "edit-project",
+            component: () => import("../views/CreateProjectView.vue"), // Ensure this is correct
+            props: (route) => ({ projectId: Number(route.params.projectId), isEditMode: true }),
+        },
+        {
             path: "/subjects/register/:uuid",
             name: "registerSubject",
             component: () => import("../views/SubjectRegisterView.vue"),

@@ -1,4 +1,4 @@
-from typing import Sequence, List
+from typing import Sequence, List, Optional
 
 from docker import DockerClient
 from fastapi import APIRouter, Depends, UploadFile, BackgroundTasks
@@ -96,7 +96,9 @@ async def get_submissions_dump(project_id: int, db: AsyncSession = Depends(get_a
 
 
 @router.get("/{project_id}/test_files")
-async def get_test_files(test_files_uuid: str = Depends(retrieve_test_files_uuid)):
+async def get_test_files(test_files_uuid: Optional[str] = Depends(retrieve_test_files_uuid)):
+    if not test_files_uuid:
+        return []
     return get_files_from_dir(tests_path(test_files_uuid))
 
 
@@ -116,7 +118,8 @@ async def put_test_files(
 
     if not using_default_docker_image(uuid):
         # build custom docker image if dockerfile is present
-        background_tasks.add_task(build_docker_image, tests_path(uuid), uuid, client)
+        background_tasks.add_task(
+            build_docker_image, tests_path(uuid), uuid, client)
 
     return await update_test_files(db, project.id, uuid)
 
