@@ -15,12 +15,22 @@
                     {{ $t("create_subject.error_snackbar") }}
                 </v-snackbar>
 
-                <ModifySubjectDialog
-                    dialog="dialog"
-                    @update:dialog="dialog = $event"
-                    @confirm-button-clicked="router.push({ name: 'subjects' })"
-                ></ModifySubjectDialog>
-
+                <v-dialog v-model="dialog" max-width="290" persistent>
+                    <v-card>
+                        <v-card-title class="headline">
+                            {{ $t("create_subject.cancel_dialog") }}
+                        </v-card-title>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" @click="dialog = false">
+                                {{ $t("default.no_capital") }}
+                            </v-btn>
+                            <v-btn color="blue darken-1" @click="router.push({ name: 'subjects' })">
+                                {{ $t("default.yes_capital") }}
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
                 <div class="flex-container">
                     <ModifySubjectHeaderContainer
                         :title="$t('create_subject.new_subject')"
@@ -60,16 +70,15 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref} from "vue";
+import { computed, ref } from "vue";
 import useAcademicYear from "@/composables/useAcademicYear";
-import {useCreateSubjectInstructorMutation, useCreateSubjectMutation} from "@/queries/Subject";
+import { useCreateSubjectInstructorMutation, useCreateSubjectMutation } from "@/queries/Subject";
 import type SubjectForm from "@/models/Subject";
 import type User from "@/models/User";
-import {useCurrentUserQuery} from "@/queries/User";
+import { useCurrentUserQuery } from "@/queries/User";
 import ModifySubjectHeaderContainer from "@/components/subject/modify/header/ModifySubjectHeaderContainer.vue";
 import ModifySubjectBody from "@/components/subject/modify/body/ModifySubjectBody.vue";
-import {useRouter} from "vue-router";
-import ModifySubjectDialog from "@/components/subject/modify/extra/ModifySubjectDialog.vue";
+import { useRouter } from "vue-router";
 
 const snackbar = ref(false);
 const dialog = ref(false);
@@ -82,7 +91,7 @@ const instructors = ref<User[]>([]);
 const currentUserAsInstructor = ref(true);
 const subjectId = ref<number | undefined>(undefined);
 
-const {data: currentUser, isLoading, isError} = useCurrentUserQuery();
+const { data: currentUser, isLoading, isError } = useCurrentUserQuery();
 const createSubjectMutation = useCreateSubjectMutation();
 const createSubjectInstructorMutation = useCreateSubjectInstructorMutation();
 
@@ -173,7 +182,7 @@ async function handleSubmit() {
             });
         }
 
-        await router.push({name: "subject", params: {subjectId: subjectId.value}});
+        await router.push({ name: "subject", params: { subjectId: subjectId.value } });
     } catch (error) {
         console.error("Error during subject creation:", error);
     }

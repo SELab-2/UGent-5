@@ -164,6 +164,11 @@ export default {
         email_invalid: "Provided email is invalid",
     },
 
+    patch_subject: {
+        cancel_dialog: "Cancel editing subject?",
+        edit_subject: "Edit subject",
+    },
+
     group: {
         not_found: "Group not found",
         not_found2: "No groups found",

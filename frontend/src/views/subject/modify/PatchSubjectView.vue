@@ -18,14 +18,14 @@
                 <v-dialog v-model="dialog" max-width="290" persistent>
                     <v-card>
                         <v-card-title class="headline">
-                            {{ $t("create_subject.cancel_dialog") }}
+                            {{ $t("patch_subject.cancel_dialog") }}
                         </v-card-title>
                         <v-card-actions>
                             <v-spacer></v-spacer>
                             <v-btn color="blue darken-1" @click="dialog = false">
                                 {{ $t("default.no_capital") }}
                             </v-btn>
-                            <v-btn color="blue darken-1" @click="router.push({ name: 'subjects' })">
+                            <v-btn color="blue darken-1" @click="router.push({ name: 'subject' , params: {subjectId: subjectId}})">
                                 {{ $t("default.yes_capital") }}
                             </v-btn>
                         </v-card-actions>
@@ -33,7 +33,7 @@
                 </v-dialog>
                 <div class="flex-container">
                     <ModifySubjectHeaderContainer
-                        title="Edit Subject"
+                        :title="$t('patch_subject.edit_subject')"
                         :image-path="`https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png`"
                         :subject-name="subject!.name"
                         :academic-year="subject!.academic_year"
