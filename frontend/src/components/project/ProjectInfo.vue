@@ -34,19 +34,14 @@
                 </v-btn>
             </v-card-actions>
         </v-card>
-        <SubmitInfo
-            class="submitInfo"
-            v-if="group && !isTeacher"
-            :project="project"
-            :group="group"
-        />
+        <SubmitInfo class="submitInfo" v-if="group" :project="project" :group="group" />
     </v-container>
 </template>
 
 <script setup lang="ts">
 import type Project from "@/models/Project";
 import type Group from "@/models/Group";
-import SubmitInfo from "@/components/project/submit/SubmitInfo.vue";
+import SubmitInfo from "@/components/submission/SubmitInfo.vue";
 import { toRefs, computed } from "vue";
 import { Quill } from "@vueup/vue-quill";
 import type User from "@/models/User";
