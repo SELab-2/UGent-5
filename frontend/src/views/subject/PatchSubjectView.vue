@@ -37,9 +37,12 @@
                         :image-path="`https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png`"
                         :subject-name="subject!.name"
                         :academic-year="subject!.academic_year"
+                        :subject-mail="subject!.email || ''"
                         :current-user-as-instructor="currentUserAsInstructor"
-                        :is-form-error="isFormError"
+                        :is-subject-name-error="isSubjectNameError"
+                        :is-subject-mail-error="isSubjectMailError"
                         @update:subject-name="onSubjectNameUpdated"
+                        @update:subject-mail="onSubjectMailUpdated"
                         @update:active-academic-year="activeAcademicYear = $event"
                         @update:current-user-as-instructor="onCurrentUserAsInstructorChanged"
                     >
@@ -69,9 +72,8 @@
 <script setup lang="ts">
 import {computed, ref, toRefs} from "vue";
 import {
-    useCreateSubjectInstructorMutation,
     useSubjectInstructorsQuery,
-    useSubjectQuery, useUpdateSubjectMutation
+    useSubjectQuery,
 } from "@/queries/Subject";
 import type SubjectForm from "@/models/Subject";
 import type User from "@/models/User";
@@ -88,13 +90,16 @@ const {subjectId} = toRefs(props);
 
 const snackbar = ref(false);
 const dialog = ref(false);
-const isFormError = ref(false);
+const isSubjectNameError = ref(false);
+const isSubjectMailError = ref(false);
 const subjectName = ref(null);
+const subjectMail = ref(null);
 const activeAcademicYear = ref<number | null>(null);
 const currentUserAsInstructor = ref(computed(() => isInstructor.value));
 const addedInstructors = ref<Set<User>>(new Set());
 const removedInstructorUIDs = ref<Set<string>>(new Set());
-const subjectChanged = ref(false);
+const subjectNameChanged = ref(false);
+const subjectMailChanged = ref(false);
 
 const {
     data: currentUser,
@@ -126,8 +131,6 @@ const isError = computed(
         isInstructorsError.value
 );
 
-const createSubjectInstructorMutation = useCreateSubjectInstructorMutation(subjectId);
-const {mutateAsync: updateSubject} = useUpdateSubjectMutation();
 
 const isInstructor = computed(() => {
     return shownInstructors.value.some((instructor) => instructor?.uid === currentUser.value?.uid);
@@ -137,8 +140,9 @@ const isCurrentInstructor = (user: User) => {
     return new Set([...(instructors.value || [])].map((instructor) => instructor.uid)).has(user.uid)
 }
 
-const name = computed<string | null>(() => subjectChanged.value ? subjectName.value : subject.value?.name);
+const name = computed<string | null>(() => subjectNameChanged.value ? subjectName.value : subject.value?.name);
 const academicYear = computed<number | null>(() => activeAcademicYear.value || subject.value?.academic_year);
+const mail = computed<string | null>(() => subjectMailChanged.value ? subjectMail.value : subject.value?.email);
 
 const router = useRouter();
 
@@ -182,14 +186,28 @@ const onCurrentUserAsInstructorChanged = (isCurrentUserInstructor: boolean) => {
 
 const onSubjectNameUpdated = (name: string) => {
     subjectName.value = name;
-    subjectChanged.value = true;
-    isFormError.value = false;
+    subjectNameChanged.value = true;
+    isSubjectNameError.value = false;
 };
+
+const onSubjectMailUpdated = (mail: string) => {
+    subjectMail.value = mail;
+    subjectMailChanged.value = true;
+    isSubjectMailError.value = false;
+};
+
 const validateSubjectName = () => {
-    if (!subjectChanged.value) {
+    if (!subjectNameChanged.value) {
         return true;
     }
     return name.value !== null && name.value.trim().length > 2;
+};
+
+const validateSubjectMail = () => {
+    if (!subjectMailChanged.value) {
+        return true;
+    }
+    return !subjectMail.value || /.+@.+\..+/.test(subjectMail.value);
 };
 
 const validateInstructors = () => {
@@ -202,7 +220,12 @@ const validateInstructors = () => {
 async function handleSubmit() {
 
     if (!validateSubjectName()) {
-        isFormError.value = true;
+        isSubjectNameError.value = true;
+        return;
+    }
+
+    if (!validateSubjectMail()) {
+        isSubjectMailError.value = true;
         return;
     }
 
@@ -213,6 +236,7 @@ async function handleSubmit() {
 
     const subjectData: SubjectForm = {
         name: name.value.trim().charAt(0).toUpperCase() + name.value.trim().slice(1),
+        email: mail.value,
         academic_year: academicYear.value
     };
 
@@ -225,9 +249,7 @@ async function handleSubmit() {
     /*
     try {
         await updateSubject({
-            subjectId: subjectId.value,
-            name: subjectData.name,
-            academic_year: subjectData.academic_year,
+            subjectData
         });
 
         for (const instructor of removedInstructorUIDs) {
