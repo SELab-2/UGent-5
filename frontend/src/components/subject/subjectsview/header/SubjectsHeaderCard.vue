@@ -5,7 +5,7 @@
                 {{ $t("subjects.title") }}
             </v-card-title>
             <v-card-text>
-                <div class="chip_container">
+                <div class="chip-container">
                     <v-chip-group mandatory v-model="activeAcademicYear" column>
                         <v-chip
                             v-for="(academicYear, index) in academicYears"
@@ -109,7 +109,7 @@ watch(activeSubjectFilter, (newVal: SubjectFilter | undefined) => {
     margin-bottom: 12px;
 }
 
-.chip_container {
+.chip-container {
     overflow-x: auto;
 }
 

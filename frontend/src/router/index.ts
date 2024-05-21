@@ -79,13 +79,17 @@ const router = createRouter({
         {
             path: "/subjects",
             name: "subjects",
-            component: () => import("../views/SubjectsView.vue"),
-            children: [],
+            component: () => import("../views/subject/SubjectsView.vue"),
+        },
+        {
+            path: "/subjects/create",
+            name: "create-subject",
+            component: () => import("../views/subject/CreateSubjectView.vue"),
         },
         {
             path: "/subjects/:subjectId(\\d+)",
             name: "subject",
-            component: () => import("../views/SubjectView.vue"),
+            component: () => import("../views/subject/SubjectView.vue"),
             props: (route) => ({ subjectId: Number(route.params.subjectId) }),
         },
         {
