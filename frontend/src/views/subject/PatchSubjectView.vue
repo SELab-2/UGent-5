@@ -71,7 +71,6 @@ import {computed, ref, toRefs} from "vue";
 import {
     useCreateSubjectInstructorMutation,
     useSubjectInstructorsQuery,
-    useSubjectProjectsQuery,
     useSubjectQuery, useUpdateSubjectMutation
 } from "@/queries/Subject";
 import type SubjectForm from "@/models/Subject";
