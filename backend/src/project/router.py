@@ -1,13 +1,16 @@
-from typing import Sequence, List
+from typing import Sequence, List, Optional
 
 from docker import DockerClient
 from fastapi import APIRouter, Depends, UploadFile, BackgroundTasks
+from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src import dependencies
 from src.auth.dependencies import authentication_validation
 from src.dependencies import get_async_db
 from src.group.dependencies import retrieve_groups_by_project
 from src.group.schemas import GroupList
+from src.project.utils import project_zip_stream
 from src.submission.schemas import Submission
 from src.submission.service import get_submissions_by_project
 from . import service
@@ -23,7 +26,7 @@ from .service import (
     update_project, update_test_files,
 )
 from ..docker_tests.dependencies import get_docker_client
-from ..docker_tests.docker_tests import using_default_docker_image, build_docker_image
+from ..docker_tests.docker_tests import using_default_docker_image, build_docker_image, remove_docker_image_if_exists
 from ..docker_tests.utils import get_files_from_dir, tests_path, write_and_unpack_files, remove_test_files
 
 router = APIRouter(
@@ -84,8 +87,18 @@ async def list_submissions(project_id: int,
     return await get_submissions_by_project(db, project_id)
 
 
+@router.get("/{project_id}/zip", response_class=StreamingResponse, dependencies=[Depends(patch_permission_validation)])
+async def get_submissions_dump(project_id: int, db: AsyncSession = Depends(get_async_db)):
+    """Return zip file containing all submission files and csv"""
+    submissions = await get_submissions_by_project(db, project_id)
+    data = await project_zip_stream(db, submissions, project_id)
+    return StreamingResponse(data, media_type="application/zip")
+
+
 @router.get("/{project_id}/test_files")
-async def get_test_files(test_files_uuid: str = Depends(retrieve_test_files_uuid)):
+async def get_test_files(test_files_uuid: Optional[str] = Depends(retrieve_test_files_uuid)):
+    if not test_files_uuid:
+        return []
     return get_files_from_dir(tests_path(test_files_uuid))
 
 
@@ -105,7 +118,8 @@ async def put_test_files(
 
     if not using_default_docker_image(uuid):
         # build custom docker image if dockerfile is present
-        background_tasks.add_task(build_docker_image, tests_path(uuid), uuid, client)
+        background_tasks.add_task(
+            build_docker_image, tests_path(uuid), uuid, client)
 
     return await update_test_files(db, project.id, uuid)
 
@@ -114,7 +128,10 @@ async def put_test_files(
 async def delete_test_files(
     project: Project = Depends(retrieve_project),
     uuid: str = Depends(retrieve_test_files_uuid),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
+    client: DockerClient = Depends(get_docker_client)
 ):
+    remove_docker_image_if_exists(uuid, client)
     remove_test_files(uuid)
+
     return await service.update_test_files(db, project.id, None)
