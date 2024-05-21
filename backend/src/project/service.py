@@ -18,7 +18,8 @@ async def create_project(db: AsyncSession, project_in: ProjectCreate) -> Project
         description=project_in.description,
         is_visible=project_in.is_visible,
         capacity=project_in.capacity,
-        requirements=[Requirement(**r.model_dump()) for r in project_in.requirements],
+        requirements=[Requirement(**r.model_dump())
+                      for r in project_in.requirements],
     )
     db.add(new_project)
     await db.commit()
@@ -77,10 +78,12 @@ async def update_project(
         project.name = project_update.name
     if project_update.deadline is not None:
         project.deadline = project_update.deadline
+    if project_update.publish_date is not None:
+        project.publish_date = project_update.publish_date
+    if project_update.enroll_deadline is not None:
+        project.enroll_deadline = project.enroll_deadline
     if project_update.description is not None:
         project.description = project_update.description
-    if project_update.is_visible is not None:
-        project.is_visible = project_update.is_visible
     if project_update.requirements is not None:
         await delete_requirements_for_project(db, project_id)
         project.requirements = [Requirement(**r.model_dump())

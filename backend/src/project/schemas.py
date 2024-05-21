@@ -19,6 +19,8 @@ class ProjectBase(BaseModel):
     is_visible: bool = Field(default=True)
     capacity: int = Field(gt=0)
     requirements: List[Requirement] = []
+    enroll_deadline: Optional[datetime]
+    publish_date: datetime
 
 
 class ProjectCreate(ProjectBase):
@@ -55,7 +57,8 @@ class ProjectUpdate(BaseModel):
     deadline: Optional[datetime] = None
     description: Optional[str] = None
     requirements: Optional[List[Requirement]] = None
-    is_visible: Optional[bool] = None
+    enroll_deadline: Optional[datetime] = None
+    publish_date: Optional[datetime] = None
 
     @field_validator("deadline")
     def validate_deadline(cls, value: datetime) -> datetime:

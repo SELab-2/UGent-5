@@ -12,55 +12,65 @@
             </v-radio-group>
             <DatePicker
                 v-if="selectedOption === 'student'"
-                v-model="radio_date"
-                label="Group Selection Deadline"
-            ></DatePicker>
-            <!-- Numeric input for Capacity -->
+                :modelValue="enrollDate"
+                @update:modelValue="handleDateChange"
+                label="Deadline"
+            />
             <v-text-field
-                v-if="selectedOption === 'student' || selectedOption === 'random'"
                 v-model="capacity"
-                label="Capacity"
+                :label="$t('project.capacity_group')"
                 type="number"
                 min="1"
+                @input="handleCapacityInput"
             ></v-text-field>
         </v-container>
     </v-card>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import DatePicker from "./DatePicker.vue"; // Import your custom DatePicker component
+import { ref, defineProps, defineEmits, watch } from "vue";
+import DatePicker from "./DatePicker.vue";
+import type { Optional } from "@tanstack/vue-query";
 
-interface RadioButtonOption {
-    label: string;
-    value: string;
-}
-
-const model = defineModel<string>({});
-
-defineProps<{
+const props = defineProps<{
     title: string;
-    options: RadioButtonOption[];
+    options: string[];
+    initialDate: Optional<Date>;
+    initialCapacity: number;
 }>();
 
-const isToggled = ref(true);
-const selectedOption = ref(model);
-const radio_date = ref(new Date());
-const capacity = ref(1); // Default capacity
+const isToggled = ref(false);
+const selectedOption = ref("");
+const enrollDate = ref(props.initialDate || new Date());
+const capacity = ref(props.initialCapacity);
 
-const emit = defineEmits<{
-    (e: "update:radio_date", value: Date): void;
-    (e: "update:capacity", value: number): void;
-}>();
+const emit = defineEmits(["update:date", "update:capacity", "update:selectedOption"]);
 
-watch(capacity, (newCapacity) => {
-    emit("update:capacity", newCapacity);
-});
-
-watch(selectedOption, (newValue) => {
-    if (newValue === "course") {
-        capacity.value = 1; // Reset capacity when 'student' is not selected
+// Reset capacity to 1 when toggle is deactivated, and reset to 2 and change selection when activated
+watch(isToggled, (newVal) => {
+    if (!newVal) {
+        capacity.value = 1;
+        emit("update:capacity", capacity.value);
+    } else {
+        selectedOption.value = "random";
+        capacity.value = 2;
+        emit("update:selectedOption", selectedOption.value);
         emit("update:capacity", capacity.value);
     }
 });
+
+function handleDateChange(value: Date) {
+    emit("update:date", value);
+}
+
+function handleCapacityInput(event: Event) {
+    const newCapacity = Number((event.target as HTMLInputElement).value);
+    if (newCapacity < 2) {
+        event.preventDefault(); // Prevent the field from updating
+        capacity.value = 2; // Enforce minimum capacity of 2 when manually changed
+    } else {
+        capacity.value = newCapacity; // Allow the update if it's 2 or greater
+    }
+    emit("update:capacity", capacity.value);
+}
 </script>
