@@ -8,6 +8,7 @@
                 :title="title"
                 :subject-name="subjectName"
                 :academic-year="academicYear"
+                :subject-mail="subjectMail"
                 :current-user-as-instructor="currentUserAsInstructor"
                 :is-subject-name-error="isSubjectNameError"
                 :is-subject-mail-error="isSubjectMailError"
@@ -32,6 +33,7 @@ defineProps<{
     imagePath: string;
     subjectName: string,
     academicYear: number,
+    subjectMail: string,
     currentUserAsInstructor: boolean;
     isSubjectNameError: boolean;
     isSubjectMailError: boolean;

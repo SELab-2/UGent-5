@@ -75,7 +75,6 @@ export async function updateSubject(subjectId: number, subjectData: SubjectForm)
         body: JSON.stringify(subjectData),
     });
 }
-gi
 
 /**
  * Creates a new subject instructor.

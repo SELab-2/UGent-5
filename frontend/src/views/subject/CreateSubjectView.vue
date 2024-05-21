@@ -37,6 +37,7 @@
                         :image-path="`https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png`"
                         :subject-name="subjectName"
                         :academic-year="activeAcademicYear"
+                        :subject-mail="subjectMail"
                         :current-user-as-instructor="currentUserAsInstructor"
                         :is-subject-name-error="isSubjectNameError"
                         :is-subject-mail-error="isSubjectMailError"

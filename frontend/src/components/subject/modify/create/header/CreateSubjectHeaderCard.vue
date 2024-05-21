@@ -61,7 +61,6 @@
 
 <script setup lang="ts">
 import { ref, toRefs, watch } from "vue";
-import useAcademicYear from "@/composables/useAcademicYear";
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
@@ -70,6 +69,7 @@ const props = defineProps<{
     title: string;
     subjectName: string;
     academicYear: number;
+    subjectMail: string;
     currentUserAsInstructor: boolean;
     isSubjectNameError: boolean;
     isSubjectMailError: boolean;
@@ -85,7 +85,7 @@ watch(currentUserAsInstructor, (newValue) => {
 
 const subjectName = ref(props.subjectName);
 const activeAcademicYear = ref<number>(props.academicYear);
-const subjectMail = ref("");
+const subjectMail = ref(props.subjectMail);
 
 const academicYearItems = [activeAcademicYear.value, activeAcademicYear.value + 1];
 const rules = {
