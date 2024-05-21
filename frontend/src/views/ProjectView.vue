@@ -7,9 +7,6 @@
         <div v-else class="projectInfo">
             <v-row>
                 <v-col class="col-sm-12 col-md-6 col-lg-8">
-                    <v-btn v-if="isTeacher" :to="`/project/${project.id}/submissions`" class="allsubmissions" variant="flat">
-                        {{ $t("project.submissions_list_teacher") }}
-                    </v-btn>
                     <ProjectInfo
                         :project="project!"
                         :group="group!"
@@ -17,6 +14,9 @@
                         :subject="subject!"
                         :user="user!"
                     />
+                    <v-btn v-if="isTeacher" :to="`/project/${project.id}/submissions`" class="allsubmissions" variant="flat">
+                        {{ $t("project.submissions_list_teacher") }}
+                    </v-btn>
                 </v-col>
                 <v-col cols="2" class="button-container">
                     <ProjectSideBar
