@@ -3,12 +3,26 @@
         <v-alert v-if="isError" title="Error" color="error" :text="error.message"></v-alert>
         <v-row v-else>
             <v-col class="col-sm-12 col-md-6 col-lg-8">
-                <v-skeleton-loader :loading="projectLoading || submissionsLoading" type="card" class="card">
-                    <v-card-title class="title">{{ $t("submission.submissions_title", { project: project.name }) }}</v-card-title>
-                    <v-card-subtitle v-if="submissions.length == 0" class="subtitle">{{ $t("submission.no_submissions") }}</v-card-subtitle>
+                <v-skeleton-loader
+                    :loading="projectLoading || submissionsLoading"
+                    type="card"
+                    class="card"
+                >
+                    <v-card-title class="title">{{
+                        $t("submission.submissions_title", { project: project.name })
+                    }}</v-card-title>
+                    <v-card-subtitle v-if="submissions.length == 0" class="subtitle">{{
+                        $t("submission.no_submissions")
+                    }}</v-card-subtitle>
                     <div v-else>
-                        <v-card-subtitle class="subtitle">{{ $t("submission.teacher_submissions_info") }}</v-card-subtitle>
-                        <v-btn class="primary-button" @click="downloadAll" prepend-icon="mdi-download">
+                        <v-card-subtitle class="subtitle">{{
+                            $t("submission.teacher_submissions_info")
+                        }}</v-card-subtitle>
+                        <v-btn
+                            class="primary-button"
+                            @click="downloadAll"
+                            prepend-icon="mdi-download"
+                        >
                             {{ $t("project.submissions_zip") }}
                         </v-btn>
                     </div>
@@ -22,10 +36,7 @@
                 </v-skeleton-loader>
             </v-col>
             <v-col cols="2" class="backbutton">
-                <BackButton
-                    title="project.to_project"
-                    :destination="`/project/${projectId}`"
-                />
+                <BackButton title="project.to_project" :destination="`/project/${projectId}`" />
             </v-col>
         </v-row>
     </v-container>
@@ -36,7 +47,7 @@ import { useProjectQuery } from "@/queries/Project";
 import { useProjectSubmissionsQuery } from "@/queries/Submission";
 import { toRefs } from "vue";
 import SubmissionTeacherCard from "@/components/submission/SubmissionTeacherCard.vue";
-import BackButton from "@/components/buttons/BackButton.vue"
+import BackButton from "@/components/buttons/BackButton.vue";
 import { download_file } from "@/utils";
 
 const props = defineProps<{
@@ -72,11 +83,12 @@ const downloadAll = () => {
     padding: 15px;
 }
 
-.title, .subtitle{
+.title,
+.subtitle {
     width: 100%;
 }
 
-.backbutton{
+.backbutton {
     margin-top: 30px;
 }
 

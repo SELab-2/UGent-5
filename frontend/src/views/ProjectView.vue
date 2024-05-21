@@ -14,7 +14,12 @@
                         :subject="subject!"
                         :user="user!"
                     />
-                    <v-btn v-if="isTeacher" :to="`/project/${project.id}/submissions`" class="allsubmissions" variant="flat">
+                    <v-btn
+                        v-if="isTeacher"
+                        :to="`/project/${project.id}/submissions`"
+                        class="allsubmissions"
+                        variant="flat"
+                    >
                         {{ $t("project.submissions_list_teacher") }}
                     </v-btn>
                 </v-col>
@@ -108,6 +113,6 @@ const isTeacher = computed(
 .allsubmissions {
     margin: 15px;
     background-color: rgb(var(--v-theme-primary));
-    color: rgb(var(--v-theme-navtext))
+    color: rgb(var(--v-theme-navtext));
 }
 </style>
