@@ -25,6 +25,24 @@ Instructions for the backend are located [here](backend/README.md).
 
 Automated clients can interact with the web application via the [API](https://sel2-5.ugent.be/api/docs).
 
+## Used tools and frameworks
+
+### Database
+ - Database: [PostgreSQL](https://www.postgresql.org/)
+ - Database migrations: [alembic](https://github.com/sqlalchemy/alembic).
+
+### Backend
+
+ - Backend framework: [FastAPI](https://fastapi.tiangolo.com/)
+ - Database interface: [SQLAlchemy](https://www.sqlalchemy.org/)
+ - JSON-validation: [Pydantic](https://github.com/pydantic/pydantic)
+ - Test framework: [pytest](https://github.com/pytest-dev/pytest)
+
+### Frontend
+ - Frontend framework: [Vue.js](https://vuejs.org/) (Composition API) + [TypeScript](https://www.typescriptlang.org/)
+ - Component library: [Vuetify](https://dev.vuetifyjs.com/en/)
+ - Test framework: [Vitest](https://vitest.dev/)
+
 ## The team
 
 |                  |                                                   |
