@@ -28,11 +28,10 @@ Automated clients can interact with the web application via the [API](https://se
 ## Used tools and frameworks
 
 ### Database
- - Database: [PostgreSQL](https://www.postgresql.org/)
+ - Database system: [PostgreSQL](https://www.postgresql.org/)
  - Database migrations: [alembic](https://github.com/sqlalchemy/alembic).
 
 ### Backend
-
  - Backend framework: [FastAPI](https://fastapi.tiangolo.com/)
  - Database interface: [SQLAlchemy](https://www.sqlalchemy.org/)
  - JSON-validation: [Pydantic](https://github.com/pydantic/pydantic)
