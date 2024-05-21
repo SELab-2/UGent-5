@@ -1,10 +1,10 @@
 <template>
     <v-row>
         <v-col cols="4">
-            <CreateSubjectHeaderImage :imagePath="imagePath"></CreateSubjectHeaderImage>
+            <ModifySubjectHeaderImage :imagePath="imagePath"></ModifySubjectHeaderImage>
         </v-col>
         <v-col cols="8">
-            <CreateSubjectHeaderCard
+            <ModifySubjectHeaderCard
                 :title="title"
                 :subject-name="subjectName"
                 :academic-year="academicYear"
@@ -19,14 +19,14 @@
                     $emit('update:current-user-as-instructor', $event)
                 "
             >
-            </CreateSubjectHeaderCard>
+            </ModifySubjectHeaderCard>
         </v-col>
     </v-row>
 </template>
 
 <script setup lang="ts">
-import CreateSubjectHeaderCard from "@/components/subject/modify/create/header/CreateSubjectHeaderCard.vue";
-import CreateSubjectHeaderImage from "@/components/subject/modify/create/header/CreateSubjectHeaderImage.vue";
+import ModifySubjectHeaderCard from "@/components/subject/modify/header/ModifySubjectHeaderCard.vue";
+import ModifySubjectHeaderImage from "@/components/subject/modify/header/ModifySubjectHeaderImage.vue";
 
 defineProps<{
     title: string;

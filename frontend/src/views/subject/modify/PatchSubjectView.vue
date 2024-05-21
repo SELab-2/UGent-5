@@ -32,7 +32,7 @@
                     </v-card>
                 </v-dialog>
                 <div class="flex-container">
-                    <CreateSubjectHeaderContainer
+                    <ModifySubjectHeaderContainer
                         title="Edit Subject"
                         :image-path="`https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png`"
                         :subject-name="subject!.name"
@@ -46,14 +46,14 @@
                         @update:active-academic-year="activeAcademicYear = $event"
                         @update:current-user-as-instructor="onCurrentUserAsInstructorChanged"
                     >
-                    </CreateSubjectHeaderContainer>
-                    <CreateSubjectBody
+                    </ModifySubjectHeaderContainer>
+                    <ModifySubjectBody
                         :current-user="currentUser"
                         :instructors="shownInstructors"
                         @add-instructor="addInstructor"
                         @remove-instructor="removeInstructor"
                     >
-                    </CreateSubjectBody>
+                    </ModifySubjectBody>
                 </div>
 
                 <div class="confirm-btn-container">
@@ -79,8 +79,8 @@ import type SubjectForm from "@/models/Subject";
 import type User from "@/models/User";
 import {useCurrentUserQuery} from "@/queries/User";
 import {useRouter} from "vue-router";
-import CreateSubjectHeaderContainer from "@/components/subject/modify/create/header/CreateSubjectHeaderContainer.vue";
-import CreateSubjectBody from "@/components/subject/modify/create/body/CreateSubjectBody.vue";
+import ModifySubjectHeaderContainer from "@/components/subject/modify/header/ModifySubjectHeaderContainer.vue";
+import ModifySubjectBody from "@/components/subject/modify/body/ModifySubjectBody.vue";
 
 const props = defineProps<{
     subjectId: number;
