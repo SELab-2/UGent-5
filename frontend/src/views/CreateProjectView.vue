@@ -14,7 +14,7 @@
                         v-model="project_title"
                         :label="$t('project.assignment')"
                         required
-                        :placeholder="$t('submit.submit_title')"
+                        :placeholder="$t('submit.create_title_tip')"
                     />
                     <v-select
                         v-if="!isEditMode"

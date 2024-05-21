@@ -26,7 +26,6 @@
 <script setup lang="ts">
 import SubjectsCard from "@/components/home/cards/SubjectsCard.vue";
 import DeadlinesCard from "@/components/home/cards/DeadlinesCard.vue";
-import AnnouncementsCard from "@/components/home/cards/AnnouncementsCard.vue";
 import TitleContainer from "@/components/TitleContainer.vue";
 import { useCurrentUserQuery } from "@/queries/User";
 import { useDisplay } from "vuetify";

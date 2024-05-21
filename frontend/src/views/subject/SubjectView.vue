@@ -61,7 +61,6 @@ import {
     useSubjectInstructorsQuery,
     useSubjectStudentsQuery,
 } from "@/queries/Subject";
-import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectHeaderContainer from "@/components/subject/subjectview/header/SubjectHeaderContainer.vue";
 import SubjectProjectsPage from "@/components/subject/subjectview/body/projects/SubjectProjectsPage.vue";
 import { useCurrentUserQuery } from "@/queries/User";

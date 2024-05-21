@@ -26,7 +26,8 @@ export default {
         logout: "Uitloggen",
     },
     submit: {
-        submit_title: "Kies een titel",
+        submit_title: "Oplossing indienen",
+        create_title_tip: "Kies een titel",
         submit_button: "Indienen",
         remarks: "Opmerkingen",
         files: "Bestanden",

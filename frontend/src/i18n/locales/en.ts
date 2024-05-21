@@ -27,7 +27,8 @@ export default {
         logout: "Logout",
     },
     submit: {
-        submit_title: "Submit title",
+        submit_title: "Submit solution",
+        create_title_tip: "Choose a title",
         submit_button: "Submit",
         remarks: "Remarks",
         files: "Files",
