@@ -9,6 +9,7 @@
                 :is-form-error="isFormError"
                 @update:subject-name="$emit('update:subject-name', $event)"
                 @update:active-academic-year="$emit('update:active-academic-year', $event)"
+                @update:subject-mail="$emit('update:subject-mail', $event)"
                 @update:current-user-as-instructor="
                     $emit('update:current-user-as-instructor', $event)
                 "
@@ -31,7 +32,9 @@ defineProps<{
 defineEmits<{
     (e: "update:current-user-as-instructor", value: boolean): void;
     (e: "update:subject-name", value: string): void;
+    (e: "update:subject-mail", value: string): void;
     (e: "update:active-academic-year", value: number): void;
+
 }>();
 </script>
 

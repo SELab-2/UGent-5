@@ -35,9 +35,10 @@
                     <CreateSubjectHeaderContainer
                         :image-path="`https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png`"
                         :current-user-as-instructor="currentUserAsInstructor"
-                        :is-form-error="isFormError"
+                        :is-form-error="isSubjectNameError"
                         @update:subject-name="onSubjectNameUpdated"
                         @update:active-academic-year="activeAcademicYear = $event"
+                        @update:subject-mail="subjectMail = $event"
                         @update:current-user-as-instructor="currentUserAsInstructor = $event"
                     >
                     </CreateSubjectHeaderContainer>
@@ -76,8 +77,10 @@ import { useRouter } from "vue-router";
 
 const snackbar = ref(false);
 const dialog = ref(false);
-const isFormError = ref(false);
+const isSubjectNameError = ref(false);
+const isSubjectMailError = ref(false);
 const subjectName = ref("");
+const subjectMail = ref("");
 const activeAcademicYear = ref<number>(useAcademicYear());
 const instructors = ref<User[]>([]);
 const currentUserAsInstructor = ref(true);
@@ -119,11 +122,15 @@ const removeInstructor = (instructor: User) => {
 
 const onSubjectNameUpdated = (name: string) => {
     subjectName.value = name;
-    isFormError.value = false;
+    isSubjectNameError.value = false;
 };
 
 const validateSubjectName = () => {
     return !(!subjectName.value || subjectName.value.trim().length < 3);
+};
+
+const validateSubjectMail = () => {
+    return !subjectMail.value || /.+@.+\..+/.test(subjectMail.value);
 };
 
 const validateInstructors = () => {
@@ -135,7 +142,12 @@ const validateInstructors = () => {
 
 async function handleSubmit() {
     if (!validateSubjectName()) {
-        isFormError.value = true;
+        isSubjectNameError.value = true;
+        return;
+    }
+
+    if (!validateSubjectMail()) {
+        isSubjectMailError.value = true;
         return;
     }
 
