@@ -3,9 +3,9 @@
         <p>Error: {{ error }}</p>
     </div>
     <v-skeleton-loader v-else type="card" :loading="isLoading">
-        <v-row>
+        <v-row class="subjectsview">
             <v-col :cols="isAdmin || isTeacher ? 10 : 12">
-                <v-card class="subjectsview" variant="flat">
+                <v-card variant="flat">
                     <v-row>
                         <v-col>
                             <SubjectsHeaderContainer
@@ -51,8 +51,8 @@
 
 <script setup lang="ts">
 import { useSubjectsQuery } from "@/queries/Subject";
-import SubjectsHeaderContainer from "@/components/subject/subjectsview/SubjectsHeaderContainer.vue";
-import SubjectCard from "@/components/subject/subjectsview/SubjectCard.vue";
+import SubjectsHeaderContainer from "@/components/subject/subjectsview/header/SubjectsHeaderContainer.vue";
+import SubjectCard from "@/components/subject/subjectsview/body/SubjectCard.vue";
 import { computed, ref } from "vue";
 import useAcademicYear from "@/composables/useAcademicYear";
 import useIsTeacher from "@/composables/useIsTeacher";
@@ -125,9 +125,6 @@ const onAcademicYearChanged = (academicYear: number) => {
 </script>
 
 <style scoped>
-.subject-card {
-    margin-top: 10px;
-}
 
 .action-btn-container {
     margin-top: 30px;
@@ -138,7 +135,8 @@ const onAcademicYearChanged = (academicYear: number) => {
 }
 
 .subjectsview {
-    margin: 50px;
+    margin-left: 40px;
+    margin-top: 30px;
     background-color: rgb(var(--v-theme-background));
 }
 

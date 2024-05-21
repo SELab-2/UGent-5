@@ -1,7 +1,6 @@
 <template>
     <div class="info">
-        <v-card variant="flat" class="about">
-            <v-card-title class="title">{{ $t("about.about") }}</v-card-title>
+        <TitleContainer :title="$t('about.about')" class="titlecontainer">
             <p>
                 {{ $t("about.p_1") }}
                 <a href="https://studiekiezer.ugent.be/2023/studiefiche/nl/C003784" class="link">
@@ -9,7 +8,7 @@
                 >. {{ $t("about.p_2") }}
                 <a href="https://github.com/SELab-2/UGent-5" class="link"> GitHub </a>.
             </p>
-        </v-card>
+        </TitleContainer>
         <h2>{{ $t("about.developers") }}:</h2>
         <v-list lines="one">
             <v-list-item v-for="developer in developers" :key="developer.name" class="developers">
@@ -25,6 +24,7 @@
 </template>
 
 <script setup lang="ts">
+import TitleContainer from "@/components/TitleContainer.vue"
 interface Developer {
     role: string;
     name: string;
@@ -77,7 +77,7 @@ const developers: Developer[] = [
 }
 
 .link {
-    color: rgb(var(--v-theme-text));
+    color: white;
 }
 
 .about {
@@ -96,7 +96,7 @@ const developers: Developer[] = [
     margin-bottom: 15px;
 }
 
-.title {
-    font-size: 32px;
+.titlecontainer {
+    margin-bottom: 30px;
 }
 </style>

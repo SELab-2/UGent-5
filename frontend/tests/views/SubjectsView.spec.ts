@@ -1,6 +1,6 @@
 import { mount } from "@vue/test-utils";
 import {expect, describe, it, vi} from "vitest";
-import SubjectsView from "../../src/views/SubjectsView.vue"
+import SubjectsView from "../../src/views/subject/SubjectsView.vue"
 import {ref} from "vue";
 
 const testSubjectsQuery = {
