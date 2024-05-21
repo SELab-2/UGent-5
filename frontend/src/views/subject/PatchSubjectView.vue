@@ -95,7 +95,7 @@ const subjectName = ref(null);
 const activeAcademicYear = ref(null);
 const currentUserAsInstructor = ref(computed(() => isInstructor.value));
 const addedInstructors = ref<Set<User>>(new Set());
-const removedInstructors = ref<Set<string>>(new Set());
+const removedInstructorUIDs = ref<Set<string>>(new Set());
 const subjectChanged = ref(false);
 
 const {
@@ -153,7 +153,7 @@ const router = useRouter();
 
 const shownInstructors = computed(() => {
     return Array.from(new Set([...(instructors.value || []), ...addedInstructors.value].filter((instructor: User) => {
-        return !removedInstructors.value.has(instructor.uid);
+        return !removedInstructorUIDs.value.has(instructor.uid);
     }))).sort((a, b) => {
         if (a?.is_teacher && !b?.is_teacher) {
             return -1;
@@ -167,7 +167,7 @@ const shownInstructors = computed(() => {
 
 const addInstructor = (instructor: User) => {
     if (isCurrentInstructor(instructor)) {
-        removedInstructors.value.delete(instructor.uid);
+        removedInstructorUIDs.value.delete(instructor.uid);
     } else {
         addedInstructors.value.add(instructor);
     }
@@ -176,16 +176,16 @@ const addInstructor = (instructor: User) => {
 
 const removeInstructor = (instructor: User) => {
     if (isCurrentInstructor(instructor)) {
-        removedInstructors.value.add(instructor.uid);
+        removedInstructorUIDs.value.add(instructor.uid);
     }
     addedInstructors.value.delete(instructor);
 };
 
 const onCurrentUserAsInstructorChanged = (isCurrentUserInstructor: boolean) => {
     if (isCurrentUserInstructor) {
-        removedInstructors.value.delete(currentUser.value.uid);
+        removedInstructorUIDs.value.delete(currentUser.value.uid);
     } else {
-        removedInstructors.value.add(currentUser.value.uid);
+        removedInstructorUIDs.value.add(currentUser.value.uid);
     }
 };
 
@@ -234,12 +234,10 @@ async function handleSubmit() {
         academic_year: academicYear.value
     };
 
-    console.log(subjectData)
-    const instructorIds = shownInstructors.value.map((instructor) => instructor.uid);
-    console.log(instructorIds)
+    const addedInstructorUIDs = Array.from(addedInstructors.value).map((instructor) => instructor.uid);
 
-
-
+    console.log(addedInstructorUIDs)
+    console.log(removedInstructorUIDs.value)
 
     /*
     try {
@@ -248,6 +246,18 @@ async function handleSubmit() {
             name: subjectData.name,
             academic_year: subjectData.academic_year,
         });
+
+        for (const instructor of removedInstructorUIDs) {
+            await removeSubjectInstructorMutation.mutateAsync(instructor);
+        }
+
+        for (const instructor of addedInstructorUIDs) {
+            await createSubjectInstructorMutation.mutateAsync(instructor);
+        }
+
+        await router.push({name: 'subject', params: {subjectId: subjectId.value}});
+
+
     } catch (error) {
         console.error("Error during subject alteration:", error);
     }
