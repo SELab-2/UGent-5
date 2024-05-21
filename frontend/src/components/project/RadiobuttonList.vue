@@ -30,13 +30,14 @@
 <script setup lang="ts">
 import { ref, defineProps, defineEmits, watch } from "vue";
 import DatePicker from "./DatePicker.vue";
+import type { Optional } from "@tanstack/vue-query";
 
-const props = defineProps({
-    title: String,
-    options: Array,
-    initialDate: Date,
-    initialCapacity: Number,
-});
+const props = defineProps<{
+    title: string;
+    options: string[];
+    initialDate: Optional<Date>;
+    initialCapacity: number;
+}>();
 
 const isToggled = ref(false);
 const selectedOption = ref("");

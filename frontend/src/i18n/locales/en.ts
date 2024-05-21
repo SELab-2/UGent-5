@@ -83,8 +83,6 @@ export default {
         publish_date: "Publish date",
         no_files: "No project files found",
         requirement: "Add mandatory or forbidden extension (ie: assignment.pdf)",
-        mandatory: "Mandatory",
-        forbidden: "Forbidden",
         invalid_format:
             "Please enter a valid file type, including the extension (e.g., 'image.png')",
         files_will_be_overwritten: "By uploading another file current files will be overwritten.",

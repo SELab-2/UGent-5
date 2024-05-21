@@ -1,10 +1,9 @@
-import { computed, type Ref, toValue } from "vue";
+import { computed, toValue } from "vue";
 import type { MaybeRefOrGetter } from "vue";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import type { UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-query";
-import type { Project, UserProjectList } from "@/models/Project";
-import type { ProjectForm } from "@/models/Project";
-import type Submission from "@/models/Submission";
+import type { ProjectForm, UserProjectList } from "@/models/Project";
+import type Project from "@/models/Project";
 import {
     getProject,
     createProject,

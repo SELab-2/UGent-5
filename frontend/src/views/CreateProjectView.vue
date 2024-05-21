@@ -172,7 +172,7 @@ const successMessage = ref("");
 const requirements = ref<{ mandatory: boolean; value: string }[]>([]);
 
 const projectId = ref(Number(route.params.projectId));
-const isEditMode = computed(() => projectId.value !== undefined);
+const isEditMode = computed(() => !isNaN(projectId.value) && projectId.value !== 0);
 
 //mutations
 const createProjectMutation = useCreateProjectMutation();

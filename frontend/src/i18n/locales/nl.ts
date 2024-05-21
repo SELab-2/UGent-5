@@ -84,8 +84,6 @@ export default {
         publish_date: "Publiceringsdatum",
         no_files: "Geen bestanden voor het project teruggevonden",
         requirement: "Voeg verplichte of verboden extensie toe (bv: verslag.pdf)",
-        mandatory: "Verplicht",
-        forbidden: "Verboden",
         invalid_format:
             "Voer een geldig bestandstype in, inclusief de extensie (bv. 'afbeelding.png')",
         files_will_be_overwritten:

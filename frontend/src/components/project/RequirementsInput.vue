@@ -13,7 +13,6 @@
     </v-alert>
     <v-row>
         <v-col cols="12">
-            <!-- Form with simpler validation trigger -->
             <v-form @submit.prevent="addRequirement" ref="form">
                 <v-text-field
                     v-model="newRequirement"
@@ -77,7 +76,7 @@ watchEffect(() => {
     internalRequirements.value = [...props.modelValue];
 });
 
-const deleteRequirement = (index) => {
+const deleteRequirement = (index: number) => {
     internalRequirements.value.splice(index, 1);
     emit("update:modelValue", internalRequirements.value);
 };
