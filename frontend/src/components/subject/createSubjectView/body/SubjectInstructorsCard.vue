@@ -37,7 +37,7 @@ defineEmits<{
 
 <style scoped>
 .title-card {
-    background-color: var(--color-secondary);
+    background-color: rgb(var(--v-theme-secondary));
     padding: 20px;
 }
 
@@ -47,7 +47,6 @@ defineEmits<{
     display: block;
     line-height: 1.2;
     font-weight: 500;
-    color: black;
     word-wrap: break-word;
     white-space: normal;
     overflow: hidden;
