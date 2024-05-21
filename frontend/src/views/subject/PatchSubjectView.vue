@@ -95,7 +95,7 @@ const subjectName = ref(null);
 const activeAcademicYear = ref(null);
 const currentUserAsInstructor = ref(computed(() => isInstructor.value));
 const addedInstructors = ref<Set<User>>(new Set());
-const removedInstructors = ref<Set<User>>(new Set());
+const removedInstructors = ref<Set<string>>(new Set());
 const subjectChanged = ref(false);
 
 const {
@@ -139,6 +139,10 @@ const isInstructor = computed(() => {
     return shownInstructors.value.some((instructor) => instructor?.uid === currentUser.value?.uid);
 });
 
+const isCurrentInstructor = (user: User) => {
+    return new Set([...(instructors.value || [])].map((instructor) => instructor.uid)).has(user.uid)
+}
+
 const name = computed<string | null>(() => subjectChanged.value ? subjectName.value : subject.value?.name);
 const academicYear = computed<number | null>(() => activeAcademicYear.value || subject.value?.academic_year);
 
@@ -146,9 +150,10 @@ const {mutateAsync: updateSubject} = useUpdateSubjectMutation();
 
 const router = useRouter();
 
+
 const shownInstructors = computed(() => {
-    return Array.from(new Set([...(instructors.value || []), ...addedInstructors.value].filter((instructor) => {
-        return !removedInstructors.value.has(instructor);
+    return Array.from(new Set([...(instructors.value || []), ...addedInstructors.value].filter((instructor: User) => {
+        return !removedInstructors.value.has(instructor.uid);
     }))).sort((a, b) => {
         if (a?.is_teacher && !b?.is_teacher) {
             return -1;
@@ -160,23 +165,27 @@ const shownInstructors = computed(() => {
     })
 });
 
-const addInstructor = (user: User) => {
-    addedInstructors.value.add(user);
-    removedInstructors.value.delete(user);
+const addInstructor = (instructor: User) => {
+    if (isCurrentInstructor(instructor)) {
+        removedInstructors.value.delete(instructor.uid);
+    } else {
+        addedInstructors.value.add(instructor);
+    }
+
 };
 
 const removeInstructor = (instructor: User) => {
-    removedInstructors.value.add(instructor);
+    if (isCurrentInstructor(instructor)) {
+        removedInstructors.value.add(instructor.uid);
+    }
     addedInstructors.value.delete(instructor);
 };
 
-const onCurrentUserAsInstructorChanged = (isInstructor: boolean) => {
-    if (isInstructor) {
-        addedInstructors.value.add(currentUser.value);
-        removedInstructors.value.delete(currentUser.value);
+const onCurrentUserAsInstructorChanged = (isCurrentUserInstructor: boolean) => {
+    if (isCurrentUserInstructor) {
+        removedInstructors.value.delete(currentUser.value.uid);
     } else {
-        addedInstructors.value.delete(currentUser.value);
-        removedInstructors.value.add(currentUser.value);
+        removedInstructors.value.add(currentUser.value.uid);
     }
 };
 
@@ -228,6 +237,9 @@ async function handleSubmit() {
     console.log(subjectData)
     const instructorIds = shownInstructors.value.map((instructor) => instructor.uid);
     console.log(instructorIds)
+
+
+
 
     /*
     try {
