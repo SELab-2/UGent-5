@@ -33,6 +33,7 @@ export default {
         new_submission: "Submit new",
         status_submission: "Submission is: {status}",
         no_submission_files: "No submissions found",
+        files_disclaimer: "For info on the usage of testfiles please visit our",
     },
     submission: {
         status: "Submission status:",
@@ -42,7 +43,7 @@ export default {
         files: "Files",
         download_info: "Click on filename to download",
         after_deadline: "After deadline",
-        submissions_title: "Submissions for project {project}",
+        submissions_title: "Submissions:",
         no_submissions: "No submissions yet",
         teacher_submissions_info:
             "This page contains a list of the latest submission of each group for this project.",
@@ -73,6 +74,20 @@ export default {
         unmet_reqs_warning: "Your submission did not satisfy all file requirements.",
         to_subject: "To subject",
         to_groups: "To groups",
+        selected_subject: "Selected subject",
+        group_warning: "Once the project has been created groups can no longer be edited",
+        group_toggle: "Group project",
+        random: "Random groups",
+        student_groups: "Student chosen groups",
+        enroll_deadline: "Enroll deadline",
+        publish_date: "Publish date",
+        no_files: "No project files found",
+        requirement: "Add mandatory or forbidden extension (ie: assignment.pdf)",
+        invalid_format:
+            "Please enter a valid file type, including the extension (e.g., 'image.png')",
+        files_will_be_overwritten: "By uploading another file current files will be overwritten.",
+        testfiles: "Testfiles",
+        requirements_disclaimer: "For info on the usage of requirements please visit our",
         to_project: "To Project",
     },
     navigation: {

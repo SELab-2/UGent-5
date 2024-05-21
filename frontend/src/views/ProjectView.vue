@@ -30,6 +30,7 @@
 
 <script setup lang="ts">
 import ProjectInfo from "@/components/project/ProjectInfo.vue";
+
 import { useProjectQuery } from "@/queries/Project";
 import { computed, toRefs } from "vue";
 import { useProjectGroupQuery } from "@/queries/Group";

@@ -62,7 +62,8 @@ async def is_instructor(db: AsyncSession, subject_id: int, uid: str) -> bool:
 
 
 async def create_subject(db: AsyncSession, subject: SubjectCreate) -> Subject:
-    db_subject = Subject(name=subject.name, academic_year=subject.academic_year)
+    db_subject = Subject(
+        name=subject.name, academic_year=subject.academic_year)
     db.add(db_subject)
     await db.commit()
     await db.refresh(db_subject)

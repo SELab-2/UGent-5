@@ -32,6 +32,8 @@ export default {
         new_submission: "Nieuwe indiening",
         status_submission: "Indiening is: {status}",
         no_submission_files: "Geen indieningen gevonden",
+        files_usage_note: "Info voor het gebruik van testbestanden",
+        files_disclaimer: "Voor info over het gebruik van testbestanden, bezoek onze  ",
     },
     submission: {
         status: "Status indiening:",
@@ -72,6 +74,22 @@ export default {
         unmet_reqs_warning: "Opgelet: je indiening voldoet niet aan alle bestandsvereisten.",
         to_subject: "Naar vak",
         to_groups: "Naar groepen",
+        selected_subject: "Gekozen vak",
+        group_warning:
+            "Eens het project aangemaakt is is het niet meer mogelijk de groepen aan te passen",
+        group_toggle: "Groepswerk",
+        random: "Willekeurige groepen",
+        student_groups: "Studenten gekozen groepen",
+        enroll_deadline: "Inschrijvingsdeadline",
+        publish_date: "Publiceringsdatum",
+        no_files: "Geen bestanden voor het project teruggevonden",
+        requirement: "Voeg verplichte of verboden extensie toe (bv: verslag.pdf)",
+        invalid_format:
+            "Voer een geldig bestandstype in, inclusief de extensie (bv. 'afbeelding.png')",
+        files_will_be_overwritten:
+            "Bij het uploaden van een nieuw testbestand zullen alle huidige testbestanden verwijderd worden.",
+        testfiles: "Testbestanden",
+        requirements_disclaimer: "Voor info over het gebruik van bestandsvereisten, bezoek onze ",
         to_project: "Naar project",
     },
     navigation: {
