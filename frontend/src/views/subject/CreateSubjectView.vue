@@ -85,9 +85,7 @@ const subjectId = ref<number | undefined>(undefined);
 
 const { data: currentUser, isLoading, isError } = useCurrentUserQuery();
 const createSubjectMutation = useCreateSubjectMutation();
-const createSubjectInstructorMutation = useCreateSubjectInstructorMutation(
-    computed(() => subjectId.value)
-);
+const createSubjectInstructorMutation = useCreateSubjectInstructorMutation();
 
 const router = useRouter();
 
@@ -152,12 +150,13 @@ async function handleSubmit() {
         academic_year: activeAcademicYear.value,
     };
 
-    const instructorIds = shownInstructors.value.map((instructor) => instructor.uid);
-
     try {
         subjectId.value = await createSubjectMutation.mutateAsync(subjectData);
-        for (const instructor of instructorIds) {
-            await createSubjectInstructorMutation.mutateAsync(instructor);
+        for (let instructor of shownInstructors.value!) {
+            await createSubjectInstructorMutation.mutateAsync({
+                user: instructor!,
+                subjectId: subjectId.value!,
+            });
         }
 
         await router.push({ name: "subject", params: { subjectId: subjectId.value } });
