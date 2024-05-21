@@ -351,7 +351,6 @@ async function handleGroupCreation(projectId) {
         const groupsToCreate = groups.map((_, i) => ({
             project_id: projectId,
             score: 0,
-            team_name: "Group " + (i + 1),
         }));
         const createdGroups = await createGroupsMutation.mutateAsync({
             projectId: projectId,
@@ -381,7 +380,6 @@ function generateEmptyGroups(projectId: number) {
         emptyGroups.push({
             project_id: projectId,
             score: 0,
-            team_name: `Group ${i + 1}`,
         });
     }
     return emptyGroups;
