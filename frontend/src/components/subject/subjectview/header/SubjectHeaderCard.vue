@@ -62,7 +62,7 @@ const { isTeacher } = useIsTeacher();
 
 <style scoped>
 .title-card {
-    background-color: white;
+    background-color: rgb(var(--v-theme-background));
     padding: 20px;
     overflow-y: auto;
     scrollbar-width: none;

@@ -2,7 +2,6 @@
     <div v-if="isError" class="v-container">
         <p>{{ $t("default.something-went-wrong") }}</p>
     </div>
-
     <v-skeleton-loader v-else type="card" :loading="isLoading">
         <v-row>
             <v-snackbar v-model="snackbar" timeout="3000" color="primary">
@@ -13,41 +12,31 @@
                     </v-btn>
                 </template>
             </v-snackbar>
-
-            <v-col cols="1">
-                <router-link :to="{ name: 'subjects' }">
-                    <v-btn variant="elevated" class="back-button" size="large">
-                        <v-icon>mdi-arrow-left</v-icon>
-                    </v-btn>
-                </router-link>
-            </v-col>
-            <v-col>
-                <BackgroundContainer>
-                    <v-row>
-                        <v-col>
-                            <SubjectHeaderContainer
-                                v-if="subject"
-                                :title="subject!.name"
-                                :instructors="sortedInstructors"
-                                :academic-year="subject!.academic_year"
-                                :is-instructor="isInstructor"
-                                :is-student="isStudent"
-                                :is-admin="isAdmin"
-                                image-path="https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png"
-                            ></SubjectHeaderContainer>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                            <SubjectBody v-if="subject" :projects="projects"></SubjectBody>
-                        </v-col>
-                    </v-row>
-                </BackgroundContainer>
+            <v-col class="subjectcard">
+                <v-row>
+                    <v-col>
+                        <SubjectHeaderContainer
+                            v-if="subject"
+                            :title="subject!.name"
+                            :instructors="sortedInstructors"
+                            :academic-year="subject!.academic_year"
+                            :is-instructor="isInstructor"
+                            :is-student="isStudent"
+                            :is-admin="isAdmin"
+                            image-path="https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png"
+                        ></SubjectHeaderContainer>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col>
+                        <SubjectBody v-if="subject" :projects="projects"></SubjectBody>
+                    </v-col>
+                </v-row>
             </v-col>
             <v-col v-if="isAdmin || isInstructor" cols="2">
                 <div class="action-btn-container">
                     <router-link :to="{ name: 'create-project', params: { subjectId: subjectId } }">
-                        <v-btn prepend-icon="mdi-plus-circle">
+                        <v-btn prepend-icon="mdi-plus-circle" class="button">
                             {{ $t("subject.create_project") }}
                         </v-btn>
                     </router-link>
@@ -56,6 +45,7 @@
                         :subjectId="subjectId"
                         @register-link-btn-pressed="snackbar = true"
                         @is-uuid-error="isUuidError = true"
+                        class="button"
                     ></RegisterLinkButton>
                 </div>
             </v-col>
@@ -151,11 +141,26 @@ const { isTeacher } = useIsTeacher();
 </script>
 ;
 <style scoped>
-.back-button {
-    margin: 30px;
-}
 
 .action-btn-container {
-    margin-top: 30px;
+    margin-top: 25px;
+    margin-right: 25px;
 }
+
+.subjectcard {
+    background-color: rgb(var(--v-theme-secondary));
+    margin-top: 50px;
+    margin-left: 50px;
+    margin-right: 10px;
+    border-radius: 3px;
+    padding: 20px;
+}
+
+.button {
+    background-color: rgb(var(--v-theme-primary));
+    color: rgb(var(--v-theme-navtext));
+    margin-bottom: 10px;
+    width: 500px;
+}
+
 </style>

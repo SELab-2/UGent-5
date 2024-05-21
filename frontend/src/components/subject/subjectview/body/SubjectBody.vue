@@ -38,22 +38,20 @@ const tab = ref(0);
 </script>
 
 <style scoped>
-.active {
-    color: #003eff;
-}
+
 
 .page-tab {
     font-size: 16px;
     font-weight: 500;
     font-family: "Poppins", sans-serif;
     text-transform: capitalize;
-    background-color: white;
+    background-color: rgb(var(--v-theme-background));
 }
 
 .tab-container {
     border-top-right-radius: 20px;
     border-top-left-radius: 20px;
-    background-color: white;
+    background-color: rgb(var(--v-theme-background));
     padding-top: 16px;
     height: 30px;
     margin-bottom: 20px;
