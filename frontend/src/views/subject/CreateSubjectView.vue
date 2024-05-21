@@ -35,10 +35,11 @@
                     <CreateSubjectHeaderContainer
                         :image-path="`https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png`"
                         :current-user-as-instructor="currentUserAsInstructor"
-                        :is-form-error="isSubjectNameError"
+                        :is-subject-name-error="isSubjectNameError"
+                        :is-subject-mail-error="isSubjectMailError"
                         @update:subject-name="onSubjectNameUpdated"
                         @update:active-academic-year="activeAcademicYear = $event"
-                        @update:subject-mail="subjectMail = $event"
+                        @update:subject-mail="onSubjectMailUpdated"
                         @update:current-user-as-instructor="currentUserAsInstructor = $event"
                     >
                     </CreateSubjectHeaderContainer>
@@ -125,6 +126,11 @@ const onSubjectNameUpdated = (name: string) => {
     isSubjectNameError.value = false;
 };
 
+const onSubjectMailUpdated = (mail: string) => {
+    subjectMail.value = mail;
+    isSubjectMailError.value = false;
+};
+
 const validateSubjectName = () => {
     return !(!subjectName.value || subjectName.value.trim().length < 3);
 };
@@ -159,6 +165,7 @@ async function handleSubmit() {
     const name = subjectName.value.trim();
     const subjectData: SubjectForm = {
         name: name.charAt(0).toUpperCase() + name.slice(1),
+        email: subjectMail.value,
         academic_year: activeAcademicYear.value,
     };
 

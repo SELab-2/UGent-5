@@ -6,7 +6,8 @@
         <v-col cols="8">
             <CreateSubjectHeaderCard
                 :current-user-as-instructor="currentUserAsInstructor"
-                :is-form-error="isFormError"
+                :is-subject-name-error="isSubjectNameError"
+                :is-subject-mail-error="isSubjectMailError"
                 @update:subject-name="$emit('update:subject-name', $event)"
                 @update:active-academic-year="$emit('update:active-academic-year', $event)"
                 @update:subject-mail="$emit('update:subject-mail', $event)"
@@ -26,7 +27,8 @@ import CreateSubjectHeaderImage from "@/components/subject/createSubjectView/hea
 defineProps<{
     imagePath: string;
     currentUserAsInstructor: boolean;
-    isFormError: boolean;
+    isSubjectNameError: boolean;
+    isSubjectMailError: boolean;
 }>();
 
 defineEmits<{

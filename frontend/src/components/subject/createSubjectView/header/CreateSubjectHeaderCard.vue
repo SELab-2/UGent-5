@@ -15,7 +15,7 @@
                 clearable
                 hide-details="auto"
                 @keydown.enter.prevent
-                :error="isFormError"
+                :error="isSubjectNameError"
                 class="form-elem"
             ></v-text-field>
 
@@ -52,6 +52,7 @@
                 :hint="$t('create_subject.email_hint')"
                 hide-details="auto"
                 @keydown.enter.prevent
+                :error="isSubjectMailError"
                 class="form-elem"
             >
             </v-text-field>
@@ -68,7 +69,8 @@ const { t } = useI18n();
 
 const props = defineProps<{
     currentUserAsInstructor: boolean;
-    isFormError: boolean;
+    isSubjectNameError: boolean;
+    isSubjectMailError: boolean;
 }>();
 
 const { currentUserAsInstructor } = toRefs(props);
