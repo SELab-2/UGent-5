@@ -309,7 +309,7 @@ async function submitForm() {
         console.error("Error during project or group creation or file upload:", error);
         setErrorAlert("An unexpected error occurred. Please try again.");
     }
-    navigateToProject(projectId.value);
+    navigateToProject(projectData.project_id);
 }
 
 function formatProjectData() {
