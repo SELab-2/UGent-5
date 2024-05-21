@@ -73,7 +73,7 @@ import {
     useCreateSubjectInstructorMutation,
     useCreateSubjectMutation, useSubjectInstructorsQuery,
     useSubjectProjectsQuery,
-    useSubjectQuery
+    useSubjectQuery, useUpdateSubjectMutation
 } from "@/queries/Subject";
 import type SubjectForm from "@/models/Subject";
 import type User from "@/models/User";
@@ -92,10 +92,11 @@ const snackbar = ref(false);
 const dialog = ref(false);
 const isFormError = ref(false);
 const subjectName = ref(null);
-const activeAcademicYear = ref<number>(null);
+const activeAcademicYear = ref(null);
 const currentUserAsInstructor = ref(computed(() => isInstructor.value));
 const addedInstructors = ref<Set<User>>(new Set());
 const removedInstructors = ref<Set<User>>(new Set());
+const subjectChanged = ref(false);
 
 const {
     data: currentUser,
@@ -138,7 +139,10 @@ const isInstructor = computed(() => {
     return shownInstructors.value.some((instructor) => instructor?.uid === currentUser.value?.uid);
 });
 
-const createSubjectInstructorMutation = useCreateSubjectInstructorMutation(subjectId);
+const name = computed<string | null>(() => subjectChanged.value ? subjectName.value : subject.value?.name);
+const academicYear = computed<number | null>(() => activeAcademicYear.value || subject.value?.academic_year);
+
+const {mutateAsync: updateSubject} = useUpdateSubjectMutation();
 
 const router = useRouter();
 
@@ -178,11 +182,19 @@ const onCurrentUserAsInstructorChanged = (isInstructor: boolean) => {
 
 const onSubjectNameUpdated = (name: string) => {
     subjectName.value = name;
+    subjectChanged.value = true;
     isFormError.value = false;
 };
 
 const validateSubjectName = () => {
-    return !(!subjectName.value || subjectName.value.trim().length < 3);
+    if (!subjectChanged.value) {
+        return true;
+    } else {
+        return name.value !== null && name.value.trim().length > 2;
+    }
+};
+const validateSubjectAcademicYear = () => {
+    return academicYear.value !== null;
 };
 
 const validateInstructors = () => {
@@ -193,9 +205,13 @@ const validateInstructors = () => {
 };
 
 async function handleSubmit() {
-    /*
+
     if (!validateSubjectName()) {
         isFormError.value = true;
+        return;
+    }
+
+    if (!validateSubjectAcademicYear()) {
         return;
     }
 
@@ -204,30 +220,27 @@ async function handleSubmit() {
         return;
     }
 
-     */
-
-
-    const name = subjectName.value || subject.value?.name;
     const subjectData: SubjectForm = {
-        name: name.trim().charAt(0).toUpperCase() + name.trim().slice(1),
-        academic_year: activeAcademicYear.value || subject.value?.academic_year,
+        name: name.value.trim().charAt(0).toUpperCase() + name.value.trim().slice(1),
+        academic_year: academicYear.value
     };
 
     console.log(subjectData)
     const instructorIds = shownInstructors.value.map((instructor) => instructor.uid);
     console.log(instructorIds)
+
     /*
     try {
-        subjectId.value = await createSubjectMutation.mutateAsync(subjectData);
-        for (const instructor of instructorIds) {
-            await createSubjectInstructorMutation.mutateAsync(instructor);
-        }
-
-        await router.push({name: "subject", params: {subjectId: subjectId.value}});
+        await updateSubject({
+            subjectId: subjectId.value,
+            name: subjectData.name,
+            academic_year: subjectData.academic_year,
+        });
     } catch (error) {
-        console.error("Error during subject creation:", error);
+        console.error("Error during subject alteration:", error);
     }
-    */
+
+     */
 }
 </script>
 
