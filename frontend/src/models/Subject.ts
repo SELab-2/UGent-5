@@ -26,3 +26,9 @@ export interface SubjectDetails {
     subjectData: Subject;
     role: SubjectRole;
 }
+
+export default interface SubjectForm {
+    name: string;
+    email: string;
+    academic_year: number;
+}

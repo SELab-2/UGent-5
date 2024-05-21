@@ -38,7 +38,7 @@
             </v-col>
             <v-col v-if="isAdmin || isTeacher" cols="2">
                 <div class="action-btn-container">
-                    <router-link to="">
+                    <router-link :to="{ name: 'create-subject' }">
                         <v-btn prepend-icon="mdi-plus-circle">
                             {{ $t("subjects.create_subject") }}
                         </v-btn>
@@ -52,8 +52,8 @@
 <script setup lang="ts">
 import { useSubjectsQuery } from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
-import SubjectsHeaderContainer from "@/components/subject/subjectsview/SubjectsHeaderContainer.vue";
-import SubjectCard from "@/components/subject/subjectsview/SubjectCard.vue";
+import SubjectsHeaderContainer from "@/components/subject/subjectsview/header/SubjectsHeaderContainer.vue";
+import SubjectCard from "@/components/subject/subjectsview/body/SubjectCard.vue";
 import { computed, ref } from "vue";
 import useAcademicYear from "@/composables/useAcademicYear";
 import useIsTeacher from "@/composables/useIsTeacher";

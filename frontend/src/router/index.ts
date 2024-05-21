@@ -80,7 +80,11 @@ const router = createRouter({
             path: "/subjects",
             name: "subjects",
             component: () => import("../views/subject/SubjectsView.vue"),
-            children: [],
+        },
+        {
+            path: "/subjects/create",
+            name: "create-subject",
+            component: () => import("../views/subject/CreateSubjectView.vue"),
         },
         {
             path: "/subjects/:subjectId(\\d+)",
