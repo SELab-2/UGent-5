@@ -2,35 +2,40 @@
     <v-container>
         <h1 v-if="isDataLoading" class="welcome">{{ $t("default.loading.loading_page") }}</h1>
         <h1 v-else-if="isDataError" class="welcome">{{ $t("group.error") }}</h1>
-        <div v-else class="projectInfo">
-            <h2>{{ "Project: " + project!.name }}</h2>
-            <StudentsDialog :students="allStudents" :title="$t('group.all_students')" />
-            <v-divider class="border-opacity-50"></v-divider>
-            <div v-if="groups.length > 0">
-                <v-row>
-                    <v-col cols="7">{{ $t("group.groups") }}</v-col>
-                    <v-col cols="2">{{ $t("group.members") }}</v-col>
-                    <v-col cols="3">{{ $t("group.actions") }}</v-col>
-                </v-row>
-                <GroupCard
-                    v-for="group in groups"
-                    :key="group.id"
-                    :project="project!"
-                    :group="group"
-                    :user="user!"
-                    :isTeacher="isTeacher!"
-                    class="group-card"
-                />
-            </div>
-            <div v-else>
-                <v-row>
-                    <v-col cols="8"> {{ $t("group.not_found2") }}</v-col>
-                </v-row>
-            </div>
-            <v-btn v-if="isTeacher" @click="createGroup" variant="flat">{{
-                $t("group.create_group")
-            }}</v-btn>
-        </div>
+        <v-row v-else class="projectInfo">
+            <v-col cols="10">
+                <h2>{{ "Project: " + project!.name }}</h2>
+                <StudentsDialog :students="allStudents" :title="$t('group.all_students')" />
+                <v-divider class="border-opacity-50"></v-divider>
+                <div v-if="groups.length > 0">
+                    <v-row>
+                        <v-col cols="7">{{ $t("group.groups") }}</v-col>
+                        <v-col cols="2">{{ $t("group.members") }}</v-col>
+                        <v-col cols="3">{{ $t("group.actions") }}</v-col>
+                    </v-row>
+                    <GroupCard
+                        v-for="group in groups"
+                        :key="group.id"
+                        :project="project!"
+                        :group="group"
+                        :user="user!"
+                        :isTeacher="isTeacher!"
+                        class="group-card"
+                    />
+                </div>
+                <div v-else>
+                    <v-row>
+                        <v-col cols="8"> {{ $t("group.not_found2") }}</v-col>
+                    </v-row>
+                </div>
+                <v-btn v-if="isTeacher" @click="createGroup" variant="flat">{{
+                        $t("group.create_group")
+                    }}</v-btn>
+            </v-col>
+            <v-col cols="2">
+                <BackButton title="project.to_project" :destination="`/project/${projectId}`" class="backbutton"/>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 
@@ -43,6 +48,7 @@ import { useCurrentUserQuery } from "@/queries/User";
 import { type GroupForm } from "@/models/Group";
 import { useSubjectInstructorsQuery, useSubjectStudentsQuery } from "@/queries/Subject";
 import StudentsDialog from "@/components/groups/StudentsDialog.vue";
+import BackButton from "@/components/buttons/BackButton.vue"
 
 const props = defineProps<{
     projectId: number;
@@ -135,5 +141,9 @@ async function createGroup() {
 .v-divider {
     margin-bottom: 15px;
     margin-top: 15px;
+}
+
+.backbutton {
+    margin: 25px;
 }
 </style>
