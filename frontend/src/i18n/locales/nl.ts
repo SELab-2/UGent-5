@@ -151,6 +151,10 @@ export default {
         field_length: "Titel moet minstens 3 tekens lang zijn",
         subject_instructors: "Vak verantwoordelijken",
         search_for_instructors: "Zoek naar vak verantwoordelijken",
+        email: "Vak email",
+        enter_email: "Voer email in",
+        email_hint: "Veld is optioneel",
+        email_invalid: "Ingevoerde email is ongeldig",
     },
 
     group: {

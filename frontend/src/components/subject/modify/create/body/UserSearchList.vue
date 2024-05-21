@@ -13,7 +13,7 @@
         @keydown.enter="onSearchIconClicked"
     ></v-text-field>
 
-    <div v-show="searchLoaded" class="scrollable-list">
+    <div class="scrollable-list">
         <p v-if="shownUsers.length === 0">No results found</p>
         <v-list v-else>
             <v-list-item v-for="(user, index) in shownUsers" :key="index">
@@ -55,9 +55,8 @@ const { data: users } = useUsersQuery();
 const search = ref("");
 const searchLoading = ref(false);
 const searchLoaded = ref(false);
-const shownUsers = ref([]);
 
-const filteredUsers = computed(() => {
+const shownUsers = computed(() => {
     if (!search.value) {
         return [];
     }
@@ -72,8 +71,7 @@ const filteredUsers = computed(() => {
                     .toLowerCase()
                     .includes(search.value.toLowerCase())
             );
-        })
-        .slice(0, 5);
+        });
 });
 
 defineEmits<{
@@ -85,7 +83,6 @@ const onSearchIconClicked = () => {
     setTimeout(() => {
         searchLoaded.value = true;
         searchLoading.value = false;
-        shownUsers.value = filteredUsers.value;
     }, 1000);
 };
 

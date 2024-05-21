@@ -38,9 +38,11 @@
                         :subject-name="subjectName"
                         :academic-year="activeAcademicYear"
                         :current-user-as-instructor="currentUserAsInstructor"
-                        :is-form-error="isFormError"
+                        :is-subject-name-error="isSubjectNameError"
+                        :is-subject-mail-error="isSubjectMailError"
                         @update:subject-name="onSubjectNameUpdated"
                         @update:active-academic-year="activeAcademicYear = $event"
+                        @update:subject-mail="onSubjectMailUpdated"
                         @update:current-user-as-instructor="currentUserAsInstructor = $event"
                     >
                     </CreateSubjectHeaderContainer>
@@ -79,8 +81,10 @@ import { useRouter } from "vue-router";
 
 const snackbar = ref(false);
 const dialog = ref(false);
-const isFormError = ref(false);
+const isSubjectNameError = ref(false);
+const isSubjectMailError = ref(false);
 const subjectName = ref("");
+const subjectMail = ref("");
 const activeAcademicYear = ref<number>(useAcademicYear());
 const instructors = ref<User[]>([]);
 const currentUserAsInstructor = ref(true);
@@ -88,9 +92,7 @@ const subjectId = ref<number | undefined>(undefined);
 
 const { data: currentUser, isLoading, isError } = useCurrentUserQuery();
 const createSubjectMutation = useCreateSubjectMutation();
-const createSubjectInstructorMutation = useCreateSubjectInstructorMutation(
-    computed(() => subjectId.value)
-);
+const createSubjectInstructorMutation = useCreateSubjectInstructorMutation();
 
 const router = useRouter();
 
@@ -122,13 +124,22 @@ const removeInstructor = (instructor: User) => {
     }
 };
 
-const onSubjectNameUpdated = (name: string | null) => {
-    subjectName.value = name ? name : "";
-    isFormError.value = false;
+const onSubjectNameUpdated = (name: string) => {
+    subjectName.value = name;
+    isSubjectNameError.value = false;
+};
+
+const onSubjectMailUpdated = (mail: string) => {
+    subjectMail.value = mail;
+    isSubjectMailError.value = false;
 };
 
 const validateSubjectName = () => {
     return !(!subjectName.value || subjectName.value.trim().length < 3);
+};
+
+const validateSubjectMail = () => {
+    return !subjectMail.value || /.+@.+\..+/.test(subjectMail.value);
 };
 
 const validateInstructors = () => {
@@ -140,7 +151,12 @@ const validateInstructors = () => {
 
 async function handleSubmit() {
     if (!validateSubjectName()) {
-        isFormError.value = true;
+        isSubjectNameError.value = true;
+        return;
+    }
+
+    if (!validateSubjectMail()) {
+        isSubjectMailError.value = true;
         return;
     }
 
@@ -152,15 +168,17 @@ async function handleSubmit() {
     const name = subjectName.value.trim();
     const subjectData: SubjectForm = {
         name: name.charAt(0).toUpperCase() + name.slice(1),
+        email: subjectMail.value,
         academic_year: activeAcademicYear.value,
     };
 
-    const instructorIds = shownInstructors.value.map((instructor) => instructor.uid);
-
     try {
         subjectId.value = await createSubjectMutation.mutateAsync(subjectData);
-        for (const instructor of instructorIds) {
-            await createSubjectInstructorMutation.mutateAsync(instructor);
+        for (let instructor of shownInstructors.value!) {
+            await createSubjectInstructorMutation.mutateAsync({
+                user: instructor!,
+                subjectId: subjectId.value!,
+            });
         }
 
         await router.push({ name: "subject", params: { subjectId: subjectId.value } });

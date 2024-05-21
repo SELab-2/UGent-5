@@ -10,6 +10,6 @@ defineProps<{
 
 <style scoped>
 .header-img {
-    height: 35vh;
+    height: 45vh;
 }
 </style>

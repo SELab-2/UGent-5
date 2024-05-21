@@ -9,9 +9,11 @@
                 :subject-name="subjectName"
                 :academic-year="academicYear"
                 :current-user-as-instructor="currentUserAsInstructor"
-                :is-form-error="isFormError"
+                :is-subject-name-error="isSubjectNameError"
+                :is-subject-mail-error="isSubjectMailError"
                 @update:subject-name="$emit('update:subject-name', $event)"
                 @update:active-academic-year="$emit('update:active-academic-year', $event)"
+                @update:subject-mail="$emit('update:subject-mail', $event)"
                 @update:current-user-as-instructor="
                     $emit('update:current-user-as-instructor', $event)
                 "
@@ -31,12 +33,14 @@ defineProps<{
     subjectName: string,
     academicYear: number,
     currentUserAsInstructor: boolean;
-    isFormError: boolean;
+    isSubjectNameError: boolean;
+    isSubjectMailError: boolean;
 }>();
 
 defineEmits<{
     (e: "update:current-user-as-instructor", value: boolean): void;
     (e: "update:subject-name", value: string): void;
+    (e: "update:subject-mail", value: string): void;
     (e: "update:active-academic-year", value: number): void;
 }>();
 </script>
