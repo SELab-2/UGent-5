@@ -1,5 +1,5 @@
 <template>
-    <v-card variant="text" class="title-card" width="100%" height="35vh">
+    <v-card variant="text" class="title-card" width="100%" height="45vh">
         <v-card-title class="title">
             {{ $t("create_subject.new_subject") }}
         </v-card-title>
@@ -12,7 +12,6 @@
                 required
                 variant="outlined"
                 :placeholder="$t('create_subject.enter_title')"
-                :hint="$t('create_subject.enter_title_hint')"
                 clearable
                 hide-details="auto"
                 @keydown.enter.prevent
@@ -38,9 +37,24 @@
                         :label="$t('create_subject.assign_self')"
                         v-model="checkbox"
                         color="primary"
+                        class="checkbox"
                     ></v-checkbox>
                 </v-col>
             </v-row>
+            <v-text-field
+                v-model="subjectMail"
+                type="email"
+                variant="outlined"
+                :rules="[rules.email]"
+                :label="$t('create_subject.email')"
+                clearable
+                :placeholder="$t('create_subject.enter_email')"
+                :hint="$t('create_subject.email_hint')"
+                hide-details="auto"
+                @keydown.enter.prevent
+                class="form-elem"
+            >
+            </v-text-field>
         </v-card-text>
     </v-card>
 </template>
@@ -66,12 +80,14 @@ watch(currentUserAsInstructor, (newValue) => {
 });
 
 const subjectName = ref("");
+const subjectMail = ref("");
 const activeAcademicYear = ref<number>(useAcademicYear());
 
 const academicYearItems = [activeAcademicYear.value, activeAcademicYear.value + 1];
 const rules = {
     required: (value: string) => !!value || t("create_subject.field_required"),
     length: (value: string) => value.length > 2 || t("create_subject.field_length"),
+    email: (value: string) => !value || /.+@.+\..+/.test(value) || t("create_subject.email_invalid"),
 };
 
 const emit = defineEmits<{
@@ -101,19 +117,18 @@ watch(checkbox, (newValue) => {
 
 .form-elem {
     margin-bottom: 2vh;
+    margin-top: -3vh;
 }
 
 .form-elem-academic {
-    margin-bottom: 2vh;
     max-width: 20vw;
 }
-
 .title {
     font-size: 32px;
     letter-spacing: -0.5px;
     text-transform: capitalize;
     font-weight: bold;
-    margin-bottom: 12px;
+    margin-bottom: 4vh;
     font-family: "Poppins", sans-serif;
 }
 </style>

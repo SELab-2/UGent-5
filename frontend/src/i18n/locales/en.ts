@@ -149,6 +149,11 @@ export default {
         field_length: "Title must be at least 3 characters long",
         subject_instructors: "Subject instructors",
         search_for_instructors: "Search for instructors",
+        email: "Subject email",
+        enter_email: "Enter email",
+        email_hint: "Field is optional",
+        email_invalid: "Provided email is invalid",
+
     },
 
     group: {
