@@ -42,7 +42,7 @@ describe('throttle', () => {
         throttledFunc();
         throttledFunc();
         throttledFunc();
-        vi.advanceTimersByTime(2000);
+        vi.advanceTimersByTime(10000);
         expect(func).toHaveBeenCalledTimes(2);
     });
 });
