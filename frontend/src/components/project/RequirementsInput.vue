@@ -3,7 +3,7 @@
         <span class="alert-text">
             {{ $t("project.requirements_disclaimer") }}
             <a
-                href="https://github.com/SELab-2/UGent-5/wiki/Automatische-testen#vereiste-en-verboden-bestanden"
+                href="https://github.com/SELab-2/UGent-5/wiki/Bestandsvereisten"
                 target="_blank"
                 rel="noopener noreferrer"
             >
