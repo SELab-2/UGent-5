@@ -22,6 +22,7 @@
                 {{ $d(project.deadline, "long") }}
             </v-card-text>
             <v-card-text>
+                <!--<h2 v-if="project.capacity > 1  && isInGroup " class="group"> {{ $t("project.group", { number: 1}) }}</h2> -->
                 <h2>{{ $t("subject.project.assignment") }}</h2>
                 <div
                     v-if="project.description && project.description.length <= assignmentLength"
@@ -66,8 +67,9 @@
 
 <script setup lang="ts">
 import type Project from "@/models/Project";
-import { ref } from "vue";
+import {computed, ref} from "vue";
 import { Quill } from "@vueup/vue-quill";
+import {getUserGroups} from "@/services/group";
 
 defineProps<{
     selectedTab: number;
@@ -82,6 +84,23 @@ const renderQuillContent = (content: string) => {
     quill.root.innerHTML = content;
     return quill.root.innerHTML;
 };
+
+/*const { data: groups, isLoading, isError} = getUserGroups()
+
+const projectGroup = ref()
+
+const isInGroup = computed(() => {
+    if (!groups.value) return false;
+    return groups.value.some((groupelem) => {
+        if(groupelem.project_id === project.id){
+            projectGroup.value = groupelem;
+            return true;
+        }
+        return false;
+    });
+});
+*/
+
 </script>
 
 <style scoped>
@@ -147,5 +166,9 @@ const renderQuillContent = (content: string) => {
 
 .title-col::-webkit-scrollbar {
     width: 0; /* For Chrome, Safari, and Opera */
+}
+
+.group {
+    margin-bottom: 25px;
 }
 </style>

@@ -27,7 +27,7 @@ export default {
         logout: "Logout",
     },
     submit: {
-        submit_title: "Submit solution",
+        submit_title: "Submit title",
         submit_button: "Submit",
         remarks: "Remarks",
         files: "Files",

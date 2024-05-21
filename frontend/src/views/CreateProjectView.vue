@@ -8,7 +8,7 @@
             {{ $t("project.not_found") }}
         </h1>
         <div v-else class="projectInfo">
-            <v-row>
+            <v-row class="createproject">
                 <v-col cols="12" md="6">
                     <v-text-field
                         v-model="project_title"
@@ -16,10 +16,6 @@
                         required
                         :placeholder="$t('submit.submit_title')"
                     />
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col cols="12" md="6">
                     <v-select
                         v-if="!isEditMode"
                         v-model="selectedSubject"
@@ -29,6 +25,17 @@
                         :label="$t('project.selected_subject')"
                         required
                         :placeholder="$t('submit.submit_title')"
+                    />
+                    <DatePicker
+                        :modelValue="deadlineModel"
+                        @update:modelValue="updateDeadline"
+                        :label="$t('project.deadline')"
+                    />
+                    <DatePicker
+                        :modelValue="publishDateModel"
+                        @update:modelValue="updatePublishDate"
+                        :label="$t('project.publish_date')"
+                        required
                     />
                 </v-col>
                 <v-col cols="12" md="6">
@@ -45,21 +52,7 @@
                         @update:capacity="handleCapacityChange"
                         @update:selected-option="handleOptionChange"
                         required
-                    />
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col cols="12" md="6">
-                    <DatePicker
-                        :modelValue="deadlineModel"
-                        @update:modelValue="updateDeadline"
-                        :label="$t('project.deadline')"
-                    />
-                    <DatePicker
-                        :modelValue="publishDateModel"
-                        @update:modelValue="updatePublishDate"
-                        :label="$t('project.publish_date')"
-                        required
+                        class="radiolist"
                     />
                 </v-col>
             </v-row>
@@ -112,11 +105,7 @@
                     />
                 </v-col>
             </v-row>
-            <v-row>
-                <v-col cols="12" class="text-right">
-                    <v-btn @click="submitForm">{{ $t("submit.submit_button") }}</v-btn>
-                </v-col>
-            </v-row>
+            <v-btn color="primary" @click="submitForm">{{ $t("submit.submit_button") }}</v-btn>
             <v-alert v-model="showErrorAlert" type="error" dense dismissible :value="true">
                 {{ errorMessage }}
             </v-alert>
@@ -474,5 +463,14 @@ function divideStudentsIntoGroups(students: User[], capacity: number) {
 
 .alert-bottom-margin {
     margin-bottom: 15px;
+}
+
+.createproject {
+    border-radius: 3px;
+    margin-top: 25px;
+}
+
+.radiolist {
+    padding: 5px;
 }
 </style>
