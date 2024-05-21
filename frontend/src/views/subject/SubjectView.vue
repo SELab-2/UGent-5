@@ -2,7 +2,7 @@
     <div v-if="isError" class="v-container">
         <p>{{ $t("default.something-went-wrong") }}</p>
     </div>
-    <v-skeleton-loader v-else type="card" :loading="isLoading">
+    <v-skeleton-loader v-else type="card" :loading="isLoading"  >
         <v-row>
             <v-snackbar v-model="snackbar" timeout="3000" color="primary">
                 {{ $t("subject.register_link_button.snackbar") }}
@@ -12,7 +12,7 @@
                     </v-btn>
                 </template>
             </v-snackbar>
-            <v-col class="subjectcard">
+            <v-col class="col-sm-12 col-md-6 col-lg-8 subjectcard">
                 <v-row>
                     <v-col>
                         <SubjectHeaderContainer
@@ -29,7 +29,7 @@
                 </v-row>
                 <v-row>
                     <v-col>
-                        <SubjectBody v-if="subject" :projects="projects"></SubjectBody>
+                        <SubjectProjectsPage v-if="subject" :projects="projects"></SubjectProjectsPage>
                     </v-col>
                 </v-row>
             </v-col>
@@ -63,7 +63,7 @@ import {
 } from "@/queries/Subject";
 import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectHeaderContainer from "@/components/subject/subjectview/header/SubjectHeaderContainer.vue";
-import SubjectBody from "@/components/subject/subjectview/body/SubjectBody.vue";
+import SubjectProjectsPage from "@/components/subject/subjectview/body/projects/SubjectProjectsPage.vue";
 import { useCurrentUserQuery } from "@/queries/User";
 import useIsTeacher from "@/composables/useIsTeacher";
 import useIsAdmin from "@/composables/useIsAdmin";
@@ -143,7 +143,7 @@ const { isTeacher } = useIsTeacher();
 <style scoped>
 
 .action-btn-container {
-    margin-top: 25px;
+    margin-top: 50px;
     margin-right: 25px;
 }
 
@@ -152,6 +152,7 @@ const { isTeacher } = useIsTeacher();
     margin-top: 50px;
     margin-left: 50px;
     margin-right: 10px;
+    margin-bottom: 50px;
     border-radius: 3px;
     padding: 20px;
 }
@@ -160,7 +161,8 @@ const { isTeacher } = useIsTeacher();
     background-color: rgb(var(--v-theme-primary));
     color: rgb(var(--v-theme-navtext));
     margin-bottom: 10px;
-    width: 500px;
+    width: 175px;
 }
+
 
 </style>

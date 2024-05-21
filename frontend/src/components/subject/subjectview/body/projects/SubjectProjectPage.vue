@@ -17,12 +17,10 @@
                     </v-row>
                 </v-card-title>
             </router-link>
-
             <v-card-text class="d-block py-3 deadline">
                 <v-icon>mdi-alarm</v-icon>
                 {{ $d(project.deadline, "long") }}
             </v-card-text>
-
             <v-card-text>
                 <h2>{{ $t("subject.project.assignment") }}</h2>
                 <div
@@ -63,13 +61,6 @@
                 </v-card-actions>
             </div>
         </v-card>
-        <v-card class="project-card" variant="text">
-            <v-card-title class="card_title">{{ $t("subject.project.group") }}</v-card-title>
-        </v-card>
-
-        <v-card class="project-card" variant="text">
-            <v-card-title class="card_title">{{ $t("subject.project.submissions") }}</v-card-title>
-        </v-card>
     </div>
 </template>
 
@@ -97,13 +88,12 @@ const renderQuillContent = (content: string) => {
 .project_description {
     font-size: 14px;
     line-height: 1.5;
-    color: #333;
     margin-top: 10px;
     margin-left: 10px;
 }
 
 .project-card {
-    background-color: white;
+    background-color: rgb(var(--v-theme-background));
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -117,17 +107,13 @@ const renderQuillContent = (content: string) => {
     color: inherit;
 }
 
-.deadline {
-    color: #181818;
-}
-
 .colored-zone {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 80px; /* Adjust the height as needed */
-    background-color: var(--color-primary); /* Desired background color */
+    background-color: rgb(var(--v-theme-primary)); /* Desired background color */
     z-index: -1; /* Ensure the colored zone is behind the card content */
 }
 
@@ -139,15 +125,6 @@ const renderQuillContent = (content: string) => {
     font-family: "Poppins", sans-serif;
     color: white;
     text-transform: capitalize;
-}
-
-.card_title {
-    font-size: 24px;
-    text-transform: capitalize;
-    display: block;
-    line-height: 1.2;
-    font-weight: 500;
-    color: black;
 }
 
 .project-container {

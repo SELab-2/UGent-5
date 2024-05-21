@@ -1,14 +1,17 @@
 <template>
-    <v-card variant="text" class="title-card" height="165">
+    <v-card variant="text" class="title-card">
         <v-row>
-            <v-col :cols="isAdmin || (isInstructor && isTeacher) ? 11 : 12" class="scrollable-col">
-                <v-card-title class="title">
-                    <div class="scrollable">
-                        {{ title }}
-                    </div>
-                </v-card-title>
+            <v-col :cols="isAdmin || (isInstructor && isTeacher) ? 11 : 12">
+                <div class="icon">
+                    <SubjectIcon :role="role" size="xxx-large" class="subject-icon"></SubjectIcon>
+                    <v-card-title class="title">
+                        <div class="scrollable">
+                            {{ title }}
+                        </div>
+                    </v-card-title>
+                </div>
                 <v-card-text>
-                    <v-chip color="primary" variant="flat" label>
+                    <v-chip color="secondary" variant="flat" label class="academyyear">
                         {{
                             `${$t("subject.academy_year")} 20${academicYear}-20${academicYear + 1}`
                         }}
@@ -19,7 +22,7 @@
                             :key="instructor!.uid"
                             variant="outlined"
                             :color="instructor!.is_teacher ? `primary` : `green`"
-                            class="ma-1 instr-chip"
+                            :class="instructor!.is_teacher ? `ma-1 instr-chip-instructor` : `ma-1 instr-chip-assistent`"
                             exact
                         >
                             <v-icon
@@ -48,12 +51,15 @@
 import type User from "@/models/User";
 import useIsAdmin from "@/composables/useIsAdmin";
 import useIsTeacher from "@/composables/useIsTeacher";
+import SubjectIcon from "@/components/subject/extra/SubjectIcon.vue";
+import {SubjectRole} from "@/models/Subject";
 
 defineProps<{
     title: string;
     academicYear: number;
     instructors: User[];
     isInstructor: boolean;
+    role: SubjectRole
 }>();
 
 const { isAdmin } = useIsAdmin();
@@ -64,12 +70,6 @@ const { isTeacher } = useIsTeacher();
 .title-card {
     background-color: rgb(var(--v-theme-background));
     padding: 20px;
-    overflow-y: auto;
-    scrollbar-width: none;
-}
-
-.title-card::-webkit-scrollbar {
-    display: none;
 }
 
 .scrollable {
@@ -98,5 +98,22 @@ const { isTeacher } = useIsTeacher();
     display: flex;
     justify-content: flex-end;
     margin-top: 10px;
+}
+
+.instr-chip-instructor {
+    background-color: #DFE5F7;
+}
+
+.instr-chip-assistent {
+    background-color: #d0efd1;
+}
+
+.academyyear{
+    border-radius: 50px;
+    border: 1px solid rgb(var(--v-theme-text));
+}
+
+.icon {
+    display: flex;
 }
 </style>
