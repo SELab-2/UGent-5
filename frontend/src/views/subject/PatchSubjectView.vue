@@ -68,10 +68,9 @@
 
 <script setup lang="ts">
 import {computed, ref, toRefs} from "vue";
-import useAcademicYear from "@/composables/useAcademicYear";
 import {
     useCreateSubjectInstructorMutation,
-    useCreateSubjectMutation, useSubjectInstructorsQuery,
+    useSubjectInstructorsQuery,
     useSubjectProjectsQuery,
     useSubjectQuery, useUpdateSubjectMutation
 } from "@/queries/Subject";
@@ -92,7 +91,7 @@ const snackbar = ref(false);
 const dialog = ref(false);
 const isFormError = ref(false);
 const subjectName = ref(null);
-const activeAcademicYear = ref(null);
+const activeAcademicYear = ref<number | null>(null);
 const currentUserAsInstructor = ref(computed(() => isInstructor.value));
 const addedInstructors = ref<Set<User>>(new Set());
 const removedInstructorUIDs = ref<Set<string>>(new Set());
@@ -109,11 +108,6 @@ const {
     isError: isSubjectError
 } = useSubjectQuery(subjectId);
 const {
-    data: projects,
-    isLoading: isProjectsLoading,
-    isError: isProjectsError,
-} = useSubjectProjectsQuery(subjectId);
-const {
     data: instructors,
     isLoading: isInstructorsLoading,
     isError: isInstructorsError,
@@ -123,7 +117,6 @@ const isLoading = computed(
     () =>
         isCurrentUserLoading.value ||
         isSubjectLoading.value ||
-        isProjectsLoading.value ||
         isInstructorsLoading.value
 );
 
@@ -131,9 +124,11 @@ const isError = computed(
     () =>
         isCurrentUserError.value ||
         isSubjectError.value ||
-        isProjectsError.value ||
         isInstructorsError.value
 );
+
+const createSubjectInstructorMutation = useCreateSubjectInstructorMutation(subjectId);
+const {mutateAsync: updateSubject} = useUpdateSubjectMutation();
 
 const isInstructor = computed(() => {
     return shownInstructors.value.some((instructor) => instructor?.uid === currentUser.value?.uid);
@@ -146,10 +141,7 @@ const isCurrentInstructor = (user: User) => {
 const name = computed<string | null>(() => subjectChanged.value ? subjectName.value : subject.value?.name);
 const academicYear = computed<number | null>(() => activeAcademicYear.value || subject.value?.academic_year);
 
-const {mutateAsync: updateSubject} = useUpdateSubjectMutation();
-
 const router = useRouter();
-
 
 const shownInstructors = computed(() => {
     return Array.from(new Set([...(instructors.value || []), ...addedInstructors.value].filter((instructor: User) => {
@@ -194,16 +186,11 @@ const onSubjectNameUpdated = (name: string) => {
     subjectChanged.value = true;
     isFormError.value = false;
 };
-
 const validateSubjectName = () => {
     if (!subjectChanged.value) {
         return true;
-    } else {
-        return name.value !== null && name.value.trim().length > 2;
     }
-};
-const validateSubjectAcademicYear = () => {
-    return academicYear.value !== null;
+    return name.value !== null && name.value.trim().length > 2;
 };
 
 const validateInstructors = () => {
@@ -220,10 +207,6 @@ async function handleSubmit() {
         return;
     }
 
-    if (!validateSubjectAcademicYear()) {
-        return;
-    }
-
     if (!validateInstructors()) {
         snackbar.value = true;
         return;
@@ -236,6 +219,7 @@ async function handleSubmit() {
 
     const addedInstructorUIDs = Array.from(addedInstructors.value).map((instructor) => instructor.uid);
 
+    console.log(subjectData)
     console.log(addedInstructorUIDs)
     console.log(removedInstructorUIDs.value)
 
