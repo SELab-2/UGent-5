@@ -94,6 +94,7 @@ export default {
         search: "Zoeken",
         userTable: {
             name: "Naam",
+            surname: "Achternaam",
             uid: "UGent ID",
             email: "Email",
             isTeacher: "Is Lesgever",

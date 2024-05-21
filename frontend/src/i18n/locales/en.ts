@@ -95,6 +95,7 @@ export default {
         search: "Search",
         userTable: {
             name: "Name",
+            surname: "Surname",
             uid: "UGent ID",
             email: "Email",
             isTeacher: "Is Teacher",
