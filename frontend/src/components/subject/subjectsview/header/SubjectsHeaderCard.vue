@@ -21,7 +21,7 @@
                 </div>
             </v-card-text>
         </div>
-        <div v-if="isInstructor && isStudent">
+        <div v-if="isInstructor && isStudent" class="checkboxes">
             <v-checkbox
                 class="subject-checkbox"
                 v-model="showInstructorSubjects"
@@ -46,6 +46,7 @@ const props = defineProps<{
     subjects: SubjectDetails[];
 }>();
 const { academicYears, subjects } = toRefs(props);
+
 const activeAcademicYear = ref(useAcademicYear());
 const showInstructorSubjects = ref(true);
 const showStudentSubjects = ref(true);
@@ -111,10 +112,6 @@ watch(activeSubjectFilter, (newVal: SubjectFilter | undefined) => {
 
 .chip-container {
     overflow-x: auto;
-}
-
-.subject-checkbox {
-    margin-top: -15px;
 }
 
 .chip {

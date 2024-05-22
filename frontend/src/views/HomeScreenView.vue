@@ -12,7 +12,7 @@
             <SubjectsCard />
         </div>
     </v-container>
-    <v-container v-else>
+    <v-container v-else class="homescreencontainer">
         <h1 v-if="isLoading">Loading...</h1>
         <TitleContainer
             v-else
@@ -49,5 +49,10 @@ const { smAndDown } = useDisplay();
 
 .mobileCard {
     margin: 15px;
+}
+
+.homescreencontainer {
+    margin-left: 40px;
+    margin-right: 40px;
 }
 </style>

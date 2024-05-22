@@ -130,6 +130,7 @@ const onAcademicYearChanged = (academicYear: number) => {
 
 .no-results {
     text-align: center;
+    margin: 50px;
 }
 
 .subjectsview {

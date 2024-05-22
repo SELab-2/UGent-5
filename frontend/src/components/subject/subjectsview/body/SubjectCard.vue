@@ -1,6 +1,6 @@
 <template>
     <router-link :to="{ name: 'subject', params: { subjectId: subject.id } }" class="router-link">
-        <v-card class="subject-card" height="16vh">
+        <v-card class="subject-card">
             <SubjectIcon :role="role" size="xx-large" class="subject-icon"></SubjectIcon>
             <v-card-title class="subject-title">
                 {{ subject?.name }}
@@ -33,13 +33,13 @@ defineProps<{
     justify-content: space-between;
     position: relative;
     width: 100%;
+    height: 100px;
     background-color: rgb(var(--v-theme-secondary));
     border-radius: 3px;
 }
 
 .subject-title {
     color: rgb(var(--v-theme-text));
-    font-size: 3vh;
 }
 
 .subject-icon {
