@@ -152,7 +152,7 @@ async function createGroup() {
     margin: 25px;
 }
 
-.buttoncontainer{
+.buttoncontainer {
     min-width: 200px;
 }
 @media (max-width: 900px) {
@@ -167,9 +167,8 @@ async function createGroup() {
         top: 10px;
     }
 
-    .projectinfo{
+    .projectinfo {
         position: relative;
     }
 }
-
 </style>

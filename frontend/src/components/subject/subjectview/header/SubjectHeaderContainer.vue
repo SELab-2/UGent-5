@@ -35,6 +35,4 @@ const userRole = computed(() => {
 });
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
