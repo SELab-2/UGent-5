@@ -29,7 +29,7 @@
                     <SubmissionTeacherCard
                         class="ma-3"
                         v-for="submission in submissions"
-                        :key="submission"
+                        :key="submission.id"
                         :submission="submission"
                         :deadline="project.deadline"
                     />

@@ -24,7 +24,7 @@
                         v-model="activeAcademicYear"
                         variant="outlined"
                         :items="academicYearItems"
-                        :item-title="(item) => `20${item}-20${item + 1}`"
+                        :item-title="(item) => `${item}-${item + 1}`"
                         :item-value="(item) => item"
                         :label="$t('subject.academy_year')"
                         required

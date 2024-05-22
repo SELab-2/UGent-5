@@ -1,5 +1,5 @@
 <template>
-    <div class="coursebtn" @click="navigateToCourse">
+    <router-link class="coursebtn" :to="`/subjects/${subject.id}`">
         <div>
             <h3>{{ subject.name }}</h3>
             <v-skeleton-loader v-if="isInstructorsLoading" type="text" />
@@ -8,12 +8,11 @@
             </p>
         </div>
         <v-icon class="chevron" icon="mdi-chevron-right" />
-    </div>
+    </router-link>
 </template>
 
 <script setup lang="ts">
 import type Subject from "@/models/Subject";
-import router from "@/router";
 import { toRefs, computed } from "vue";
 import { useSubjectInstructorsQuery } from "@/queries/Subject";
 
@@ -34,10 +33,6 @@ const sortedInstructors = computed(() => {
         return b.is_teacher - a.is_teacher;
     });
 });
-
-const navigateToCourse = () => {
-    router.push(`/subjects/${subject.value.id}`);
-};
 </script>
 
 <style scoped>
@@ -51,6 +46,8 @@ const navigateToCourse = () => {
     cursor: pointer;
     background-color: rgb(var(--v-theme-background));
     border-radius: 2px;
+    text-decoration: none;
+    color: inherit;
 }
 
 .coursebtn:hover {
