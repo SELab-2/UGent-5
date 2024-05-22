@@ -97,6 +97,8 @@ async def create_subject_instructor(
 ):
     if await service.is_instructor(db, subject_id, user.uid):
         raise AlreadyInstructor()
+    if await service.is_student(db, subject_id, user.uid):
+        raise AlreadyRegistered()
     await service.add_instructor_to_subject(db, subject_id, user.uid)
 
 
@@ -129,6 +131,8 @@ async def add_student_to_subject(
     user: User = Depends(retrieve_user),
     db: AsyncSession = Depends(get_async_db)
 ) -> Subject:
+    if await service.is_instructor(db, subject.id, user.uid):
+        raise AlreadyInstructor()
     if await service.is_student(db, subject.id, user.uid):
         raise AlreadyRegistered()
     await service.create_subject_student(db, subject.id, user.uid)
