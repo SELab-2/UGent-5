@@ -2,7 +2,7 @@ import type User from "@/models/User";
 import type Subject from "@/models/Subject";
 import type { UserSubjectList } from "@/models/Subject";
 import { authorized_fetch } from "@/services";
-import type SubjectForm from "@/models/Subject";
+import type { SubjectForm } from "@/models/Subject";
 
 /**
  * Fetches the subject with the given ID.
@@ -51,7 +51,10 @@ export async function registerToSubject(subjectUuid: string): Promise<Subject> {
 }
 
 export async function getSubjectUuid(subjectId: number): Promise<string> {
-    const result = await authorized_fetch(`/api/subjects/${subjectId}/uuid`, { method: "GET" });
+    const result = await authorized_fetch<{ subject_uuid: string }>(
+        `/api/subjects/${subjectId}/uuid`,
+        { method: "GET" }
+    );
     return result.subject_uuid;
 }
 

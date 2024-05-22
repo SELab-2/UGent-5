@@ -56,7 +56,7 @@
                     >
                     </ModifySubjectHeaderContainer>
                     <ModifySubjectBody
-                        :current-user="currentUser"
+                        :current-user="currentUser!"
                         :instructors="shownInstructors"
                         @add-instructor="addInstructor"
                         @remove-instructor="removeInstructor"
@@ -79,8 +79,14 @@
 
 <script setup lang="ts">
 import { computed, ref, toRefs } from "vue";
-import { useSubjectInstructorsQuery, useSubjectQuery } from "@/queries/Subject";
-import type SubjectForm from "@/models/Subject";
+import {
+    useCreateSubjectInstructorMutation,
+    useDeleteSubjectInstructorMutation,
+    useSubjectInstructorsQuery,
+    useSubjectQuery,
+    useUpdateSubjectMutation,
+} from "@/queries/Subject";
+import type { SubjectForm } from "@/models/Subject";
 import type User from "@/models/User";
 import { useCurrentUserQuery } from "@/queries/User";
 import { useRouter } from "vue-router";
@@ -97,12 +103,12 @@ const snackbar = ref(false);
 const dialog = ref(false);
 const isSubjectNameError = ref(false);
 const isSubjectMailError = ref(false);
-const subjectName = ref(null);
-const subjectMail = ref(null);
+const subjectName = ref("");
+const subjectMail = ref("");
 const activeAcademicYear = ref<number | null>(null);
 const currentUserAsInstructor = ref(computed(() => isInstructor.value));
 const addedInstructors = ref<Set<User>>(new Set());
-const removedInstructorUIDs = ref<Set<string>>(new Set());
+const removedInstructors = ref<Set<User>>(new Set());
 const subjectNameChanged = ref(false);
 const subjectMailChanged = ref(false);
 
@@ -122,6 +128,10 @@ const {
     isError: isInstructorsError,
 } = useSubjectInstructorsQuery(subjectId);
 
+const { mutateAsync: updateSubject } = useUpdateSubjectMutation();
+const { mutateAsync: createSubjectInstructor } = useCreateSubjectInstructorMutation();
+const { mutateAsync: deleteSubjectInstructor } = useDeleteSubjectInstructorMutation();
+
 const isLoading = computed(
     () => isCurrentUserLoading.value || isSubjectLoading.value || isInstructorsLoading.value
 );
@@ -140,15 +150,9 @@ const isCurrentInstructor = (user: User) => {
     );
 };
 
-const name = computed<string | null>(() =>
-    subjectNameChanged.value ? subjectName.value : subject.value?.name
-);
-const academicYear = computed<number | null>(
-    () => activeAcademicYear.value || subject.value?.academic_year
-);
-const mail = computed<string | null>(() =>
-    subjectMailChanged.value ? subjectMail.value : subject.value?.email
-);
+const name = computed(() => (subjectNameChanged.value ? subjectName.value : subject.value!.name));
+const academicYear = computed(() => activeAcademicYear.value || subject.value!.academic_year);
+const mail = computed(() => (subjectMailChanged.value ? subjectMail.value : subject.value!.email));
 
 const router = useRouter();
 
@@ -156,7 +160,7 @@ const shownInstructors = computed(() => {
     return Array.from(
         new Set(
             [...(instructors.value || []), ...addedInstructors.value].filter((instructor: User) => {
-                return !removedInstructorUIDs.value.has(instructor.uid);
+                return !removedInstructors.value.has(instructor);
             })
         )
     ).sort((a, b) => {
@@ -172,24 +176,23 @@ const shownInstructors = computed(() => {
 
 const addInstructor = (instructor: User) => {
     if (isCurrentInstructor(instructor)) {
-        removedInstructorUIDs.value.delete(instructor.uid);
-    } else {
-        addedInstructors.value.add(instructor);
+        removedInstructors.value.delete(instructor);
     }
+    addedInstructors.value.add(instructor);
 };
 
 const removeInstructor = (instructor: User) => {
     if (isCurrentInstructor(instructor)) {
-        removedInstructorUIDs.value.add(instructor.uid);
+        removedInstructors.value.add(instructor);
     }
     addedInstructors.value.delete(instructor);
 };
 
 const onCurrentUserAsInstructorChanged = (isCurrentUserInstructor: boolean) => {
     if (isCurrentUserInstructor) {
-        removedInstructorUIDs.value.delete(currentUser.value.uid);
+        removedInstructors.value.delete(currentUser.value!);
     } else {
-        removedInstructorUIDs.value.add(currentUser.value.uid);
+        removedInstructors.value.add(currentUser.value!);
     }
 };
 
@@ -248,36 +251,27 @@ async function handleSubmit() {
         academic_year: academicYear.value,
     };
 
-    const addedInstructorUIDs = Array.from(addedInstructors.value).map(
-        (instructor) => instructor.uid
-    );
-
-    console.log(subjectData);
-    console.log(addedInstructorUIDs);
-    console.log(removedInstructorUIDs.value);
-
-    /*
     try {
-        await updateSubject({
-            subjectData
-        });
+        await updateSubject({ subject: subjectData, subjectId: subjectId.value });
 
-        for (const instructor of removedInstructorUIDs) {
-            await removeSubjectInstructorMutation.mutateAsync(instructor);
+        for (let instructor of removedInstructors.value) {
+            await deleteSubjectInstructor({
+                subjectId: subjectId.value,
+                user: instructor,
+            });
         }
 
-        for (const instructor of addedInstructorUIDs) {
-            await createSubjectInstructorMutation.mutateAsync(instructor);
+        for (let instructor of addedInstructors.value) {
+            await createSubjectInstructor({
+                subjectId: subjectId.value,
+                user: instructor,
+            });
         }
 
-        await router.push({name: 'subject', params: {subjectId: subjectId.value}});
-
-
+        await router.push({ name: "subject", params: { subjectId: subjectId.value } });
     } catch (error) {
         console.error("Error during subject alteration:", error);
     }
-
-     */
 }
 </script>
 
