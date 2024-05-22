@@ -211,7 +211,7 @@ router.beforeEach(async (to, from, next) => {
     }
 
     let new_next = next;
-    for (let middleware of middlewares) {
+    for (const middleware of middlewares) {
         const context: MiddlewareContext = { to, from, next: new_next, router };
         const { next: returned_next, final } = await middleware(context);
         if (final) {
