@@ -79,7 +79,7 @@ async def join_group(
     if len(group.members) >= project.capacity:
         raise MaxCapacity()
 
-    groups = await retrieve_groups_by_user(user,db)
+    groups = await retrieve_groups_by_user(user, db)
     if any([group.project_id == g.project_id for g in groups]):
         raise AlreadyInGroupOfProject()
 

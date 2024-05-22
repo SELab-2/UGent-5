@@ -46,7 +46,9 @@ function onAddFilesClick() {
 
 function updateFiles(event: Event) {
     const files = (event.target as HTMLInputElement).files!;
-    const unique_files = Array.from(files).filter((file) => !inputFiles.value.map(file => file.name).includes(file.name));
+    const unique_files = Array.from(files).filter(
+        (file) => !inputFiles.value.map((file) => file.name).includes(file.name)
+    );
     inputFiles.value.push(...unique_files);
 }
 

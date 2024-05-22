@@ -33,7 +33,6 @@ const sortedInstructors = computed(() => {
         return b.is_teacher - a.is_teacher;
     });
 });
-
 </script>
 
 <style scoped>
