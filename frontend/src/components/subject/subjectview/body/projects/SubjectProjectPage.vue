@@ -25,7 +25,7 @@
                 <h2 v-if="project.capacity > 1 && !isLoading && group !== null" class="group">
                     {{ $t("project.group", { number: group?.num }) }}
                 </h2>
-                <h2 v-else-if="!isError" class="group">
+                <h2 v-else-if="!isError && project.capacity > 1" class="group">
                     {{ $t("project.no_group") }}
                 </h2>
                 <h2>{{ $t("subject.project.assignment") }}</h2>

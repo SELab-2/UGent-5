@@ -63,7 +63,7 @@ export default {
         group_button: "Vind groep",
         needhelp_button: "Hulp nodig",
         group: "Groep {number}",
-        no_group: "Nog niet insgeschreven in een groep",
+        no_group: "Nog niet ingeschreven in een groep",
         assignment: "Opdracht:",
         myProject: "Mijn projecten",
         capacity_group: "Capaciteit: ",
