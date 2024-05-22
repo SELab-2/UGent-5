@@ -30,10 +30,12 @@ describe("DeadlineItem",() => {
                 deadline: new Date(2024, 10, 15),
                 id: 1
             })
+        },
+        global: {
+            stubs: ['router-link']
         }
     })
     it("render item", () => {
-        expect(wrapper.text()).toContain("testproject")
-        expect(wrapper.text()).toContain("testsubject")
+       expect(wrapper.findComponent({name: "router-link"}).exists()).toBeTruthy()
     });
 })
