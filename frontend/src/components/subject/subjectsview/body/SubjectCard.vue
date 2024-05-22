@@ -40,13 +40,11 @@ defineProps<{
 .subject-title {
     color: rgb(var(--v-theme-text));
     font-size: 3vh;
-    position: absolute;
-    bottom: 0;
 }
 
 .subject-icon {
     position: absolute;
-    top: 10px;
+    bottom: 10px;
     right: 15px;
     color: rgb(var(--v-theme-text));
 }

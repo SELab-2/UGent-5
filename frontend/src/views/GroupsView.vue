@@ -2,8 +2,8 @@
     <v-container>
         <h1 v-if="isDataLoading" class="welcome">{{ $t("default.loading.loading_page") }}</h1>
         <h1 v-else-if="isDataError" class="welcome">{{ $t("group.error") }}</h1>
-        <v-row v-else class="projectInfo">
-            <v-col cols="10">
+        <v-row v-else class="projectinfo">
+            <v-col class="col-sm-12 col-md-6">
                 <h2>{{ "Project: " + project!.name }}</h2>
                 <StudentsDialog :students="allStudents" :title="$t('group.all_students')" />
                 <v-divider class="border-opacity-50"></v-divider>
@@ -32,7 +32,7 @@
                     $t("group.create_group")
                 }}</v-btn>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="2" class="buttoncontainer">
                 <BackButton
                     title="project.to_project"
                     :destination="`/project/${projectId}`"
@@ -133,6 +133,7 @@ async function createGroup() {
 <style scoped>
 .v-container {
     padding: 25px;
+    position: relative;
 }
 
 .group-card {
@@ -150,4 +151,25 @@ async function createGroup() {
 .backbutton {
     margin: 25px;
 }
+
+.buttoncontainer{
+    min-width: 200px;
+}
+@media (max-width: 900px) {
+    .backbutton {
+        margin-right: 0;
+    }
+
+    .buttoncontainer {
+        z-index: 10;
+        position: absolute;
+        right: 20px;
+        top: 10px;
+    }
+
+    .projectinfo{
+        position: relative;
+    }
+}
+
 </style>

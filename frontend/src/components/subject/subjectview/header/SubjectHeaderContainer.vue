@@ -12,8 +12,6 @@
 <script setup lang="ts">
 import SubjectHeaderCard from "@/components/subject/subjectview/header/SubjectHeaderCard.vue";
 import type User from "@/models/User";
-import SubjectHeaderImage from "@/components/subject/subjectview/header/SubjectHeaderImage.vue";
-import SubjectIcon from "@/components/subject/extra/SubjectIcon.vue";
 import { SubjectRole } from "@/models/Subject";
 import { computed, toRefs } from "vue";
 
@@ -38,7 +36,5 @@ const userRole = computed(() => {
 </script>
 
 <style scoped>
-.header {
-    display: flex;
-}
+
 </style>

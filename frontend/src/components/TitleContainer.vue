@@ -1,6 +1,6 @@
 <template>
     <v-card class="title-card" variant="flat" color="primary">
-        <v-card-title class="title"> {{ title }}</v-card-title>
+        <v-card-title class="title"> {{ props.title }}</v-card-title>
         <slot></slot>
     </v-card>
 </template>
