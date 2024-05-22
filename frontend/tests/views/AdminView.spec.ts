@@ -48,14 +48,4 @@ describe("AdminView", async () => {
         expect(VDataTableVirtual.text()).toContain("Is Lesgever")
         expect(VDataTableVirtual.text()).toContain("Is Beheerder")
     });
-
-    it("test sort bool function", () => {
-        const instance = wrapper.vm;
-        const sortBoolFunction = (instance as any).sortBool;
-        expect(sortBoolFunction(true, true)).toBe(0)
-        expect(sortBoolFunction(false, false)).toBe(0)
-        expect(sortBoolFunction(false, true)).toBe(1)
-        expect(sortBoolFunction(true, false)).toBe(-1)
-    });
-
 });

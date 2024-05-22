@@ -7,7 +7,7 @@
                 </v-card-title>
 
                 <v-card-text>
-                    <div class="chip_container">
+                    <div class="chip-container">
                         <v-chip-group mandatory v-model="activeAcademicYear" column>
                             <v-chip
                                 v-for="(academicYear, index) in academicYears"
@@ -103,13 +103,8 @@ watch(activeSubjectFilter, (newVal: SubjectFilter | undefined) => {
     font-family: "Poppins", sans-serif;
 }
 
-.chip_container {
+.chip-container {
     overflow-x: auto;
-}
-
-.checkbox container {
-    display: flex;
-    justify-content: flex-end;
 }
 
 .subject-checkbox {

@@ -120,6 +120,11 @@ const router = createRouter({
             component: () => import("../views/subject/SubjectsView.vue"),
         },
         {
+            path: "/subjects/create",
+            name: "create-subject",
+            component: () => import("../views/subject/CreateSubjectView.vue"),
+        },
+        {
             path: "/subjects/:subjectId(\\d+)",
             name: "subject",
             component: () => import("../views/subject/SubjectView.vue"),

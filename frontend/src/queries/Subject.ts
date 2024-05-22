@@ -10,12 +10,15 @@ import {
     getSubjectByUuid,
     registerToSubject,
     getSubjectUuid,
+    createSubject,
+    createSubjectInstructor,
 } from "@/services/subject";
 import { getSubjectProjects } from "@/services/project";
 import type User from "@/models/User";
 import type Subject from "@/models/Subject";
 import type { UserSubjectList } from "@/models/Subject";
 import type Project from "@/models/Project";
+import type SubjectForm from "@/models/Subject";
 
 function SUBJECT_QUERY_KEY(subjectId: number | string): (string | number)[] {
     return ["subject", subjectId];
@@ -147,9 +150,67 @@ export function useRegisterToSubjectMutation(): UseMutationReturnType<
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: SUBJECTS_QUERY_KEY() });
         },
-        onError: (error) => {
-            console.error(error);
+        onError: () => {
             alert("Failed to register to subject");
+        },
+    });
+}
+
+/**
+ * Mutation composable for creating a subject
+ */
+export function useCreateSubjectMutation(): UseMutationReturnType<
+    number,
+    Error,
+    SubjectForm,
+    void
+> {
+    const queryClient = useQueryClient();
+    return useMutation<number, Error, SubjectForm, void>({
+        mutationFn: createSubject,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: SUBJECTS_QUERY_KEY() });
+        },
+        onError: () => {
+            alert("Could not create subject. Please try again.");
+        },
+    });
+}
+
+/**
+ * Mutation composable for creating subject instructor
+ */
+
+export function useCreateSubjectInstructorMutation(): UseMutationReturnType<
+    void,
+    Error,
+    { user: User; subjectId: number },
+    { previousUsers: User[] }
+> {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: ({ user, subjectId }) => createSubjectInstructor(subjectId, user.uid),
+        onMutate: ({ subjectId, user }) => {
+            const previousUsers = queryClient.getQueryData<User[]>(
+                SUBJECT_INSTRUCTORS_QUERY_KEY(subjectId)
+            );
+            queryClient.cancelQueries({ queryKey: SUBJECT_INSTRUCTORS_QUERY_KEY(subjectId) });
+            const newUsers = previousUsers ? [...previousUsers] : [];
+            newUsers.push(user);
+            queryClient.setQueryData(SUBJECT_INSTRUCTORS_QUERY_KEY(subjectId), newUsers);
+            return { previousUsers: previousUsers || [] };
+        },
+        onSuccess: (_, { subjectId }) => {
+            queryClient.invalidateQueries({
+                queryKey: SUBJECT_INSTRUCTORS_QUERY_KEY(subjectId),
+            });
+        },
+        onError: (_, { subjectId }, ctx) => {
+            queryClient.setQueryData<User[]>(
+                SUBJECT_INSTRUCTORS_QUERY_KEY(subjectId),
+                () => ctx!.previousUsers!
+            );
+            alert("Could not create subject instructor. Please try again.");
         },
     });
 }
