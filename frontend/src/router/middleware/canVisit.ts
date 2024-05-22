@@ -1,4 +1,4 @@
-import { computed, inject, type Ref } from "vue";
+import { computed, type Ref } from "vue";
 import type { Middleware, MiddlewareContext } from "./index";
 import { QueryClient } from "@tanstack/vue-query";
 import useIsAdmin from "@/composables/useIsAdmin";
@@ -15,30 +15,34 @@ export interface CanVisitCondition {
     ): { condition: Ref<boolean>; isLoading: Ref<boolean> };
 }
 
+function useAwaitLoading(isLoading: Ref<boolean>): Promise<void> {
+    return new Promise<void>((resolve) => {
+        const interval = setInterval(() => {
+            if (!isLoading.value) {
+                clearInterval(interval);
+                resolve();
+            }
+        }, 10);
+    });
+}
+
 function useCanVisit(useCondition: CanVisitCondition): Middleware {
     return async (context) => {
         const { next } = context;
-        // TODO: Figure out why this doesn't work anymore
-        // const queryClient = inject<QueryClient>("queryClient", new QueryClient());
         const queryClient = new QueryClient();
+        const { condition: isAdmin, isLoading: isAdminLoading } = useIsAdminCondition(
+            queryClient,
+            context
+        );
         const { condition, isLoading } = useCondition(queryClient, context);
-        const awaitLoading = () =>
-            new Promise<void>((resolve) => {
-                const interval = setInterval(() => {
-                    if (!isLoading.value) {
-                        clearInterval(interval);
-                        resolve();
-                    }
-                }, 10);
-            });
-        await awaitLoading();
-        if (!condition.value) {
-            return {
-                next: () => next({ path: "not-found" }),
-                final: true,
-            };
+        await useAwaitLoading(computed(() => isAdminLoading.value || isLoading.value));
+        if (isAdmin.value || condition.value) {
+            return { next, final: false };
         }
-        return { next, final: false };
+        return {
+            next: () => next({ path: "not-found" }),
+            final: true,
+        };
     };
 }
 
