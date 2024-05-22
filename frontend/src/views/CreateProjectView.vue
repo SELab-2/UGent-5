@@ -304,7 +304,7 @@ async function submitForm() {
         } else {
             await createProject(projectData);
         }
-        handleFiles(projectId.value);
+        handleFiles(projectData.project_id);
     } catch (error) {
         console.error("Error during project or group creation or file upload:", error);
         setErrorAlert("An unexpected error occurred. Please try again.");

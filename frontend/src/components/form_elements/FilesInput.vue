@@ -45,9 +45,9 @@ function onAddFilesClick() {
 }
 
 function updateFiles(event: Event) {
-    // todo: check of meerdere identieke filenames aanwezig zijn
     const files = (event.target as HTMLInputElement).files!;
-    inputFiles.value.push(...files);
+    const unique_files = Array.from(files).filter((file) => !inputFiles.value.map(file => file.name).includes(file.name));
+    inputFiles.value.push(...unique_files);
 }
 
 function onDeleteClick(index: number) {
