@@ -27,7 +27,7 @@ project = {
     "requirements": [],
     "test_files": [],
 }
-group_data = {"team_name": "test group", "project_id": 0}
+group_data = {"project_id": 0}
 
 
 @pytest_asyncio.fixture
@@ -41,14 +41,13 @@ async def group_id(client: AsyncClient, db: AsyncSession, project_id: int):
 
 @pytest.mark.asyncio
 async def test_create_group(client: AsyncClient, db: AsyncSession, project_id: int):
-    group_data = {"team_name": "test group", "project_id": project_id}
+    group_data = {"project_id": project_id}
     response = await client.post("/api/groups/", json=group_data)
     assert response.status_code == 403
 
     await set_teacher(db, "test", True)
     response = await client.post("/api/groups/", json=group_data)
     assert response.status_code == 201  # Created
-    assert response.json()["team_name"] == group_data["team_name"]
 
 
 @pytest.mark.asyncio
@@ -70,9 +69,20 @@ async def test_join_user(client: AsyncClient, group_id: int):
 @pytest.mark.asyncio
 async def test_remove_user(client: AsyncClient, group_id: int):
     response = await client.post(f"/api/groups/{group_id}")
+    response = await client.post(f"/api/groups/{group_id}/leave")
+    assert response.status_code == 200
+    response = await client.post(f"/api/groups/{group_id}/leave")
+    assert response.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_delete_group(client: AsyncClient, group_id: int, db: AsyncSession):
+    response = await client.delete(f"/api/groups/{group_id}")
+    assert response.status_code == 403  # Forbidden
+    await set_teacher(db, "test", True)
     response = await client.delete(f"/api/groups/{group_id}")
     assert response.status_code == 200
-    response = await client.delete(f"/api/groups/{group_id}")
+    response = await client.get(f"/api/groups/{group_id}")
     assert response.status_code == 404
 
 
@@ -87,7 +97,7 @@ async def test_list_submissions(client: AsyncClient, group_id: int, db: AsyncSes
     assert response.status_code == 200
     assert response.json() == []
 
-    response = await client.delete(f"/api/groups/{group_id}")
+    response = await client.post(f"/api/groups/{group_id}/leave")
 
     response = await client.get(f"/api/groups/{group_id}/submissions")
     assert response.status_code == 403  # No permission again
@@ -109,7 +119,7 @@ async def test_capacity_group(client: AsyncClient, group_id: int, db:  AsyncSess
 
     username = "test2"
     token = create_jwt_token(username)
-    await create_user(db, UserCreate(uid=username, given_name="tester", mail="test@test.test"))
+    await create_user(db, UserCreate(uid=username, given_name="tester", surname="testy", mail="test@test.test"))
 
     # Join group
     response = await client.post(f"/api/groups/{group_id}", headers={"Authorization": f"Bearer {token.token}"})

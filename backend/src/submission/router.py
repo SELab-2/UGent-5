@@ -2,7 +2,7 @@ import os
 from typing import Sequence
 
 from fastapi import APIRouter, Depends, BackgroundTasks
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.dependencies import get_async_db
@@ -15,12 +15,13 @@ from src.submission.dependencies import (
 )
 from src.submission.exceptions import FileNotFound
 from src.submission.exceptions import FilesNotFound
-from src.submission.utils import upload_files
+from src.submission.utils import upload_files, remove_files, zip_stream
 from src.user.dependencies import admin_user_validation, get_authenticated_user
 from src.user.schemas import User
 from . import service
 from .models import Status
 from .schemas import File, Submission, SubmissionCreate
+from ..docker_tests.dependencies import get_docker_client
 from ..docker_tests.docker_tests import launch_docker_tests
 from ..docker_tests.utils import submission_path, get_files_from_dir, artifacts_path
 
@@ -47,7 +48,8 @@ async def create_submission(background_tasks: BackgroundTasks,
                             submission_in: SubmissionCreate = Depends(),
                             group: Group = Depends(retrieve_group),
                             user: User = Depends(get_authenticated_user),
-                            db: AsyncSession = Depends(get_async_db)):
+                            db: AsyncSession = Depends(get_async_db),
+                            client=Depends(get_docker_client)):
     project = await retrieve_project(group.project_id, user, db)
     test_files_uuid = project.test_files_uuid
     submission_uuid = upload_files(submission_in.files, project)
@@ -57,13 +59,14 @@ async def create_submission(background_tasks: BackgroundTasks,
     status = Status.InProgress if docker_tests_present else Status.Accepted
 
     submission = await service.create_submission(
-        db, uuid=submission_uuid, remarks=submission_in.remarks, status=status, group_id=group.id, project_id=group.project_id
+        db, uuid=submission_uuid, remarks=submission_in.remarks, status=status, group_id=group.id,
+        project_id=group.project_id
     )
 
     # launch docker tests
     if docker_tests_present:
-        background_tasks.add_task(launch_docker_tests, db,
-                                  submission.id, submission.files_uuid, test_files_uuid)
+        background_tasks.add_task(launch_docker_tests,
+                                  submission.id, submission.files_uuid, test_files_uuid, db, client)
 
     return submission
 
@@ -71,8 +74,10 @@ async def create_submission(background_tasks: BackgroundTasks,
 @router.delete("/{submission_id}",
                dependencies=[Depends(admin_user_validation)],
                status_code=200)
-async def delete_submision(submission_id: int, db: AsyncSession = Depends(get_async_db)):
-    await service.delete_submission(db, submission_id)
+async def delete_submission(submission: Submission = Depends(retrieve_submission),
+                            db: AsyncSession = Depends(get_async_db)):
+    remove_files(submission.files_uuid)
+    await service.delete_submission(db, submission.id)
 
 
 @router.get("/{submission_id}/files", response_model=list[File])
@@ -82,13 +87,19 @@ async def get_files(submission: Submission = Depends(retrieve_submission)):
 
 
 @router.get("/{submission_id}/files/{path:path}", response_class=FileResponse)
-async def get_file(path: str, submission: Submission = Depends(get_submission)):
+async def get_file(path: str, submission: Submission = Depends(retrieve_submission)):
     path = submission_path(submission.files_uuid, path)
 
     if not os.path.isfile(path):
         raise FileNotFound
 
     return FileResponse(path=path)
+
+
+@router.get("/{submission_id}/zip", response_class=StreamingResponse)
+async def get_all_files(submission: Submission = Depends(retrieve_submission), db: AsyncSession = Depends(get_async_db)):
+    data = await zip_stream(db, submission)
+    return StreamingResponse(data, media_type="application/zip")
 
 
 @router.get("/{submission_id}/artifacts", response_model=list[File])
@@ -100,7 +111,7 @@ async def get_artifacts(submission: Submission = Depends(retrieve_submission)):
 
 
 @router.get("/{submission_id}/artifacts/{path:path}", response_class=FileResponse)
-async def get_artifact(path: str, submission: Submission = Depends(get_submission)):
+async def get_artifact(path: str, submission: Submission = Depends(retrieve_submission)):
     if submission.status == Status.InProgress:
         raise FileNotFound
 

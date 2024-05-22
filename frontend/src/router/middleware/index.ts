@@ -7,17 +7,9 @@ export interface MiddlewareContext {
     router: Router;
 }
 
-export type Middleware = (_: MiddlewareContext) => void;
-
-export function nextFactory(
-    context: MiddlewareContext,
-    middleware: Array<Middleware>,
-    index: number
-): () => void {
-    const currentMiddleware = middleware[index];
-    if (!currentMiddleware) {
-        return context.next;
-    }
-    const nextMiddleware = nextFactory(context, middleware, index + 1);
-    return () => currentMiddleware({ ...context, next: nextMiddleware });
+export interface MiddlewareResponse {
+    next: NavigationGuardNext;
+    final: boolean;
 }
+
+export type Middleware = (_: MiddlewareContext) => Promise<MiddlewareResponse>;

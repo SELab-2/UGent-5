@@ -6,7 +6,7 @@
 
 ```sh
 # Create a python virtual environment
-python -m venv venv
+python3.12 -m venv venv
 # Activate the environment
 source venv/bin/activate
 # Install dependencies
@@ -70,6 +70,8 @@ DATABASE_URI="postgresql://username:password@localhost:5432/dbname"
 ```sh
 alembic upgrade head
 ```
+
+You can find more info about alembic [here](alembic/README.md).
 
 #### Managing the database
 ```sh

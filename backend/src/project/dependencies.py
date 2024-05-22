@@ -22,8 +22,6 @@ async def retrieve_project(project_id: int,
 
 
 async def retrieve_test_files_uuid(project: Project = Depends(retrieve_project)):
-    if project.test_files_uuid is None:
-        raise TestsNotFound
     return project.test_files_uuid
 
 
@@ -42,6 +40,5 @@ async def patch_permission_validation(
     db: AsyncSession = Depends(get_async_db),
 ):
     await user_permission_validation(project.subject_id, user, db)
-
 
 delete_permission_validation = patch_permission_validation
