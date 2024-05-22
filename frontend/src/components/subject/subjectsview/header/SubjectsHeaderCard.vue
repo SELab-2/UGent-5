@@ -1,41 +1,38 @@
 <template>
-    <v-card variant="text" class="title-card" width="100%">
-        <v-row>
-            <v-col>
-                <v-card-title class="title">
-                    {{ $t("subjects.title") }}
-                </v-card-title>
-
-                <v-card-text>
-                    <div class="chip-container">
-                        <v-chip-group mandatory v-model="activeAcademicYear" column>
-                            <v-chip
-                                v-for="(academicYear, index) in academicYears"
-                                :key="index"
-                                :value="academicYear"
-                                color="primary"
-                                class="ma-1"
-                                variant="tonal"
-                            >
-                                {{ `${academicYear}-${academicYear + 1}` }}
-                            </v-chip>
-                        </v-chip-group>
-                    </div>
-                </v-card-text>
-            </v-col>
-            <v-col v-if="isInstructor && isStudent" cols="6">
-                <v-checkbox
-                    class="subject-checkbox"
-                    v-model="showInstructorSubjects"
-                    :label="$t('subjects.instructor_subjects')"
-                ></v-checkbox>
-                <v-checkbox
-                    class="subject-checkbox"
-                    v-model="showStudentSubjects"
-                    :label="$t('subjects.student_subjects')"
-                ></v-checkbox>
-            </v-col>
-        </v-row>
+    <v-card variant="flat" class="title-card">
+        <div class="leftcontent">
+            <v-card-title class="title">
+                {{ $t("subjects.title") }}
+            </v-card-title>
+            <v-card-text>
+                <div class="chip-container">
+                    <v-chip-group mandatory v-model="activeAcademicYear" column>
+                        <v-chip
+                            v-for="(academicYear, index) in academicYears"
+                            :key="index"
+                            :value="academicYear"
+                            class="ma-1 chip"
+                            color="secondary"
+                            variant="flat"
+                        >
+                            {{ `${academicYear}-${academicYear + 1}` }}
+                        </v-chip>
+                    </v-chip-group>
+                </div>
+            </v-card-text>
+        </div>
+        <div v-if="isInstructor && isStudent" class="checkboxes">
+            <v-checkbox
+                class="subject-checkbox"
+                v-model="showInstructorSubjects"
+                :label="$t('subjects.instructor_subjects')"
+            ></v-checkbox>
+            <v-checkbox
+                class="subject-checkbox"
+                v-model="showStudentSubjects"
+                :label="$t('subjects.student_subjects')"
+            ></v-checkbox>
+        </div>
     </v-card>
 </template>
 
@@ -49,6 +46,7 @@ const props = defineProps<{
     subjects: SubjectDetails[];
 }>();
 const { academicYears, subjects } = toRefs(props);
+
 const activeAcademicYear = ref(useAcademicYear());
 const showInstructorSubjects = ref(true);
 const showStudentSubjects = ref(true);
@@ -90,24 +88,38 @@ watch(activeSubjectFilter, (newVal: SubjectFilter | undefined) => {
 
 <style scoped>
 .title-card {
-    background-color: white;
+    position: relative;
+    display: flex;
     padding: 20px;
+    color: white;
+}
+.title-card:after {
+    content: "";
+    background: url("@/assets/ugent_background.png") no-repeat center center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.4;
 }
 
 .title {
     font-size: 32px;
-    letter-spacing: -0.5px;
-    text-transform: capitalize;
-    font-weight: bold;
     margin-bottom: 12px;
-    font-family: "Poppins", sans-serif;
 }
 
 .chip-container {
     overflow-x: auto;
 }
 
-.subject-checkbox {
-    margin-top: -15px;
+.chip {
+    color: rgb(var(--v-theme-text));
+    background-color: rgb(var(--v-theme-background));
+}
+
+.leftcontent {
+    max-width: 400px;
 }
 </style>

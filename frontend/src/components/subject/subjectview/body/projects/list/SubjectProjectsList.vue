@@ -9,7 +9,7 @@
                     v-for="(filter, index) in filterOptions"
                     :key="index"
                     :value="FilterOptions[filter]"
-                    color="primary"
+                    color="text"
                     variant="tonal"
                 >
                     {{ $t(`subject.projectsPage.${filter.toLowerCase()}`) }}
@@ -73,7 +73,7 @@ watch(activeButton, (newVal: string) => {
 
 <style scoped>
 .projects-card {
-    background-color: white;
+    background-color: rgb(var(--v-theme-background));
     padding: 20px;
     display: flex;
     flex-direction: column;

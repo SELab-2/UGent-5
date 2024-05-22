@@ -1,24 +1,14 @@
 <template>
-    <v-row>
-        <v-col cols="7">
-            <SubjectsHeaderCard
-                :academic-years="academicYears"
-                :subjects="subjects"
-                @academic-year-changed="$emit('academic-year-changed', $event)"
-                @subjects-filter-changed="$emit('subjects-filter-changed', $event)"
-            ></SubjectsHeaderCard>
-        </v-col>
-        <v-col>
-            <SubjectsHeaderImage
-                image-path="https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png"
-            ></SubjectsHeaderImage>
-        </v-col>
-    </v-row>
+    <SubjectsHeaderCard
+        :academic-years="academicYears"
+        :subjects="subjects"
+        @academic-year-changed="$emit('academic-year-changed', $event)"
+        @subjects-filter-changed="$emit('subjects-filter-changed', $event)"
+    ></SubjectsHeaderCard>
 </template>
 
 <script setup lang="ts">
 import SubjectsHeaderCard from "@/components/subject/subjectsview/header/SubjectsHeaderCard.vue";
-import SubjectsHeaderImage from "@/components/subject/subjectsview/header/SubjectsHeaderImage.vue";
 import type { SubjectDetails, SubjectFilter } from "@/models/Subject";
 
 defineProps<{

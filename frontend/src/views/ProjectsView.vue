@@ -1,16 +1,16 @@
 <template>
-    <div>
+    <div class="projects">
         <h1 v-if="isLoading">{{ $t("default.loading.loading_page") }}</h1>
         <h1 v-else-if="isError || noProjectsFound" class="welcome">
             {{ $t("project.not_found") }}
         </h1>
         <div v-else class="projectInfo">
-            <div class="rowheader">
-                <h1>{{ $t("project.myProject") }}</h1>
+            <TitleContainer :title="$t('project.myProject')">
                 <v-btn-toggle v-model="activeButton" class="button">
                     <v-btn value="finished">{{ $t("project.finished") }}</v-btn>
                 </v-btn-toggle>
-            </div>
+            </TitleContainer>
+            <v-divider class="divider" />
             <ProjectMiniCard
                 v-for="project in filteredProjects"
                 :key="project.id"
@@ -24,9 +24,9 @@
 <script setup lang="ts">
 import { useProjectsQuery } from "@/queries/Project";
 import ProjectMiniCard from "@/components/project/ProjectMiniCard.vue";
+import TitleContainer from "@/components/TitleContainer.vue";
 import { computed, ref } from "vue";
 import type Project from "@/models/Project";
-
 const { data: projects, isLoading, isError } = useProjectsQuery();
 const allProjects = computed(() =>
     isLoading.value ? [] : [...projects.value!.as_student, ...projects.value!.as_instructor]
@@ -63,16 +63,17 @@ const filteredProjects = computed(() => {
     margin: 25px;
 }
 
-.rowheader {
-    display: flex;
-    align-items: center;
-    margin-bottom: 30px;
-}
-
 .button {
     height: 30px;
     margin-top: 10px;
-    margin-left: 75px;
-    border: 1px solid rgb(var(--v-theme-text));
+    margin-left: 30px;
+}
+
+.projects {
+    margin: 15px;
+}
+
+.divider {
+    margin-bottom: 30px;
 }
 </style>

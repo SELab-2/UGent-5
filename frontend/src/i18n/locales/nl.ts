@@ -27,6 +27,7 @@ export default {
     },
     submit: {
         submit_title: "Oplossing indienen",
+        create_title_tip: "Kies een titel",
         submit_button: "Indienen",
         remarks: "Opmerkingen",
         files: "Bestanden",
@@ -62,6 +63,7 @@ export default {
         group_button: "Vind groep",
         needhelp_button: "Hulp nodig",
         group: "Groep {number}",
+        no_group: "Nog niet ingeschreven in een groep",
         assignment: "Opdracht:",
         myProject: "Mijn projecten",
         capacity_group: "Capaciteit: ",

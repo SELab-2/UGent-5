@@ -2,11 +2,10 @@
     <div v-if="isError" class="v-container">
         <p>Error: {{ error }}</p>
     </div>
-
     <v-skeleton-loader v-else type="card" :loading="isLoading">
-        <v-row>
-            <v-col :cols="isAdmin || isTeacher ? 10 : 12">
-                <BackgroundContainer>
+        <v-row class="subjectsview">
+            <v-col class="col-sm-12 col-md-6">
+                <v-card variant="flat">
                     <v-row>
                         <v-col>
                             <SubjectsHeaderContainer
@@ -14,6 +13,7 @@
                                 :subjects="subjectsByAcademicYear"
                                 @academic-year-changed="onAcademicYearChanged"
                                 @subjects-filter-changed="onSubjectsFilterChanged"
+                                class="headercontainer"
                             ></SubjectsHeaderContainer>
                         </v-col>
                     </v-row>
@@ -34,16 +34,14 @@
                             ></SubjectCard>
                         </v-col>
                     </v-row>
-                </BackgroundContainer>
+                </v-card>
             </v-col>
-            <v-col v-if="isAdmin || isTeacher" cols="2">
-                <div class="action-btn-container">
-                    <router-link :to="{ name: 'create-subject' }">
-                        <v-btn prepend-icon="mdi-plus-circle">
-                            {{ $t("subjects.create_subject") }}
-                        </v-btn>
-                    </router-link>
-                </div>
+            <v-col v-if="isAdmin || isTeacher" cols="2" class="action-btn-container">
+                <router-link :to="{ name: 'create-subject' }">
+                    <v-btn prepend-icon="mdi-plus-circle" class="button">
+                        {{ $t("subjects.create_subject") }}
+                    </v-btn>
+                </router-link>
             </v-col>
         </v-row>
     </v-skeleton-loader>
@@ -51,7 +49,6 @@
 
 <script setup lang="ts">
 import { useSubjectsQuery } from "@/queries/Subject";
-import BackgroundContainer from "@/components/BackgroundContainer.vue";
 import SubjectsHeaderContainer from "@/components/subject/subjectsview/header/SubjectsHeaderContainer.vue";
 import SubjectCard from "@/components/subject/subjectsview/body/SubjectCard.vue";
 import { computed, ref } from "vue";
@@ -126,15 +123,32 @@ const onAcademicYearChanged = (academicYear: number) => {
 </script>
 
 <style scoped>
-.subject-card {
-    margin-top: 10px;
-}
-
 .action-btn-container {
     margin-top: 30px;
+    min-width: 200px;
 }
 
 .no-results {
     text-align: center;
+    margin: 50px;
+}
+
+.subjectsview {
+    margin-left: 40px;
+    margin-top: 30px;
+    margin-right: 40px;
+    background-color: rgb(var(--v-theme-background));
+}
+
+.headercontainer {
+    border-color: rgb(var(--v-theme-text));
+    background-color: rgb(var(--v-theme-primary));
+    border-radius: 3px;
+}
+
+.button {
+    background-color: rgb(var(--v-theme-primary));
+    color: white;
+    width: 200px;
 }
 </style>

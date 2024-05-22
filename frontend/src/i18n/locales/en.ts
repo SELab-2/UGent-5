@@ -28,6 +28,7 @@ export default {
     },
     submit: {
         submit_title: "Submit solution",
+        create_title_tip: "Choose a title",
         submit_button: "Submit",
         remarks: "Remarks",
         files: "Files",
@@ -62,6 +63,7 @@ export default {
         group_button: "Join group",
         needhelp_button: "Need help",
         group: "Group {number}",
+        no_group: "Not yet in a group",
         assignment: "Assignment:",
         myProject: "My projects",
         capacity_group: "Capacity: ",

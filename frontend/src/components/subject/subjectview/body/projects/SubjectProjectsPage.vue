@@ -20,7 +20,6 @@
                         :project="project"
                     ></SubjectProjectPage>
                 </v-window-item>
-
                 <v-window-item v-if="filteredProjects.length === 0" :key="'placeholder'">
                     <div class="placeholder">
                         <p>{{ $t("subject.projectsPage.no_projects") }}</p>
@@ -78,7 +77,8 @@ const updateFilterOption = (option: FilterOptions) => {
     justify-content: center;
     align-items: center;
     height: 400px; /* Adjust height as needed */
-    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: rgb(var(--v-theme-background));
 }
 
 .placeholder p {

@@ -4,7 +4,7 @@
             {{ $t("project.to_subject") }}
         </v-btn>
     </router-link>
-    <router-link v-if="group && !isSoloProject && !isTeacher" :to="`/groups/${group!.id}`">
+    <router-link v-if="group && !isSoloProject && !isTeacher" :to="`/submissions/${group!.id}`">
         <v-btn class="group-button" prepend-icon="mdi-account-group">
             {{ $t("project.group", { number: group!.num }) }}
         </v-btn>
@@ -14,7 +14,7 @@
             {{ $t("project.group_button") }}
         </v-btn>
     </router-link>
-    <router-link v-else-if="isTeacher" :to="`/project/${project!.id}/groups`">
+    <router-link v-else-if="isTeacher && !isSoloProject" :to="`/project/${project!.id}/groups`">
         <v-btn class="group-button" prepend-icon="mdi-account-group">
             {{ $t("project.to_groups") }}
         </v-btn>
@@ -55,7 +55,10 @@ const isTeacher = computed(() => {
     if (!user.value || !instructors.value) {
         return false;
     }
-    return instructors.value.some((instructor) => instructor.uid === user.value.uid);
+    return (
+        user.value.is_admin ||
+        instructors.value.some((instructor) => instructor.uid === user.value.uid)
+    );
 });
 
 const isSoloProject = computed(() => project.value.capacity === 1);
@@ -64,7 +67,7 @@ const isSoloProject = computed(() => project.value.capacity === 1);
 <style scoped>
 .group-button {
     margin-bottom: 5px;
-    min-width: 150px;
+    width: 200px;
     background-color: rgb(var(--v-theme-primary));
     color: rgb(var(--v-theme-navtext));
 }

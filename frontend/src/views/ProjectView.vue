@@ -92,6 +92,6 @@ const isDataError = computed(
 <style scoped>
 .button-container {
     margin-top: 20px;
-    min-width: 170px;
+    min-width: 200px;
 }
 </style>

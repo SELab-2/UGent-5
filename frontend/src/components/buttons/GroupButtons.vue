@@ -67,7 +67,7 @@ const { mutateAsync: removeGroup } = useDeleteGroupMutation();
 
 const joinGroupAndRedirect = async () => {
     await joinGroup({ groupId: group.value.id, projectId: project.value.id });
-    router.push(`/groups/${group.value.id}`);
+    router.push(`/submissions/${group.value.id}`);
 };
 
 const leaveGroupAndRedirect = async () => {
