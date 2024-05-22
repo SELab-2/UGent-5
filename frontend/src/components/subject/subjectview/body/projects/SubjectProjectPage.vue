@@ -22,7 +22,12 @@
                 {{ $d(project.deadline, "long") }}
             </v-card-text>
             <v-card-text>
-                <!--<h2 v-if="project.capacity > 1  && isInGroup " class="group"> {{ $t("project.group", { number: 1}) }}</h2> -->
+                <h2 v-if="project.capacity > 1 && !isLoading && group !== null" class="group">
+                    {{ $t("project.group", { number: group?.num }) }}
+                </h2>
+                <h2 v-else-if="!isError" class="group">
+                    {{ $t("project.no_group") }}
+                </h2>
                 <h2>{{ $t("subject.project.assignment") }}</h2>
                 <div
                     v-if="project.description && project.description.length <= assignmentLength"
@@ -67,14 +72,16 @@
 
 <script setup lang="ts">
 import type Project from "@/models/Project";
-import { computed, ref } from "vue";
+import { ref, toRefs } from "vue";
 import { Quill } from "@vueup/vue-quill";
-import { getUserGroups } from "@/services/group";
+import { useProjectGroupQuery } from "@/queries/Group";
 
-defineProps<{
+const props = defineProps<{
     selectedTab: number;
     project: Project;
 }>();
+
+const { project } = toRefs(props);
 
 const expanded = ref(false);
 const assignmentLength = 100;
@@ -85,21 +92,7 @@ const renderQuillContent = (content: string) => {
     return quill.root.innerHTML;
 };
 
-/*const { data: groups, isLoading, isError} = getUserGroups()
-
-const projectGroup = ref()
-
-const isInGroup = computed(() => {
-    if (!groups.value) return false;
-    return groups.value.some((groupelem) => {
-        if(groupelem.project_id === project.id){
-            projectGroup.value = groupelem;
-            return true;
-        }
-        return false;
-    });
-});
-*/
+const { data: group, isLoading, isError } = useProjectGroupQuery(project.value.id);
 </script>
 
 <style scoped>
