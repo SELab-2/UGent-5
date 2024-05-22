@@ -1,5 +1,5 @@
 <template>
-    <div class="projectbtn" @click="navigateToProject">
+    <router-link class="projectbtn" :to="`/project/${project.id}`">
         <div :class="submissionToClass(latestSubmissionStatus)"></div>
         <div class="leftcontent">
             <h3>{{ project.name }}</h3>
@@ -8,12 +8,11 @@
         <div class="rightcontent">
             {{ $d(project.deadline, "short") }}
         </div>
-    </div>
+    </router-link>
 </template>
 
 <script setup lang="ts">
 import { computed, toRefs } from "vue";
-import router from "@/router";
 import type Project from "@/models/Project";
 import type Submission from "@/models/Submission";
 import { Status } from "@/models/Submission";
@@ -44,10 +43,6 @@ function submissionToClass(submission: Submission | null) {
         none: !submission,
     };
 }
-
-const navigateToProject = () => {
-    router.push(`/project/${project.value.id}`);
-};
 </script>
 
 <style scoped>
@@ -60,6 +55,8 @@ const navigateToProject = () => {
     cursor: pointer;
     height: 65px;
     border-radius: 2px;
+    text-decoration: none;
+    color: inherit;
 }
 
 .projectbtn:hover {
