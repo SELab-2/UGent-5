@@ -1,6 +1,6 @@
 import { mount } from "@vue/test-utils";
 import {expect, describe, it, vi} from "vitest";
-import SubjectsHeaderCard from "@/components/subject/subjectsview/header/SubjectsHeaderCard.vue"
+import SubjectsHeaderCard from "@/components/subject/subjects/header/SubjectsHeaderCard.vue"
 
 describe("SubjectsHeaderCard", () => {
     const ResizeObserverMock = vi.fn(() => ({
