@@ -4,7 +4,7 @@ import SubjectsView from "../../../src/views/subject/SubjectsView.vue"
 import {ref} from "vue";
 
 const testSubjectsQuery = {
-    data: ref({as_student: [{id: 1, academic_year: 23}], as_instructor: []}),
+    data: ref({as_student: [{id: 1, academic_year: 2023}], as_instructor: []}),
     isLoading: ref(false),
     isError: ref(true),
     error: ref({as_student: [{id: 1}]}),
