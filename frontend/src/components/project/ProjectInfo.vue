@@ -28,11 +28,6 @@
                 </v-card-title>
                 <div v-html="renderQuillContent(project.description)"></div>
             </v-card-item>
-            <v-card-actions>
-                <v-btn v-if="isTeacher" :to="`/project/${project.id}/submissions`">
-                    {{ $t("project.submissions_list_teacher") }}
-                </v-btn>
-            </v-card-actions>
         </v-card>
         <SubmitInfo class="submitInfo" v-if="group" :project="project" :group="group" />
     </v-container>

@@ -1,30 +1,44 @@
 <template>
     <v-container>
         <v-alert v-if="isError" title="Error" color="error" :text="error.message"></v-alert>
-        <v-skeleton-loader v-else :loading="projectLoading || submissionsLoading" type="card">
-            <v-col class="mx-auto">
-                <h1>{{ $t("submission.submissions_title", { project: project.name }) }}</h1>
-
-                <v-btn class="primary-button" @click="downloadAll" prepend-icon="mdi-download">
-                    {{ $t("project.submissions_zip") }}
-                </v-btn>
-
-                <v-alert v-if="submissions.length == 0" icon="$warning" color="warning">
-                    {{ $t("submission.no_submissions") }}</v-alert
+        <v-row v-else>
+            <v-col class="col-sm-12 col-md-6 col-lg-8">
+                <v-skeleton-loader
+                    :loading="projectLoading || submissionsLoading"
+                    type="card"
+                    class="card"
                 >
-                <v-alert v-else icon="$info" color="info" closable>
-                    {{ $t("submission.teacher_submissions_info") }}</v-alert
-                >
-
-                <SubmissionTeacherCard
-                    class="ma-3"
-                    v-for="submission in submissions"
-                    :key="submission"
-                    :submission="submission"
-                    :deadline="project.deadline"
-                />
+                    <v-card-title class="title">{{
+                        $t("submission.submissions_title", { project: project.name })
+                    }}</v-card-title>
+                    <v-card-subtitle v-if="submissions.length == 0" class="subtitle">{{
+                        $t("submission.no_submissions")
+                    }}</v-card-subtitle>
+                    <div v-else>
+                        <v-card-subtitle class="subtitle">{{
+                            $t("submission.teacher_submissions_info")
+                        }}</v-card-subtitle>
+                        <v-btn
+                            class="primary-button"
+                            @click="downloadAll"
+                            prepend-icon="mdi-download"
+                        >
+                            {{ $t("project.submissions_zip") }}
+                        </v-btn>
+                    </div>
+                    <SubmissionTeacherCard
+                        class="ma-3"
+                        v-for="submission in submissions"
+                        :key="submission"
+                        :submission="submission"
+                        :deadline="project.deadline"
+                    />
+                </v-skeleton-loader>
             </v-col>
-        </v-skeleton-loader>
+            <v-col cols="2" class="backbutton">
+                <BackButton title="project.to_project" :destination="`/project/${projectId}`" />
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 
@@ -33,6 +47,7 @@ import { useProjectQuery } from "@/queries/Project";
 import { useProjectSubmissionsQuery } from "@/queries/Submission";
 import { toRefs } from "vue";
 import SubmissionTeacherCard from "@/components/submission/SubmissionTeacherCard.vue";
+import BackButton from "@/components/buttons/BackButton.vue";
 import { download_file } from "@/utils";
 
 const props = defineProps<{
@@ -60,5 +75,24 @@ const downloadAll = () => {
     min-width: 150px;
     background-color: rgb(var(--v-theme-primary));
     color: rgb(var(--v-theme-navtext));
+}
+
+.card {
+    background-color: rgb(var(--v-theme-secondary));
+    margin-top: 25px;
+    padding: 15px;
+}
+
+.title,
+.subtitle {
+    width: 100%;
+}
+
+.backbutton {
+    margin-top: 30px;
+}
+
+.primary-button {
+    margin: 15px;
 }
 </style>
