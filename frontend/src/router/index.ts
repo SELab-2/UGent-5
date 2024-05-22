@@ -12,6 +12,7 @@ import useCanVisit, {
     useIsInstructorOfGroupCondition,
     useOrCondition,
     useIsInGroupOfProjectCondition,
+    useIsTeacherCondition,
 } from "./middleware/canVisit";
 
 declare module "vue-router" {
@@ -123,6 +124,9 @@ const router = createRouter({
             path: "/subjects/create",
             name: "create-subject",
             component: () => import("../views/subject/CreateSubjectView.vue"),
+            meta: {
+                middleware: useCanVisit(useOrCondition(useIsAdminCondition, useIsTeacherCondition)),
+            },
         },
         {
             path: "/subjects/:subjectId(\\d+)",
@@ -152,6 +156,9 @@ const router = createRouter({
             name: "edit-project",
             component: () => import("../views/CreateProjectView.vue"), // Ensure this is correct
             props: (route) => ({ projectId: Number(route.params.projectId), isEditMode: true }),
+            meta: {
+                middleware: useCanVisit(useIsInstructorOfProjectCondition),
+            },
         },
         {
             path: "/subjects/register/:uuid",
