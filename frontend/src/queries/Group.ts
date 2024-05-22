@@ -1,7 +1,7 @@
 import { computed, toValue } from "vue";
 import type { MaybeRefOrGetter } from "vue";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import type { UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-query";
+import type { QueryClient, UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-query";
 import type Group from "@/models/Group";
 import type { GroupForm } from "@/models/Group";
 import {
@@ -38,26 +38,34 @@ function PROJECT_USER_GROUP_QUERY_KEY(projectId: number): (string | number)[] {
  * Query composable for fetching a group by id
  */
 export function useGroupQuery(
-    groupId: MaybeRefOrGetter<number | undefined>
+    groupId: MaybeRefOrGetter<number | undefined>,
+    queryClient?: QueryClient
 ): UseQueryReturnType<Group, Error> {
-    return useQuery<Group, Error>({
-        queryKey: GROUP_QUERY_KEY(toValue(groupId)!),
-        queryFn: () => getGroup(toValue(groupId)!),
-        enabled: () => !!toValue(groupId),
-    });
+    return useQuery<Group, Error>(
+        {
+            queryKey: GROUP_QUERY_KEY(toValue(groupId)!),
+            queryFn: () => getGroup(toValue(groupId)!),
+            enabled: () => !!toValue(groupId),
+        },
+        queryClient
+    );
 }
 
 /**
  * Query composable for fetching all groups of a project
  */
 export function useProjectGroupsQuery(
-    projectId: MaybeRefOrGetter<number | undefined>
+    projectId: MaybeRefOrGetter<number | undefined>,
+    queryClient?: QueryClient
 ): UseQueryReturnType<Group[], Error> {
-    return useQuery<Group[], Error>({
-        queryKey: computed(() => PROJECT_GROUPS_QUERY_KEY(toValue(projectId)!)),
-        queryFn: () => getProjectGroups(toValue(projectId)!),
-        enabled: !!toValue(projectId),
-    });
+    return useQuery<Group[], Error>(
+        {
+            queryKey: computed(() => PROJECT_GROUPS_QUERY_KEY(toValue(projectId)!)),
+            queryFn: () => getProjectGroups(toValue(projectId)!),
+            enabled: !!toValue(projectId),
+        },
+        queryClient
+    );
 }
 
 export function useUserGroupsQuery(): UseQueryReturnType<Group[], Error> {
@@ -73,20 +81,26 @@ export function useUserGroupsQuery(): UseQueryReturnType<Group[], Error> {
  * @returns The group the user is in for the project, undefined if the user is not in a group
  */
 export function useProjectGroupQuery(
-    projectId: MaybeRefOrGetter<number | undefined>
+    projectId: MaybeRefOrGetter<number | undefined>,
+    queryClient?: QueryClient
 ): UseQueryReturnType<Group | null, Error> {
-    const { data: projectGroups } = useProjectGroupsQuery(projectId);
-    const { data: user } = useCurrentUserQuery();
-    const userGroup = computed(
-        () =>
+    const { data: projectGroups } = useProjectGroupsQuery(projectId, queryClient);
+    const { data: user } = useCurrentUserQuery(queryClient);
+    const userGroup = computed(() => {
+        if (projectGroups.value === undefined || user.value === undefined) return undefined;
+        return (
             projectGroups.value?.find((group) =>
                 group.members.some((member) => member.uid === user.value?.uid)
             ) || null
-    );
-    return useQuery({
-        queryKey: computed(() => PROJECT_USER_GROUP_QUERY_KEY(toValue(projectId)!)),
-        queryFn: () => userGroup,
+        );
     });
+    return useQuery(
+        {
+            queryKey: computed(() => PROJECT_USER_GROUP_QUERY_KEY(toValue(projectId)!)),
+            queryFn: () => userGroup,
+        },
+        queryClient
+    );
 }
 
 /**

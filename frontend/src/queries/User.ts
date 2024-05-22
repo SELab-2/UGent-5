@@ -1,7 +1,7 @@
 import { computed, toValue } from "vue";
 import type { MaybeRefOrGetter } from "vue";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/vue-query";
-import type { UseQueryReturnType, UseMutationReturnType } from "@tanstack/vue-query";
+import type { UseQueryReturnType, UseMutationReturnType, QueryClient } from "@tanstack/vue-query";
 import type User from "@/models/User";
 import {
     getCurrentUser,
@@ -27,11 +27,14 @@ export function USERS_QUERY_KEY(): string[] {
 /**
  * Query composable for fetching the current user
  */
-export function useCurrentUserQuery(): UseQueryReturnType<User, Error> {
-    return useQuery<User, Error>({
-        queryKey: CURRENT_USER_QUERY_KEY(),
-        queryFn: () => getCurrentUser(),
-    });
+export function useCurrentUserQuery(queryClient?: QueryClient): UseQueryReturnType<User, Error> {
+    return useQuery<User, Error>(
+        {
+            queryKey: CURRENT_USER_QUERY_KEY(),
+            queryFn: () => getCurrentUser(),
+        },
+        queryClient
+    );
 }
 
 /**
