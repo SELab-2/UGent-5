@@ -7,7 +7,7 @@
                 <h2>{{ "Project: " + project!.name }}</h2>
                 <StudentsDialog :students="allStudents" :title="$t('group.all_students')" />
                 <v-divider class="border-opacity-50"></v-divider>
-                <div v-if="groups.length > 0">
+                <v-col v-if="groups.length > 0">
                     <v-row>
                         <v-col cols="7">{{ $t("group.groups") }}</v-col>
                         <v-col cols="2">{{ $t("group.members") }}</v-col>
@@ -22,7 +22,7 @@
                         :isTeacher="isTeacher!"
                         class="group-card"
                     />
-                </div>
+                </v-col>
                 <div v-else>
                     <v-row>
                         <v-col cols="8"> {{ $t("group.not_found2") }}</v-col>

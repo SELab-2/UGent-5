@@ -154,34 +154,13 @@ export function useAddToGroupMutation(): UseMutationReturnType<
     void,
     Error,
     { groupId: number; uid: string },
-    { previousGroup: Group }
+    void
 > {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: ({ groupId, uid }) => addToGroup(groupId, uid),
-        onMutate: ({ groupId, uid }) => {
-            const previousGroup = queryClient.getQueryData<Group>(GROUP_QUERY_KEY(groupId));
-            // TODO: this is a placeholder and should be replaced with the
-            // actual user data, but query structure does not support this
-            // currently
-            const newGroup = { ...previousGroup! };
-            newGroup.members.push({
-                uid,
-                given_name: "placeholder",
-                surname: "placeholder",
-                mail: "placeholder",
-                is_teacher: false,
-                is_admin: false,
-            });
-            queryClient.setQueryData<Group>(GROUP_QUERY_KEY(groupId), newGroup);
-            return { previousGroup: previousGroup! };
-        },
         onSuccess: (_, { groupId }) => {
             queryClient.invalidateQueries({ queryKey: GROUP_QUERY_KEY(groupId) });
-        },
-        onError: (_, { groupId }, ctx) => {
-            queryClient.setQueryData<Group>(GROUP_QUERY_KEY(groupId), ctx!.previousGroup);
-            alert("Could not join group. Please try again.");
         },
     });
 }

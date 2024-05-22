@@ -11,7 +11,7 @@ from src.user.schemas import User
 from src.subject.utils import has_subject_privileges
 
 from . import service
-from .exceptions import AlreadyInGroup, GroupNotFound, MaxCapacity
+from .exceptions import AlreadyInGroup, AlreadyInGroupOfProject, GroupNotFound, MaxCapacity
 
 
 async def retrieve_group(
@@ -78,6 +78,10 @@ async def join_group(
 
     if len(group.members) >= project.capacity:
         raise MaxCapacity()
+
+    groups = await retrieve_groups_by_user(user, db)
+    if any([group.project_id == g.project_id for g in groups]):
+        raise AlreadyInGroupOfProject()
 
     await service.join_group(db, group_id, uid)
     return await service.get_group_by_id(db, group_id)

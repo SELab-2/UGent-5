@@ -304,12 +304,12 @@ async function submitForm() {
         } else {
             await createProject(projectData);
         }
-        handleFiles(projectId.value);
+        handleFiles(projectData.project_id);
     } catch (error) {
         console.error("Error during project or group creation or file upload:", error);
         setErrorAlert("An unexpected error occurred. Please try again.");
     }
-    navigateToProject(projectId.value);
+    navigateToProject(projectData.project_id);
 }
 
 function formatProjectData() {
@@ -351,7 +351,6 @@ async function handleGroupCreation(projectId) {
         const groupsToCreate = groups.map((_, i) => ({
             project_id: projectId,
             score: 0,
-            team_name: "Group " + (i + 1),
         }));
         const createdGroups = await createGroupsMutation.mutateAsync({
             projectId: projectId,
@@ -381,7 +380,6 @@ function generateEmptyGroups(projectId: number) {
         emptyGroups.push({
             project_id: projectId,
             score: 0,
-            team_name: `Group ${i + 1}`,
         });
     }
     return emptyGroups;
