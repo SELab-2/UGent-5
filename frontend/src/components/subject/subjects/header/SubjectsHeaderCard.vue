@@ -47,7 +47,7 @@ const props = defineProps<{
 }>();
 const { academicYears, subjects } = toRefs(props);
 
-const activeAcademicYear = ref(useAcademicYear());
+const activeAcademicYear = ref(useAcademicYear() - 2000);
 const showInstructorSubjects = ref(true);
 const showStudentSubjects = ref(true);
 
