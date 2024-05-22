@@ -1,28 +1,30 @@
 <template>
     <v-card class="groupcard" variant="flat">
-        <v-row>
-            <v-col cols="7">
-                <StudentsDialog
-                    :students="group.members"
-                    :title="$t('project.group', { number: group.num })"
-                />
-                <v-btn v-if="isTeacher" variant="flat" @click="toGroupPage">
-                    {{ $t("group.to_grouppage") }}
-                </v-btn>
-            </v-col>
-            <v-col cols="2">
-                {{ amountOfMembers + "/" + project.capacity }}
-            </v-col>
-            <v-col cols="3">
-                <GroupButtons
-                    :amountOfMembers="amountOfMembers"
-                    :group="group"
-                    :project="project"
-                    :user="user"
-                    :isTeacher="isTeacher"
-                />
-            </v-col>
-        </v-row>
+        <v-container>
+            <v-row>
+                <v-col cols="7">
+                    <StudentsDialog
+                        :students="group.members"
+                        :title="$t('project.group', { number: group.num })"
+                    />
+                    <v-btn v-if="isTeacher" variant="flat" @click="toGroupPage">
+                        {{ $t("group.to_grouppage") }}
+                    </v-btn>
+                </v-col>
+                <v-col cols="2">
+                    {{ amountOfMembers + "/" + project.capacity }}
+                </v-col>
+                <v-col cols="3">
+                    <GroupButtons
+                        :amountOfMembers="amountOfMembers"
+                        :group="group"
+                        :project="project"
+                        :user="user"
+                        :isTeacher="isTeacher"
+                    />
+                </v-col>
+            </v-row>
+        </v-container>
     </v-card>
 </template>
 
