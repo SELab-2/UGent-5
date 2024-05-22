@@ -56,8 +56,8 @@
                     >
                     </ModifySubjectHeaderContainer>
                     <ModifySubjectBody
-                        :current-user="currentUser!"
-                        :instructors="shownInstructors"
+                        :current-user="currentUser"
+                        :instructors="pageUpdating ? tempInstructors : shownInstructors"
                         @add-instructor="addInstructor"
                         @remove-instructor="removeInstructor"
                     >
@@ -68,7 +68,7 @@
                     <v-btn class="ma-2" color="grey" @click="dialog = true">
                         {{ $t("default.cancel") }}
                     </v-btn>
-                    <v-btn class="ma-2" @click="handleSubmit" color="primary" type="submit">
+                    <v-btn class="ma-2" @click.prevent="handleSubmit" color="primary" type="submit">
                         {{ $t("default.confirm") }}
                     </v-btn>
                 </div>
@@ -86,7 +86,7 @@ import {
     useSubjectQuery,
     useUpdateSubjectMutation,
 } from "@/queries/Subject";
-import type { SubjectForm } from "@/models/Subject";
+import type SubjectForm from "@/models/Subject";
 import type User from "@/models/User";
 import { useCurrentUserQuery } from "@/queries/User";
 import { useRouter } from "vue-router";
@@ -108,9 +108,11 @@ const subjectMail = ref("");
 const activeAcademicYear = ref<number | null>(null);
 const currentUserAsInstructor = ref(computed(() => isInstructor.value));
 const addedInstructors = ref<Set<User>>(new Set());
-const removedInstructors = ref<Set<User>>(new Set());
+const removedInstructorUIDs = ref<Set<string>>(new Set());
 const subjectNameChanged = ref(false);
 const subjectMailChanged = ref(false);
+const pageUpdating = ref(false);
+const tempInstructors = ref<User[]>([]);
 
 const {
     data: currentUser,
@@ -150,9 +152,13 @@ const isCurrentInstructor = (user: User) => {
     );
 };
 
-const name = computed(() => (subjectNameChanged.value ? subjectName.value : subject.value!.name));
+const name = computed(() =>
+    subjectNameChanged.value ? subjectName.value || "" : subject.value!.name
+);
 const academicYear = computed(() => activeAcademicYear.value || subject.value!.academic_year);
-const mail = computed(() => (subjectMailChanged.value ? subjectMail.value : subject.value!.email));
+const mail = computed(() =>
+    subjectMailChanged.value ? subjectMail.value || "" : subject.value!.email || ""
+);
 
 const router = useRouter();
 
@@ -160,7 +166,7 @@ const shownInstructors = computed(() => {
     return Array.from(
         new Set(
             [...(instructors.value || []), ...addedInstructors.value].filter((instructor: User) => {
-                return !removedInstructors.value.has(instructor);
+                return !removedInstructorUIDs.value.has(instructor.uid);
             })
         )
     ).sort((a, b) => {
@@ -174,25 +180,30 @@ const shownInstructors = computed(() => {
     });
 });
 
+const getInstructor = (instructorUID: string) => {
+    return [...(instructors.value || [])].find((i) => i.uid === instructorUID);
+};
+
 const addInstructor = (instructor: User) => {
     if (isCurrentInstructor(instructor)) {
-        removedInstructors.value.delete(instructor);
+        removedInstructorUIDs.value.delete(instructor.uid);
+    } else {
+        addedInstructors.value.add(instructor);
     }
-    addedInstructors.value.add(instructor);
 };
 
 const removeInstructor = (instructor: User) => {
     if (isCurrentInstructor(instructor)) {
-        removedInstructors.value.add(instructor);
+        removedInstructorUIDs.value.add(instructor.uid);
     }
     addedInstructors.value.delete(instructor);
 };
 
 const onCurrentUserAsInstructorChanged = (isCurrentUserInstructor: boolean) => {
     if (isCurrentUserInstructor) {
-        removedInstructors.value.delete(currentUser.value!);
+        removedInstructorUIDs.value.delete(currentUser.value.uid);
     } else {
-        removedInstructors.value.add(currentUser.value!);
+        removedInstructorUIDs.value.add(currentUser.value.uid);
     }
 };
 
@@ -212,14 +223,14 @@ const validateSubjectName = () => {
     if (!subjectNameChanged.value) {
         return true;
     }
-    return name.value !== null && name.value.trim().length > 2;
+    return name.value.trim() !== "" && name.value.trim().length > 2;
 };
 
 const validateSubjectMail = () => {
     if (!subjectMailChanged.value) {
         return true;
     }
-    return !subjectMail.value || /.+@.+\..+/.test(subjectMail.value);
+    return subjectMail.value == "" || /.+@.+\..+/.test(subjectMail.value.trim());
 };
 
 const validateInstructors = () => {
@@ -247,18 +258,23 @@ async function handleSubmit() {
 
     const subjectData: SubjectForm = {
         name: name.value.trim().charAt(0).toUpperCase() + name.value.trim().slice(1),
-        email: mail.value,
+        email: mail.value.trim(),
         academic_year: academicYear.value,
     };
 
     try {
         await updateSubject({ subject: subjectData, subjectId: subjectId.value });
 
-        for (let instructor of removedInstructors.value) {
-            await deleteSubjectInstructor({
-                subjectId: subjectId.value,
-                user: instructor,
-            });
+        pageUpdating.value = true;
+        tempInstructors.value = [...shownInstructors.value];
+
+        for (let instructorUID of removedInstructorUIDs.value) {
+            const instructor = getInstructor(instructorUID);
+            if (instructor)
+                await deleteSubjectInstructor({
+                    subjectId: subjectId.value,
+                    user: instructor,
+                });
         }
 
         for (let instructor of addedInstructors.value) {
