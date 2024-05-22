@@ -15,7 +15,7 @@
                             color="secondary"
                             variant="flat"
                         >
-                            {{ `${academicYear}-${academicYear + 1}` }}
+                            {{ `${academicYear - 2000}-${academicYear - 2000 + 1}` }}
                         </v-chip>
                     </v-chip-group>
                 </div>
@@ -47,7 +47,7 @@ const props = defineProps<{
 }>();
 const { academicYears, subjects } = toRefs(props);
 
-const activeAcademicYear = ref(useAcademicYear() - 2000);
+const activeAcademicYear = ref(useAcademicYear());
 const showInstructorSubjects = ref(true);
 const showStudentSubjects = ref(true);
 

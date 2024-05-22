@@ -70,7 +70,7 @@ const subjectsList = computed(() => {
 
     return [...instructorSubjects, ...studentSubjects];
 });
-const activeAcademicYear = ref<number>(useAcademicYear() - 2000);
+const activeAcademicYear = ref<number>(useAcademicYear());
 const activeSubjectsFilter = ref<SubjectFilter>({
     showInstructorSubjects: true,
     showStudentSubjects: true,
