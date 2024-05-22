@@ -1,6 +1,7 @@
 <template>
     <SubjectHeaderCard
         :title="title"
+        :subject-id="subjectId"
         :academic-year="academicYear"
         :instructors="instructors"
         :isInstructor="isInstructor"
@@ -10,13 +11,14 @@
 </template>
 
 <script setup lang="ts">
-import SubjectHeaderCard from "@/components/subject/subjectview/header/SubjectHeaderCard.vue";
+import SubjectHeaderCard from "@/components/subject/subject/header/SubjectHeaderCard.vue";
 import type User from "@/models/User";
 import { SubjectRole } from "@/models/Subject";
 import { computed, toRefs } from "vue";
 
 const props = defineProps<{
     title: string;
+    subjectId: number;
     academicYear: number;
     instructors: User[];
     imagePath: string;
