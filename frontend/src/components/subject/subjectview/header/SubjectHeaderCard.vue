@@ -12,9 +12,7 @@
                 </div>
                 <v-card-text>
                     <v-chip color="secondary" variant="flat" label class="academyyear">
-                        {{
-                            `${$t("subject.academy_year")} 20${academicYear}-20${academicYear + 1}`
-                        }}
+                        {{ `${$t("subject.academy_year")} ${academicYear}-${academicYear + 1}` }}
                     </v-chip>
                     <v-row class="instr-container">
                         <v-chip
