@@ -4,7 +4,7 @@
             {{ $t("project.group", { number: submission.group_id }) }}
         </v-card-title>
         <SubmissionCard class="ma-3" :submission="submission" :deadline="deadline" />
-        <v-divider class="divider"/>
+        <v-divider class="divider" />
         <v-card-actions>
             <v-btn :to="`/groups/${submission.group_id}`" class="button">
                 {{ $t("project.submissions_list") }}
