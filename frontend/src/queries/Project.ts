@@ -1,7 +1,7 @@
 import { computed, toValue } from "vue";
 import type { MaybeRefOrGetter } from "vue";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import type { UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-query";
+import type { QueryClient, UseMutationReturnType, UseQueryReturnType } from "@tanstack/vue-query";
 import type { ProjectForm, UserProjectList } from "@/models/Project";
 import type Project from "@/models/Project";
 import {
@@ -31,23 +31,32 @@ function TEST_FILES_QUERY_KEY(projectId: number): (string | number)[] {
 
 // Hook for fetching project details
 export function useProjectQuery(
-    projectId: MaybeRefOrGetter<number | undefined>
+    projectId: MaybeRefOrGetter<number | undefined>,
+    queryClient?: QueryClient
 ): UseQueryReturnType<Project, Error> {
-    return useQuery<Project, Error>({
-        queryKey: computed(() => PROJECT_QUERY_KEY(toValue(projectId)!)),
-        queryFn: () => getProject(toValue(projectId)!),
-        enabled: () => !!toValue(projectId),
-    });
+    return useQuery<Project, Error>(
+        {
+            queryKey: computed(() => PROJECT_QUERY_KEY(toValue(projectId)!)),
+            queryFn: () => getProject(toValue(projectId)!),
+            enabled: () => !!toValue(projectId),
+        },
+        queryClient
+    );
 }
 
 /**
  * Query composable for fetching all projects of the current user
  */
-export function useProjectsQuery(): UseQueryReturnType<UserProjectList, Error> {
-    return useQuery<UserProjectList>({
-        queryKey: PROJECTS_QUERY_KEY(),
-        queryFn: getProjects,
-    });
+export function useProjectsQuery(
+    queryClient?: QueryClient
+): UseQueryReturnType<UserProjectList, Error> {
+    return useQuery<UserProjectList>(
+        {
+            queryKey: PROJECTS_QUERY_KEY(),
+            queryFn: getProjects,
+        },
+        queryClient
+    );
 }
 
 /**

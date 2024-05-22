@@ -1,5 +1,5 @@
 <template>
-    <v-icon color="white" :size="size">
+    <v-icon :size="size">
         {{ `mdi-${userRole}` }}
     </v-icon>
 </template>

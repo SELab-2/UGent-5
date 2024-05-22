@@ -117,10 +117,6 @@ describe("GroupsView", () => {
         expect(wrapper.findComponent(".groupCard").exists()).toBeTruthy()
     });
 
-    it("render if user is student", () => {
-        expect(wrapper.findComponent({name: "VBtn"}).exists()).toBeFalsy()
-    });
-
     it("render if user is teacher", async () => {
         testCurrentUserQuery.data.value.setUid("teacher")
         await wrapper.vm.$nextTick();

@@ -2,7 +2,6 @@
     <div v-if="isError" class="v-container">
         <p>{{ $t("default.something-went-wrong") }}</p>
     </div>
-
     <v-skeleton-loader v-else type="card" :loading="isLoading">
         <v-row>
             <v-snackbar v-model="snackbar" timeout="3000" color="primary">
@@ -13,52 +12,43 @@
                     </v-btn>
                 </template>
             </v-snackbar>
-
-            <v-col cols="1">
-                <router-link :to="{ name: 'subjects' }">
-                    <v-btn variant="elevated" class="back-button" size="large">
-                        <v-icon>mdi-arrow-left</v-icon>
+            <v-col class="col-sm-12 col-md-6 subjectcard">
+                <v-row>
+                    <v-col>
+                        <SubjectHeaderContainer
+                            v-if="subject"
+                            :title="subject!.name"
+                            :instructors="sortedInstructors"
+                            :academic-year="subject!.academic_year"
+                            :is-instructor="isInstructor"
+                            :is-student="isStudent"
+                            :is-admin="isAdmin"
+                            image-path="https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png"
+                        ></SubjectHeaderContainer>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col>
+                        <SubjectProjectsPage
+                            v-if="subject"
+                            :projects="projects"
+                        ></SubjectProjectsPage>
+                    </v-col>
+                </v-row>
+            </v-col>
+            <v-col v-if="isAdmin || isInstructor" cols="2" class="action-btn-container">
+                <router-link :to="{ name: 'create-project', params: { subjectId: subjectId } }">
+                    <v-btn prepend-icon="mdi-plus-circle" class="button">
+                        {{ $t("subject.create_project") }}
                     </v-btn>
                 </router-link>
-            </v-col>
-            <v-col>
-                <BackgroundContainer>
-                    <v-row>
-                        <v-col>
-                            <SubjectHeaderContainer
-                                v-if="subject"
-                                :subject-id="subjectId"
-                                :title="subject!.name"
-                                :instructors="sortedInstructors"
-                                :academic-year="subject!.academic_year"
-                                :is-instructor="isInstructor"
-                                :is-student="isStudent"
-                                :is-admin="isAdmin"
-                                image-path="https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png"
-                            ></SubjectHeaderContainer>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                            <SubjectBody v-if="subject" :projects="projects"></SubjectBody>
-                        </v-col>
-                    </v-row>
-                </BackgroundContainer>
-            </v-col>
-            <v-col v-if="isAdmin || isInstructor" cols="2">
-                <div class="action-btn-container">
-                    <router-link :to="{ name: 'create-project', params: { subjectId: subjectId } }">
-                        <v-btn prepend-icon="mdi-plus-circle">
-                            {{ $t("subject.create_project") }}
-                        </v-btn>
-                    </router-link>
-                    <RegisterLinkButton
-                        v-if="isAdmin || isTeacher"
-                        :subjectId="subjectId"
-                        @register-link-btn-pressed="snackbar = true"
-                        @is-uuid-error="isUuidError = true"
-                    ></RegisterLinkButton>
-                </div>
+                <RegisterLinkButton
+                    v-if="isAdmin || isTeacher"
+                    :subjectId="subjectId"
+                    @register-link-btn-pressed="snackbar = true"
+                    @is-uuid-error="isUuidError = true"
+                    class="button"
+                ></RegisterLinkButton>
             </v-col>
         </v-row>
     </v-skeleton-loader>
@@ -72,13 +62,12 @@ import {
     useSubjectInstructorsQuery,
     useSubjectStudentsQuery,
 } from "@/queries/Subject";
-import BackgroundContainer from "@/components/BackgroundContainer.vue";
-import SubjectHeaderContainer from "@/components/subject/subject/header/SubjectHeaderContainer.vue";
-import SubjectBody from "@/components/subject/subject/body/SubjectBody.vue";
+import SubjectHeaderContainer from "@/components/subject/subjectview/header/SubjectHeaderContainer.vue";
+import SubjectProjectsPage from "@/components/subject/subjectview/body/projects/SubjectProjectsPage.vue";
 import { useCurrentUserQuery } from "@/queries/User";
 import useIsTeacher from "@/composables/useIsTeacher";
 import useIsAdmin from "@/composables/useIsAdmin";
-import RegisterLinkButton from "@/components/subject/subject/buttons/RegisterLinkButton.vue";
+import RegisterLinkButton from "@/components/subject/subjectview/buttons/RegisterLinkButton.vue";
 
 const props = defineProps<{
     subjectId: number;
@@ -152,11 +141,38 @@ const { isTeacher } = useIsTeacher();
 </script>
 ;
 <style scoped>
-.back-button {
-    margin: 30px;
+.action-btn-container {
+    margin-top: 50px;
+    margin-right: 25px;
+    min-width: 200px;
+    margin-left: 25px;
 }
 
-.action-btn-container {
-    margin-top: 30px;
+@media (max-width: 900px) {
+    .action-btn-container {
+        display: flex;
+        order: -1;
+        margin-top: 50px;
+        margin-bottom: -30px;
+        width: 100%;
+        margin-left: 50px;
+    }
+    .button {
+        margin-right: 10px;
+    }
+}
+
+.subjectcard {
+    background-color: rgb(var(--v-theme-secondary));
+    margin: 50px 50px 50px 50px;
+    border-radius: 3px;
+    padding: 20px;
+}
+
+.button {
+    background-color: rgb(var(--v-theme-primary));
+    color: rgb(var(--v-theme-navtext));
+    margin-bottom: 10px;
+    width: 200px;
 }
 </style>

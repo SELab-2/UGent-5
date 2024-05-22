@@ -2,10 +2,15 @@
     <div v-if="isError" class="v-container">
         <p>{{ $t("default.something-went-wrong") }}</p>
     </div>
-
     <v-row v-else>
         <v-col cols="1">
-            <v-btn variant="elevated" class="back-button" size="large" @click="dialog = true">
+            <v-btn
+                color="primary"
+                variant="elevated"
+                class="back-button"
+                size="large"
+                @click="dialog = true"
+            >
                 <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
         </v-col>
@@ -14,7 +19,6 @@
                 <v-snackbar v-model="snackbar" :timeout="3500" color="error" top>
                     {{ $t("create_subject.error_snackbar") }}
                 </v-snackbar>
-
                 <v-dialog v-model="dialog" max-width="290" persistent>
                     <v-card>
                         <v-card-title class="headline">
@@ -55,7 +59,6 @@
                     >
                     </ModifySubjectBody>
                 </div>
-
                 <div class="confirm-btn-container">
                     <v-btn class="ma-2" color="grey" @click="dialog = true">
                         {{ $t("default.cancel") }}
@@ -191,11 +194,7 @@ async function handleSubmit() {
 
 <style scoped>
 .confirm-btn-container {
-    display: flex;
-    position: absolute;
-    right: 4vw;
-    bottom: 4vw;
-    margin-top: 2vh;
+    margin-top: 10px;
 }
 
 .back-button {

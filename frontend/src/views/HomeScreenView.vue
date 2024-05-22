@@ -1,9 +1,10 @@
 <template>
     <v-container v-if="smAndDown">
         <h1 v-if="isLoading">Loading...</h1>
-        <h1 v-else class="title">
-            {{ $t("home.welcome", { name: user!.given_name, surname: user!.surname }) }}
-        </h1>
+        <TitleContainer
+            v-else
+            :title="$t('home.welcome', { name: user!.given_name, surname: user!.surname })"
+        ></TitleContainer>
         <div class="mobileCard">
             <DeadlinesCard />
         </div>
@@ -11,11 +12,13 @@
             <SubjectsCard />
         </div>
     </v-container>
-    <v-container v-else>
+    <v-container v-else class="homescreencontainer">
         <h1 v-if="isLoading">Loading...</h1>
-        <h1 v-else class="title">
-            {{ $t("home.welcome", { name: user!.given_name, surname: user!.surname }) }}
-        </h1>
+        <TitleContainer
+            v-else
+            :title="$t('home.welcome', { name: user!.given_name, surname: user!.surname })"
+            class="title"
+        ></TitleContainer>
         <v-row>
             <v-col>
                 <DeadlinesCard />
@@ -30,6 +33,7 @@
 <script setup lang="ts">
 import SubjectsCard from "@/components/home/cards/SubjectsCard.vue";
 import DeadlinesCard from "@/components/home/cards/DeadlinesCard.vue";
+import TitleContainer from "@/components/TitleContainer.vue";
 import { useCurrentUserQuery } from "@/queries/User";
 import { useDisplay } from "vuetify";
 
@@ -39,15 +43,16 @@ const { smAndDown } = useDisplay();
 
 <style scoped lang="scss">
 .title {
-    background-color: rgb(var(--v-theme-secondary));
-    color: rgb(var(--v-theme-text));
     margin-bottom: 15px;
-    margin-top: 15px;
-    padding: 10px;
-    border-radius: 2px;
+    margin-top: 30px;
 }
 
 .mobileCard {
     margin: 15px;
+}
+
+.homescreencontainer {
+    margin-left: 40px;
+    margin-right: 40px;
 }
 </style>

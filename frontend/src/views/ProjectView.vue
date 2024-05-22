@@ -14,6 +14,14 @@
                         :subject="subject!"
                         :user="user!"
                     />
+                    <v-btn
+                        v-if="isTeacher"
+                        :to="`/project/${project.id}/submissions`"
+                        class="allsubmissions"
+                        variant="flat"
+                    >
+                        {{ $t("project.submissions_list_teacher") }}
+                    </v-btn>
                 </v-col>
                 <v-col cols="2" class="button-container">
                     <ProjectSideBar
@@ -87,11 +95,24 @@ const isDataError = computed(
         isSubjectError.value ||
         isUserError.value
 );
+
+const isTeacher = computed(
+    () =>
+        user.value.is_teacher ||
+        user.value.is_admin ||
+        instructors.value?.some((element) => element.uid == user.value.uid)
+);
 </script>
 
 <style scoped>
 .button-container {
     margin-top: 20px;
-    min-width: 170px;
+    min-width: 200px;
+}
+
+.allsubmissions {
+    margin: 15px;
+    background-color: rgb(var(--v-theme-primary));
+    color: rgb(var(--v-theme-navtext));
 }
 </style>

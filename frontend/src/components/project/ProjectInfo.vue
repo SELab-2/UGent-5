@@ -28,11 +28,6 @@
                 </v-card-title>
                 <div v-html="renderQuillContent(project.description)"></div>
             </v-card-item>
-            <v-card-actions>
-                <v-btn v-if="isTeacher" :to="`/project/${project.id}/submissions`">
-                    {{ $t("project.submissions_list_teacher") }}
-                </v-btn>
-            </v-card-actions>
         </v-card>
         <SubmitInfo class="submitInfo" v-if="group" :project="project" :group="group" />
     </v-container>
@@ -58,10 +53,7 @@ const props = defineProps<{
 const { project, group, instructors, subject, user } = toRefs(props);
 
 const isTeacher = computed(
-    () =>
-        user.value.is_teacher ||
-        user.value.is_admin ||
-        instructors.value?.some((element) => element.uid == user.value.uid)
+    () => user.value.is_admin || instructors.value?.some((element) => element.uid == user.value.uid)
 );
 
 const renderQuillContent = (content: string) => {

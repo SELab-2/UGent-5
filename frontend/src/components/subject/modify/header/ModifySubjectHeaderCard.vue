@@ -3,7 +3,6 @@
         <v-card-title class="title">
             {{ title }}
         </v-card-title>
-
         <v-card-text>
             <v-text-field
                 v-model="subjectName"
@@ -36,7 +35,8 @@
                     <v-checkbox
                         :label="$t('create_subject.assign_self')"
                         v-model="checkbox"
-                        color="primary"
+                        color="text"
+                        class="checkbox"
                     ></v-checkbox>
                 </v-col>
             </v-row>
@@ -130,7 +130,7 @@ watch(subjectMail, (newValue) => {
 
 <style scoped>
 .title-card {
-    background-color: var(--color-secondary);
+    background-color: rgb(var(--v-theme-secondary));
     padding: 20px;
 }
 

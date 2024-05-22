@@ -28,12 +28,12 @@
         </v-col>
     </v-row>
     <v-row v-for="(req, index) in internalRequirements" :key="index" class="align-center my-1">
-        <v-col cols="10">
+        <v-col cols="5">
             <v-chip class="me-2" color="blue" text-color="white">
                 {{ req.value }}
             </v-chip>
         </v-col>
-        <v-col cols="2" class="d-flex justify-space-between align-center">
+        <v-col cols="4" class="d-flex justify-space-between align-center">
             <v-switch
                 v-model="req.mandatory"
                 :label="req.mandatory ? $t('project.mandatory') : $t('project.forbidden')"
@@ -41,6 +41,8 @@
                 hide-details
                 inset
             ></v-switch>
+        </v-col>
+        <v-col cols="2">
             <v-btn icon="mdi-delete" @click="deleteRequirement(index)" />
         </v-col>
     </v-row>

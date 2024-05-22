@@ -111,7 +111,10 @@ const isTeacher = computed(() => {
     if (!user.value || !instructors.value) {
         return false;
     }
-    return instructors.value.some((instructor) => instructor.uid === user.value.uid);
+    return (
+        user.value.is_admin ||
+        instructors.value.some((instructor) => instructor.uid === user.value.uid)
+    );
 });
 
 const amountOfMembers = computed(() => {

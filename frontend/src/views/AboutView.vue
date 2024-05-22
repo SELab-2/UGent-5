@@ -1,7 +1,6 @@
 <template>
     <div class="info">
-        <div class="about">
-            <h1>{{ $t("about.about") }}</h1>
+        <TitleContainer :title="$t('about.about')" class="titlecontainer">
             <p>
                 {{ $t("about.p_1") }}
                 <a href="https://studiekiezer.ugent.be/2023/studiefiche/nl/C003784" class="link">
@@ -9,7 +8,7 @@
                 >. {{ $t("about.p_2") }}
                 <a href="https://github.com/SELab-2/UGent-5" class="link"> GitHub </a>.
             </p>
-        </div>
+        </TitleContainer>
         <h2>{{ $t("about.developers") }}:</h2>
         <v-list lines="one">
             <v-list-item v-for="developer in developers" :key="developer.name" class="developers">
@@ -25,6 +24,7 @@
 </template>
 
 <script setup lang="ts">
+import TitleContainer from "@/components/TitleContainer.vue";
 interface Developer {
     role: string;
     name: string;
@@ -71,14 +71,19 @@ const developers: Developer[] = [
 <style scoped>
 .info {
     padding: 30px;
+    margin-left: 25px;
+    margin-top: 10px;
+    margin-right: 25px;
 }
 
 .link {
-    color: rgb(var(--v-theme-text));
+    color: white;
 }
 
 .about {
     margin-bottom: 25px;
+    background-color: rgb(var(--v-theme-secondary));
+    padding: 15px;
 }
 
 .v-btn {
@@ -89,5 +94,9 @@ const developers: Developer[] = [
     display: flex;
     align-items: center;
     margin-bottom: 15px;
+}
+
+.titlecontainer {
+    margin-bottom: 30px;
 }
 </style>

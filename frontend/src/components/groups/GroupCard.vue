@@ -49,7 +49,7 @@ const amountOfMembers = computed(() => {
 });
 
 const toGroupPage = async () => {
-    router.push(`/groups/${group.value.id}`);
+    router.push(`/submissions/${group.value.id}`);
 };
 </script>
 
