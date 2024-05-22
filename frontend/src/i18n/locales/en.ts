@@ -63,6 +63,7 @@ export default {
         group_button: "Join group",
         needhelp_button: "Need help",
         group: "Group {number}",
+        no_group: "Not yet in a group",
         assignment: "Assignment:",
         myProject: "My projects",
         capacity_group: "Capacity: ",
