@@ -33,15 +33,12 @@ async def get_project(db: AsyncSession, project_id: int) -> Project:
     return result.scalars().first()
 
 
-async def get_projects_by_user(db: AsyncSession, user_id: str) -> tuple:
-    now_utc = datetime.now(timezone.utc)
+async def get_projects_by_user(db: AsyncSession, user_id: str) -> tuple[Sequence[Project], Sequence[Project]]:
     student_result = await db.execute(
         select(Project)
         .join(Subject, Project.subject_id == Subject.id)
         .join(StudentSubject, StudentSubject.c.subject_id == Subject.id)
-        .where(
-            (StudentSubject.c.uid == user_id)
-        )
+        .where(StudentSubject.c.uid == user_id)
     )
     instructor_result = await db.execute(
         select(Project)

@@ -181,6 +181,6 @@ async def list_projects(
     if not await has_subject_privileges(subject_id, user, db):
         now = datetime.now(timezone.utc)
         projects.projects = [
-            project for project in projects.projects if project.publish_date <= now and project.is_visible]
+            project for project in projects.projects if project.publish_date <= now]
 
     return projects
