@@ -41,7 +41,10 @@
                 </v-card-text>
             </v-col>
             <v-col v-if="isAdmin || (isInstructor && isTeacher)" cols="1">
-                <router-link to="" class="link">
+                <router-link
+                    :to="{ name: 'edit-subject', params: { subjectId: subjectId } }"
+                    class="link"
+                >
                     <v-icon size="large">mdi-square-edit-outline</v-icon>
                 </router-link>
             </v-col>
@@ -57,6 +60,7 @@ import SubjectIcon from "@/components/subject/extra/SubjectIcon.vue";
 import { SubjectRole } from "@/models/Subject";
 
 defineProps<{
+    subjectId: number;
     title: string;
     academicYear: number;
     instructors: User[];

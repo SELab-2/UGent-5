@@ -13,6 +13,7 @@ import useCanVisit, {
     useOrCondition,
     useIsInGroupOfProjectCondition,
     useIsTeacherCondition,
+    useAndCondition,
 } from "./middleware/canVisit";
 
 declare module "vue-router" {
@@ -123,9 +124,20 @@ const router = createRouter({
         {
             path: "/subjects/create",
             name: "create-subject",
-            component: () => import("../views/subject/CreateSubjectView.vue"),
+            component: () => import("../views/subject/modify/CreateSubjectView.vue"),
             meta: {
                 middleware: useCanVisit(useOrCondition(useIsAdminCondition, useIsTeacherCondition)),
+            },
+        },
+        {
+            path: "/subjects/:subjectId(\\d+)/edit",
+            name: "edit-subject",
+            component: () => import("../views/subject/modify/PatchSubjectView.vue"),
+            props: (route) => ({ subjectId: Number(route.params.subjectId) }),
+            meta: {
+                middleware: useCanVisit(
+                    useAndCondition(useIsTeacherCondition, useIsInstructorOfSubjectCondition)
+                ),
             },
         },
         {
@@ -205,7 +217,7 @@ router.beforeEach(async (to, from, next) => {
     }
 
     let new_next = next;
-    for (let middleware of middlewares) {
+    for (const middleware of middlewares) {
         const context: MiddlewareContext = { to, from, next: new_next, router };
         const { next: returned_next, final } = await middleware(context);
         if (final) {

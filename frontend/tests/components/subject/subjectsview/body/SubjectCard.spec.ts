@@ -1,6 +1,6 @@
 import { mount } from "@vue/test-utils";
 import {expect, describe, it} from "vitest";
-import SubjectsCard from "@/components/subject/subjectsview/body/SubjectCard.vue"
+import SubjectsCard from "@/components/subject/subjects/body/SubjectCard.vue"
 
 describe("subjectsCard", () => {
     const wrapper = mount(SubjectsCard, {

@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import SubjectsHeaderCard from "@/components/subject/subjectsview/header/SubjectsHeaderCard.vue";
+import SubjectsHeaderCard from "@/components/subject/subjects/header/SubjectsHeaderCard.vue";
 import type { SubjectDetails, SubjectFilter } from "@/models/Subject";
 
 defineProps<{

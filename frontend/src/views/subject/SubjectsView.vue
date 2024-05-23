@@ -49,8 +49,8 @@
 
 <script setup lang="ts">
 import { useSubjectsQuery } from "@/queries/Subject";
-import SubjectsHeaderContainer from "@/components/subject/subjectsview/header/SubjectsHeaderContainer.vue";
-import SubjectCard from "@/components/subject/subjectsview/body/SubjectCard.vue";
+import SubjectsHeaderContainer from "@/components/subject/subjects/header/SubjectsHeaderContainer.vue";
+import SubjectCard from "@/components/subject/subjects/body/SubjectCard.vue";
 import { computed, ref } from "vue";
 import useAcademicYear from "@/composables/useAcademicYear";
 import useIsTeacher from "@/composables/useIsTeacher";

@@ -1,7 +1,7 @@
 <template>
     <v-card variant="text" class="title-card" width="100%" height="45vh">
         <v-card-title class="title">
-            {{ $t("create_subject.new_subject") }}
+            {{ title }}
         </v-card-title>
         <v-card-text>
             <v-text-field
@@ -60,13 +60,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, watch } from "vue";
 import useAcademicYear from "@/composables/useAcademicYear";
+import { computed, ref, toRefs, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
 
 const props = defineProps<{
+    title: string;
+    subjectName: string;
+    academicYear: number;
+    subjectMail: string;
     currentUserAsInstructor: boolean;
     isSubjectNameError: boolean;
     isSubjectMailError: boolean;
@@ -80,11 +84,19 @@ watch(currentUserAsInstructor, (newValue) => {
     checkbox.value = newValue;
 });
 
-const subjectName = ref("");
-const subjectMail = ref("");
-const activeAcademicYear = ref<number>(useAcademicYear());
+const subjectName = ref(props.subjectName);
+const activeAcademicYear = ref<number>(props.academicYear);
+const subjectMail = ref(props.subjectMail);
+const currentAcademicYear = useAcademicYear();
 
-const academicYearItems = [activeAcademicYear.value, activeAcademicYear.value + 1];
+const academicYearItems = computed(() => {
+    const years = [currentAcademicYear];
+    if (activeAcademicYear.value !== currentAcademicYear) {
+        years.push(activeAcademicYear.value);
+    }
+    years.push(activeAcademicYear.value + 1);
+    return years;
+});
 const rules = {
     required: (value: string) => !!value || t("create_subject.field_required"),
     length: (value: string) => value.length > 2 || t("create_subject.field_length"),

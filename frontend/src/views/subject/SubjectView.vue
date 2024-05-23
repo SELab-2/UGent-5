@@ -18,6 +18,7 @@
                         <SubjectHeaderContainer
                             v-if="subject"
                             :title="subject!.name"
+                            :subject-id="subjectId"
                             :instructors="sortedInstructors"
                             :academic-year="subject!.academic_year"
                             :is-instructor="isInstructor"
@@ -62,12 +63,12 @@ import {
     useSubjectInstructorsQuery,
     useSubjectStudentsQuery,
 } from "@/queries/Subject";
-import SubjectHeaderContainer from "@/components/subject/subjectview/header/SubjectHeaderContainer.vue";
-import SubjectProjectsPage from "@/components/subject/subjectview/body/projects/SubjectProjectsPage.vue";
+import SubjectHeaderContainer from "@/components/subject/subject/header/SubjectHeaderContainer.vue";
+import SubjectProjectsPage from "@/components/subject/subject/body/projects/SubjectProjectsPage.vue";
 import { useCurrentUserQuery } from "@/queries/User";
 import useIsTeacher from "@/composables/useIsTeacher";
 import useIsAdmin from "@/composables/useIsAdmin";
-import RegisterLinkButton from "@/components/subject/subjectview/buttons/RegisterLinkButton.vue";
+import RegisterLinkButton from "@/components/subject/subject/buttons/RegisterLinkButton.vue";
 
 const props = defineProps<{
     subjectId: number;

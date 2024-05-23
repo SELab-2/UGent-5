@@ -186,6 +186,11 @@ export default {
         email_invalid: "Ingevoerde email is ongeldig",
     },
 
+    patch_subject: {
+        cancel_dialog: "Wijzigingen annuleren?",
+        edit_subject: "Wijzig vak",
+    },
+
     group: {
         not_found: "Groep niet gevonden",
         not_found2: "Geen groepen teruggevonden",

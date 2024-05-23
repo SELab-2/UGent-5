@@ -36,8 +36,12 @@
                     </v-card>
                 </v-dialog>
                 <div class="flex-container">
-                    <CreateSubjectHeaderContainer
+                    <ModifySubjectHeaderContainer
+                        :title="$t('create_subject.new_subject')"
                         :image-path="`https://www.ugent.be/img/dcom/faciliteiten/ufo-logo.png`"
+                        :subject-name="subjectName"
+                        :academic-year="activeAcademicYear"
+                        :subject-mail="subjectMail"
                         :current-user-as-instructor="currentUserAsInstructor"
                         :is-subject-name-error="isSubjectNameError"
                         :is-subject-mail-error="isSubjectMailError"
@@ -46,14 +50,14 @@
                         @update:subject-mail="onSubjectMailUpdated"
                         @update:current-user-as-instructor="currentUserAsInstructor = $event"
                     >
-                    </CreateSubjectHeaderContainer>
-                    <CreateSubjectBody
+                    </ModifySubjectHeaderContainer>
+                    <ModifySubjectBody
                         :current-user="currentUser"
                         :instructors="shownInstructors"
                         @add-instructor="addInstructor"
                         @remove-instructor="removeInstructor"
                     >
-                    </CreateSubjectBody>
+                    </ModifySubjectBody>
                 </div>
                 <div class="confirm-btn-container">
                     <v-btn class="ma-2" color="grey" @click="dialog = true">
@@ -75,8 +79,8 @@ import { useCreateSubjectInstructorMutation, useCreateSubjectMutation } from "@/
 import type SubjectForm from "@/models/Subject";
 import type User from "@/models/User";
 import { useCurrentUserQuery } from "@/queries/User";
-import CreateSubjectHeaderContainer from "@/components/subject/createSubjectView/header/CreateSubjectHeaderContainer.vue";
-import CreateSubjectBody from "@/components/subject/createSubjectView/body/CreateSubjectBody.vue";
+import ModifySubjectHeaderContainer from "@/components/subject/modify/header/ModifySubjectHeaderContainer.vue";
+import ModifySubjectBody from "@/components/subject/modify/body/ModifySubjectBody.vue";
 import { useRouter } from "vue-router";
 
 const snackbar = ref(false);

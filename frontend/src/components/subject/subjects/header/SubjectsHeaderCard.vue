@@ -15,7 +15,7 @@
                             color="secondary"
                             variant="flat"
                         >
-                            {{ `${academicYear}-${academicYear + 1}` }}
+                            {{ `${academicYear - 2000}-${academicYear - 2000 + 1}` }}
                         </v-chip>
                     </v-chip-group>
                 </div>

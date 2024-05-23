@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import UserSearchList from "@/components/subject/createSubjectView/body/UserSearchList.vue";
+import UserSearchList from "@/components/subject/modify/body/UserSearchList.vue";
 import type User from "@/models/User";
 
 defineProps<{

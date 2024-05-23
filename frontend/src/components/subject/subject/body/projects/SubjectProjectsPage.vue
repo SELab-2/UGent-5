@@ -31,11 +31,11 @@
 </template>
 
 <script setup lang="ts">
-import SubjectProjectsList from "@/components/subject/subjectview/body/projects/list/SubjectProjectsList.vue";
+import SubjectProjectsList from "@/components/subject/subject/body/projects/list/SubjectProjectsList.vue";
 import type Project from "@/models/Project";
 import { FilterOptions } from "@/models/Project";
 import { computed, ref, toRefs } from "vue";
-import SubjectProjectPage from "@/components/subject/subjectview/body/projects/SubjectProjectPage.vue";
+import SubjectProjectPage from "@/components/subject/subject/body/projects/SubjectProjectPage.vue";
 
 const props = defineProps<{
     projects: Project[];
