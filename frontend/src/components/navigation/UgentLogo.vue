@@ -1,9 +1,9 @@
 <template>
-    <div v-if="selectedLocale === 'nl'" class="ugent-logo">
-        <img alt="Logo" class="logo" src="@/assets/universiteit-gent-logo-white.png" height="150" />
-    </div>
-    <div v-else-if="selectedLocale === 'en'" class="ugent-logo">
+    <div v-if="selectedLocale === 'en'" class="ugent-logo">
         <img alt="Logo" class="logo" src="@/assets/ghent-university-logo-white.png" height="150" />
+    </div>
+    <div v-else class="ugent-logo">
+        <img alt="Logo" class="logo" src="@/assets/universiteit-gent-logo-white.png" height="150" />
     </div>
 </template>
 
