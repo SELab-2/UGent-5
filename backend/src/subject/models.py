@@ -8,7 +8,7 @@ StudentSubject = Table(
     "student_subject",
     Base.metadata,
     Column("uid", ForeignKey("website_user.uid", ondelete="CASCADE"), primary_key=True),
-    Column("subject_id", ForeignKey("subject.id" , ondelete="CASCADE"), primary_key=True),
+    Column("subject_id", ForeignKey("subject.id", ondelete="CASCADE"), primary_key=True),
 )
 
 InstructorSubject = Table(

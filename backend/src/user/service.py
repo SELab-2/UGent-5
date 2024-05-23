@@ -42,11 +42,11 @@ async def set_teacher(db: AsyncSession, user_id: str, value: bool):
 async def delete_user(db: AsyncSession, user_id: str):
     user = await get_by_id(db, user_id)
     if user:
-        await db.execute(delete(StudentSubject).where(StudentSubject.c.uid == user_id))            
+        await db.execute(delete(StudentSubject).where(StudentSubject.c.uid == user_id))
         await db.execute(delete(InstructorProject).where(InstructorProject.c.uid == user_id))
         await db.execute(delete(StudentGroup).where(StudentGroup.c.uid == user_id))
         await db.flush()
-            
+
         await db.delete(user)
         await db.commit()
 
