@@ -1,11 +1,13 @@
 from typing import Sequence
 
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .models import User
 from .schemas import UserCreate
-from ..subject.models import InstructorSubject
+from ..subject.models import InstructorSubject, StudentSubject, Subject
+from ..group.models import StudentGroup
+from ..project.models import InstructorProject
 
 
 async def get_by_id(db: AsyncSession, user_id: str) -> User:
@@ -35,6 +37,18 @@ async def set_teacher(db: AsyncSession, user_id: str, value: bool):
     user = await get_by_id(db, user_id)
     user.is_teacher = value
     await db.commit()
+
+
+async def delete_user(db: AsyncSession, user_id: str):
+    user = await get_by_id(db, user_id)
+    if user:
+        await db.execute(delete(StudentSubject).where(StudentSubject.c.uid == user_id))
+        await db.execute(delete(InstructorProject).where(InstructorProject.c.uid == user_id))
+        await db.execute(delete(StudentGroup).where(StudentGroup.c.uid == user_id))
+        await db.flush()
+
+        await db.delete(user)
+        await db.commit()
 
 
 async def get_instructors(db: AsyncSession) -> Sequence[User]:

@@ -1,34 +1,24 @@
 <template>
-    <v-container>
-        <v-row>
-            <v-col>
-                <input @change="updateFiles" ref="fileInput" type="file" multiple hidden />
-                <v-btn class="mb-0" @click="onAddFilesClick">{{
-                    $t("submit.add_files_button")
-                }}</v-btn>
-            </v-col>
-        </v-row>
-        <v-row class="mt-0">
-            <v-col>
-                <div v-if="inputFiles.length === 0">
-                    <p>{{ $t("submit.no_files_added") }}</p>
-                </div>
-                <div v-else>
-                    <v-chip
-                        v-for="(item, index) in inputFiles"
-                        :key="item.name"
-                        class="ma-1"
-                        closable
-                        label
-                        @click:close="() => onDeleteClick(index)"
-                    >
-                        <v-icon icon="mdi-file" start></v-icon>
-                        {{ item.name }} ({{ formatBytes(item.size) }})
-                    </v-chip>
-                </div>
-            </v-col>
-        </v-row>
-    </v-container>
+    <input @change="updateFiles" ref="fileInput" type="file" multiple hidden />
+    <v-btn variant="flat" class="mb-0" @click="onAddFilesClick">{{
+        $t("submit.add_files_button")
+    }}</v-btn>
+    <div v-if="inputFiles.length === 0" class="files">
+        <p>{{ $t("submit.no_files_added") }}</p>
+    </div>
+    <div v-else>
+        <v-chip
+            v-for="(item, index) in inputFiles"
+            :key="item.name"
+            class="ma-1"
+            closable
+            label
+            @click:close="() => onDeleteClick(index)"
+        >
+            <v-icon icon="mdi-file" start></v-icon>
+            {{ item.name }} ({{ formatBytes(item.size) }})
+        </v-chip>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -55,14 +45,37 @@ function onAddFilesClick() {
 }
 
 function updateFiles(event: Event) {
-    // todo: check of meerdere identieke filenames aanwezig zijn
     const files = (event.target as HTMLInputElement).files!;
-    inputFiles.value.push(...files);
+    const unique_files = Array.from(files).filter(
+        (file) => !inputFiles.value.map((file) => file.name).includes(file.name)
+    );
+    inputFiles.value.push(...unique_files);
 }
 
 function onDeleteClick(index: number) {
     inputFiles.value.splice(index, 1);
 }
 </script>
+<style scoped>
+.v-btn {
+    background-color: rgb(var(--v-theme-secondary));
+}
 
-<style scoped></style>
+.files {
+    margin-top: 15px;
+}
+.custom-alert .alert-text {
+    white-space: nowrap; /* Prevents the text from wrapping */
+    overflow: hidden; /* Prevents overflow of text outside the alert box */
+    text-overflow: ellipsis; /* Adds an ellipsis if the text overflows */
+}
+
+.custom-alert a {
+    display: inline; /* Ensures the link is in line with other text */
+    white-space: normal; /* Allows normal wrapping inside the link if needed */
+}
+
+.custom-alert {
+    margin-bottom: 15px; /* Added spacing between the alert and the button */
+}
+</style>

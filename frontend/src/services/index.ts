@@ -3,22 +3,42 @@ import { storeToRefs } from "pinia";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
+interface FetchOptions {
+    omitContentType?: boolean;
+    toJson?: boolean;
+}
+
+const defaultOptions: FetchOptions = {
+    omitContentType: false,
+    toJson: true,
+};
+
+export class FetchError extends Error {
+    body: any;
+
+    constructor(message?: string, body?: any, ...params: any[]) {
+        super(message, ...params);
+        this.body = body;
+    }
+}
+
 /**
  * Fetch data from the API
  * @param endpoint API endpoint
  * @param requestOptions Custom request options
- * @param omitContentType Omit the Content-Type header
+ * @param options Custom fetch options
  * @returns Response from the API
  */
 export async function authorized_fetch<T>(
     endpoint: string,
     requestOptions: RequestInit,
-    omitContentType: boolean = false
+    options: FetchOptions = {}
 ): Promise<T> {
+    const mergedOptions = { ...defaultOptions, ...options };
     const { token, isLoggedIn } = storeToRefs(useAuthStore());
     const { refresh } = useAuthStore();
     if (!isLoggedIn) {
-        throw new Error("User is not logged in");
+        throw new FetchError("User is not logged in");
     }
     const { "Content-Type": contentType, ...strippedHeaders } = {
         Authorization: `${token.value!.token_type} ${token.value!.token}`,
@@ -26,7 +46,7 @@ export async function authorized_fetch<T>(
         ...requestOptions.headers,
     };
 
-    const headers = omitContentType
+    const headers = mergedOptions.omitContentType
         ? strippedHeaders
         : { ...strippedHeaders, "Content-Type": contentType };
 
@@ -36,9 +56,10 @@ export async function authorized_fetch<T>(
     });
     if (response.status === 401) {
         await refresh();
-        throw new Error("Not authenticated");
+        throw new FetchError("Not authenticated");
     } else if (!response.ok) {
-        throw new Error(response.statusText);
+        const error = await response.json();
+        throw new FetchError(error.detail, error);
     }
-    return response.json();
+    return mergedOptions.toJson ? response.json() : response;
 }

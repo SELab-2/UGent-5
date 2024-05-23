@@ -2,16 +2,17 @@ import src.group.service as group_service
 import src.project.service as project_service
 import src.subject.service as subject_service
 import src.user.service as user_service
+from datetime import datetime, timezone
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.dependencies import jwt_token_validation
 from src.auth.exceptions import NotAuthorized, UnAuthenticated
 from src.dependencies import get_async_db
 from src.group.schemas import GroupList
-from src.project.schemas import ProjectList
+from src.project.schemas import UserProjectList
 
 from .exceptions import UserNotFound
-from .schemas import User, UserSimple, UserSubjectList
+from .schemas import User, UserSubjectList
 
 
 async def get_authenticated_user(
@@ -77,5 +78,14 @@ async def retrieve_groups(
 async def retrieve_projects(
     user: User = Depends(get_authenticated_user),
     db: AsyncSession = Depends(get_async_db),
-) -> ProjectList:
-    return await project_service.get_projects_by_user(db, user.uid)
+) -> UserProjectList:
+    student_projects, instructor_projects = await project_service.get_projects_by_user(
+        db, user.uid
+    )
+    now = datetime.now(timezone.utc)
+    student_projects = [
+        project for project in student_projects
+        if project.publish_date <= now and project.is_visible
+    ]
+
+    return UserProjectList(as_student=student_projects, as_instructor=instructor_projects)

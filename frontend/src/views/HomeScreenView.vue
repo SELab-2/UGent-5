@@ -1,52 +1,58 @@
 <template>
-    <BackgroundContainer>
+    <v-container v-if="smAndDown">
         <h1 v-if="isLoading">Loading...</h1>
-        <h1 v-else>{{ $t("home.welcome", { name: user!.given_name }) }}</h1>
-        <v-container v-if="smAndDown">
-            <div class="mobileCard">
+        <TitleContainer
+            v-else
+            :title="$t('home.welcome', { name: user!.given_name, surname: user!.surname })"
+        ></TitleContainer>
+        <div class="mobileCard">
+            <DeadlinesCard />
+        </div>
+        <div class="mobileCard">
+            <SubjectsCard />
+        </div>
+    </v-container>
+    <v-container v-else class="homescreencontainer">
+        <h1 v-if="isLoading">Loading...</h1>
+        <TitleContainer
+            v-else
+            :title="$t('home.welcome', { name: user!.given_name, surname: user!.surname })"
+            class="title"
+        ></TitleContainer>
+        <v-row>
+            <v-col>
                 <DeadlinesCard />
-            </div>
-            <div class="mobileCard">
+            </v-col>
+            <v-col>
                 <SubjectsCard />
-            </div>
-            <div class="mobileCard">
-                <AnnouncementsCard />
-            </div>
-        </v-container>
-        <v-container v-else>
-            <v-row>
-                <v-col>
-                    <DeadlinesCard />
-                </v-col>
-                <v-col>
-                    <SubjectsCard />
-                </v-col>
-                <v-col>
-                    <AnnouncementsCard />
-                </v-col>
-            </v-row>
-        </v-container>
-    </BackgroundContainer>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script setup lang="ts">
 import SubjectsCard from "@/components/home/cards/SubjectsCard.vue";
 import DeadlinesCard from "@/components/home/cards/DeadlinesCard.vue";
-import AnnouncementsCard from "@/components/home/cards/AnnouncementsCard.vue";
-import BackgroundContainer from "@/components/BackgroundContainer.vue";
-import { useUserQuery } from "@/queries/User";
+import TitleContainer from "@/components/TitleContainer.vue";
+import { useCurrentUserQuery } from "@/queries/User";
 import { useDisplay } from "vuetify";
 
-const { data: user, isLoading } = useUserQuery(null);
+const { data: user, isLoading } = useCurrentUserQuery();
 const { smAndDown } = useDisplay();
 </script>
 
 <style scoped lang="scss">
-.h1 {
-    margin-bottom: 30px;
+.title {
+    margin-bottom: 15px;
+    margin-top: 30px;
 }
 
 .mobileCard {
     margin: 15px;
+}
+
+.homescreencontainer {
+    margin-left: 40px;
+    margin-right: 40px;
 }
 </style>

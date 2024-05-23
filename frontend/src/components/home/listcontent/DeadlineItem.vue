@@ -1,85 +1,92 @@
 <template>
-    <div :class="getBackgroundClass()" @click="navigateToProject">
+    <router-link class="projectbtn" :to="`/project/${project.id}`">
+        <div :class="submissionToClass(latestSubmissionStatus)"></div>
         <div class="leftcontent">
-            <h3>{{ deadline.project.name }}</h3>
-            <p class="p">{{ deadline.project.subject_id }}</p>
+            <h3>{{ project.name }}</h3>
+            <p v-if="!isSubjectLoading" class="p">{{ subject!.name }}</p>
         </div>
         <div class="rightcontent">
-            {{ formattedDate }}
+            {{ $d(project.deadline, "short") }}
         </div>
-    </div>
+    </router-link>
 </template>
 
 <script setup lang="ts">
-import { type Deadline } from "@/models/Project";
-import router from "@/router";
-import { toRefs, computed } from "vue";
+import { computed, toRefs } from "vue";
+import type Project from "@/models/Project";
+import type Submission from "@/models/Submission";
+import { Status } from "@/models/Submission";
+import { useSubjectQuery } from "@/queries/Subject";
+import { useUserProjectSubmissionsQuery } from "@/queries/Submission";
 
 const props = defineProps<{
-    deadline: Deadline;
+    project: Project;
 }>();
 
-const { deadline } = toRefs(props);
+const { project } = toRefs(props);
 
-const getBackgroundClass = () => {
+const { data: submissions } = useUserProjectSubmissionsQuery(project.value.id);
+
+const latestSubmissionStatus = computed(() => {
+    if (!submissions.value || submissions.value.length === 0) return null;
+    return [...submissions.value].sort((a, b) => b.date.getTime() - a.date.getTime())[0];
+});
+
+const { data: subject, isLoading: isSubjectLoading } = useSubjectQuery(project.value.subject_id);
+
+function submissionToClass(submission: Submission | null) {
     return {
-        projectbtn: true,
-        accepted: deadline.value.status === "accepted",
-        rejected: deadline.value.status === "rejected",
-        none: deadline.value.status === "none",
+        block: true,
+        in_progress: submission?.status === Status.InProgress,
+        accepted: submission?.status === Status.Accepted,
+        rejected: submission?.status === Status.Rejected || submission?.status === Status.Crashed,
+        none: !submission,
     };
-};
-
-const formattedDate = computed(() =>
-    deadline.value.project.deadline.toLocaleTimeString([], {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-    })
-);
-
-const navigateToProject = () => {
-    router.push(`/project/${deadline.value.project.id}`);
-};
+}
 </script>
 
 <style scoped>
 .projectbtn {
-    margin: 10px;
-    width: calc(100% - 20px);
-    background-color: white;
-    padding: 10px;
+    margin: 5px;
+    background-color: rgb(var(--v-theme-background));
     display: flex;
-    align-items: center;
     transition: background-color 0.3s;
-    border-radius: 10px;
+    align-items: center;
     cursor: pointer;
+    height: 65px;
+    border-radius: 2px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.projectbtn:hover {
+    background-color: rgb(var(--v-theme-tertiary));
+}
+
+.block {
+    margin-left: 10px;
+    width: 5px;
+    height: 100%;
 }
 
 .none {
-    background-color: #eeeeee;
+    background-color: gray;
 }
 
 .accepted {
-    background-color: #e3f7e4;
+    background-color: green;
 }
 
 .rejected {
-    background-color: #ffcaca;
+    background-color: darkred;
 }
 
-.accepted:hover {
-    background-color: #c3f2c6;
+.in_progress {
+    background-color: orange;
 }
 
-.rejected:hover {
-    background-color: #ff9898;
-}
-
-.none:hover {
-    background-color: lightgray;
+.leftcontent {
+    margin-left: 20px;
 }
 
 .rightcontent {
@@ -89,6 +96,6 @@ const navigateToProject = () => {
 }
 
 .p {
-    color: lightslategrey;
+    color: rgb(var(--v-theme-textsecondary));
 }
 </style>

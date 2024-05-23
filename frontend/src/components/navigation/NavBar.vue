@@ -1,5 +1,5 @@
 <template>
-    <v-navigation-drawer v-model="isOpen" app>
+    <v-navigation-drawer v-model="isOpen" app class="text-background">
         <div class="navbuttons">
             <NavButton
                 v-for="nav in navigations"
@@ -10,14 +10,7 @@
             />
         </div>
         <template v-slot:append>
-            <div class="ugent-logo">
-                <img
-                    alt="Logo"
-                    class="logo"
-                    src="@/assets/universiteit-gent-logo-white.png"
-                    height="150"
-                />
-            </div>
+            <UgentLogo />
         </template>
     </v-navigation-drawer>
 </template>
@@ -26,6 +19,7 @@
 import NavButton from "@/components/navigation/NavButton.vue";
 import { ref } from "vue";
 import useNavigations from "@/composables/useNavigations";
+import UgentLogo from "@/components/navigation/UgentLogo.vue";
 
 const { navigations } = useNavigations();
 
@@ -42,13 +36,12 @@ defineExpose({
 
 <style scoped lang="scss">
 .v-navigation-drawer {
-    background: linear-gradient(var(--color-primary), #0e2057);
+    background: rgb(var(--v-theme-primary));
     padding: 10px;
 }
 
 .ugent-logo {
     bottom: 0;
-    margin-bottom: 30px;
 }
 
 .navbuttons {

@@ -1,6 +1,6 @@
 from typing import Sequence
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 from src.user.schemas import User
 
 
@@ -8,7 +8,6 @@ class Groupbase(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     project_id: int
     score: int = 0
-    team_name: str = Field(min_length=1)
 
 
 class GroupCreate(Groupbase):
@@ -17,6 +16,7 @@ class GroupCreate(Groupbase):
 
 class Group(Groupbase):
     id: int
+    num: int
     members: list[User]
 
 

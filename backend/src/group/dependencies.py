@@ -11,7 +11,7 @@ from src.user.schemas import User
 from src.subject.utils import has_subject_privileges
 
 from . import service
-from .exceptions import AlreadyInGroup, GroupNotFound, MaxCapacity
+from .exceptions import AlreadyInGroup, AlreadyInGroupOfProject, GroupNotFound, MaxCapacity
 
 
 async def retrieve_group(
@@ -32,7 +32,8 @@ async def retrieve_groups_by_user(
 async def retrieve_groups_by_project(
     project_id: int, db: AsyncSession = Depends(get_async_db)
 ) -> GroupList:
-    groups = await service.get_groups_by_project(db, project_id)
+    groups = list(await service.get_groups_by_project(db, project_id))
+    groups.sort(key=lambda x: x.num)
     return GroupList(groups=groups)
 
 
@@ -46,12 +47,24 @@ async def create_group_validation(
         raise NotAuthorized()
 
 
+async def groups_permission_validation(
+    group_id: int,
+    user: User = Depends(get_authenticated_user),
+    db: AsyncSession = Depends(get_async_db)
+):
+
+    from src.group.utils import has_group_privileges
+    if not await has_group_privileges(group_id, user, db, False):
+        raise NotAuthorized()
+
+
 async def join_group(
     group_id: int,
     uid: Optional[str] = None,
     db: AsyncSession = Depends(get_async_db),
     user: User = Depends(get_authenticated_user)
 ) -> Group:
+
     if not uid:
         uid = user.uid
 
@@ -66,5 +79,9 @@ async def join_group(
     if len(group.members) >= project.capacity:
         raise MaxCapacity()
 
+    groups = await retrieve_groups_by_user(user, db)
+    if any([group.project_id == g.project_id for g in groups]):
+        raise AlreadyInGroupOfProject()
+
     await service.join_group(db, group_id, uid)
-    return group
+    return await service.get_group_by_id(db, group_id)
