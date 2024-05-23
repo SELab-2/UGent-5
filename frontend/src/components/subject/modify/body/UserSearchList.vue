@@ -94,7 +94,7 @@ const userIsInstructor = (user: User) => {
 <style scoped>
 .scrollable-list {
     overflow-y: auto;
-    max-height: 30vh;
+    max-height: 200px;
     scrollbar-width: none;
 }
 

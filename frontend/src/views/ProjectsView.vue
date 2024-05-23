@@ -73,4 +73,8 @@ const noProjectsFound = computed(() => filteredProjects.value.length === 0);
 .projects {
     margin: 15px;
 }
+
+.project-card {
+    margin-bottom: 10px;
+}
 </style>

@@ -11,7 +11,7 @@
                 variant="elevated"
                 :color="instructor!.is_teacher ? `primary` : `green`"
                 @click:close="$emit('remove-instructor', instructor)"
-                class="ma-1"
+                class="ma-1 chip"
             >
                 <v-icon
                     :icon="instructor!.is_teacher ? `mdi-account-tie-outline` : `mdi-school`"
@@ -39,6 +39,10 @@ defineEmits<{
 .title-card {
     background-color: rgb(var(--v-theme-secondary));
     padding: 20px;
+}
+
+.chip {
+    min-width: fit-content;
 }
 
 .card-title {
