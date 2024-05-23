@@ -9,7 +9,7 @@
             />
             <h3>{{ $t("login.about") }}</h3>
             <a class="login-button" :href="useCASUrl().CASUrl">{{ $t("login.login") }}</a>
-            <img alt="ugent logo" class="ugent-logo" :src="`/src/assets/${$t('logo')}`" />
+            <UgentLogo class="ugent-logo" />
             <LocaleSwitcher class="login-switcher" />
         </div>
     </div>
@@ -18,6 +18,7 @@
 <script setup lang="ts">
 import { useCASUrl } from "@/stores/cas-url";
 import LocaleSwitcher from "@/components/switcher/LocaleSwitcher.vue";
+import UgentLogo from "@/components/navigation/UgentLogo.vue";
 </script>
 
 <style scoped>
