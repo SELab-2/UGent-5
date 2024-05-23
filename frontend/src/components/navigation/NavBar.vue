@@ -10,9 +10,7 @@
             />
         </div>
         <template v-slot:append>
-            <div class="ugent-logo">
-                <img alt="Logo" class="logo" :src="`/src/assets/${$t('logo')}`" height="150" />
-            </div>
+            <UgentLogo />
         </template>
     </v-navigation-drawer>
 </template>
@@ -21,6 +19,7 @@
 import NavButton from "@/components/navigation/NavButton.vue";
 import { ref } from "vue";
 import useNavigations from "@/composables/useNavigations";
+import UgentLogo from "@/components/navigation/UgentLogo.vue";
 
 const { navigations } = useNavigations();
 
