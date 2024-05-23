@@ -179,11 +179,6 @@ const router = createRouter({
             props: (route) => ({ uuid: String(route.params.uuid) }),
         },
         {
-            path: "/settings",
-            name: "settings",
-            component: () => import("../views/SettingsView.vue"),
-        },
-        {
             path: "/admin",
             name: "admin",
             component: () => import("../views/AdminView.vue"),

@@ -3,6 +3,14 @@ import {expect, describe, it, vi} from "vitest";
 import GroupsView from "@/views/GroupsView.vue"
 import {ref} from "vue";
 
+const mockRouter = {
+    push: vi.fn(),
+};
+
+vi.mock("vue-router", () => ({
+    useRouter: () => mockRouter,
+}));
+
 const mockProject = {
     name: "testproject"
 }
@@ -95,6 +103,9 @@ describe("GroupsView", () => {
     const wrapper = mount(GroupsView, {
         props: {
             projectId: 1
+        },
+        global: {
+            stubs: ['router-link']
         }
     });
 

@@ -1,16 +1,15 @@
 <template>
     <div class="projects">
+        <TitleContainer :title="$t('project.myProject')" class="titlecontainer">
+            <v-btn-toggle v-model="activeButton" class="button">
+                <v-btn value="finished">{{ $t("project.finished") }}</v-btn>
+            </v-btn-toggle>
+        </TitleContainer>
         <h1 v-if="isLoading">{{ $t("default.loading.loading_page") }}</h1>
-        <h1 v-else-if="isError || noProjectsFound" class="welcome">
+        <h1 v-else-if="isError || noProjectsFound" class="projectInfo">
             {{ $t("project.not_found") }}
         </h1>
         <div v-else class="projectInfo">
-            <TitleContainer :title="$t('project.myProject')">
-                <v-btn-toggle v-model="activeButton" class="button">
-                    <v-btn value="finished">{{ $t("project.finished") }}</v-btn>
-                </v-btn-toggle>
-            </TitleContainer>
-            <v-divider class="divider" />
             <ProjectMiniCard
                 v-for="project in filteredProjects"
                 :key="project.id"
@@ -31,8 +30,6 @@ const { data: projects, isLoading, isError } = useProjectsQuery();
 const allProjects = computed(() =>
     isLoading.value ? [] : [...projects.value!.as_student, ...projects.value!.as_instructor]
 );
-const noProjectsFound = computed(() => allProjects.value.length === 0);
-
 const activeButton = ref("notFinished");
 
 const filteredProjects = computed(() => {
@@ -51,11 +48,15 @@ const filteredProjects = computed(() => {
             return sortedProjects.filter((project: Project) => new Date(project.deadline) > now);
     }
 });
+
+const noProjectsFound = computed(() => filteredProjects.value.length === 0);
 </script>
 
 <style scoped>
-.project-card {
-    margin-top: 10px;
+.titlecontainer {
+    margin-top: 40px;
+    margin-left: 40px;
+    margin-right: 40px;
 }
 
 .projectInfo {
@@ -71,9 +72,5 @@ const filteredProjects = computed(() => {
 
 .projects {
     margin: 15px;
-}
-
-.divider {
-    margin-bottom: 30px;
 }
 </style>

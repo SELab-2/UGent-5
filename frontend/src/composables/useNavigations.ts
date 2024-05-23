@@ -18,7 +18,6 @@ const main_navigations: NavigationData[] = [
     { icon: "mdi-school-outline", title: "navigation.subjects", goto: "subjects" },
     { icon: "mdi-book-check-outline", title: "navigation.projects", goto: "projects" },
     { icon: "mdi-information-outline", title: "navigation.about", goto: "about" },
-    { icon: "mdi-cog-outline", title: "navigation.settings", goto: "settings" },
 ];
 
 const admin_navigations: NavigationData[] = [
