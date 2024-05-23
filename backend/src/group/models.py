@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Table, ForeignKeyConstraint, Integer, event, select, func
+from sqlalchemy import Column, ForeignKey, Table, event, select, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.database import Base
 from typing import List

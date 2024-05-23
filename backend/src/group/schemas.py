@@ -1,6 +1,6 @@
 from typing import Sequence
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 from src.user.schemas import User
 
 
