@@ -59,6 +59,10 @@ watch(isToggled, (newVal) => {
     }
 });
 
+watch(selectedOption, (newVal) => {
+    emit("update:selectedOption", newVal);
+});
+
 function handleDateChange(value: Date) {
     emit("update:date", value);
 }
