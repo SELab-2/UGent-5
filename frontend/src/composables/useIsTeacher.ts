@@ -1,9 +1,8 @@
 import { computed } from "vue";
-import { useCurrentUserQuery } from "@/queries/User";
-import type { QueryClient } from "@tanstack/vue-query";
+import { useUserQuery } from "@/queries/User";
 
-export default function useIsTeacher(queryClient?: QueryClient) {
-    const { data: user, isLoading } = useCurrentUserQuery(queryClient);
+export default function useIsTeacher() {
+    const { data: user } = useUserQuery();
     const isTeacher = computed(() => user.value?.is_teacher || false);
-    return { isTeacher, isLoading };
+    return { isTeacher };
 }

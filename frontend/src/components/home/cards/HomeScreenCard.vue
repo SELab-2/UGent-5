@@ -1,5 +1,5 @@
 <template>
-    <v-card :title="$t(title)" class="card" variant="flat">
+    <v-card variant="text" :title="$t(title)" class="card">
         <slot></slot>
     </v-card>
 </template>
@@ -12,9 +12,8 @@ defineProps<{
 
 <style scoped>
 .card {
-    background-color: rgb(var(--v-theme-secondary));
-    color: rgb(var(--v-theme-text));
-    border-radius: 2px;
-    text-transform: capitalize;
+    background-color: white;
+    color: black;
+    border-radius: 20px;
 }
 </style>

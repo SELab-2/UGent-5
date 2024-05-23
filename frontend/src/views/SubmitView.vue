@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import SubmitCard from "@/components/submission/SubmitCard.vue";
+import SubmitCard from "@/components/project/submit/SubmitCard.vue";
 
 defineProps<{
     projectId: number;

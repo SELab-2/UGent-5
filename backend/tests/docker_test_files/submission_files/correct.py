@@ -7,5 +7,3 @@ def questionable_code(path):
 
     with open(path, "w") as f:
         f.write("Artifact gegenereerd!")
-
-    return "correct"

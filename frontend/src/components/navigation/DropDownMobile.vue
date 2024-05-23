@@ -1,5 +1,5 @@
 <template>
-    <v-menu>
+    <v-menu transition="slide-y-transition">
         <template v-slot:activator="{ props }">
             <v-btn v-bind="props" class="menu">
                 <v-icon class="mdi mdi-dots-vertical"></v-icon>

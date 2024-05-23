@@ -1,14 +1,12 @@
-import type User from "@/models/User";
-
 export default interface Group {
     id: number;
     project_id: number;
-    num: number;
     score: number;
-    members: User[];
+    team_name: string;
 }
 
 export interface GroupForm {
     project_id: number;
     score: number;
+    team_name: string;
 }

@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.dependencies import authentication_validation
 from src.dependencies import get_async_db
 from src.group.schemas import GroupList
-from src.project.schemas import UserProjectList
+from src.project.schemas import ProjectList
 
 from .dependencies import (
     get_authenticated_user,
@@ -12,11 +12,9 @@ from .dependencies import (
     retrieve_subjects,
     retrieve_user,
     admin_user_validation,
-    teacher_or_admin_user_validation,
 )
 from .schemas import User, UserSimple, UserSubjectList
 from .service import set_admin, set_teacher, get_all_users
-from . import service
 
 router = APIRouter(
     prefix="/api/users",
@@ -26,7 +24,7 @@ router = APIRouter(
 )
 
 
-@router.get("/", dependencies=[Depends(teacher_or_admin_user_validation)])
+@router.get("/", dependencies=[Depends(admin_user_validation)])
 async def get_users(
     db: AsyncSession = Depends(get_async_db),
 ) -> list[User]:
@@ -53,15 +51,6 @@ async def user_info(user: UserSimple = Depends(retrieve_user)) -> UserSimple:
     return user
 
 
-@router.delete("/{user_id}", dependencies=[Depends(admin_user_validation)])
-async def delete_user(user: User = Depends(retrieve_user), db: AsyncSession
-                      = Depends(get_async_db)):
-    """
-    Delete a user
-    """
-    await service.delete_user(db, user.uid)
-
-
 @router.get("/me/subjects")
 async def list_subjects(
     subjects: UserSubjectList = Depends(retrieve_subjects),
@@ -74,8 +63,8 @@ async def list_subjects(
 
 @router.get("/me/projects")
 async def list_projects(
-    projects: UserProjectList = Depends(retrieve_projects),
-) -> UserProjectList:
+    projects: ProjectList = Depends(retrieve_projects),
+) -> ProjectList:
     """
     Get the projects of the current user
     """

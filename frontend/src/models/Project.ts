@@ -2,30 +2,23 @@ export default interface Project {
     id: number;
     name: string;
     deadline: Date;
+    // groupProjectType: string;
+    // selectedTeachers: string[]; // Assuming you store only teacher IDs
     subject_id: number;
-    requirements: Requirement[];
-    description: string;
+    requirements: [];
+    description: String;
     capacity: number;
-    enroll_deadline: Date;
-    publish_date: Date;
-    test_files_uuid: string;
-}
-
-export interface UserProjectList {
-    as_student: Project[];
-    as_instructor: Project[];
 }
 
 export interface ProjectForm {
     name: string;
     deadline: Date;
-    subject_id: number;
-    requirements: Requirement[];
     description: string;
-    capacity: number;
-    enroll_deadline: Date;
-    publish_date: Date;
+    subject_id: number;
     test_files_uuid: string;
+    is_visible: boolean;
+    capacity: number;
+    requirements: [];
 }
 
 export interface Deadline {
@@ -33,23 +26,8 @@ export interface Deadline {
     status: string;
 }
 
-export interface Requirement {
-    mandatory: boolean;
-    value: string;
-}
-
-export interface UnmetRequirement {
-    requirement: Requirement;
-    files: string[] | undefined;
-}
-
 export enum FilterOptions {
     All = "All",
-    Active = "Active",
     Completed = "Completed",
-}
-
-export interface Requirement {
-    mandatory: boolean;
-    value: string;
+    Active = "Active",
 }

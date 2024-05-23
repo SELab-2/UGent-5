@@ -1,18 +1,20 @@
 <template>
-    <router-link class="coursebtn" :to="`/subjects/${subject.id}`">
+    <v-divider></v-divider>
+    <div class="coursebtn" @click="navigateToCourse">
         <div>
             <h3>{{ subject.name }}</h3>
             <v-skeleton-loader v-if="isInstructorsLoading" type="text" />
-            <p v-else-if="sortedInstructors.length > 0" class="teacher">
-                {{ sortedInstructors[0].given_name + " " + sortedInstructors[0].surname }}
+            <p v-else-if="instructors!.length > 0" class="teacher">
+                {{ instructors![0].given_name }}
             </p>
         </div>
         <v-icon class="chevron" icon="mdi-chevron-right" />
-    </router-link>
+    </div>
 </template>
 
 <script setup lang="ts">
 import type Subject from "@/models/Subject";
+import router from "@/router";
 import { toRefs, computed } from "vue";
 import { useSubjectInstructorsQuery } from "@/queries/Subject";
 
@@ -22,36 +24,28 @@ const props = defineProps<{
 
 const { subject } = toRefs(props);
 
-const { data: instructorsData, isLoading: isInstructorsLoading } = useSubjectInstructorsQuery(
+const { data: instructors, isLoading: isInstructorsLoading } = useSubjectInstructorsQuery(
     computed(() => subject.value.id)
 );
 
-//sorteer zodat teachers voor assistenten tevoorschijn komen
-const sortedInstructors = computed(() => {
-    if (!instructorsData.value) return [];
-    return instructorsData.value.slice().sort((a, b) => {
-        return b.is_teacher - a.is_teacher;
-    });
-});
+const navigateToCourse = () => {
+    router.push(`/subjects/${subject.value.id}`);
+};
 </script>
 
 <style scoped>
 .coursebtn {
-    width: calc(100% - 10px);
-    margin: 5px;
+    width: 100%;
+    background-color: white;
     padding: 10px;
     display: flex;
     align-items: center;
     transition: background-color 0.3s;
     cursor: pointer;
-    background-color: rgb(var(--v-theme-background));
-    border-radius: 2px;
-    text-decoration: none;
-    color: inherit;
 }
 
 .coursebtn:hover {
-    background-color: rgb(var(--v-theme-tertiary));
+    background-color: lightgray;
 }
 
 .chevron {
@@ -61,6 +55,6 @@ const sortedInstructors = computed(() => {
 }
 
 .teacher {
-    color: rgb(var(--v-theme-textsecondary));
+    color: lightslategrey;
 }
 </style>

@@ -1,9 +1,8 @@
 import { computed } from "vue";
-import { useCurrentUserQuery } from "@/queries/User";
-import type { QueryClient } from "@tanstack/vue-query";
+import { useUserQuery } from "@/queries/User";
 
-export default function useIsAdmin(queryClient?: QueryClient) {
-    const { data: user, isLoading } = useCurrentUserQuery(queryClient);
+export default function useIsAdmin() {
+    const { data: user } = useUserQuery(null);
     const isAdmin = computed(() => user.value?.is_admin || false);
-    return { isAdmin, isLoading };
+    return { isAdmin };
 }

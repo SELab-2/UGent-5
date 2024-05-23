@@ -65,7 +65,7 @@ async def db():
 async def client(db: AsyncSession):
     token = create_jwt_token("test")
 
-    await create_user(db, UserCreate(uid="test", given_name="tester", surname="testy", mail="test@test.test"))
+    await create_user(db, UserCreate(uid="test", given_name="tester", mail="test@test.test"))
 
     transport = ASGITransport(app=app)  # type: ignore
     async with AsyncClient(transport=transport, base_url="http://test", headers={"Authorization": f"Bearer {token.token}"}) as client:

@@ -41,14 +41,9 @@ async def create_group(db: AsyncSession, group: schemas.GroupCreate) -> Group:
 async def join_group(db: AsyncSession, team_id: int, user_id: str):
     insert_stmnt = StudentGroup.insert().values(team_id=team_id, uid=user_id)
     await db.execute(insert_stmnt)
-    await db.commit()
+    await db.flush()
 
 
 async def leave_group(db: AsyncSession, team_id: int, user_id: str):
     await db.execute(delete(StudentGroup).filter_by(team_id=team_id, uid=user_id))
-    await db.commit()
-
-
-async def delete_group(db: AsyncSession, group_id: int):
-    await db.execute(delete(Group).filter_by(id=group_id))
     await db.commit()

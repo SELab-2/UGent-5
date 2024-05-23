@@ -35,11 +35,11 @@ async def get_subjects_by_user(
     db: AsyncSession, user_id: str
 ) -> tuple[Sequence[Subject], Sequence[Subject]]:
     instructors_subjects = await db.execute(
-        select(Subject).join(InstructorSubject).where(
+        select(Subject).join(InstructorSubject).filter(
             InstructorSubject.c.uid == user_id)
     )
     students_subjects = await db.execute(
-        select(Subject).join(StudentSubject).where(
+        select(Subject).join(StudentSubject).filter(
             StudentSubject.c.uid == user_id)
 
     )
@@ -62,8 +62,7 @@ async def is_instructor(db: AsyncSession, subject_id: int, uid: str) -> bool:
 
 
 async def create_subject(db: AsyncSession, subject: SubjectCreate) -> Subject:
-    db_subject = Subject(
-        name=subject.name, academic_year=subject.academic_year, email=subject.email)
+    db_subject = Subject(name=subject.name)
     db.add(db_subject)
     await db.commit()
     await db.refresh(db_subject)

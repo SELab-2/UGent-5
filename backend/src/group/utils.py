@@ -9,9 +9,8 @@ from src.user.schemas import User
 async def has_group_privileges(
     group_id: int,
     user: User,
-    db: AsyncSession,
-    or_member=True
+    db: AsyncSession
 ) -> bool:
     group = await retrieve_group(group_id, db)
     project = await retrieve_project(group.project_id, user, db)
-    return await has_subject_privileges(project.subject_id, user, db) or (or_member and user in group.members)
+    return await has_subject_privileges(project.subject_id, user, db) or user in group.members

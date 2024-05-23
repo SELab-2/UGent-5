@@ -7,13 +7,11 @@ def main():
     with open(os.environ['CORRECT'], 'w') as correct, open(os.environ['FAILED'], 'w') as failed:
         correct.write("Eerste test geslaagd\n")
 
-        answer = questionable_code(os.path.join(
-            os.environ['ARTIFACT_DIR'], "artifact.txt"))
-
-        if answer == "correct":
+        try:
+            questionable_code(os.path.join(os.environ['ARTIFACT_DIR'], "artifact.txt"))
             correct.write("Tweede test geslaagd\n")
-            exit(0)
-        else:
+
+        except RuntimeError:
             failed.write("Tweede test mislukt!\n")
             exit(int(os.environ['EXIT_TEST_FAILED']))
 

@@ -1,25 +1,20 @@
 import { type Middleware } from "./index";
 import { useAuthStore } from "@/stores/auth-store";
 
-const login: Middleware = async ({ to, next }) => {
+const login: Middleware = async ({ to, next, router }) => {
     const { login, setRedirect, isLoggedIn } = useAuthStore();
     const nextPage = to.query.redirect?.toString() || "/home";
     if (isLoggedIn) {
-        return {
-            next: () => next(nextPage),
-            final: true,
-        };
+        router.replace(nextPage);
+        return next();
     }
     const ticket = to.query.ticket?.toString();
     setRedirect(`${nextPage}`);
     const redirect = await login(nextPage, ticket);
     if (redirect) {
-        return {
-            next: () => next(redirect),
-            final: true,
-        };
+        router.replace(redirect);
     }
-    return { next, final: false };
+    return next();
 };
 
 export default login;

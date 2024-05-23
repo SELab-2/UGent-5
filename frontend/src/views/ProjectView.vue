@@ -1,35 +1,24 @@
 <template>
     <v-container>
-        <h1 v-if="isDataLoading || isSubjectLoading" class="welcome">
-            {{ $t("default.loading.loading_page") }}
-        </h1>
-        <h1 v-else-if="isDataError" class="welcome">{{ $t("project.not_found2") }}</h1>
+        <h1 v-if="isDataLoading" class="welcome">{{ $t("default.loading.loading_page") }}</h1>
+        <h1 v-else-if="isDataError" class="welcome">{{ $t("default.error") }}</h1>
         <div v-else class="projectInfo">
             <v-row>
-                <v-col class="col-sm-12 col-md-6 col-lg-8">
-                    <ProjectInfo
-                        :project="project!"
-                        :group="group!"
-                        :instructors="instructors!"
-                        :subject="subject!"
-                        :user="user!"
-                    />
-                    <v-btn
-                        v-if="isTeacher"
-                        :to="`/project/${project.id}/submissions`"
-                        class="allsubmissions"
-                        variant="flat"
-                    >
-                        {{ $t("project.submissions_list_teacher") }}
-                    </v-btn>
+                <v-col cols="10">
+                    <ProjectInfo :project="project!" :group="group!" />
                 </v-col>
                 <v-col cols="2" class="button-container">
-                    <ProjectSideBar
-                        :project="project!"
-                        :group="group!"
-                        :subject="subject!"
-                        :instructors="instructors!"
-                    />
+                    <router-link v-if="group" :to="`/api/groups/${group!.id}`">
+                        <v-btn class="group-button" prepend-icon="mdi-account-group">
+                            {{ $t("project.group", { number: group!.id }) }}
+                        </v-btn>
+                    </router-link>
+                    <router-link v-else :to="`/projects/${projectId}/groups`">
+                        <v-btn class="group-button" prepend-icon="mdi-account-group">
+                            {{ $t("project.group_button") }}
+                        </v-btn>
+                    </router-link>
+                    <NeedHelpButton class="group-button" :email="'test@test.be'"></NeedHelpButton>
                 </v-col>
             </v-row>
         </div>
@@ -41,10 +30,8 @@ import ProjectInfo from "@/components/project/ProjectInfo.vue";
 
 import { useProjectQuery } from "@/queries/Project";
 import { computed, toRefs } from "vue";
-import { useProjectGroupQuery } from "@/queries/Group";
-import { useSubjectInstructorsQuery, useSubjectQuery } from "@/queries/Subject";
-import { useCurrentUserQuery } from "@/queries/User";
-import ProjectSideBar from "@/components/project/ProjectSideBar.vue";
+import NeedHelpButton from "@/components/buttons/NeedHelpButton.vue";
+import { useUserGroupQuery } from "@/queries/Group";
 
 const props = defineProps<{
     projectId: number;
@@ -62,57 +49,19 @@ const {
     data: group,
     isLoading: isGroupLoading,
     isError: isGroupError,
-} = useProjectGroupQuery(projectId);
+} = useUserGroupQuery(projectId);
 
-const {
-    data: subject,
-    isLoading: isSubjectLoading,
-    isError: isSubjectError,
-} = useSubjectQuery(computed(() => project.value?.subject_id));
-
-const {
-    data: instructors,
-    isLoading: isInstructorsLoading,
-    isError: isInstructorsError,
-} = useSubjectInstructorsQuery(computed(() => project.value?.subject_id));
-
-const { data: user, isLoading: isUserLoading, isError: isUserError } = useCurrentUserQuery();
-
-const isDataLoading = computed(
-    () =>
-        isProjectLoading.value ||
-        isGroupLoading.value ||
-        isInstructorsLoading.value ||
-        isSubjectLoading.value ||
-        isUserLoading.value
-);
-
-const isDataError = computed(
-    () =>
-        isProjectError.value ||
-        isGroupError.value ||
-        isInstructorsError.value ||
-        isSubjectError.value ||
-        isUserError.value
-);
-
-const isTeacher = computed(
-    () =>
-        user.value.is_teacher ||
-        user.value.is_admin ||
-        instructors.value?.some((element) => element.uid == user.value.uid)
-);
+const isDataLoading = computed(() => isProjectLoading.value || isGroupLoading.value);
+const isDataError = computed(() => isProjectError.value || isGroupError.value);
 </script>
 
 <style scoped>
 .button-container {
     margin-top: 20px;
-    min-width: 200px;
 }
 
-.allsubmissions {
-    margin: 15px;
-    background-color: rgb(var(--v-theme-primary));
-    color: rgb(var(--v-theme-navtext));
+.group-button {
+    margin-bottom: 5px;
+    min-width: auto;
 }
 </style>

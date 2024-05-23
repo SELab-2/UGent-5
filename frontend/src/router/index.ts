@@ -1,19 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { type Middleware, type MiddlewareContext } from "./middleware/index";
+import { type Middleware, type MiddlewareContext, nextFactory } from "./middleware/index";
 import isAuthenticated from "./middleware/isAuthenticated";
 import loginMiddleware from "./middleware/login";
-import useCanVisit, {
-    useIsAdminCondition,
-    useIsStudentOfSubjectCondition,
-    useIsInstructorOfSubjectCondition,
-    useIsStudentOfProjectCondition,
-    useIsInstructorOfProjectCondition,
-    useIsInGroupCondition,
-    useIsInstructorOfGroupCondition,
-    useOrCondition,
-    useIsInGroupOfProjectCondition,
-    useIsTeacherCondition,
-} from "./middleware/canVisit";
 
 declare module "vue-router" {
     interface RouteMeta {
@@ -63,102 +51,30 @@ const router = createRouter({
             name: "project",
             component: () => import("../views/ProjectView.vue"),
             props: (route) => ({ projectId: Number(route.params.projectId) }),
-            meta: {
-                middleware: useCanVisit(
-                    useOrCondition(
-                        useIsStudentOfProjectCondition,
-                        useIsInstructorOfProjectCondition
-                    )
-                ),
-            },
         },
         {
             path: "/project/:projectId(\\d+)/submit",
             name: "onSubmit",
             component: () => import("../views/SubmitView.vue"),
             props: (route) => ({ projectId: Number(route.params.projectId) }),
-            meta: {
-                middleware: useCanVisit(useIsInGroupOfProjectCondition),
-            },
-        },
-        {
-            path: "/project/:projectId(\\d+)/groups",
-            name: "groups",
-            component: () => import("../views/GroupsView.vue"),
-            props: (route) => ({ projectId: Number(route.params.projectId) }),
-            meta: {
-                middleware: useCanVisit(
-                    useOrCondition(
-                        useIsStudentOfProjectCondition,
-                        useIsInstructorOfProjectCondition
-                    )
-                ),
-            },
-        },
-        {
-            path: "/submissions/:groupId(\\d+)",
-            name: "submissions",
-            component: () => import("../views/GroupView.vue"),
-            props: (route) => ({ groupId: Number(route.params.groupId) }),
-            meta: {
-                middleware: useCanVisit(
-                    useOrCondition(useIsInGroupCondition, useIsInstructorOfGroupCondition)
-                ),
-            },
-        },
-        {
-            path: "/project/:projectId(\\d+)/submissions",
-            name: "projectSubmissions",
-            component: () => import("../views/SubmissionsTeacherView.vue"),
-            props: (route) => ({ projectId: Number(route.params.projectId) }),
-            meta: {
-                middleware: useCanVisit(useIsInstructorOfProjectCondition),
-            },
         },
         {
             path: "/subjects",
             name: "subjects",
             component: () => import("../views/subject/SubjectsView.vue"),
-        },
-        {
-            path: "/subjects/create",
-            name: "create-subject",
-            component: () => import("../views/subject/CreateSubjectView.vue"),
-            meta: {
-                middleware: useCanVisit(useOrCondition(useIsAdminCondition, useIsTeacherCondition)),
-            },
+            children: [],
         },
         {
             path: "/subjects/:subjectId(\\d+)",
             name: "subject",
             component: () => import("../views/subject/SubjectView.vue"),
             props: (route) => ({ subjectId: Number(route.params.subjectId) }),
-            meta: {
-                middleware: useCanVisit(
-                    useOrCondition(
-                        useIsStudentOfSubjectCondition,
-                        useIsInstructorOfSubjectCondition
-                    )
-                ),
-            },
         },
         {
             path: "/subjects/:subjectId(\\d+)/create-project",
             name: "create-project",
             component: () => import("../views/CreateProjectView.vue"),
             props: (route) => ({ subjectId: Number(route.params.subjectId) }),
-            meta: {
-                middleware: useCanVisit(useIsInstructorOfSubjectCondition),
-            },
-        },
-        {
-            path: "/project/:projectId(\\d+)/edit",
-            name: "edit-project",
-            component: () => import("../views/CreateProjectView.vue"), // Ensure this is correct
-            props: (route) => ({ projectId: Number(route.params.projectId), isEditMode: true }),
-            meta: {
-                middleware: useCanVisit(useIsInstructorOfProjectCondition),
-            },
         },
         {
             path: "/subjects/register/:uuid",
@@ -175,9 +91,6 @@ const router = createRouter({
             path: "/admin",
             name: "admin",
             component: () => import("../views/AdminView.vue"),
-            meta: {
-                middleware: useCanVisit(useIsAdminCondition),
-            },
         },
         {
             path: "/:pathMatch(.*)",
@@ -191,29 +104,22 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-    const middlewares: Middleware[] = [];
+    const middleware: Middleware[] = [];
 
     // Always check for authentication
-    middlewares.push(isAuthenticated);
+    middleware.push(isAuthenticated);
 
     // Add additional middleware if specified
     if (to.meta.middleware) {
         const meta_middleware = Array.isArray(to.meta.middleware)
             ? to.meta.middleware
             : [to.meta.middleware];
-        middlewares.push(...meta_middleware.filter((m) => m !== isAuthenticated));
+        middleware.push(...meta_middleware.filter((m) => m !== isAuthenticated));
     }
 
-    let new_next = next;
-    for (let middleware of middlewares) {
-        const context: MiddlewareContext = { to, from, next: new_next, router };
-        const { next: returned_next, final } = await middleware(context);
-        if (final) {
-            return returned_next();
-        }
-        new_next = returned_next;
-    }
-    return new_next();
+    const context: MiddlewareContext = { to, from, next, router };
+    const nextMiddleware = nextFactory(context, middleware, 0);
+    return nextMiddleware();
 });
 
 export default router;

@@ -16,9 +16,10 @@ project = {
     "deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
     "description": "test",
     "enroll_deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
+    "is_visible": True,
     "capacity": 1,
-    "requirements": [{"mandatory": "false", "value": "*.pdf"}],
-    "publish_date": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
+    "requirements": [],
+    "test_files": [],
 }
 
 
@@ -111,3 +112,28 @@ async def test_patch_project(client: AsyncClient, db: AsyncSession, project_id: 
     assert response.status_code == 200
     response = await client.get(f"/api/projects/{project_id}")
     assert response.json()["description"] == "new description"
+
+
+@pytest.mark.asyncio
+async def test_is_visible_project(client: AsyncClient, db: AsyncSession, project_id: int):
+
+    response = await client.get(f"/api/projects/{project_id}")
+    subject_id = response.json()["subject_id"]
+
+    await set_admin(db, "test", True)
+    await client.patch(f"/api/projects/{project_id}", json={"is_visible": False})
+    await set_admin(db, "test", False)
+
+    response = await client.get(f"/api/projects/{project_id}")
+    assert response.status_code == 404  # Not found as project is not visible
+
+    response = await client.get(f"/api/subjects/{subject_id}/projects")
+    assert len(response.json()["projects"]) == 0
+
+    # Now privileged get request
+    await make_instructor(subject_id, "test", db, client)
+    response = await client.get(f"/api/projects/{project_id}")
+    assert response.status_code == 200
+
+    response = await client.get(f"/api/subjects/{subject_id}/projects")
+    assert len(response.json()["projects"]) == 1

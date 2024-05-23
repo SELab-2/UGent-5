@@ -48,19 +48,15 @@ async def token(
     if not user or not attributes:
         raise UnAuthenticated(detail="Invalid CAS ticket")
     # Create user if not exists
-    resolved_user = await user_service.get_by_id(db, attributes["uid"])
-    if not resolved_user:
+    if not await user_service.get_by_id(db, attributes["uid"]):
         await user_service.create_user(
             db,
             UserCreate(
                 given_name=attributes["givenname"],
-                surname=attributes["surname"],
                 uid=attributes["uid"],
                 mail=attributes["mail"],
             ),
         )
-    elif resolved_user.surname == 'SURNAME_DEFAULT':
-        resolved_user.surname = attributes["surname"]
 
     # Create JWT token
     jwt_token = create_jwt_token(attributes["uid"])
