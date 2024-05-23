@@ -199,6 +199,7 @@ async function handleSubmit() {
 
 .back-button {
     margin: 30px;
+    z-index: 10;
 }
 
 .flex-container {

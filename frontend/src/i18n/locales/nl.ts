@@ -69,6 +69,7 @@ export default {
         capacity_group: "Capaciteit: ",
         edit: "Bewerk project",
         submissions_list: "Alle indieningen van deze persoon/groep",
+        submissions_all: "Indieningen bekijken",
         submissions_list_teacher: "Alle indieningen voor dit project",
         submissions_zip: "Download alle indieningen",
         not_found: "Geen projecten teruggevonden.",

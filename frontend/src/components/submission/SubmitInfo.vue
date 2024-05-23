@@ -19,7 +19,7 @@
                 {{ $t("submit.new_submission") }}
             </v-btn>
             <v-btn :to="`/submissions/${group?.id}`">
-                {{ $t("project.submissions_list") }}
+                {{ $t("project.submissions_all") }}
             </v-btn>
         </v-card-actions>
     </v-card>

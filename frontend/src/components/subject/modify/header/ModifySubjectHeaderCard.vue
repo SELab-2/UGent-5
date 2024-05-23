@@ -1,5 +1,5 @@
 <template>
-    <v-card variant="text" class="title-card" width="100%" height="45vh">
+    <v-card variant="text" class="title-card" width="100%" height="325">
         <v-card-title class="title">
             {{ title }}
         </v-card-title>
@@ -135,19 +135,17 @@ watch(subjectMail, (newValue) => {
 }
 
 .form-elem {
-    margin-bottom: 2vh;
-    margin-top: -3vh;
+    margin-bottom: 20px;
 }
 
 .form-elem-academic {
-    max-width: 20vw;
 }
 .title {
     font-size: 32px;
+    margin-bottom: 5px;
     letter-spacing: -0.5px;
     text-transform: capitalize;
     font-weight: bold;
-    margin-bottom: 4vh;
     font-family: "Poppins", sans-serif;
 }
 </style>

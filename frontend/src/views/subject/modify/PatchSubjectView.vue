@@ -5,7 +5,13 @@
 
     <v-row v-else>
         <v-col cols="1">
-            <v-btn variant="elevated" class="back-button" size="large" @click="dialog = true">
+            <v-btn
+                variant="elevated"
+                class="back-button"
+                size="large"
+                @click="dialog = true"
+                color="primary"
+            >
                 <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
         </v-col>
@@ -63,7 +69,6 @@
                     >
                     </ModifySubjectBody>
                 </div>
-
                 <div class="confirm-btn-container">
                     <v-btn class="ma-2" color="grey" @click="dialog = true">
                         {{ $t("default.cancel") }}
@@ -293,15 +298,12 @@ async function handleSubmit() {
 
 <style scoped>
 .confirm-btn-container {
-    display: flex;
-    position: absolute;
-    right: 4vw;
-    bottom: 4vw;
-    margin-top: 2vh;
+    margin-top: 10px;
 }
 
 .back-button {
     margin: 30px;
+    z-index: 10;
 }
 
 .flex-container {

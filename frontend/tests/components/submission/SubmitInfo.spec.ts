@@ -67,7 +67,7 @@ describe("SubmitInfo", async () => {
         expect(text).toContain("Laatste indiening:")
         expect(text).toContain("Indiening is: Accepted")
         expect(text).toContain("Nieuwe indiening")
-        expect(text).toContain("Alle indieningen")
+        expect(text).toContain("Indieningen bekijken")
     });
     it("render submit info without submission", () => {
         const wrapper = mount(SubmitInfo, {
@@ -85,6 +85,6 @@ describe("SubmitInfo", async () => {
         expect(text).toContain("Indieningszone")
         expect(text).toContain("Geen indieningen gevonden.")
         expect(text).toContain("Nieuwe indiening")
-        expect(text).toContain("Alle indieningen")
+        expect(text).toContain("Indieningen bekijken")
     })
 });

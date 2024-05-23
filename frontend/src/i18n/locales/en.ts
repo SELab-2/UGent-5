@@ -69,6 +69,7 @@ export default {
         capacity_group: "Capacity: ",
         edit: "Edit project",
         submissions_list: "All submissions from this person/group",
+        submissions_all: "View submissions",
         submissions_list_teacher: "All submissions for this project",
         submissions_zip: "Download all submissions",
         not_found: "No projects found.",
