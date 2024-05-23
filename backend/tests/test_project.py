@@ -10,6 +10,7 @@ from tests.test_subject import make_instructor
 # skeletons for basic json objects
 subject = {"name": "test subject"}
 future_date = datetime.now(timezone.utc) + timedelta(weeks=1)
+past_date = datetime.now(timezone.utc) - timedelta(weeks=1)
 project = {
     "name": "test project",
     "subject_id": 0,  # temp needs to be filled in by actual subject id
@@ -18,7 +19,7 @@ project = {
     "enroll_deadline": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
     "capacity": 1,
     "requirements": [{"mandatory": "false", "value": "*.pdf"}],
-    "publish_date": future_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
+    "publish_date": past_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
 }
 
 

@@ -99,6 +99,9 @@ export default {
         testfiles: "Testbestanden",
         requirements_disclaimer: "Voor info over het gebruik van bestandsvereisten, bezoek onze ",
         to_project: "Naar project",
+        titlereq: "Project titel is verplicht.",
+        date_check: "Deadline of publiceerdatum kan niet in het verleden liggen.",
+        publish_check: "Publiceerdatum moet voor de deadline liggen.",
     },
     navigation: {
         home: "Hoofdscherm",

@@ -4,6 +4,7 @@ from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from src.subject.models import InstructorSubject, StudentSubject, Subject
+from datetime import datetime, timezone
 
 from .exceptions import ProjectNotFound
 from .models import Project, Requirement
@@ -14,6 +15,7 @@ async def create_project(db: AsyncSession, project_in: ProjectCreate) -> Project
     new_project = Project(
         name=project_in.name,
         deadline=project_in.deadline,
+        publish_date=project_in.publish_date,
         subject_id=project_in.subject_id,
         description=project_in.description,
         is_visible=project_in.is_visible,
