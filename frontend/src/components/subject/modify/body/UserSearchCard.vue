@@ -1,5 +1,5 @@
 <template>
-    <v-card variant="text" class="title-card" width="100%" height="50vh">
+    <v-card variant="text" class="title-card" width="100%" height="350px">
         <v-card-title class="card-title">
             {{ $t("create_subject.search_for_instructors") }}
         </v-card-title>
