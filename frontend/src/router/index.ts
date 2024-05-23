@@ -13,6 +13,7 @@ import useCanVisit, {
     useOrCondition,
     useIsInGroupOfProjectCondition,
     useIsTeacherCondition,
+    useAndCondition,
 } from "./middleware/canVisit";
 
 declare module "vue-router" {
@@ -133,6 +134,11 @@ const router = createRouter({
             name: "edit-subject",
             component: () => import("../views/subject/modify/PatchSubjectView.vue"),
             props: (route) => ({ subjectId: Number(route.params.subjectId) }),
+            meta: {
+                middleware: useCanVisit(
+                    useAndCondition(useIsTeacherCondition, useIsInstructorOfSubjectCondition)
+                ),
+            },
         },
         {
             path: "/subjects/:subjectId(\\d+)",
