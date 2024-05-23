@@ -15,6 +15,7 @@
                         :label="$t('project.assignment')"
                         required
                         :placeholder="$t('submit.create_title_tip')"
+                        :rules="titleRules"
                     />
                     <v-select
                         v-if="!isEditMode"
@@ -297,6 +298,17 @@ function setErrorAlert(message) {
 }
 
 async function submitForm() {
+    if (
+        isDateInPast(deadline.value) ||
+        (enrollDeadline.value && isDateInPast(enrollDeadline.value))
+    ) {
+        setErrorAlert(t("project.date_check"));
+        return;
+    }
+    if (!isPublishDateValid(publishDate.value, deadline.value)) {
+        setErrorAlert(t("project.publish_check"));
+        return;
+    }
     const projectData = formatProjectData();
     try {
         if (isEditMode.value) {
@@ -431,6 +443,17 @@ function divideStudentsIntoGroups(students: User[], capacity: number) {
 
     return groups;
 }
+
+function isDateInPast(date) {
+    const now = new Date();
+    return new Date(date) < now;
+}
+
+function isPublishDateValid(publishDate, deadline) {
+    return new Date(publishDate) <= new Date(deadline);
+}
+
+const titleRules = computed(() => [(v) => !!v.trim() || t("project.titlereq")]);
 </script>
 
 <style>

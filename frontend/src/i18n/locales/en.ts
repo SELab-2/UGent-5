@@ -97,6 +97,9 @@ export default {
         testfiles: "Testfiles",
         requirements_disclaimer: "For info on the usage of requirements please visit our",
         to_project: "To Project",
+        titlereq: "Project title is required.",
+        date_check: "Deadline or publish date cannot be in the past. Please correct the dates.",
+        publish_check: "Publish date must be before or on the deadline. Please correct the dates.",
     },
     navigation: {
         home: "Home",
