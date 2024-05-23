@@ -55,7 +55,7 @@ async function formOnSubmit(event: SubmitEvent) {
 
     try {
         await mutateAsync(formData);
-        await router.push(`/groups/${group.value?.id}`);
+        await router.push(`/submissions/${group.value?.id}`);
     } catch (error) {
         if (error instanceof UnmetRequirementsError) {
             unmetRequirements.value = error.unmetRequirements;

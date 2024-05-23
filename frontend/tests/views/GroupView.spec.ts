@@ -24,7 +24,7 @@ vi.mock("@/queries/Group", () => ({
 }))
 
 const testProjectQuery = {
-    data: ref({subject_id: 1, name: "testproject"}),
+    data: ref({subject_id: 1, name: "testproject", capacity: 2}),
     isLoading: ref(false),
     isError: ref(false)
 }

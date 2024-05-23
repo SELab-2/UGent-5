@@ -32,6 +32,7 @@
                         :key="submission.id"
                         :submission="submission"
                         :deadline="project.deadline"
+                        :capacity="project.capacity"
                     />
                 </v-skeleton-loader>
             </v-col>
