@@ -30,8 +30,6 @@ const { data: projects, isLoading, isError } = useProjectsQuery();
 const allProjects = computed(() =>
     isLoading.value ? [] : [...projects.value!.as_student, ...projects.value!.as_instructor]
 );
-const noProjectsFound = computed(() => allProjects.value.length === 0);
-
 const activeButton = ref("notFinished");
 
 const filteredProjects = computed(() => {
@@ -50,6 +48,8 @@ const filteredProjects = computed(() => {
             return sortedProjects.filter((project: Project) => new Date(project.deadline) > now);
     }
 });
+
+const noProjectsFound = computed(() => filteredProjects.value.length === 0);
 </script>
 
 <style scoped>
