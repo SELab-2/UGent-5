@@ -1,12 +1,15 @@
 <template>
     <v-card v-if="!isLoading" class="parent-card">
-        <v-card-title>
+        <v-card-title v-if="capacity > 1">
             {{ $t("project.group", { number: group!.num }) }}
+        </v-card-title>
+        <v-card-title v-else>
+            {{ group.members[0].given_name + " " + group.members[0].surname }}
         </v-card-title>
         <SubmissionCard class="ma-3" :submission="submission" :deadline="deadline" />
         <v-divider class="divider" />
         <v-card-actions>
-            <v-btn :to="`/groups/${submission.group_id}`" class="button">
+            <v-btn :to="`/submissions/${submission.group_id}`" class="button">
                 {{ $t("project.submissions_list") }}
             </v-btn>
         </v-card-actions>
@@ -22,6 +25,7 @@ import { useGroupQuery } from "@/queries/Group";
 const props = defineProps<{
     submission: Submission;
     deadline: Date;
+    capacity: Number;
 }>();
 const { submission } = toRefs(props);
 
