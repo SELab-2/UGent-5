@@ -8,6 +8,7 @@ from src.subject.exceptions import AlreadyInstructor, AlreadyRegistered
 from src.user.dependencies import get_authenticated_user, retrieve_user, teacher_or_admin_user_validation
 from src.user.schemas import User
 from src.subject.utils import has_subject_privileges
+from datetime import datetime, timezone
 
 from . import service
 from .dependencies import (
@@ -177,8 +178,9 @@ async def list_projects(
     user: User = Depends(get_authenticated_user)
 ) -> ProjectList:
     projects = await get_projects_for_subject(db, subject_id)
-
     if not await has_subject_privileges(subject_id, user, db):
-        projects.projects = list(filter(lambda x: x.is_visible, projects.projects))
+        now = datetime.now(timezone.utc)
+        projects.projects = [
+            project for project in projects.projects if project.publish_date <= now and project.is_visible]
 
     return projects

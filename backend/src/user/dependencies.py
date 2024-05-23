@@ -2,6 +2,7 @@ import src.group.service as group_service
 import src.project.service as project_service
 import src.subject.service as subject_service
 import src.user.service as user_service
+from datetime import datetime, timezone
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.dependencies import jwt_token_validation
@@ -81,4 +82,10 @@ async def retrieve_projects(
     student_projects, instructor_projects = await project_service.get_projects_by_user(
         db, user.uid
     )
+    now = datetime.now(timezone.utc)
+    student_projects = [
+        project for project in student_projects
+        if project.publish_date <= now and project.is_visible
+    ]
+
     return UserProjectList(as_student=student_projects, as_instructor=instructor_projects)
