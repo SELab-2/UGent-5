@@ -25,7 +25,7 @@
                 <h2 v-if="project.capacity > 1 && !isLoading && group !== null" class="group">
                     {{ $t("project.group", { number: group?.num }) }}
                 </h2>
-                <h2 v-else-if="!isError && project.capacity > 1" class="group">
+                <h2 v-else-if="!isError && project.capacity > 1 && !isTeacher" class="group">
                     {{ $t("project.no_group") }}
                 </h2>
                 <h2>{{ $t("subject.project.assignment") }}</h2>
@@ -72,9 +72,11 @@
 
 <script setup lang="ts">
 import type Project from "@/models/Project";
-import { ref, toRefs } from "vue";
+import { computed, ref, toRefs } from "vue";
 import { Quill } from "@vueup/vue-quill";
 import { useProjectGroupQuery } from "@/queries/Group";
+import { useCurrentUserQuery } from "@/queries/User";
+import { useSubjectInstructorsQuery } from "@/queries/Subject";
 
 const props = defineProps<{
     selectedTab: number;
@@ -91,8 +93,19 @@ const renderQuillContent = (content: string) => {
     quill.root.innerHTML = content;
     return quill.root.innerHTML;
 };
-
+const { data: user } = useCurrentUserQuery();
+const { data: instructors } = useSubjectInstructorsQuery(computed(() => project.value?.subject_id));
 const { data: group, isLoading, isError } = useProjectGroupQuery(project.value.id);
+
+const isTeacher = computed(() => {
+    if (!user.value || !instructors.value) {
+        return false;
+    }
+    return (
+        user.value.is_admin ||
+        instructors.value.some((instructor) => instructor.uid === user.value.uid)
+    );
+});
 </script>
 
 <style scoped>
