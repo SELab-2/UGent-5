@@ -380,6 +380,7 @@ function generateEmptyGroups(projectId: number) {
         emptyGroups.push({
             project_id: projectId,
             score: 0,
+            num: i,
         });
     }
     return emptyGroups;
