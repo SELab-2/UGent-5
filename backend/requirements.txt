@@ -6,7 +6,7 @@ asyncpg==0.29.0
 attrs==23.1.0
 autopep8==2.0.4
 cattrs==23.1.2
-certifi==2024.2.2
+certifi==2024.7.4
 cffi==1.16.0
 charset-normalizer==3.3.2
 click==8.1.7
